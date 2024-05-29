@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:ClippyAI.ViewModels"
+             xmlns:resources="clr-namespace:ClippyAI.Resources"
              mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
              Padding="10"
              x:Class="ClippyAI.Views.MainView"
@@ -16,7 +17,7 @@
   <StackPanel>
       <Button Content="Configuration" Command="{Binding OpenConfigurationCommand}"
       HorizontalAlignment="Right" Margin="0 10 0 0" />
-      <Label Content="Clipboard Contents:" HorizontalAlignment="Left" FontSize="16"/>
+      <Label Content="{x:Static resources:Resources.ClipboardContent}" HorizontalAlignment="Left" FontSize="16"/>
       <TextBox Text="{Binding ClipboardContent, Mode=TwoWay}"
             CaretIndex="{Binding CaretIndex, Mode=OneWay}" 
             AcceptsReturn="True" 
@@ -26,10 +27,10 @@
             HorizontalAlignment="Left"
             FontSize="12"
             />
-      <Label Content="What ClippyAI should do for you:" HorizontalAlignment="Left" FontSize="16" Margin="0 10 0 0" />
+      <Label Content="{x:Static resources:Resources.TaskLabel}" HorizontalAlignment="Left" FontSize="16" Margin="0 10 0 0" />
       <ComboBox x:Name="cboTask" SelectedItem="{Binding Task}" HorizontalAlignment="Left" Width="580">
       </ComboBox>
-      <Button Content="Start" Command="{Binding AskClippyCommand}" HorizontalAlignment="Left" 
+      <Button Content="{x:Static resources:Resources.TaskStart}" Command="{Binding AskClippyCommand}" HorizontalAlignment="Left" 
               Margin="0 10 0 0" />
   </StackPanel>
 </UserControl>

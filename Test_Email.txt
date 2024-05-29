@@ -6,14 +6,8 @@ wenn Sie an der Schulung teilnehmen möchten.
 Mit freundlichen Grüßen
 John Doe
 
-This is a user interface (UI) element in WPF (Windows Presentation Foundation), a Microsoft technology for building Windows applications.
+--
 
-Here's a breakdown of the different parts:
+szustand dies zulässt.
 
-1. `<StackPanel>`: This is a panel that arranges its child elements vertically, from top to bottom.
-2. `<Label>`: These are text labels that display static or dynamic content. The first label says "Clipboard Contents:", and the second one says "What ClippyAI should do for you:".
-3. `<TextBox>`: This is an editable text box that allows users to enter or edit text. The `Text` property is bound to a `ClipboardContent` property in the data context, which means that the text box will automatically update when the clipboard contents change. The `CaretIndex` property is also bound to the same property, which allows the text box to keep track of its current cursor position.
-4. `<ComboBox>`: This is a drop-down list that allows users to select one option from a list of choices. In this case, it's bound to a `Task` property in the data context, which means that the selected item will be updated when the user selects a new option.
-5. `<Button>`: This is a button that triggers an action (in this case, a command called `AskClippyCommand`) when clicked.
-
-The overall purpose of this UI appears to be a simple interactive tool for users to manage their clipboard contents and interact with some kind of AI-powered assistant named "ClippyAI". The user can view the current clipboard contents in the text box, select a task from the drop-down list, and then click the "Start" button to initiate an action related to that task.
+Vielen Dank auch für deine Bemühungen, Kontakt zu mir aufzunehmen. Ich bin dankbar für dein

@@ -15,8 +15,9 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="ClipboardContents" xml:space="preserve">
-        <value>Clipboard Contents:</value>
+
+    <data name="ClipboardContent" xml:space="preserve">
+        <value>Clipboard Content:</value>
     </data>
     <data name="ClippyAI" xml:space="preserve">
         <value>ClippyAI</value>
@@ -25,7 +26,7 @@
         <value>Task</value>
     </data>
     <data name="TaskLabel" xml:space="preserve">
-        <value>What ClippyAI should do for you:</value>
+        <value>What I should do for you:</value>
     </data>
     <data name="TaskStart" xml:space="preserve">
         <value>Start</value>

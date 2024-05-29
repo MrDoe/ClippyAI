@@ -4,6 +4,7 @@ using Avalonia.Markup.Xaml;
 using System.Globalization;
 using ClippyAI.ViewModels;
 using ClippyAI.Views;
+using ClippyAI.Resources;
 namespace ClippyAI;
 
 public partial class App : Application
@@ -15,7 +16,7 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        Assets.Resources.Culture = new CultureInfo("de-DE");
+        //Resources.Culture = new CultureInfo("de-DE");
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = new MainWindow

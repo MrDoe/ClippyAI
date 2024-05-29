@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:ClippyAI.Views"
-        xmlns:assets="clr-namespace:ClippyAI.Assets"
+        xmlns:assets="clr-namespace:ClippyAI.Resources"
         mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
         Width="600" Height="450"
         x:Class="ClippyAI.Views.MainWindow"
