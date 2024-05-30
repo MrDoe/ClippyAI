@@ -12,6 +12,7 @@ using System.Reactive.Disposables;
 using ClippyAI.Services;
 using System.Collections.Generic;
 using ClippyAI.Views;
+using Avalonia.Automation.Peers;
 
 namespace ClippyAI.ViewModels;
 
@@ -26,17 +27,33 @@ public partial class MainViewModel : ViewModelBase
     [ObservableProperty]
     private int _caretIndex;
 
+    [ObservableProperty]
+    private string? _clippyResponse;
+
+    [ObservableProperty]
+    private bool _keyboardOutputSelected = true;
+
+    [ObservableProperty]
+    private bool _textBoxOutputSelected;
+
     [RelayCommand]
     public async Task AskClippy(CancellationToken token)
     {
         ErrorMessages?.Clear();
+        string? response = null;
+        
         try
         {
-            await OllamaService.SendRequest(ClipboardContent!, Task);
+            response = await OllamaService.SendRequest(ClipboardContent!, Task, KeyboardOutputSelected);
         }
         catch (Exception e)
         {
             ErrorMessages?.Add(e.Message);
+        }
+
+        if (TextBoxOutputSelected && response != null)
+        {
+            ClippyResponse = response;
         }
     }
 

@@ -34,4 +34,13 @@
     <data name="Configuration" xml:space="preserve">
         <value>Configuration</value>
     </data>
+    <data name="Response" xml:space="preserve">
+        <value>Response:</value>
+    </data>
+    <data name="Keyboard" xml:space="preserve">
+        <value>Keyboard</value>
+    </data>
+    <data name="ResponseField" xml:space="preserve">
+        <value>Response Text Box</value>
+    </data>
 </root>

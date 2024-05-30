@@ -15,8 +15,31 @@ public static class OllamaService
     private static readonly string model = "llama3";
     private static readonly string system = "Du schreibst freundliche Antworten auf E-Mails in Deutsch.";
 
-    public static async Task SendRequest(string clipboardData, string task)
+    private static void SimulateTyping(string text)
     {
+        foreach (var key in text)
+        {
+            if (key == '\n')
+            {
+                var process1 = Process.Start("xdotool", ["key", "Return"]);
+                process1.WaitForExit();
+            }
+            else if (key == '\t')
+            {
+                var process2 = Process.Start("xdotool", ["key", "Tab"]);
+                process2.WaitForExit();
+            }
+            else
+            {
+                var process3 = Process.Start("xdotool", ["type", key.ToString()]);
+                process3.WaitForExit();
+            }
+        }
+    }
+    public static async Task<string?> SendRequest(string clipboardData, string task, bool typeOutput = true)
+    {
+        string? responseText = null;
+        
         OllamaRequest body = new()
         {
             prompt = $"{clipboardData}<br/>{task}",
@@ -44,35 +67,23 @@ public static class OllamaService
                 if (!string.IsNullOrWhiteSpace(line))
                 {
                     var responseObj = JsonSerializer.Deserialize<OllamaResponse>(line);
+                    responseText += responseObj?.response;
 
-                    for (int i = 0; i < responseObj?.response?.Length; ++i)
-                    {
-                        var key = responseObj?.response[i];
-                        if (key == '\n')
-                        {
-                            var process1 = Process.Start("xdotool", ["key", "Return"]);
-                            process1.WaitForExit();
-                        }
-                        else if (key == '\t')
-                        {
-                            var process2 = Process.Start("xdotool", ["key", "Tab"]);
-                            process2.WaitForExit();
-                        }
-                        else
-                        {
-                            var process3 = Process.Start("xdotool", ["type", key?.ToString() ?? ""]);
-                            process3.WaitForExit();
-                        }
-                        //Console.Write(key);
-                    }
-                    var process4 = Process.Start("xdotool", ["keyup", "Alt_R", "Control_L", "Control_R", "Shift_L", "Shift_R"]);
-                    process4.WaitForExit();
+                    if (typeOutput)
+                        SimulateTyping(responseText!);
                 }
+            }
+
+            if (typeOutput)
+            {
+                var process4 = Process.Start("xdotool", ["keyup", "Alt_R", "Control_L", "Control_R", "Shift_L", "Shift_R"]);
+                process4.WaitForExit();
             }
         }
         else
         {
             Console.WriteLine($"Request failed with status: {response.StatusCode}.");
-        }
+        }       
+        return responseText;
     }
 }
