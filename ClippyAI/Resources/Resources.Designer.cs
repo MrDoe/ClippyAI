@@ -19,21 +19,21 @@ namespace ClippyAI.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Build.Tasks.StronglyTypedResourceBuilder", "15.1.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Resources {
+    internal class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        public Resources() {
+        internal Resources() {
         }
         
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager {
+        internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ClippyAI.Resources.Resources", typeof(Resources).Assembly);
@@ -48,7 +48,7 @@ namespace ClippyAI.Resources {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture {
+        internal static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -60,7 +60,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Clipboard Content:.
         /// </summary>
-        public static string ClipboardContent {
+        internal static string ClipboardContent {
             get {
                 return ResourceManager.GetString("ClipboardContent", resourceCulture);
             }
@@ -69,16 +69,25 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to ClippyAI.
         /// </summary>
-        public static string ClippyAI {
+        internal static string ClippyAI {
             get {
                 return ResourceManager.GetString("ClippyAI", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Configuration.
+        /// </summary>
+        internal static string Configuration {
+            get {
+                return ResourceManager.GetString("Configuration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Task.
         /// </summary>
-        public static string Task {
+        internal static string Task {
             get {
                 return ResourceManager.GetString("Task", resourceCulture);
             }
@@ -87,7 +96,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to What I should do for you:.
         /// </summary>
-        public static string TaskLabel {
+        internal static string TaskLabel {
             get {
                 return ResourceManager.GetString("TaskLabel", resourceCulture);
             }
@@ -96,7 +105,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Start.
         /// </summary>
-        public static string TaskStart {
+        internal static string TaskStart {
             get {
                 return ResourceManager.GetString("TaskStart", resourceCulture);
             }

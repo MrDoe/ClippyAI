@@ -6,7 +6,7 @@
         xmlns:views="clr-namespace:ClippyAI.Views"
         xmlns:assets="clr-namespace:ClippyAI.Resources"
         mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
-        Width="600" Height="450"
+        Width="420" Height="500"
         x:Class="ClippyAI.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="{x:Static assets:Resources.ClippyAI}"

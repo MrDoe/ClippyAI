@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:ClippyAI.ViewModels"
              xmlns:resources="clr-namespace:ClippyAI.Resources"
-             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="400"
              Padding="10"
              x:Class="ClippyAI.Views.MainView"
              x:DataType="vm:MainViewModel">
@@ -15,22 +15,22 @@
   </Design.DataContext>
 
   <StackPanel>
-      <Button Content="Configuration" Command="{Binding OpenConfigurationCommand}"
-      HorizontalAlignment="Right" Margin="0 10 0 0" />
+      <Button Content="{x:Static resources:Resources.Configuration}" Command="{Binding OpenConfigurationCommand}"
+              HorizontalAlignment="Right" Margin="0 10 0 0" />
       <Label Content="{x:Static resources:Resources.ClipboardContent}" HorizontalAlignment="Left" FontSize="16"/>
       <TextBox Text="{Binding ClipboardContent, Mode=TwoWay}"
             CaretIndex="{Binding CaretIndex, Mode=OneWay}" 
             AcceptsReturn="True" 
             AcceptsTab="True"
-            Width="580"
+            Width="400"
             Height="300"
             HorizontalAlignment="Left"
-            FontSize="12"
-            />
-      <Label Content="{x:Static resources:Resources.TaskLabel}" HorizontalAlignment="Left" FontSize="16" Margin="0 10 0 0" />
-      <ComboBox x:Name="cboTask" SelectedItem="{Binding Task}" HorizontalAlignment="Left" Width="580">
+            FontSize="12" />
+      <Label Content="{x:Static resources:Resources.TaskLabel}" HorizontalAlignment="Left" FontSize="16"
+            Margin="0 10 0 0" />
+      <ComboBox x:Name="cboTask" SelectedItem="{Binding Task}" HorizontalAlignment="Left" Width="400">
       </ComboBox>
-      <Button Content="{x:Static resources:Resources.TaskStart}" Command="{Binding AskClippyCommand}" HorizontalAlignment="Left" 
-              Margin="0 10 0 0" />
+      <Button Content="{x:Static resources:Resources.TaskStart}" Command="{Binding AskClippyCommand}" 
+              HorizontalAlignment="Left" Margin="0 10 0 0" />
   </StackPanel>
 </UserControl>

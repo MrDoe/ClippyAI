@@ -31,4 +31,7 @@
     <data name="TaskStart" xml:space="preserve">
         <value>Start</value>
     </data>
+    <data name="Configuration" xml:space="preserve">
+        <value>Configuration</value>
+    </data>
 </root>
