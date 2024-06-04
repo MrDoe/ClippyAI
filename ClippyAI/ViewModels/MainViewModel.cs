@@ -41,10 +41,13 @@ public partial class MainViewModel : ViewModelBase
     {
         ErrorMessages?.Clear();
         string? response = null;
-        
+
         try
         {
-            response = await OllamaService.SendRequest(ClipboardContent!, Task, KeyboardOutputSelected);
+            response = await OllamaService.SendRequest(ClipboardContent!, 
+                                                       Task, 
+                                                       KeyboardOutputSelected, 
+                                                       token);
         }
         catch (Exception e)
         {
