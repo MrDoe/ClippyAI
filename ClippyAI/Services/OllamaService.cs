@@ -5,7 +5,8 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using ClippyAI.Models;
-
+using Desktop.Robot;
+using Desktop.Robot.Extensions;
 namespace ClippyAI.Services;
 
 public static class OllamaService
@@ -15,7 +16,7 @@ public static class OllamaService
     private static readonly string model = "llama3";
     private static readonly string system = "Du schreibst freundliche Antworten auf E-Mails in Deutsch.";
 
-    private static void SimulateTyping(string text)
+    private static void SimulateTypingX11(string text)
     {
         foreach (var key in text)
         {
@@ -36,6 +37,13 @@ public static class OllamaService
             }
         }
     }
+
+    private static void SimulateTyping(string text)
+    {
+        var robot = new Robot();
+        robot.Type(text);
+    }
+
     public static async Task<string?> SendRequest(string clipboardData, string task, bool typeOutput = true)
     {
         string? responseText = null;
@@ -74,11 +82,11 @@ public static class OllamaService
                 }
             }
 
-            if (typeOutput)
-            {
-                var process4 = Process.Start("xdotool", ["keyup", "Alt_R", "Control_L", "Control_R", "Shift_L", "Shift_R"]);
-                process4.WaitForExit();
-            }
+            // if (typeOutput)
+            // {
+            //     var process4 = Process.Start("xdotool", ["keyup", "Alt_R", "Control_L", "Control_R", "Shift_L", "Shift_R"]);
+            //     process4.WaitForExit();
+            // }
         }
         else
         {
