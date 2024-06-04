@@ -1,41 +1,29 @@
 using System;
+using System.Configuration;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using ClippyAI.Models;
+using Desktop.Robot;
+using Desktop.Robot.Extensions;
 
 namespace ClippyAI.Services;
 
 public static class OllamaService
 {
     private static readonly HttpClient client = new();
-    private static readonly string url = "http://127.0.0.1:11434/api/generate";
-    private static readonly string model = "llama3";
-    private static readonly string system = "Du schreibst freundliche Antworten auf E-Mails in Deutsch.";
-
+    private static readonly string? url = ConfigurationManager.AppSettings?.Get("OllamaUrl");
+    private static readonly string? model = ConfigurationManager.AppSettings?.Get("Model");
+    private static readonly string? system = ConfigurationManager.AppSettings?.Get("System"); 
+    
     private static void SimulateTyping(string text)
     {
-        foreach (var key in text)
-        {
-            if (key == '\n')
-            {
-                var process1 = Process.Start("xdotool", ["key", "Return"]);
-                process1.WaitForExit();
-            }
-            else if (key == '\t')
-            {
-                var process2 = Process.Start("xdotool", ["key", "Tab"]);
-                process2.WaitForExit();
-            }
-            else
-            {
-                var process3 = Process.Start("xdotool", ["type", key.ToString()]);
-                process3.WaitForExit();
-            }
-        }
+        var robot = new Robot();
+        robot.Type(text);
     }
+    
     public static async Task<string?> SendRequest(string clipboardData, string task, bool typeOutput = true)
     {
         string? responseText = null;
