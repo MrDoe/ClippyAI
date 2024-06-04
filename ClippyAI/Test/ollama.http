@@ -1,0 +1,7 @@
+POST http://localhost:11434/api/generate
+Content-Type: application/json
+
+{
+  "prompt": "Hello, world!",
+  "model": "llama3"
+}

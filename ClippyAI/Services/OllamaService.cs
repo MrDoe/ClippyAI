@@ -11,32 +11,14 @@ namespace ClippyAI.Services;
 
 public static class OllamaService
 {
-    private static readonly HttpClient client = new();
-    private static readonly string url = "http://127.0.0.1:11434/api/generate";
-    private static readonly string model = "llama3";
-    private static readonly string system = "Du schreibst freundliche Antworten auf E-Mails in Deutsch.";
-
-    private static void SimulateTypingX11(string text)
+    private static readonly HttpClientHandler handler = new()
     {
-        foreach (var key in text)
-        {
-            if (key == '\n')
-            {
-                var process1 = Process.Start("xdotool", ["key", "Return"]);
-                process1.WaitForExit();
-            }
-            else if (key == '\t')
-            {
-                var process2 = Process.Start("xdotool", ["key", "Tab"]);
-                process2.WaitForExit();
-            }
-            else
-            {
-                var process3 = Process.Start("xdotool", ["type", key.ToString()]);
-                process3.WaitForExit();
-            }
-        }
-    }
+        UseProxy = false
+    };
+    private static readonly HttpClient client = new(handler);
+    private static readonly string url = "http://localhost:11434/api/generate";
+    private static readonly string model = "tinyllama";
+    private static readonly string system = "You are writing answers to the tasks given.";
 
     private static void SimulateTyping(string text)
     {
@@ -75,18 +57,13 @@ public static class OllamaService
                 if (!string.IsNullOrWhiteSpace(line))
                 {
                     var responseObj = JsonSerializer.Deserialize<OllamaResponse>(line);
-                    responseText += responseObj?.response;
+                    string currentText = responseObj?.response ?? string.Empty;
+                    responseText += currentText;
 
                     if (typeOutput)
-                        SimulateTyping(responseText!);
+                        SimulateTyping(currentText);
                 }
             }
-
-            // if (typeOutput)
-            // {
-            //     var process4 = Process.Start("xdotool", ["keyup", "Alt_R", "Control_L", "Control_R", "Shift_L", "Shift_R"]);
-            //     process4.WaitForExit();
-            // }
         }
         else
         {
