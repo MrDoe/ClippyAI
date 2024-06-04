@@ -18,15 +18,16 @@
       <Button Content="{x:Static resources:Resources.Configuration}" Command="{Binding OpenConfigurationCommand}"
               HorizontalAlignment="Right" Margin="0 10 0 0" />
       <Label Content="{x:Static resources:Resources.ClipboardContent}" HorizontalAlignment="Left" FontSize="16"/>
-      <TextBox Text="{Binding ClipboardContent, Mode=TwoWay}"
-            CaretIndex="{Binding CaretIndex, Mode=OneWay}" 
+      <TextBox Text="{Binding ClipboardContent}"
             AcceptsReturn="True" 
             AcceptsTab="True"
             Width="400"
             Height="300"
             HorizontalAlignment="Left"
             FontSize="12"
-            IsReadOnly="True" />
+            IsReadOnly="True"
+            ScrollViewer.VerticalScrollBarVisibility="Auto"
+            ScrollViewer.HorizontalScrollBarVisibility="Auto" />
       <Label Content="{x:Static resources:Resources.TaskLabel}" HorizontalAlignment="Left" FontSize="16"
             Margin="0 10 0 0" />
       <ComboBox x:Name="cboTask" SelectedItem="{Binding Task}" HorizontalAlignment="Left" Width="400">
@@ -41,6 +42,12 @@
       </StackPanel>
       <Label Content="{x:Static resources:Resources.Response}" HorizontalAlignment="Left" FontSize="16"
             Margin="0 10 0 0" />
-      <TextBox Text="{Binding ClippyResponse}" IsReadOnly="True" Width="400" Height="300" HorizontalAlignment="Left" />
+      <TextBox Text="{Binding ClippyResponse}" 
+            IsReadOnly="True" 
+            Width="400" 
+            Height="300" 
+            HorizontalAlignment="Left"
+            ScrollViewer.VerticalScrollBarVisibility="Auto"
+            ScrollViewer.HorizontalScrollBarVisibility="Auto" />
   </StackPanel>
 </UserControl>

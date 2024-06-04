@@ -1,10 +1,14 @@
 using System;
 using System.Configuration;
 using System.Diagnostics;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Configuration;
+using System.Collections.Specialized;
 using ClippyAI.Models;
 using Desktop.Robot;
 using Desktop.Robot.Extensions;
@@ -24,10 +28,10 @@ public static class OllamaService
         robot.Type(text);
     }
     
-    public static async Task<string?> SendRequest(string clipboardData, string task, bool typeOutput = true)
+    public static async Task<string?> SendRequest(string clipboardData, string task, bool typeOutput = true, CancellationToken token = default)
     {
-        string? responseText = null;
-        
+        string? fullResponse = null;
+
         OllamaRequest body = new()
         {
             prompt = $"{clipboardData}<br/>{task}",
@@ -37,41 +41,39 @@ public static class OllamaService
         };
         Console.WriteLine("Sending request...");
 
-        var response = await client.PostAsync(
+        using var response = await client.PostAsync(
                              url,
                              new StringContent(JsonSerializer.Serialize(body),
                              Encoding.UTF8,
-                             "application/json"));
+                             "application/json"),
+                             token).ConfigureAwait(false);
 
         if (response.IsSuccessStatusCode)
         {
             Console.WriteLine("Request successful.");
 
-            var responseBody = await response.Content.ReadAsStringAsync();
-            var lines = responseBody.Split('\n');
+            using var stream = await response.Content.ReadAsStreamAsync(token);
+            using var reader = new StreamReader(stream);
 
-            foreach (var line in lines)
+            string? line;
+            while ((line = await reader.ReadLineAsync(token)) != null && 
+                    !token.IsCancellationRequested)
             {
                 if (!string.IsNullOrWhiteSpace(line))
                 {
                     var responseObj = JsonSerializer.Deserialize<OllamaResponse>(line);
-                    responseText += responseObj?.response;
+                    string? responseText = responseObj?.response;
+                    fullResponse += responseText;
 
                     if (typeOutput)
                         SimulateTyping(responseText!);
                 }
             }
-
-            if (typeOutput)
-            {
-                var process4 = Process.Start("xdotool", ["keyup", "Alt_R", "Control_L", "Control_R", "Shift_L", "Shift_R"]);
-                process4.WaitForExit();
-            }
         }
         else
         {
             Console.WriteLine($"Request failed with status: {response.StatusCode}.");
-        }       
-        return responseText;
+        }
+        return fullResponse;
     }
 }
