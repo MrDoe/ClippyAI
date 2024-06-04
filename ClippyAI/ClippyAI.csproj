@@ -10,7 +10,6 @@
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
     <PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
@@ -34,7 +33,12 @@
       <StronglyTypedLanguage>CSharp</StronglyTypedLanguage>
       <StronglyTypedNamespace>ClippyAI.Resources</StronglyTypedNamespace>
       <StronglyTypedClassName>Resources</StronglyTypedClassName>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Resources.de-DE.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>    
   </ItemGroup>
-
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="powershell -Command &quot;(Get-Content -path $(ProjectDir)\Resources\Resources.Designer.cs) -replace 'internal', 'public' | Set-Content -Path $(ProjectDir)\Resources\Resources.Designer.cs&quot;" />
+</Target>
 </Project>

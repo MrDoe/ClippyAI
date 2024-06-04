@@ -13,11 +13,17 @@ using ClippyAI.Services;
 using System.Collections.Generic;
 using ClippyAI.Views;
 using Avalonia.Automation.Peers;
+using System.Collections.ObjectModel;
 
 namespace ClippyAI.ViewModels;
 
 public partial class MainViewModel : ViewModelBase
 {
+    public MainViewModel()
+    {
+        PopulateTasks();
+    }
+
     [ObservableProperty]
     private string _task = "";
 
@@ -36,17 +42,54 @@ public partial class MainViewModel : ViewModelBase
     [ObservableProperty]
     private bool _textBoxOutputSelected;
 
+    [ObservableProperty]
+    private ObservableCollection<string> taskItems = [];
+
+    [ObservableProperty]
+    private int selectedItemIndex = -1;
+    
+    [ObservableProperty]
+    private string _customTask = "";
+
+    private void PopulateTasks()
+    {
+        // iterate over Resources and add Tasks to ComboBox
+        foreach (var property in typeof(Resources.Resources).GetProperties())
+        {
+            if (property.Name.StartsWith("Task_"))
+            {
+                var value = property.GetValue(null)?.ToString();
+                if (value != null)
+                {
+                    TaskItems.Add(value);
+                }
+            }
+        }
+
+        SelectedItemIndex = 0;
+    }
+
     [RelayCommand]
     public async Task AskClippy(CancellationToken token)
     {
         ErrorMessages?.Clear();
         string? response = null;
+        string task;
 
+        // user defined task
+        if(Task == Resources.Resources.Task_14)
+            task = CustomTask;
+        else
+            task = Task;
+
+        if(string.IsNullOrEmpty(task))
+            return;
+        
         try
         {
-            response = await OllamaService.SendRequest(ClipboardContent!, 
-                                                       Task, 
-                                                       KeyboardOutputSelected, 
+            response = await OllamaService.SendRequest(ClipboardContent!,
+                                                       task,
+                                                       KeyboardOutputSelected,
                                                        token);
         }
         catch (Exception e)

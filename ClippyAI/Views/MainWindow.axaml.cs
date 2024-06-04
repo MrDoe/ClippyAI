@@ -19,7 +19,7 @@ public partial class MainWindow : Window
             this.Height = Screens.Primary.Bounds.Height;
 
         // poll clipboard every 3 seconds
-        clipboardPollingTimer = new System.Timers.Timer(3000);
+        clipboardPollingTimer = new System.Timers.Timer(1000);
         clipboardPollingTimer.Elapsed += ClipboardPollingTimer_Elapsed;
     }
 
@@ -33,7 +33,7 @@ public partial class MainWindow : Window
 
             Position = new PixelPoint(
               screenSize.Width - windowSize.Width,
-              screenSize.Height - windowSize.Height);
+              screenSize.Height - windowSize.Height + 23);
         }
 
         clipboardPollingTimer.Start();

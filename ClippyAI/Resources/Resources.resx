@@ -43,4 +43,49 @@
     <data name="ResponseField" xml:space="preserve">
         <value>Response Text Box</value>
     </data>
+    <data name="Task_1" xml:space="preserve">
+        <value>Write a response to the email.</value>
+    </data>
+    <data name="Task_2" xml:space="preserve">
+        <value>Write a detailed response to the email.</value>
+    </data>
+    <data name="Task_3" xml:space="preserve">
+        <value>Write a response to the email and graciously agree.</value>
+    </data>
+    <data name="Task_4" xml:space="preserve">
+        <value>Write a response to the email and politely decline.</value>
+    </data>
+    <data name="Task_5" xml:space="preserve">
+        <value>Write a response to the email and request more information.</value>
+    </data>
+    <data name="Task_6" xml:space="preserve">
+        <value>Write a response to the email and request a meeting appointment.</value>
+    </data>
+    <data name="Task_7" xml:space="preserve">
+        <value>Write a response to the email and say that you will take care of the problem.</value>
+    </data>
+    <data name="Task_8" xml:space="preserve">
+        <value>Write a response to the email and say that you cannot solve the problem and refer to Person X.</value>
+    </data>
+    <data name="Task_9" xml:space="preserve">
+        <value>Write a response to the email and request a feedback.</value>
+    </data>
+    <data name="Task_10" xml:space="preserve">
+        <value>Write a response to the email and request a confirmation.</value>
+    </data>
+    <data name="Task_11" xml:space="preserve">
+        <value>Write a response to the email and request a rescheduling.</value>
+    </data>
+    <data name="Task_12" xml:space="preserve">
+        <value>Explain what it is as precisely as possible.</value>
+    </data>
+    <data name="Task_13" xml:space="preserve">
+        <value>Explain where the error lies.</value>
+    </data>
+    <data name="Task_14" xml:space="preserve">
+        <value>Explain how it can be improved.</value>
+    </data>
+    <data name="Task_15" xml:space="preserve">
+        <value>Custom Task</value>
+    </data>
 </root>

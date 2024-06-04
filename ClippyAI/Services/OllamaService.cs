@@ -1,14 +1,11 @@
 using System;
 using System.Configuration;
-using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Configuration;
-using System.Collections.Specialized;
 using ClippyAI.Models;
 using Desktop.Robot;
 using Desktop.Robot.Extensions;
@@ -22,19 +19,31 @@ public static class OllamaService
     private static readonly string? model = ConfigurationManager.AppSettings?.Get("Model");
     private static readonly string? system = ConfigurationManager.AppSettings?.Get("System"); 
     
+    /// <summary>
+    /// Simulates typing the given text.
+    /// </summary>
+    /// <param name="text">The text to type.</param>
     private static void SimulateTyping(string text)
     {
         var robot = new Robot();
         robot.Type(text);
     }
-    
-    public static async Task<string?> SendRequest(string clipboardData, string task, bool typeOutput = true, CancellationToken token = default)
+
+    /// <summary>
+    /// Sends a request to the Ollama API.
+    /// </summary>
+    /// <param name="clipboardData">The clipboard data to send.</param>
+    /// <param name="task">The task to perform.</param>
+    /// <param name="typeOutput">Whether to simulate typing the output.</param>
+    /// <param name="token">The cancellation token.</param>
+    public static async Task<string?> SendRequest(string clipboardData, string task, bool typeOutput = true,
+                                                  CancellationToken token = default)
     {
         string? fullResponse = null;
-
+        
         OllamaRequest body = new()
         {
-            prompt = $"{clipboardData}<br/>{task}",
+            prompt = $"{clipboardData}<br/>{Resources.Resources.Task}: {task}",
             model = model,
             system = system,
             stream = true
@@ -54,6 +63,14 @@ public static class OllamaService
 
             using var stream = await response.Content.ReadAsStreamAsync(token);
             using var reader = new StreamReader(stream);
+
+            if (typeOutput)
+            {
+                // press ALT + Tab to return to previous window
+                var robot = new Robot();
+                robot.KeyDown(Key.Alt);
+                robot.KeyPress(Key.Tab);
+            }
 
             string? line;
             while ((line = await reader.ReadLineAsync(token)) != null && 

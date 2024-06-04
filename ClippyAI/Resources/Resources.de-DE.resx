@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-        <xsd:element name="root" msdata:IsDataSet="true"/>
+    <xsd:schema id="root"
+        xmlns=""
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true" />
     </xsd:schema>
     <resheader name="resmimetype">
         <value>text/microsoft-resx</value>
@@ -15,7 +18,7 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    
+
     <data name="ClipboardContent" xml:space="preserve">
         <value>Inhalt der Zwischenablage:</value>
     </data>
@@ -42,5 +45,50 @@
     </data>
     <data name="ResponseField" xml:space="preserve">
         <value>Antwort-Textfeld</value>
+    </data>
+    <data name="Task_1" xml:space="preserve">
+        <value>Schreibe eine Antwort auf die E-Mail.</value>
+    </data>
+    <data name="Task_2" xml:space="preserve">
+        <value>Schreibe eine ausführliche Antwort auf die E-Mail.</value>
+    </data>
+    <data name="Task_3" xml:space="preserve">
+        <value>Schreibe eine Antwort auf die E-Mail und stimme dankend zu.</value>
+    </data>
+    <data name="Task_4" xml:space="preserve">
+        <value>Schreibe eine Antwort auf die E-Mail und lehne höflich ab.</value>
+    </data>
+    <data name="Task_5" xml:space="preserve">
+        <value>Schreibe eine Antwort auf die E-Mail und bitte um mehr Informationen.</value>
+    </data>
+    <data name="Task_6" xml:space="preserve">
+        <value>Schreibe eine Antwort auf die E-Mail und bitte um eine Terminabsprache.</value>
+    </data>
+    <data name="Task_7" xml:space="preserve">
+        <value>Schreibe eine Antwort auf die E-Mail und sage, dass du dich um das Problem kümmerst.</value>
+    </data>
+    <data name="Task_8" xml:space="preserve">
+        <value>Schreibe eine Antwort auf die E-Mail und sage, dass du das Problem nicht lösen kannst und an Person X verweist.</value>
+    </data>
+    <data name="Task_9" xml:space="preserve">
+        <value>Schreibe eine Antwort auf die E-Mail und bitte um eine Rückmeldung.</value>
+    </data>
+    <data name="Task_10" xml:space="preserve">
+        <value>Schreibe eine Antwort auf die E-Mail und bitte um eine Bestätigung.</value>
+    </data>
+    <data name="Task_11" xml:space="preserve">
+        <value>Schreibe eine Antwort auf die E-Mail und bitte um eine erneute Terminvereinbarung.</value>
+    </data>
+    <data name="Task_12" xml:space="preserve">
+        <value>Erkläre möglichst genau, was das ist.</value>
+    </data>
+    <data name="Task_13" xml:space="preserve">
+        <value>Erkläre, wo hier der Fehler liegt.</value>
+    </data>
+    <data name="Task_14" xml:space="preserve">
+        <value>Erkläre, wie man das verbessern kann.</value>
+    </data>
+    <data name="Task_15" xml:space="preserve">
+        <value>Benutzerdefinierte Aufgabe</value>
     </data>
 </root>
