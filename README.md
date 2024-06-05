@@ -20,7 +20,7 @@ to the Ollama API.
 * **Keyboard Simulation**: The response is either sent to an integrated output field or can automatically be typed
 into the application window where the user is working.
 * **Cross-Platform Support**: Developed with .NET and Avalonia, ClippyAI runs on Windows, Linux, and MacOS,
-ensuring that users can enjoy its benefits regardless of their platform. Right now I've only tested Linux and Windows, because I don't own a Mac.
+ensuring that users can enjoy its benefits regardless of their platform.
 
 **Example Use Cases**
 
@@ -47,6 +47,7 @@ ensuring that users can enjoy its benefits regardless of their platform. Right n
 This tool is in an early development phase. Use it at your own risk. We take no responsibility, if it accidently
 deletes or overwrites your currently opened documents.
 If you encounter any issues or have questions or new ideas about using ClippyAI, please open an issue here on GitHub.
+Right now it's only tested on Linux and Windows, because I don't own a Mac, I would need testers here.
 
 **Developers Wanted!**
 
