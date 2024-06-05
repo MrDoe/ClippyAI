@@ -57,7 +57,7 @@ you're skilled in a particular area, we might need your expertise!
 To get started with contributing to ClippyAI, please submit your pull requests.
 
 **Licensing & Terms**
-ClippyAI is distributed under the terms of the [MIT License](/LICENSE). By using ClippyAI, you agree to abide by
+ClippyAI is distributed under the terms of the [MIT License](/LICENSE.md). By using ClippyAI, you agree to abide by
 the terms and conditions outlined in the license.
 
 **Acknowledgments**
