@@ -77,7 +77,7 @@ public partial class MainViewModel : ViewModelBase
         string task;
 
         // user defined task
-        if(Task == Resources.Resources.Task_14)
+        if(Task == Resources.Resources.Task_15)
             task = CustomTask;
         else
             task = Task;

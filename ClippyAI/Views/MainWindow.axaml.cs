@@ -16,7 +16,7 @@ public partial class MainWindow : Window
         InitializeComponent();
         
         if(Screens.Primary != null)
-            this.Height = Screens.Primary.Bounds.Height;
+            Height = Screens.Primary.Bounds.Height;
 
         // poll clipboard every 3 seconds
         clipboardPollingTimer = new System.Timers.Timer(1000);
@@ -33,7 +33,7 @@ public partial class MainWindow : Window
 
             Position = new PixelPoint(
               screenSize.Width - windowSize.Width,
-              screenSize.Height - windowSize.Height + 23);
+              screenSize.Height - windowSize.Height + 38);
         }
 
         clipboardPollingTimer.Start();

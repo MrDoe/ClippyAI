@@ -85,6 +85,15 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Data.
+        /// </summary>
+        public static string Data {
+            get {
+                return ResourceManager.GetString("Data", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Keyboard.
         /// </summary>
         public static string Keyboard {

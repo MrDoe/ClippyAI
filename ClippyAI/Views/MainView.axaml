@@ -55,7 +55,7 @@
       <TextBox Text="{Binding ClippyResponse}" 
             IsReadOnly="True" 
             Width="400" 
-            Height="300" 
+            Height="250" 
             HorizontalAlignment="Left"
             ScrollViewer.VerticalScrollBarVisibility="Auto"
             ScrollViewer.HorizontalScrollBarVisibility="Auto" />

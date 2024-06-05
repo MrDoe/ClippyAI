@@ -1,11 +1,11 @@
 using System;
-using System.Configuration;
 using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Configuration;
 using ClippyAI.Models;
 using Desktop.Robot;
 using Desktop.Robot.Extensions;
@@ -14,11 +14,15 @@ namespace ClippyAI.Services;
 
 public static class OllamaService
 {
-    private static readonly HttpClient client = new();
+    private static readonly HttpClientHandler handler = new()
+    {
+        UseProxy = false
+    };
+    private static readonly HttpClient client = new(handler);
     private static readonly string? url = ConfigurationManager.AppSettings?.Get("OllamaUrl");
     private static readonly string? model = ConfigurationManager.AppSettings?.Get("Model");
-    private static readonly string? system = ConfigurationManager.AppSettings?.Get("System"); 
-    
+    private static readonly string? system = ConfigurationManager.AppSettings?.Get("System");
+
     /// <summary>
     /// Simulates typing the given text.
     /// </summary>
@@ -40,10 +44,10 @@ public static class OllamaService
                                                   CancellationToken token = default)
     {
         string? fullResponse = null;
-        
+
         OllamaRequest body = new()
         {
-            prompt = $"{clipboardData}<br/>{Resources.Resources.Task}: {task}",
+            prompt = $"{Resources.Resources.Data}:'''{clipboardData}'''\n{Resources.Resources.Task}: '{task}'",
             model = model,
             system = system,
             stream = true
@@ -64,16 +68,8 @@ public static class OllamaService
             using var stream = await response.Content.ReadAsStreamAsync(token);
             using var reader = new StreamReader(stream);
 
-            if (typeOutput)
-            {
-                // press ALT + Tab to return to previous window
-                var robot = new Robot();
-                robot.KeyDown(Key.Alt);
-                robot.KeyPress(Key.Tab);
-            }
-
             string? line;
-            while ((line = await reader.ReadLineAsync(token)) != null && 
+            while ((line = await reader.ReadLineAsync(token)) != null &&
                     !token.IsCancellationRequested)
             {
                 if (!string.IsNullOrWhiteSpace(line))
