@@ -28,7 +28,7 @@ ensuring that users can enjoy its benefits regardless of their platform. Right n
 * Let ClippyAI explain a short text
 
 **Getting Started**
-1. Install Ollama from (https://ollama.com)[https://ollama.com].
+1. Install Ollama from https://ollama.com.
 2. Run `ollama pull llama3` on the command line to install the llama3 AI model on your PC.
 3. Clone this repository and build and run this tool.
 4. Check the configuration in App.config. The standard values should work fine for most installations.
