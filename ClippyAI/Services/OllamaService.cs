@@ -30,7 +30,7 @@ public static class OllamaService
     private static void SimulateTyping(string text)
     {
         var robot = new Robot();
-        robot.Type(text);
+        robot.Type(text, 50);
     }
 
     /// <summary>
