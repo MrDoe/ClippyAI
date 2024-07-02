@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using ClippyAI.Views;
 using Avalonia.Automation.Peers;
 using System.Collections.ObjectModel;
+using System.Configuration;
 
 namespace ClippyAI.ViewModels;
 
@@ -61,6 +62,13 @@ public partial class MainViewModel : ViewModelBase
 
     [ObservableProperty]
     private bool _isEnabled = false;
+
+    [ObservableProperty]
+    private string _language = ConfigurationManager.AppSettings["DefaultLanguage"] ?? "English";
+
+    [ObservableProperty]
+    private ObservableCollection<string> _languageItems = ["English", "Deutsch"];
+
 
     private void PopulateTasks()
     {

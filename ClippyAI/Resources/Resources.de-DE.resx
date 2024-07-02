@@ -112,4 +112,7 @@
     <data name="PleaseWait" xml:space="preserve">
         <value>Bitte warten...</value>
     </data>
+    <data name="Language" xml:space="preserve">
+        <value>Sprache:</value>
+    </data>
 </root>

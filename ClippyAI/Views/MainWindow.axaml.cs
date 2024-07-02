@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Timers;
 using Avalonia;
@@ -9,13 +10,13 @@ namespace ClippyAI.Views;
 
 public partial class MainWindow : Window
 {
-    private readonly System.Timers.Timer clipboardPollingTimer;
+    public readonly System.Timers.Timer clipboardPollingTimer;
 
     public MainWindow()
     {
         InitializeComponent();
-        
-        if(Screens.Primary != null)
+
+        if (Screens.Primary != null)
             Height = Screens.Primary.Bounds.Height;
 
         // poll clipboard every 3 seconds
@@ -41,11 +42,18 @@ public partial class MainWindow : Window
 
     private async void ClipboardPollingTimer_Elapsed(object? sender, ElapsedEventArgs e)
     {
-        // update the data context on the UI thread
-        await Dispatcher.UIThread.InvokeAsync(async () =>
+        try
         {
-            // update clipboard content
-            await ((MainViewModel)DataContext!).UpdateClipboardContent(CancellationToken.None);
-        });
+            // update the data context on the UI thread
+            await Dispatcher.UIThread.InvokeAsync(async () =>
+            {
+                // update clipboard content
+                await ((MainViewModel)DataContext!).UpdateClipboardContent(CancellationToken.None);
+            });
+        }
+        catch (Exception)
+        {
+            // ignore
+        }
     }
 }

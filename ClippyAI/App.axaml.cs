@@ -5,6 +5,7 @@ using System.Globalization;
 using ClippyAI.ViewModels;
 using ClippyAI.Views;
 using ClippyAI.Resources;
+using System.Configuration;
 namespace ClippyAI;
 
 public partial class App : Application
@@ -16,7 +17,9 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        //Resources.Culture = new CultureInfo("de-DE");
+        string language = ConfigurationManager.AppSettings["DefaultLanguage"] ?? "English";
+        ClippyAI.Resources.Resources.Culture = new CultureInfo(language == "Deutsch" ? "de-DE" : "en-US");
+        
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = new MainWindow

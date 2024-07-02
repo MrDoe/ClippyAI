@@ -1,25 +1,88 @@
+using System.Configuration;
+using System.Diagnostics;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using ClippyAI.ViewModels;
 namespace ClippyAI.Views;
 
 public partial class MainView : UserControl
 {
+    private bool initialized = false;
+
     public MainView()
     {
         InitializeComponent();
 
-        // Finden Sie die ComboBox in Ihrem Avalonia XAML
-        var comboBox = this.FindControl<ComboBox>("cboTask");
+        // add event handler for task selection changed
+        var cboTask = this.FindControl<ComboBox>("cboTask");
+        if (cboTask != null)
+            cboTask.SelectionChanged += OnCboTaskSelectionChanged;
 
-        // Fügen Sie einen Event-Handler für das SelectionChanged Event hinzu
-        if (comboBox != null)
-            comboBox.SelectionChanged += OnComboBoxSelectionChanged;
+        // add event handler for language selection changed
+        var cboLanguage = this.FindControl<ComboBox>("cboLanguage");
+        if (cboLanguage != null)
+            cboLanguage.SelectionChanged += OnCboLanguageSelectionChanged;
+
+        initialized = true;
     }
 
-    // Diese Funktion wird aufgerufen, wenn der Benutzer einen Wert in der ComboBox auswählt
-    private void OnComboBoxSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    private void OnCboLanguageSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        // setze txtCustomTask auf Enabled, wenn der Benutzer "Custom Task" auswählt 
+        if (!initialized)
+            return;
+        if (e.RemovedItems.Count == 0)
+            return;
+
+        var comboBox = (ComboBox)sender!;
+        var selectedItem = (string)comboBox.SelectedItem!;
+        ((MainViewModel)DataContext!).Language = selectedItem;
+
+        // update language in configuration file
+        var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+        config.AppSettings.Settings.Remove("DefaultLanguage");
+        config.AppSettings.Settings.Add("DefaultLanguage", selectedItem);
+        config.Save(ConfigurationSaveMode.Modified);
+        ConfigurationManager.RefreshSection("appSettings");
+
+        RestartApplication();
+    }
+
+    private void RestartApplication()
+    {
+
+        // get the full path to the dotnet executable
+        string fullPath = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+
+        // Get the full path to the entry assembly (your application's DLL)
+        string entryAssemblyPath = System.Reflection.Assembly.GetEntryAssembly().Location;
+
+        // Combine the dotnet executable path, the entry assembly path, and the arguments
+        string command = $"{fullPath} {entryAssemblyPath}";
+
+        // Start a new process with the combined command
+        Process.Start(new ProcessStartInfo
+        {
+            FileName = "/bin/bash",
+            Arguments = $"-c \"{command}\"",
+            UseShellExecute = true
+        });
+
+        // Close the current application instance
+        if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            // stop clipboard polling timer
+            var mainWindow = (MainWindow)desktop.MainWindow!;
+            mainWindow.clipboardPollingTimer.Stop();
+
+            desktop.Shutdown();
+        }
+    }
+
+    // Event handler for task selection changed
+    private void OnCboTaskSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        // set custom task text box enabled/disabled based on selected task
         var comboBox = (ComboBox)sender!;
         var selectedItem = (string)comboBox.SelectedItem!;
         var txtCustomTask = this.FindControl<TextBox>("txtCustomTask");
@@ -27,7 +90,7 @@ public partial class MainView : UserControl
         {
             if (selectedItem == ClippyAI.Resources.Resources.Task_15)
             {
-                 ((MainViewModel)DataContext!).ShowCustomTask = true;
+                ((MainViewModel)DataContext!).ShowCustomTask = true;
                 txtCustomTask.IsEnabled = true;
             }
             else
