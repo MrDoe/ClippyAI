@@ -32,13 +32,13 @@
         <value>Was ich für dich tun soll:</value>
     </data>
     <data name="TaskStart" xml:space="preserve">
-        <value>Start</value>
+        <value>Ausführen</value>
     </data>
     <data name="TaskStop" xml:space="preserve">
-        <value>Stop</value>
+        <value>Abbrechen</value>
     </data>
     <data name="AutoMode" xml:space="preserve">
-        <value>Automatik-Modus:</value>
+        <value>Auto-Modus:</value>
     </data>
         <data name="Enabled" xml:space="preserve">
         <value>An</value>

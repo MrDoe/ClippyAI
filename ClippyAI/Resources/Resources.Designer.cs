@@ -328,7 +328,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Start.
+        ///   Looks up a localized string similar to Execute.
         /// </summary>
         public static string TaskStart {
             get {
@@ -337,7 +337,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Stop.
+        ///   Looks up a localized string similar to Cancel.
         /// </summary>
         public static string TaskStop {
             get {

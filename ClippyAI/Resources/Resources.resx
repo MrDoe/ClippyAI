@@ -29,10 +29,10 @@
         <value>What I should do for you:</value>
     </data>
     <data name="TaskStart" xml:space="preserve">
-        <value>Start</value>
+        <value>Execute</value>
     </data>
     <data name="TaskStop" xml:space="preserve">
-        <value>Stop</value>
+        <value>Cancel</value>
     </data>
     <data name="AutoMode" xml:space="preserve">
         <value>Auto Mode:</value>

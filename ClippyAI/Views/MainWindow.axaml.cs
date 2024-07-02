@@ -27,17 +27,38 @@ public partial class MainWindow : Window
     private void MainWindow_Loaded(object? sender, RoutedEventArgs e)
     {
         // set window position to bottom right corner
+        SetWindowPos();
+        clipboardPollingTimer.Start();
+        
+        this.PositionChanged += MainWindow_PositionChanged;
+        this.Resized += MainWindow_Resized;
+    }
+
+    private void SetWindowPos()
+    {
+        // set window position to bottom right corner
         if (Screens.Primary != null)
         {
-            PixelSize screenSize = Screens.Primary.WorkingArea.Size;
+            // get current screen
+            PixelSize screenSize = Screens.All[0].Bounds.Size;
+
             PixelSize windowSize = PixelSize.FromSize(ClientSize, Screens.Primary.Scaling);
 
             Position = new PixelPoint(
               screenSize.Width - windowSize.Width,
-              screenSize.Height - windowSize.Height + 38);
-        }
+              0);
 
-        clipboardPollingTimer.Start();
+            Height = screenSize.Height;
+        }
+    }
+    private void MainWindow_Resized(object? sender, EventArgs e)
+    {
+        SetWindowPos();
+    }
+
+    private void MainWindow_PositionChanged(object? sender, EventArgs e)
+    {
+        SetWindowPos();
     }
 
     private async void ClipboardPollingTimer_Elapsed(object? sender, ElapsedEventArgs e)
