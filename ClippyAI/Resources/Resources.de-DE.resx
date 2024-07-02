@@ -103,6 +103,9 @@
     <data name="Task_15" xml:space="preserve">
         <value>Benutzerdefinierte Aufgabe</value>
     </data>
+    <data name="Task_16" xml:space="preserve">
+        <value>Übersetze den Text ins Deutsche.</value>
+    </data>
     <data name="Data" xml:space="preserve">
         <value>Daten</value>
     </data>

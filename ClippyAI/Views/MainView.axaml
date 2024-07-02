@@ -29,10 +29,12 @@
             IsReadOnly="True"
             ScrollViewer.VerticalScrollBarVisibility="Auto"
             TextWrapping="Wrap" />
+
       <Label Content="{x:Static resources:Resources.TaskLabel}" HorizontalAlignment="Left" FontSize="16"
             Margin="0 10 0 0" />
       <ComboBox x:Name="cboTask" SelectedItem="{Binding Task}" SelectedIndex="{Binding SelectedItemIndex}" 
                 ItemsSource="{Binding TaskItems}" HorizontalAlignment="Left" Width="400" />
+
       <StackPanel Orientation="Vertical" IsVisible="{Binding ShowCustomTask}" >
             <Label Content="{x:Static resources:Resources.Task_15}" HorizontalAlignment="Left" FontSize="16"
                   Margin="0 10 0 0" />
@@ -41,7 +43,7 @@
                   AcceptsTab="True"
                   IsReadOnly="False" 
                   Width="400" 
-                  Height="300" 
+                  Height="200" 
                   HorizontalAlignment="Left"
                   ScrollViewer.VerticalScrollBarVisibility="Auto"
                   IsEnabled="False"
@@ -77,7 +79,5 @@
             <Label Content="{x:Static resources:Resources.PleaseWait}" HorizontalAlignment="Left" FontSize="16" Margin="0 10 0 0" />
             <ProgressBar IsIndeterminate="True" Width="400" Height="32" />
       </StackPanel>
-
-
   </StackPanel>
 </UserControl>
