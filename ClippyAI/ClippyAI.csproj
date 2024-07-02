@@ -19,7 +19,7 @@
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-    <!-- <PackageReference Include="Desktop.Robot_Net8_v" Version="1.5.2" /> -->
+    <PackageReference Include="Desktop.Robot_Net8_v" Version="1.5.2" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
   </ItemGroup>
   
@@ -36,9 +36,9 @@
     </EmbeddedResource>    
   </ItemGroup>
   
-  <ItemGroup>
+  <!-- <ItemGroup>
     <ProjectReference Include="..\..\..\Desktop.Robot\Desktop.Robot\Desktop.Robot\Desktop.Robot.csproj" />
-  </ItemGroup>
+  </ItemGroup> -->
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <!-- <Exec Command="powershell -Command &quot;(Get-Content -path $(ProjectDir)\Resources\Resources.Designer.cs) -replace 'internal', 'public' | Set-Content -Path $(ProjectDir)\Resources\Resources.Designer.cs&quot;" /> -->
     <Exec Command="sed -i 's/internal/public/g' Resources/Resources.Designer.cs" />
