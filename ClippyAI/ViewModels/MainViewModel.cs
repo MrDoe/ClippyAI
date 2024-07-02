@@ -24,6 +24,8 @@ public partial class MainViewModel : ViewModelBase
         PopulateTasks();
     }
 
+    private CancellationTokenSource _askClippyCts = new();
+
     [ObservableProperty]
     private string _task = "";
 
@@ -37,19 +39,28 @@ public partial class MainViewModel : ViewModelBase
     private string? _clippyResponse;
 
     [ObservableProperty]
-    private bool _keyboardOutputSelected = true;
+    private bool _keyboardOutputSelected = false;
 
     [ObservableProperty]
-    private bool _textBoxOutputSelected;
+    private bool _textBoxOutputSelected = true;
 
     [ObservableProperty]
     private ObservableCollection<string> taskItems = [];
 
     [ObservableProperty]
     private int selectedItemIndex = -1;
-    
+
     [ObservableProperty]
     private string _customTask = "";
+
+    [ObservableProperty]
+    private bool _showCustomTask = false;
+
+    [ObservableProperty]
+    private bool _isBusy = false;
+
+    [ObservableProperty]
+    private bool _isEnabled = false;
 
     private void PopulateTasks()
     {
@@ -72,25 +83,34 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     public async Task AskClippy(CancellationToken token)
     {
+        IsBusy = true;
         ErrorMessages?.Clear();
         string? response = null;
         string task;
 
         // user defined task
-        if(Task == Resources.Resources.Task_15)
+        if (Task == Resources.Resources.Task_15)
             task = CustomTask;
         else
             task = Task;
 
-        if(string.IsNullOrEmpty(task))
+        if (string.IsNullOrEmpty(task))
+        {
+            ErrorMessages?.Add("Please select a task.");
+            IsBusy = false;
             return;
-        
+        }
+
         try
         {
             response = await OllamaService.SendRequest(ClipboardContent!,
                                                        task,
                                                        KeyboardOutputSelected,
-                                                       token);
+                                                       _askClippyCts.Token); // Use the token from _askClippyCts
+        }
+        catch (OperationCanceledException)
+        {
+            // Handle the task cancellation here if needed
         }
         catch (Exception e)
         {
@@ -99,7 +119,21 @@ public partial class MainViewModel : ViewModelBase
 
         if (TextBoxOutputSelected && response != null)
         {
-            ClippyResponse = response;
+            ClipboardContent = response;
+            
+            // Update the clipboard content
+            await ClipboardService.SetText(ClipboardContent);
+        }
+        IsBusy = false;
+    }
+
+    [RelayCommand]
+    public void StopClippyTask()
+    {
+        if (!_askClippyCts.IsCancellationRequested)
+        {
+            _askClippyCts.Cancel(); // Cancel the ongoing task
+            _askClippyCts = new CancellationTokenSource(); // Reset the CancellationTokenSource for future use
         }
     }
 
@@ -150,14 +184,26 @@ public partial class MainViewModel : ViewModelBase
     // updates the clipboard content regularly
     public async Task UpdateClipboardContent(CancellationToken cancellationToken)
     {
+        if (IsBusy)
+            return;
+
         // Get the clipboard content
         var newContent = await ClipboardService.GetText();
 
         // Check if the content has changed
         if (newContent != ClipboardContent)
         {
+            IsBusy = true;
+
             // Update the property
             ClipboardContent = newContent;
+
+            if(IsEnabled)
+            {
+                await AskClippy(cancellationToken);
+            }
+
+            IsBusy = false;
         }
     }
 }

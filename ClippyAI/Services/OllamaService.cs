@@ -30,7 +30,7 @@ public static class OllamaService
     private static void SimulateTyping(string text)
     {
         var robot = new Robot();
-        robot.Type(text, 50);
+        robot.Type(text, 80);
     }
 
     /// <summary>
@@ -47,7 +47,7 @@ public static class OllamaService
 
         OllamaRequest body = new()
         {
-            prompt = $"{Resources.Resources.Data}:'''{clipboardData}'''\n{Resources.Resources.Task}: '{task}'",
+            prompt = $"# DATA\n\n'''{clipboardData}'''\n# TASK\n\n'{task}'",
             model = model,
             system = system,
             stream = true

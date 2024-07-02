@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using ClippyAI.ViewModels;
 namespace ClippyAI.Views;
 
 public partial class MainView : UserControl
@@ -26,10 +27,12 @@ public partial class MainView : UserControl
         {
             if (selectedItem == ClippyAI.Resources.Resources.Task_15)
             {
+                 ((MainViewModel)DataContext!).ShowCustomTask = true;
                 txtCustomTask.IsEnabled = true;
             }
             else
             {
+                ((MainViewModel)DataContext!).ShowCustomTask = false;
                 txtCustomTask.IsEnabled = false;
             }
         }

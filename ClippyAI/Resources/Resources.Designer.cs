@@ -58,6 +58,24 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Auto Mode:.
+        /// </summary>
+        public static string AutoMode {
+            get {
+                return ResourceManager.GetString("AutoMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clipboard.
+        /// </summary>
+        public static string Clipboard {
+            get {
+                return ResourceManager.GetString("Clipboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Clipboard Content:.
         /// </summary>
         public static string ClipboardContent {
@@ -94,11 +112,47 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Keyboard.
+        ///   Looks up a localized string similar to Disabled.
+        /// </summary>
+        public static string Disabled {
+            get {
+                return ResourceManager.GetString("Disabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enabled.
+        /// </summary>
+        public static string Enabled {
+            get {
+                return ResourceManager.GetString("Enabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keyboard (experimental).
         /// </summary>
         public static string Keyboard {
             get {
                 return ResourceManager.GetString("Keyboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Output:.
+        /// </summary>
+        public static string Output {
+            get {
+                return ResourceManager.GetString("Output", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please wait....
+        /// </summary>
+        public static string PleaseWait {
+            get {
+                return ResourceManager.GetString("PleaseWait", resourceCulture);
             }
         }
         
@@ -108,15 +162,6 @@ namespace ClippyAI.Resources {
         public static string Response {
             get {
                 return ResourceManager.GetString("Response", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Response Text Box.
-        /// </summary>
-        public static string ResponseField {
-            get {
-                return ResourceManager.GetString("ResponseField", resourceCulture);
             }
         }
         
@@ -279,6 +324,15 @@ namespace ClippyAI.Resources {
         public static string TaskStart {
             get {
                 return ResourceManager.GetString("TaskStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop.
+        /// </summary>
+        public static string TaskStop {
+            get {
+                return ResourceManager.GetString("TaskStop", resourceCulture);
             }
         }
     }

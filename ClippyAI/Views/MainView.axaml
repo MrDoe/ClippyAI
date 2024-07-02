@@ -14,50 +14,64 @@
     <vm:MainViewModel />
   </Design.DataContext>
 
-  <StackPanel>
-      <Button Content="{x:Static resources:Resources.Configuration}" Command="{Binding OpenConfigurationCommand}"
-              HorizontalAlignment="Right" Margin="0 10 0 0" />
+  <StackPanel Width="400">
       <Label Content="{x:Static resources:Resources.ClipboardContent}" HorizontalAlignment="Left" FontSize="16"/>
       <TextBox Text="{Binding ClipboardContent}"
             Width="400"
-            Height="300"
-            HorizontalAlignment="Left"
+            Height="500"
             FontSize="12"
             IsReadOnly="True"
             ScrollViewer.VerticalScrollBarVisibility="Auto"
-            ScrollViewer.HorizontalScrollBarVisibility="Auto" />
+            TextWrapping="Wrap" />
       <Label Content="{x:Static resources:Resources.TaskLabel}" HorizontalAlignment="Left" FontSize="16"
             Margin="0 10 0 0" />
       <ComboBox x:Name="cboTask" SelectedItem="{Binding Task}" SelectedIndex="{Binding SelectedItemIndex}" 
                 ItemsSource="{Binding TaskItems}" HorizontalAlignment="Left" Width="400" />
-      <Label Content="{x:Static resources:Resources.Task_15}" HorizontalAlignment="Left" FontSize="16"
-            Margin="0 10 0 0" />
-      <TextBox x:Name="txtCustomTask" Text="{Binding CustomTask}"
-            AcceptsReturn="True" 
-            AcceptsTab="True"
-            IsReadOnly="False" 
-            Width="400" 
-            Height="300" 
-            HorizontalAlignment="Left"
-            ScrollViewer.VerticalScrollBarVisibility="Auto"
-            ScrollViewer.HorizontalScrollBarVisibility="Auto"
-            IsEnabled="False" />
-      <Button Content="{x:Static resources:Resources.TaskStart}" Command="{Binding AskClippyCommand}" 
-              HorizontalAlignment="Left" Margin="0 10 0 0" />
-      <StackPanel Orientation="Horizontal">
-        <RadioButton Content="{x:Static resources:Resources.Keyboard}" IsChecked="{Binding KeyboardOutputSelected}" 
-            HorizontalAlignment="Left" Margin="0 10 0 0" />
-        <RadioButton Content="{x:Static resources:Resources.ResponseField}" IsChecked="{Binding TextBoxOutputSelected}"
-            HorizontalAlignment="Left" Margin="10 10 0 0" />
+      <StackPanel Orientation="Vertical" IsVisible="{Binding ShowCustomTask}" >
+            <Label Content="{x:Static resources:Resources.Task_15}" HorizontalAlignment="Left" FontSize="16"
+                  Margin="0 10 0 0" />
+            <TextBox x:Name="txtCustomTask" Text="{Binding CustomTask}"
+                  AcceptsReturn="True" 
+                  AcceptsTab="True"
+                  IsReadOnly="False" 
+                  Width="400" 
+                  Height="300" 
+                  HorizontalAlignment="Left"
+                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                  IsEnabled="False"
+                  TextWrapping="Wrap" />
       </StackPanel>
-      <Label Content="{x:Static resources:Resources.Response}" HorizontalAlignment="Left" FontSize="16"
+      <Label Content="{x:Static resources:Resources.Output}" Margin="0 10 0 0" HorizontalAlignment="Left" FontSize="16" />
+      <StackPanel Orientation="Horizontal">
+        <RadioButton Content="{x:Static resources:Resources.Clipboard}" IsChecked="{Binding TextBoxOutputSelected}"
+            HorizontalAlignment="Left" Margin="10 5 0 0" />
+        <RadioButton Content="{x:Static resources:Resources.Keyboard}" IsChecked="{Binding KeyboardOutputSelected}" 
+            HorizontalAlignment="Left" Margin="10 5 0 0" />
+      </StackPanel>
+
+      <Label Content="{x:Static resources:Resources.AutoMode}" HorizontalAlignment="Left" FontSize="16"
             Margin="0 10 0 0" />
-      <TextBox Text="{Binding ClippyResponse}" 
-            IsReadOnly="True" 
-            Width="400" 
-            Height="250" 
-            HorizontalAlignment="Left"
-            ScrollViewer.VerticalScrollBarVisibility="Auto"
-            ScrollViewer.HorizontalScrollBarVisibility="Auto" />
+      <StackPanel Orientation="Horizontal">
+        <RadioButton Content="{x:Static resources:Resources.Enabled}" IsChecked="{Binding IsEnabled}" 
+            HorizontalAlignment="Left" Margin="10 5 0 0" />
+        <RadioButton Content="{x:Static resources:Resources.Disabled}" IsChecked="True" 
+            HorizontalAlignment="Left" Margin="10 5 0 0" />
+      </StackPanel>
+
+      <StackPanel Orientation="Horizontal">
+            <Button Content="{x:Static resources:Resources.TaskStart}" Command="{Binding AskClippyCommand}"
+                  HorizontalAlignment="Left" Margin="0 10 0 0" />
+
+            <Button Content="{x:Static resources:Resources.TaskStop}" Command="{Binding StopClippyTaskCommand}"
+                  HorizontalAlignment="Left" Margin="10 10 0 0" />
+      </StackPanel>
+
+      <!-- Loading Spinner -->
+      <StackPanel x:Name="pnlLoading" Orientation="Vertical" HorizontalAlignment="Center" Margin="0 10 0 0" IsVisible="{Binding IsBusy}">
+      <Label Content="{x:Static resources:Resources.PleaseWait}" HorizontalAlignment="Left" FontSize="16" Margin="0 10 0 0" />
+      <ProgressBar IsIndeterminate="True" Width="400" Height="32" />
+      </StackPanel>
+
+
   </StackPanel>
 </UserControl>

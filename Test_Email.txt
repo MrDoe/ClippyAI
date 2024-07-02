@@ -5,14 +5,9 @@ wenn Sie an der Schulung teilnehmen möchten.
 
 Mit freundlichen Grüßen
 John Doe
+Sehr geehrter Herr Doe,
 
---
+ich melde mich gerne fr die Schulung an.
 
-Here is a possible response.
-
-Liebe John,
-
-Ja, ich wrde mich sehr freuen, wenn ich an der Schulung teilnehmen knnte. Bitte teilen Sie mir weitere Informationen ber das Event mit, damit ich mich ordentlich vorbereiten kann.
-
-Mit freundlichen Gren,
-Herr Mustermann
+Viele Gre 
+Mustermann 

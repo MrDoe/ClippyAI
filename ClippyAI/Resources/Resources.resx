@@ -31,6 +31,18 @@
     <data name="TaskStart" xml:space="preserve">
         <value>Start</value>
     </data>
+    <data name="TaskStop" xml:space="preserve">
+        <value>Stop</value>
+    </data>
+    <data name="AutoMode" xml:space="preserve">
+        <value>Auto Mode:</value>
+    </data>
+    <data name="Enabled" xml:space="preserve">
+        <value>Enabled</value>
+    </data>
+    <data name="Disabled" xml:space="preserve">
+        <value>Disabled</value>
+    </data>
     <data name="Configuration" xml:space="preserve">
         <value>Configuration</value>
     </data>
@@ -38,10 +50,10 @@
         <value>Response:</value>
     </data>
     <data name="Keyboard" xml:space="preserve">
-        <value>Keyboard</value>
+        <value>Keyboard (experimental)</value>
     </data>
-    <data name="ResponseField" xml:space="preserve">
-        <value>Response Text Box</value>
+    <data name="Clipboard" xml:space="preserve">
+        <value>Clipboard</value>
     </data>
     <data name="Task_1" xml:space="preserve">
         <value>Write a response to the email.</value>
@@ -90,5 +102,11 @@
     </data>
     <data name="Data" xml:space="preserve">
         <value>Data</value>
+    </data>
+    <data name="Output" xml:space="preserve">
+        <value>Output:</value>
+    </data>
+    <data name="PleaseWait" xml:space="preserve">
+        <value>Please wait...</value>
     </data>
 </root>

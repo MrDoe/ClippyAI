@@ -23,7 +23,7 @@ public partial class MainWindow : Window
         clipboardPollingTimer.Elapsed += ClipboardPollingTimer_Elapsed;
     }
 
-    private async void MainWindow_Loaded(object? sender, RoutedEventArgs e)
+    private void MainWindow_Loaded(object? sender, RoutedEventArgs e)
     {
         // set window position to bottom right corner
         if (Screens.Primary != null)
@@ -37,7 +37,6 @@ public partial class MainWindow : Window
         }
 
         clipboardPollingTimer.Start();
-        await ((MainViewModel)DataContext!).PasteText(CancellationToken.None);
     }
 
     private async void ClipboardPollingTimer_Elapsed(object? sender, ElapsedEventArgs e)
