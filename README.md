@@ -50,7 +50,7 @@ If you encounter any issues or have questions or new ideas about using ClippyAI,
 
 **Future Plans**
 
-There are several things in my mind on how to improve ClippyAI. Take a look at the issues page for open enhancements.
+
 
 **Developers Wanted!**
 
@@ -59,8 +59,7 @@ interested in joining the ClippyAI community and contributing to its development
 involved:
 
 * **Bug Fixing**: Help me squash those pesky bugs that prevent users from enjoying the full potential of ClippyAI.
-* **Feature Development**: Suggest new features or enhancements that could take ClippyAI to the next level. If
-you're skilled in a particular area, I might need your expertise!
+* **Feature Development**: There are several things in my mind on how to improve ClippyAI. Take a look at the issues page for open enhancements. You may also suggest new features or enhancements.
 * **Testing**: Put ClippyAI through its paces and help me to identify areas where it can be improved.
 
 To get started with contributing to ClippyAI, please submit your pull requests.
