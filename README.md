@@ -27,6 +27,8 @@ ensuring that users can enjoy its benefits regardless of their platform.
 * Explain a compilcated text in more easy words
 * Translate text to another language
 
+![Clippy Example](./Images/clippy.png)
+
 **Getting Started**
 
 1. Install Ollama from https://ollama.com.
