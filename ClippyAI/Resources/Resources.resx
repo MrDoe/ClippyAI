@@ -103,6 +103,9 @@
     <data name="Task_16" xml:space="preserve">
         <value>Translate this text to English.</value>
     </data>
+    <data name="Task_17" xml:space="preserve">
+        <value>Translate this text to German.</value>
+    </data>
     <data name="Data" xml:space="preserve">
         <value>Data</value>
     </data>

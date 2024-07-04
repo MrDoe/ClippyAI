@@ -220,7 +220,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Explain where the error lies..
+        ///   Looks up a localized string similar to Explain where the error lies and how to fix it..
         /// </summary>
         public static string Task_13 {
             get {
@@ -243,6 +243,24 @@ namespace ClippyAI.Resources {
         public static string Task_15 {
             get {
                 return ResourceManager.GetString("Task_15", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Translate this text to English..
+        /// </summary>
+        public static string Task_16 {
+            get {
+                return ResourceManager.GetString("Task_16", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Translate this text to German..
+        /// </summary>
+        public static string Task_17 {
+            get {
+                return ResourceManager.GetString("Task_17", resourceCulture);
             }
         }
         

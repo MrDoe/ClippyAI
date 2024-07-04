@@ -47,7 +47,7 @@ public static class OllamaService
 
         OllamaRequest body = new()
         {
-            prompt = $"# DATA\n\n'''{clipboardData}'''\n# TASK\n\n'{task}'",
+            prompt = $"# TEXT\n\n'''{clipboardData}'''\n# TASK\n\n'{task}'",
             model = model,
             system = system,
             stream = true
