@@ -4,11 +4,9 @@
 **Overview**
 
 ClippyAI is an innovative productivity tool that revolutionizes the way you interact with your computer. This
-application takes notes from your clipboard and sends them along with a task to Ollama, a popular local AI tool. The response is then automatically typed in
+application takes notes from your clipboard and sends them along with a task to Ollama, a popular local AI service.
+After processed, the response will be either available in the clipboard, or will automatically be typed in 
 the application the user is running.
-
-This tool is in an early development phase. Use it at your own risk. We take no responsibility, if it accidently
-deletes or overwrites your currently opened documents.
 
 **Features**
 
