@@ -42,7 +42,7 @@ ensuring that users can enjoy its benefits regardless of their platform.
 3. Click ''Send'' to send the task to the local Ollama API.
 4. Review and edit your generated task as needed.
 
-**Troubleshooting**
+**Disclaimer**
 
 This tool is in an early development phase. Use it at your own risk. We take no responsibility, if it accidently
 deletes or overwrites your currently opened documents.
