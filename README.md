@@ -19,7 +19,7 @@ after it is copied or cut. Users can send the clipboard contents along with one 
 to the Ollama API.
 * **Keyboard Simulation**: The response is either sent to an integrated output field or can automatically be typed
 into the application window where the user is working. Alternatively, you can just send the output back to the clipboard.
-* **Cross-Platform Support**: Developed with .NET and Avalonia, ClippyAI runs on Windows, Linux, and MacOS,
+* **Cross-Platform Support**: Developed with .NET and Avalonia, ClippyAI runs on Windows and Linux (X11)
 ensuring that users can enjoy its benefits regardless of their platform.
 
 **Example Use Cases**
@@ -49,7 +49,6 @@ ensuring that users can enjoy its benefits regardless of their platform.
 This tool is in an early development phase. Use it at your own risk. We take no responsibility, if it accidently
 deletes or overwrites your currently opened documents.
 If you encounter any issues or have questions or new ideas about using ClippyAI, please open an issue here on GitHub.
-Right now it's only tested on Linux and Windows, because I don't own a Mac, I would need testers here.
 
 **Future Plans**
 
