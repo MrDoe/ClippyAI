@@ -31,9 +31,9 @@ ensuring that users can enjoy its benefits regardless of their platform.
 
 1. Install Ollama from https://ollama.com.
 2. Run `ollama pull llama3` on the command line to install the llama3 AI model on your PC.
-3. Clone this repository and build and run this tool.
-4. Check the configuration in App.config. The standard values should work fine for most installations.
-5. Run the application.
+3. Clone this repository and build and run this tool. You may need to build the project twice, if you are using VS Code, because it generates the necessary resources files during the first build.
+5. Check the configuration in App.config. The standard values should work fine for most installations.
+6. Run the application.
 
 **Using ClippyAI**
 
