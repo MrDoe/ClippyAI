@@ -50,14 +50,7 @@ If you encounter any issues or have questions or new ideas about using ClippyAI,
 
 **Future Plans**
 
-There are several things in my mind on how to improve ClippyAI:
-* Publish executables/installer packages for Windows and Linux.
-* Edit ClippyAI's configuration from the UI.
-* Bind ClippyAI to a global hotkey like hitting [Ctrl]+[C] twice in a short period of time.
-* Don't start typing after another global hotkey has been pressed.
-* Advanced task configuration like changing the system prompt, temperature and model for every task.
-* Create jobs, i. e. a main task, which is divided into several sub-tasks using different AI agents and settings. 
-* Show a notification and/or play a sound when an response of ClippyAI is ready.
+There are several things in my mind on how to improve ClippyAI. Take a look at the issues page for open enhancements.
 
 **Developers Wanted!**
 
