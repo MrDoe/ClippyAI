@@ -52,24 +52,24 @@ public partial class MainView : UserControl
     {
 
         // get the full path to the dotnet executable
-        string? fullPath = System.Diagnostics.Process.GetCurrentProcess()?.MainModule?.FileName;
+        string? fullPath = Process.GetCurrentProcess()?.MainModule?.FileName;
 
         // Get the full path to the entry assembly (your application's DLL)
         string? entryAssemblyPath = System.Reflection.Assembly.GetEntryAssembly()?.Location;
 
-        // Combine the dotnet executable path, the entry assembly path, and the arguments
-        string command = $"{fullPath} {entryAssemblyPath}";
-
         // command dependent on the OS
         string fileName = "";
-        if(System.Environment.OSVersion.Platform == System.PlatformID.Win32NT)
+        string command = "";
+        if (System.Environment.OSVersion.Platform == System.PlatformID.Win32NT)
         {
             fileName = "cmd.exe";
-            command = $"/c {command}";
+            command = "\"" + fullPath + "\" \"" + entryAssemblyPath + "\"";
+            command = $"/C \"{command}\"";
         }
-        if(System.Environment.OSVersion.Platform == System.PlatformID.Unix)
+        if (System.Environment.OSVersion.Platform == System.PlatformID.Unix)
         {
             fileName = "/bin/bash";
+            command = $"{fullPath} {entryAssemblyPath}";
             command = $"-c \"{command}\"";
         }
 
@@ -78,7 +78,8 @@ public partial class MainView : UserControl
         {
             FileName = fileName,
             Arguments = command,
-            UseShellExecute = true
+            UseShellExecute = false,
+            CreateNoWindow = true
         });
 
         // Close the current application instance
