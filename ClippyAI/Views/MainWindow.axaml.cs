@@ -30,8 +30,8 @@ public partial class MainWindow : Window
         SetWindowPos();
         clipboardPollingTimer.Start();
         
-        this.PositionChanged += MainWindow_PositionChanged;
-        this.Resized += MainWindow_Resized;
+        PositionChanged += MainWindow_PositionChanged;
+        Resized += MainWindow_Resized;
     }
 
     private void SetWindowPos()
@@ -39,9 +39,8 @@ public partial class MainWindow : Window
         // set window position to bottom right corner
         if (Screens.Primary != null)
         {
-            // get current screen
-            PixelSize screenSize = Screens.All[0].Bounds.Size;
-
+            // get primary screen size
+            PixelSize screenSize = Screens.Primary.Bounds.Size;
             PixelSize windowSize = PixelSize.FromSize(ClientSize, Screens.Primary.Scaling);
 
             Position = new PixelPoint(
