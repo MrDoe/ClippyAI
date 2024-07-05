@@ -59,13 +59,13 @@
         <value>Zwischenablage</value>
     </data>
     <data name="Task_1" xml:space="preserve">
-        <value>Schreibe eine Antwort auf die E-Mail. Verwende kein Komma nach 'Viele Grüße'</value>
+        <value>Schreibe eine Antwort auf die E-Mail.</value>
     </data>
     <data name="Task_2" xml:space="preserve">
         <value>Schreibe eine ausführliche Antwort auf die E-Mail.</value>
     </data>
     <data name="Task_3" xml:space="preserve">
-        <value>Schreibe eine Antwort auf die E-Mail und stimme dankend zu.</value>
+        <value>Schreibe eine Antwort auf die E-Mail und stimme zu.</value>
     </data>
     <data name="Task_4" xml:space="preserve">
         <value>Schreibe eine Antwort auf die E-Mail und lehne höflich ab.</value>
@@ -77,7 +77,7 @@
         <value>Schreibe eine Antwort auf die E-Mail und bitte um eine Terminabsprache.</value>
     </data>
     <data name="Task_7" xml:space="preserve">
-        <value>Schreibe eine Antwort auf die E-Mail und sage, dass du dich um das Problem kümmerst.</value>
+        <value>Schreibe eine Antwort auf die E-Mail und sage, dass du dich um die Sache kümmerst.</value>
     </data>
     <data name="Task_8" xml:space="preserve">
         <value>Schreibe eine Antwort auf die E-Mail und sage, dass du das Problem nicht lösen kannst und an Person X verweist.</value>
@@ -109,6 +109,9 @@
     <data name="Task_17" xml:space="preserve">
         <value>Übersetze den Text ins Englische.</value>
     </data>
+    <data name="Task_18" xml:space="preserve">
+        <value>Übersetze den Text ins Französische.</value>
+    </data>
     <data name="Data" xml:space="preserve">
         <value>Daten</value>
     </data>
@@ -121,4 +124,7 @@
     <data name="Language" xml:space="preserve">
         <value>Sprache:</value>
     </data>
+    <data name="OllamaUrl" xml:space="preserve">
+        <value>Ollama-URL:</value>
+    </data>    
 </root>

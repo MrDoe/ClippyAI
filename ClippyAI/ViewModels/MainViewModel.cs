@@ -69,6 +69,8 @@ public partial class MainViewModel : ViewModelBase
     [ObservableProperty]
     private ObservableCollection<string> _languageItems = ["English", "Deutsch"];
 
+    [ObservableProperty]
+    private string _ollamaUrl = ConfigurationManager.AppSettings["OllamaUrl"] ?? "http://127.0.0.1:11434/api/generate";
 
     private void PopulateTasks()
     {

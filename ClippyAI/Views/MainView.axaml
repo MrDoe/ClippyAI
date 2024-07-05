@@ -7,7 +7,8 @@
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="400"
              Padding="10"
              x:Class="ClippyAI.Views.MainView"
-             x:DataType="vm:MainViewModel">
+             x:DataType="vm:MainViewModel"
+             Loaded="MainView_Loaded">
   <Design.DataContext>
     <!-- This only sets the DataContext for the previewer in an IDE,
          to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
@@ -15,11 +16,15 @@
   </Design.DataContext>
 
   <StackPanel Width="400">
-      <StackPanel Orientation="Horizontal">
-        <Label Content="{x:Static resources:Resources.Language}" HorizontalAlignment="Left" FontSize="16" />
-            <ComboBox x:Name="cboLanguage" SelectedItem="{Binding Language}" Margin="10 0 0 0"
-                        ItemsSource="{Binding LanguageItems}" HorizontalAlignment="Left" Width="120" />
-      </StackPanel>
+      <Grid ColumnDefinitions="100, 300" RowDefinitions="*, 5, *">
+            <Label Content="{x:Static resources:Resources.OllamaUrl}" HorizontalAlignment="Left" VerticalAlignment="Center" 
+                   FontSize="14" Grid.Row="0" Grid.Column="0" Grid.RowSpan="1" />
+            <TextBox x:Name="txtOllamaUrl" Text="{Binding OllamaUrl}" Margin="10 0 0 0" Grid.Row="0" Grid.Column="1" />
+            <Label Content="{x:Static resources:Resources.Language}" HorizontalAlignment="Left" VerticalAlignment="Center" 
+                   FontSize="14" Grid.Row="2" Grid.Column="0" />
+            <ComboBox x:Name="cboLanguage" SelectedItem="{Binding Language}" Margin="10 0 0 0" ItemsSource="{Binding LanguageItems}"
+                      HorizontalAlignment="Left" Width="120" Grid.Row="2" Grid.Column="1" />
+      </Grid>
       <Label Content="{x:Static resources:Resources.ClipboardContent}" Margin="0 10 0 0" HorizontalAlignment="Left"
              FontSize="16"/>
       <TextBox Text="{Binding ClipboardContent}"

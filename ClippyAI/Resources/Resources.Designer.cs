@@ -148,6 +148,15 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ollama URL:.
+        /// </summary>
+        public static string OllamaUrl {
+            get {
+                return ResourceManager.GetString("OllamaUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Output:.
         /// </summary>
         public static string Output {
@@ -261,6 +270,15 @@ namespace ClippyAI.Resources {
         public static string Task_17 {
             get {
                 return ResourceManager.GetString("Task_17", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Translate this text to French..
+        /// </summary>
+        public static string Task_18 {
+            get {
+                return ResourceManager.GetString("Task_18", resourceCulture);
             }
         }
         

@@ -3,15 +3,18 @@ using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Interactivity;
 using ClippyAI.ViewModels;
 namespace ClippyAI.Views;
 
 public partial class MainView : UserControl
 {
-    private bool initialized = false;
+    private bool Initialized { get; set; }
+    private bool UrlHasChanged = false;
 
     public MainView()
     {
+        Initialized = false;
         InitializeComponent();
 
         // add event handler for task selection changed
@@ -24,14 +27,23 @@ public partial class MainView : UserControl
         if (cboLanguage != null)
             cboLanguage.SelectionChanged += OnCboLanguageSelectionChanged;
 
-        initialized = true;
+        // add event handler for Ollama URL text changed
+        var txtOllamaUrl = this.FindControl<TextBox>("txtOllamaUrl");
+        if (txtOllamaUrl != null)
+        {
+            txtOllamaUrl.TextChanged += OnTxtOllamaUrlTextChanged;
+            txtOllamaUrl.LostFocus += OnTxtOllamaUrlLostFocus;
+        }
+    }
+
+    private void MainView_Loaded(object? sender, RoutedEventArgs e)
+    {        
+        Initialized = true;
     }
 
     private void OnCboLanguageSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (!initialized)
-            return;
-        if (e.RemovedItems.Count == 0)
+        if (!Initialized || e.RemovedItems.Count == 0)
             return;
 
         var comboBox = (ComboBox)sender!;
@@ -48,9 +60,35 @@ public partial class MainView : UserControl
         RestartApplication();
     }
 
-    private void RestartApplication()
-    {
 
+    private void OnTxtOllamaUrlTextChanged(object? sender, RoutedEventArgs e)
+    {
+         if (!Initialized)
+            return;
+        
+        UrlHasChanged = true;
+    }
+
+    private void OnTxtOllamaUrlLostFocus(object? sender, RoutedEventArgs e)
+    {
+        if (!Initialized || !UrlHasChanged)
+            return;
+
+        var txtOllamaUrl = (TextBox)sender!;
+        ((MainViewModel)DataContext!).OllamaUrl = txtOllamaUrl.Text!;
+
+        // update Ollama URL in configuration file
+        var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+        config.AppSettings.Settings.Remove("OllamaUrl");
+        config.AppSettings.Settings.Add("OllamaUrl", txtOllamaUrl.Text);
+        config.Save(ConfigurationSaveMode.Modified);
+        ConfigurationManager.RefreshSection("appSettings");
+
+        RestartApplication();
+    }
+
+    private static void RestartApplication()
+    {
         // get the full path to the dotnet executable
         string? fullPath = Process.GetCurrentProcess()?.MainModule?.FileName;
 

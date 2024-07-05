@@ -106,6 +106,9 @@
     <data name="Task_17" xml:space="preserve">
         <value>Translate this text to German.</value>
     </data>
+    <data name="Task_18" xml:space="preserve">
+        <value>Translate this text to French.</value>
+    </data>    
     <data name="Data" xml:space="preserve">
         <value>Data</value>
     </data>
@@ -117,5 +120,8 @@
     </data>
     <data name="Language" xml:space="preserve">
         <value>Language:</value>
+    </data>
+    <data name="OllamaUrl" xml:space="preserve">
+        <value>Ollama URL:</value>
     </data>
 </root>
