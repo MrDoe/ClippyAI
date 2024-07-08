@@ -9,12 +9,12 @@ namespace ClippyAI.Views;
 
 public partial class MainView : UserControl
 {
-    private bool Initialized { get; set; }
+    private bool Init = false;
     private bool UrlHasChanged = false;
 
     public MainView()
     {
-        Initialized = false;
+        Init = false;
         InitializeComponent();
 
         // add event handler for task selection changed
@@ -38,12 +38,12 @@ public partial class MainView : UserControl
 
     private void MainView_Loaded(object? sender, RoutedEventArgs e)
     {        
-        Initialized = true;
+        Init = true;
     }
 
     private void OnCboLanguageSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (!Initialized || e.RemovedItems.Count == 0)
+        if (!Init || e.RemovedItems.Count == 0)
             return;
 
         var comboBox = (ComboBox)sender!;
@@ -63,7 +63,7 @@ public partial class MainView : UserControl
 
     private void OnTxtOllamaUrlTextChanged(object? sender, RoutedEventArgs e)
     {
-         if (!Initialized)
+         if (!Init)
             return;
         
         UrlHasChanged = true;
@@ -71,7 +71,7 @@ public partial class MainView : UserControl
 
     private void OnTxtOllamaUrlLostFocus(object? sender, RoutedEventArgs e)
     {
-        if (!Initialized || !UrlHasChanged)
+        if (!Init || !UrlHasChanged)
             return;
 
         var txtOllamaUrl = (TextBox)sender!;
