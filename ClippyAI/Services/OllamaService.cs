@@ -53,6 +53,9 @@ public static class OllamaService
             stream = true
         };
         Console.WriteLine("Sending request...");
+        
+        // increase timeout
+        client.Timeout = TimeSpan.FromMinutes(5);
 
         using var response = await client.PostAsync(
                              url,
