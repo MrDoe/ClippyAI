@@ -70,10 +70,13 @@ public partial class MainViewModel : ViewModelBase
     private ObservableCollection<string> _languageItems = ["English", "Deutsch"];
 
     [ObservableProperty]
-    private string _ollamaUrl = ConfigurationManager.AppSettings["OllamaUrl"] ?? "http://127.0.0.1:11434/api/generate";
+    private ObservableCollection<string> _modelItems = OllamaService.GetModels();
 
     [ObservableProperty]
-    private string _model = ConfigurationManager.AppSettings["Model"] ?? "gemma2";
+    private string _ollamaUrl = ConfigurationManager.AppSettings["OllamaUrl"] ?? "http://127.0.0.1:11434/api";
+
+    [ObservableProperty]
+    private string _model = ConfigurationManager.AppSettings["OllamaModel"] ?? "gemma2:latest";
 
     private void PopulateTasks()
     {

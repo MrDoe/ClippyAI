@@ -27,6 +27,11 @@ public partial class MainView : UserControl
         if (cboLanguage != null)
             cboLanguage.SelectionChanged += OnCboLanguageSelectionChanged;
 
+        // add event handler for model selection changed
+        var cboOllamaModel = this.FindControl<ComboBox>("cboOllamaModel");
+        if (cboOllamaModel != null)
+            cboOllamaModel.SelectionChanged += OnCboOllamaModelSelectionChanged;
+
         // add event handler for Ollama URL text changed
         var txtOllamaUrl = this.FindControl<TextBox>("txtOllamaUrl");
         if (txtOllamaUrl != null)
@@ -59,7 +64,6 @@ public partial class MainView : UserControl
 
         RestartApplication();
     }
-
 
     private void OnTxtOllamaUrlTextChanged(object? sender, RoutedEventArgs e)
     {
@@ -151,5 +155,22 @@ public partial class MainView : UserControl
                 txtCustomTask.IsEnabled = false;
             }
         }
+    }
+
+    private void OnCboOllamaModelSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (!Init || e.RemovedItems.Count == 0)
+            return;
+
+        var comboBox = (ComboBox)sender!;
+        var selectedItem = (string)comboBox.SelectedItem!;
+        ((MainViewModel)DataContext!).Model = selectedItem;
+
+        // update Ollama model in configuration file
+        var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+        config.AppSettings.Settings.Remove("OllamaModel");
+        config.AppSettings.Settings.Add("OllamaModel", selectedItem);
+        config.Save(ConfigurationSaveMode.Modified);
+        ConfigurationManager.RefreshSection("appSettings");
     }
 }

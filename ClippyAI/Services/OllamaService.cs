@@ -9,6 +9,10 @@ using System.Configuration;
 using ClippyAI.Models;
 using Desktop.Robot;
 using Desktop.Robot.Extensions;
+using System.Collections.Generic;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
 
 namespace ClippyAI.Services;
 
@@ -24,7 +28,7 @@ public static class OllamaService
     };
 
     private static readonly string? url = ConfigurationManager.AppSettings?.Get("OllamaUrl");
-    private static readonly string? model = ConfigurationManager.AppSettings?.Get("Model");
+    private static readonly string? model = ConfigurationManager.AppSettings?.Get("OllamaModel");
     private static readonly string? system = ConfigurationManager.AppSettings?.Get("System");
 
     /// <summary>
@@ -59,7 +63,7 @@ public static class OllamaService
         Console.WriteLine("Sending request...");
 
         using var response = await client.PostAsync(
-                             url,
+                             url + "/generate",
                              new StringContent(JsonSerializer.Serialize(body),
                              Encoding.UTF8,
                              "application/json"),
@@ -92,5 +96,59 @@ public static class OllamaService
             Console.WriteLine($"Request failed with status: {response.StatusCode}.");
         }
         return fullResponse;
+    }
+    /// <summary>
+    /// Get models from the Ollama API.
+    /// </summary>
+    /// <param name="token">The cancellation token.</param>
+    /// <returns>The models.</returns>
+    public static ObservableCollection<string> GetModels(CancellationToken token = default)
+    {
+        return GetModelsAsync(token).GetAwaiter().GetResult();
+    }
+    /// <summary>
+    /// Get models from the Ollama API.
+    /// </summary>
+    /// <param name="token">The cancellation token.</param>
+    /// <returns>The models.</returns>
+    public static async Task<ObservableCollection<string>> GetModelsAsync(CancellationToken token = default)
+    {
+        List<string> models = new();
+
+        using var response = await client.GetAsync(
+                             $"{url}/tags",
+                             token).ConfigureAwait(false);
+
+        if (response.IsSuccessStatusCode)
+        {
+            using var stream = await response.Content.ReadAsStreamAsync(token);
+            using var reader = new StreamReader(stream);
+            string? output = await reader.ReadToEndAsync();
+
+            if (output != null)
+            {
+                // only collect model names
+                var deserializedModels = JsonSerializer.Deserialize<OllamaModelRequest>(output)?.models;
+
+                if (deserializedModels != null)
+                {
+                    foreach (var model in deserializedModels)
+                    {
+                        models.Add(model!.name);
+                    }
+                }
+            }
+        }
+        else
+        {
+            Console.WriteLine($"Request failed with status: {response.StatusCode}.");
+        }
+
+        // convert list to observable collection
+        var oc = new ObservableCollection<string>();
+        foreach (var item in models)
+            oc.Add(item);
+
+        return oc;
     }
 }
