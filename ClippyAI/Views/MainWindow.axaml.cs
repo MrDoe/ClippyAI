@@ -1,14 +1,17 @@
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Timers;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.ReactiveUI;
 using Avalonia.Threading;
 using ClippyAI.ViewModels;
+using ReactiveUI;
 namespace ClippyAI.Views;
 
-public partial class MainWindow : Window
+public partial class MainWindow : ReactiveWindow<MainViewModel>
 {
     public readonly System.Timers.Timer clipboardPollingTimer;
 

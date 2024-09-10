@@ -1,0 +1,19 @@
+<Window xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Class="ClippyAI.Views.ErrorMessageDialog"
+    x:DataType="vm:ErrorMessageDialogViewModel"
+    xmlns:vm="clr-namespace:ClippyAI.ViewModels"
+    Width="500"
+    Height="150"
+    Background="DimGray"
+    ExtendClientAreaToDecorationsHint="True"
+    ExtendClientAreaChromeHints="NoChrome"
+    ExtendClientAreaTitleBarHeightHint="-1"
+    SystemDecorations="BorderOnly"
+    CanResize="false">
+    <StackPanel>
+    <TextBlock Text="Error" FontSize="20" FontWeight="Bold" Margin="10,10,10,10"/>
+    <TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap" Margin="10,0,20,10"/>
+    <Button Content="OK" HorizontalContentAlignment="Center" Command="{Binding CloseCommand}" Width="100" HorizontalAlignment="Center"/>
+    </StackPanel>
+</Window>

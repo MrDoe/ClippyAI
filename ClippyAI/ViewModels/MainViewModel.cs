@@ -72,6 +72,9 @@ public partial class MainViewModel : ViewModelBase
     [ObservableProperty]
     private string _ollamaUrl = ConfigurationManager.AppSettings["OllamaUrl"] ?? "http://127.0.0.1:11434/api/generate";
 
+    [ObservableProperty]
+    private string _model = ConfigurationManager.AppSettings["Model"] ?? "gemma2";
+
     private void PopulateTasks()
     {
         // iterate over Resources and add Tasks to ComboBox
@@ -125,6 +128,9 @@ public partial class MainViewModel : ViewModelBase
         catch (Exception e)
         {
             ErrorMessages?.Add(e.Message);
+
+            // show error message in dialog
+            ShowErrorMessage(e.Message);
         }
 
         if (TextBoxOutputSelected && response != null)
@@ -169,21 +175,6 @@ public partial class MainViewModel : ViewModelBase
         {
             if (await ClipboardService.GetText() is { } pastedText)
                 ClipboardContent = ClipboardContent?.Insert(CaretIndex, pastedText);
-        }
-        catch (Exception e)
-        {
-            ErrorMessages?.Add(e.Message);
-        }
-    }
-
-    [RelayCommand]
-    public void OpenConfiguration(CancellationToken token)
-    {
-        ErrorMessages?.Clear();
-        try
-        {
-            var window = new ConfigurationWindow();
-            window.Show();
         }
         catch (Exception e)
         {

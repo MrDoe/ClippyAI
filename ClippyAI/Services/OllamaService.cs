@@ -18,7 +18,11 @@ public static class OllamaService
     {
         UseProxy = false
     };
-    private static readonly HttpClient client = new(handler);
+    private static readonly HttpClient client = new(handler)
+    {
+        Timeout = TimeSpan.FromMinutes(5)
+    };
+
     private static readonly string? url = ConfigurationManager.AppSettings?.Get("OllamaUrl");
     private static readonly string? model = ConfigurationManager.AppSettings?.Get("Model");
     private static readonly string? system = ConfigurationManager.AppSettings?.Get("System");
@@ -53,9 +57,6 @@ public static class OllamaService
             stream = true
         };
         Console.WriteLine("Sending request...");
-        
-        // increase timeout
-        client.Timeout = TimeSpan.FromMinutes(5);
 
         using var response = await client.PostAsync(
                              url,

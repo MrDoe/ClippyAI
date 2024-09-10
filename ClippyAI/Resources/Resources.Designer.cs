@@ -148,6 +148,15 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Model:.
+        /// </summary>
+        public static string Model {
+            get {
+                return ResourceManager.GetString("Model", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ollama URL:.
         /// </summary>
         public static string OllamaUrl {

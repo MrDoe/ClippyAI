@@ -127,4 +127,7 @@
     <data name="OllamaUrl" xml:space="preserve">
         <value>Ollama-URL:</value>
     </data>    
+    <data name="Model" xml:space="preserve">
+        <value>Modell:</value>
+    </data>
 </root>
