@@ -28,7 +28,6 @@ public static class OllamaService
     };
 
     private static readonly string? url = ConfigurationManager.AppSettings?.Get("OllamaUrl");
-    private static readonly string? model = ConfigurationManager.AppSettings?.Get("OllamaModel");
     private static readonly string? system = ConfigurationManager.AppSettings?.Get("System");
 
     /// <summary>
@@ -48,7 +47,8 @@ public static class OllamaService
     /// <param name="task">The task to perform.</param>
     /// <param name="typeOutput">Whether to simulate typing the output.</param>
     /// <param name="token">The cancellation token.</param>
-    public static async Task<string?> SendRequest(string clipboardData, string task, bool typeOutput = true,
+    public static async Task<string?> SendRequest(string clipboardData, string task, 
+                                                  string model, bool typeOutput = true,
                                                   CancellationToken token = default)
     {
         string? fullResponse = null;
@@ -134,7 +134,7 @@ public static class OllamaService
                 {
                     foreach (var model in deserializedModels)
                     {
-                        models.Add(model!.name);
+                        models.Add(model!.name!);
                     }
                 }
             }

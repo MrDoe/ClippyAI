@@ -119,8 +119,16 @@ public partial class MainViewModel : ViewModelBase
 
         try
         {
+            string model = ModelItems[ModelItems.IndexOf(Model)];
+            if(model == null)
+            {
+                ErrorMessages?.Add("Please select a model.");
+                IsBusy = false;
+                return;
+            }
             response = await OllamaService.SendRequest(ClipboardContent!,
                                                        task,
+                                                       model,
                                                        KeyboardOutputSelected,
                                                        _askClippyCts.Token); // Use the token from _askClippyCts
         }
