@@ -58,7 +58,12 @@ public static class OllamaService
             prompt = $"# TEXT\n\n'''{clipboardData}'''\n# TASK\n\n'{task}'",
             model = model,
             system = system,
-            stream = true
+            stream = true,
+            keep_alive = "60m",
+            options = new OllamaModelOptions()
+            {
+                num_ctx = 512
+            }
         };
         Console.WriteLine("Sending request...");
 
@@ -113,7 +118,7 @@ public static class OllamaService
     /// <returns>The models.</returns>
     public static async Task<ObservableCollection<string>> GetModelsAsync(CancellationToken token = default)
     {
-        List<string> models = new();
+        List<string> models = [];
 
         using var response = await client.GetAsync(
                              $"{url}/tags",
