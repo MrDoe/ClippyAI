@@ -15,6 +15,8 @@
   </PropertyGroup>
 <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <PublishAot>False</PublishAot>
+    <PublishTrimmed>False</PublishTrimmed>
   </PropertyGroup>
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
