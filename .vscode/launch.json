@@ -9,9 +9,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/ClippyAI.Desktop/bin/Debug/net8.0/ClippyAI.Desktop.dll",
+            "program": "${workspaceFolder}/ClippyAI/bin/Debug/net8.0/ClippyAI.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/ClippyAI.Desktop",
+            "cwd": "${workspaceFolder}/ClippyAI",
             "console": "internalConsole",
             "stopAtEntry": false
         },

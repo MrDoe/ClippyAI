@@ -1,21 +1,14 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Reactive.Concurrency;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using ReactiveUI;
-using System.Reactive.Disposables;
 using ClippyAI.Services;
-using System.Collections.Generic;
 using ClippyAI.Views;
-using Avalonia.Automation.Peers;
 using System.Collections.ObjectModel;
 using System.Configuration;
-
 namespace ClippyAI.ViewModels;
 
 public partial class MainViewModel : ViewModelBase
@@ -27,8 +20,10 @@ public partial class MainViewModel : ViewModelBase
 
     private CancellationTokenSource _askClippyCts = new();
 
+    private bool initialized = false;
+
     [ObservableProperty]
-    private string _task = "";
+    private string _task = ConfigurationManager.AppSettings["DefaultTask"] ?? Resources.Resources.Task_1;
 
     [ObservableProperty]
     private string? _clipboardContent = "";
@@ -48,8 +43,8 @@ public partial class MainViewModel : ViewModelBase
     [ObservableProperty]
     private ObservableCollection<string> taskItems = [];
 
-    [ObservableProperty]
-    private int selectedItemIndex = -1;
+    // [ObservableProperty]
+    // private int selectedItemIndex = -1;
 
     [ObservableProperty]
     private string _customTask = "";
@@ -61,13 +56,13 @@ public partial class MainViewModel : ViewModelBase
     private bool _isBusy = false;
 
     [ObservableProperty]
-    private bool _isEnabled = false;
+    private bool _autoMode = Convert.ToBoolean(ConfigurationManager.AppSettings["AutoMode"]);
 
     [ObservableProperty]
     private string _language = ConfigurationManager.AppSettings["DefaultLanguage"] ?? "English";
 
     [ObservableProperty]
-    private ObservableCollection<string> _languageItems = ["English", "Deutsch"];
+    private ObservableCollection<string> _languageItems = ["English", "Deutsch", "Français", "Español"];
 
     [ObservableProperty]
     private ObservableCollection<string> _modelItems = OllamaService.GetModels();
@@ -77,6 +72,7 @@ public partial class MainViewModel : ViewModelBase
 
     [ObservableProperty]
     private string _model = ConfigurationManager.AppSettings["OllamaModel"] ?? "gemma2:latest";
+
 
     private void PopulateTasks()
     {
@@ -91,9 +87,7 @@ public partial class MainViewModel : ViewModelBase
                     TaskItems.Add(value);
                 }
             }
-        }
-
-        SelectedItemIndex = 0;
+        }       
     }
 
     [RelayCommand]
@@ -112,7 +106,7 @@ public partial class MainViewModel : ViewModelBase
 
         if (string.IsNullOrEmpty(task))
         {
-            ErrorMessages?.Add("Please select a task.");
+            ErrorMessages?.Add(Resources.Resources.SelectTask);
             IsBusy = false;
             return;
         }
@@ -122,10 +116,18 @@ public partial class MainViewModel : ViewModelBase
             string model = ModelItems[ModelItems.IndexOf(Model)];
             if(model == null)
             {
-                ErrorMessages?.Add("Please select a model.");
+                ErrorMessages?.Add(Resources.Resources.SelectModel);
                 IsBusy = false;
                 return;
             }
+
+            // call ShowNotification method from MainWindow
+            if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                var mainWindow = (MainWindow)desktop.MainWindow!;
+                mainWindow.ShowNotification("ClippyAI", Resources.Resources.PleaseWait, true);
+            }
+
             response = await OllamaService.SendRequest(ClipboardContent!,
                                                        task,
                                                        model,
@@ -150,6 +152,13 @@ public partial class MainViewModel : ViewModelBase
             
             // Update the clipboard content
             await ClipboardService.SetText(ClipboardContent);
+
+            // call ShowNotification method from MainWindow
+            if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                var mainWindow = (MainWindow)desktop.MainWindow!;
+                mainWindow.ShowNotification("ClippyAI", Resources.Resources.TaskCompleted + response, false);
+            }
         }
         IsBusy = false;
     }
@@ -210,9 +219,13 @@ public partial class MainViewModel : ViewModelBase
             // Update the property
             ClipboardContent = newContent;
 
-            if(IsEnabled)
+            if(AutoMode && initialized)
             {
                 await AskClippy(cancellationToken);
+            }
+            else
+            {
+                initialized = true;
             }
 
             IsBusy = false;

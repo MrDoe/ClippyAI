@@ -166,7 +166,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Output:.
+        ///   Looks up a localized string similar to Result:.
         /// </summary>
         public static string Output {
             get {
@@ -189,6 +189,24 @@ namespace ClippyAI.Resources {
         public static string Response {
             get {
                 return ResourceManager.GetString("Response", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select a model!.
+        /// </summary>
+        public static string SelectModel {
+            get {
+                return ResourceManager.GetString("SelectModel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select a task!.
+        /// </summary>
+        public static string SelectTask {
+            get {
+                return ResourceManager.GetString("SelectTask", resourceCulture);
             }
         }
         
@@ -360,6 +378,15 @@ namespace ClippyAI.Resources {
         public static string Task_9 {
             get {
                 return ResourceManager.GetString("Task_9", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your task has been completed and copied to the clipboard!\n\Result:\n.
+        /// </summary>
+        public static string TaskCompleted {
+            get {
+                return ResourceManager.GetString("TaskCompleted", resourceCulture);
             }
         }
         

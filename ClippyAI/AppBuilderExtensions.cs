@@ -1,7 +1,5 @@
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Platform;
 using DesktopNotifications.FreeDesktop;
 using DesktopNotifications.Windows;
 using System;

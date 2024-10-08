@@ -4,8 +4,9 @@ using Avalonia.Markup.Xaml;
 using System.Globalization;
 using ClippyAI.ViewModels;
 using ClippyAI.Views;
-using ClippyAI.Resources;
 using System.Configuration;
+using System.Text;
+using System;
 namespace ClippyAI;
 
 public partial class App : Application
@@ -18,8 +19,27 @@ public partial class App : Application
     public override void OnFrameworkInitializationCompleted()
     {
         string language = ConfigurationManager.AppSettings["DefaultLanguage"] ?? "English";
-        ClippyAI.Resources.Resources.Culture = new CultureInfo(language == "Deutsch" ? "de-DE" : "en-US");
-        
+        language = language.Normalize(NormalizationForm.FormC); // Normalize the input string
+
+        switch (language)
+        {
+            case string lang when lang.Equals("English", StringComparison.OrdinalIgnoreCase):
+                ClippyAI.Resources.Resources.Culture = new CultureInfo("en-US");
+                break;
+            case string lang when lang.Equals("Deutsch", StringComparison.OrdinalIgnoreCase):
+                ClippyAI.Resources.Resources.Culture = new CultureInfo("de-DE");
+                break;
+            case string lang when lang.Equals("Français", StringComparison.OrdinalIgnoreCase):
+                ClippyAI.Resources.Resources.Culture = new CultureInfo("fr-FR");
+                break;
+            case string lang when lang.Equals("Español", StringComparison.OrdinalIgnoreCase):
+                ClippyAI.Resources.Resources.Culture = new CultureInfo("es-ES");
+                break;
+            default:
+                // Handle unknown languages if necessary
+                break;
+        }
+
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = new MainWindow

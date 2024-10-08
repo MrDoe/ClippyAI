@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/ClippyAI.Desktop/ClippyAI.Desktop.csproj",
+                "${workspaceFolder}/ClippyAI/ClippyAI.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary;ForceNoAlign"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/ClippyAI.Desktop/ClippyAI.Desktop.csproj",
+                "${workspaceFolder}/ClippyAI/ClippyAI.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary;ForceNoAlign"
             ],
@@ -33,7 +33,7 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/ClippyAI.Desktop/ClippyAI.Desktop.csproj"
+                "${workspaceFolder}/ClippyAI/ClippyAI.csproj"
             ],
             "problemMatcher": "$msCompile"
         }

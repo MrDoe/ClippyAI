@@ -39,6 +39,11 @@ public partial class MainView : UserControl
             txtOllamaUrl.TextChanged += OnTxtOllamaUrlTextChanged;
             txtOllamaUrl.LostFocus += OnTxtOllamaUrlLostFocus;
         }
+
+        // add event handler for auto mode radio button checked
+        var rbAuto = this.FindControl<RadioButton>("rbAuto");
+        if (rbAuto != null)
+            rbAuto.IsCheckedChanged += OnRbAutoChecked;
     }
 
     private void MainView_Loaded(object? sender, RoutedEventArgs e)
@@ -108,6 +113,7 @@ public partial class MainView : UserControl
             command = "\"" + fullPath + "\" \"" + entryAssemblyPath + "\"";
             command = $"/C \"{command}\"";
         }
+        
         if (System.Environment.OSVersion.Platform == System.PlatformID.Unix)
         {
             fileName = "/bin/bash";
@@ -155,6 +161,13 @@ public partial class MainView : UserControl
                 txtCustomTask.IsEnabled = false;
             }
         }
+        // save default task in configuration file
+        ((MainViewModel)DataContext!).Task = selectedItem;
+        var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+        config.AppSettings.Settings.Remove("DefaultTask");
+        config.AppSettings.Settings.Add("DefaultTask", selectedItem);
+        config.Save(ConfigurationSaveMode.Modified);
+        ConfigurationManager.RefreshSection("appSettings");
     }
 
     private void OnCboOllamaModelSelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -170,6 +183,23 @@ public partial class MainView : UserControl
         var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
         config.AppSettings.Settings.Remove("OllamaModel");
         config.AppSettings.Settings.Add("OllamaModel", selectedItem);
+        config.Save(ConfigurationSaveMode.Modified);
+        ConfigurationManager.RefreshSection("appSettings");
+    }
+
+    private void OnRbAutoChecked(object? sender, RoutedEventArgs e)
+    {
+        if (!Init)
+            return;
+
+        var radiobutton = (RadioButton)sender!;
+        bool isChecked = radiobutton.IsChecked ?? false;
+        ((MainViewModel)DataContext!).AutoMode = isChecked;
+
+        // save to configuration file
+        var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+        config.AppSettings.Settings.Remove("AutoMode");
+        config.AppSettings.Settings.Add("AutoMode", isChecked.ToString());
         config.Save(ConfigurationSaveMode.Modified);
         ConfigurationManager.RefreshSection("appSettings");
     }

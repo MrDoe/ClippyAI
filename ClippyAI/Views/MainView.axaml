@@ -41,8 +41,8 @@
 
       <Label Content="{x:Static resources:Resources.TaskLabel}" HorizontalAlignment="Left" FontSize="16"
             Margin="0 10 0 0" />
-      <ComboBox x:Name="cboTask" SelectedItem="{Binding Task}" SelectedIndex="{Binding SelectedItemIndex}" 
-                ItemsSource="{Binding TaskItems}" HorizontalAlignment="Left" Width="400" />
+      <ComboBox x:Name="cboTask" SelectedItem="{Binding Task}" ItemsSource="{Binding TaskItems}"
+            HorizontalAlignment="Left" Width="400" />
 
       <StackPanel Orientation="Vertical" IsVisible="{Binding ShowCustomTask}" >
             <Label Content="{x:Static resources:Resources.Task_15}" HorizontalAlignment="Left" FontSize="16"
@@ -75,13 +75,11 @@
             HorizontalAlignment="Left" Margin="10 5 0 0" />
       </StackPanel>
 
-      <Label Content="{x:Static resources:Resources.AutoMode}" HorizontalAlignment="Left" FontSize="16"
-            Margin="0 10 0 0" />
+      <Label Content="{x:Static resources:Resources.AutoMode}" HorizontalAlignment="Left" FontSize="16" Margin="0 10 0 0" />
       <StackPanel Orientation="Horizontal">
-        <RadioButton Content="{x:Static resources:Resources.Enabled}" IsChecked="{Binding IsEnabled}" 
+        <RadioButton x:Name="rbAuto" Content="{x:Static resources:Resources.Enabled}" IsChecked="{Binding AutoMode}" 
             HorizontalAlignment="Left" Margin="10 5 0 0" />
-        <RadioButton Content="{x:Static resources:Resources.Disabled}" IsChecked="True" 
-            HorizontalAlignment="Left" Margin="10 5 0 0" />
+        <RadioButton Content="{x:Static resources:Resources.Disabled}" HorizontalAlignment="Left" Margin="10 5 0 0" IsChecked="{Binding !AutoMode}" />
       </StackPanel>
 
       <StackPanel x:Name="pnlLoading" Orientation="Vertical" HorizontalAlignment="Center" Margin="0 10 0 0" IsVisible="{Binding IsBusy}">
