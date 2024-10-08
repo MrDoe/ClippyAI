@@ -7,14 +7,23 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.ReactiveUI;
 using Avalonia.Threading;
+using Avalonia.Markup.Xaml;
+using ClippyAI.Desktop;
 using ClippyAI.ViewModels;
 using ReactiveUI;
+using DesktopNotifications;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
 namespace ClippyAI.Views;
 
 public partial class MainWindow : ReactiveWindow<MainViewModel>
 {
     public readonly System.Timers.Timer clipboardPollingTimer;
+    private readonly INotificationManager _notificationManager;
 
+    private Notification? _lastNotification;
     public MainWindow()
     {
         InitializeComponent();
@@ -25,6 +34,13 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         // poll clipboard every 3 seconds
         clipboardPollingTimer = new System.Timers.Timer(1000);
         clipboardPollingTimer.Elapsed += ClipboardPollingTimer_Elapsed;
+
+        // get notification manager from ClippyAI.Desktop.Program
+        _notificationManager = Program.NotificationManager ??
+                                throw new InvalidOperationException("Missing notification manager");
+        _notificationManager.NotificationActivated += OnNotificationActivated;
+        _notificationManager.NotificationDismissed += OnNotificationDismissed;
+
     }
 
     private void MainWindow_Loaded(object? sender, RoutedEventArgs e)
