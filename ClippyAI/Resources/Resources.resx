@@ -108,7 +108,13 @@
     </data>
     <data name="Task_18" xml:space="preserve">
         <value>Translate this text to French.</value>
-    </data>    
+    </data>
+    <data name="Task_19" xml:space="preserve">
+        <value>Translate this text to Spanish.</value>
+    </data>
+    <data name="Task_20" xml:space="preserve">
+        <value>Write a response to the email and tell that you already solved the problem.</value>
+    </data>
     <data name="Data" xml:space="preserve">
         <value>Data</value>
     </data>

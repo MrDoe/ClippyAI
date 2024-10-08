@@ -112,6 +112,12 @@
     <data name="Task_18" xml:space="preserve">
         <value>Übersetze den Text ins Französische.</value>
     </data>
+    <data name="Task_19" xml:space="preserve">
+        <value>Übersetze den Text ins Spanische.</value>
+    </data>
+    <data name="Task_20" xml:space="preserve">
+        <value>Schreibe eine Antwort auf die E-Mail und teile mit, dass du das Problem gelöst hast.</value>
+    </data>
     <data name="Data" xml:space="preserve">
         <value>Daten</value>
     </data>
