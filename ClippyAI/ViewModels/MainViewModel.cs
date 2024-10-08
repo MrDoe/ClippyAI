@@ -19,7 +19,6 @@ public partial class MainViewModel : ViewModelBase
     }
 
     private CancellationTokenSource _askClippyCts = new();
-
     private bool initialized = false;
 
     [ObservableProperty]
@@ -42,9 +41,6 @@ public partial class MainViewModel : ViewModelBase
 
     [ObservableProperty]
     private ObservableCollection<string> taskItems = [];
-
-    // [ObservableProperty]
-    // private int selectedItemIndex = -1;
 
     [ObservableProperty]
     private string _customTask = "";
@@ -72,7 +68,6 @@ public partial class MainViewModel : ViewModelBase
 
     [ObservableProperty]
     private string _model = ConfigurationManager.AppSettings["OllamaModel"] ?? "gemma2:latest";
-
 
     private void PopulateTasks()
     {
@@ -121,12 +116,12 @@ public partial class MainViewModel : ViewModelBase
                 return;
             }
 
-            // call ShowNotification method from MainWindow
-            if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-            {
-                var mainWindow = (MainWindow)desktop.MainWindow!;
-                mainWindow.ShowNotification("ClippyAI", Resources.Resources.PleaseWait, true);
-            }
+            // // call ShowNotification method from MainWindow
+            // if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            // {
+            //     var mainWindow = (MainWindow)desktop.MainWindow!;
+            //     mainWindow.ShowNotification("ClippyAI", Resources.Resources.PleaseWait, true);
+            // }
 
             response = await OllamaService.SendRequest(ClipboardContent!,
                                                        task,
@@ -209,8 +204,24 @@ public partial class MainViewModel : ViewModelBase
             return;
 
         // Get the clipboard content
-        var newContent = await ClipboardService.GetText();
-
+        string? newContent;
+        try 
+        {
+            newContent = await ClipboardService.GetText();
+        }
+        catch (Exception e)
+        {
+            if(e is InvalidOperationException)
+            {
+                // Ignore the exception if the clipboard does not contain text
+                return;
+            }
+            else
+            {
+                ErrorMessages?.Add(e.Message);
+                return;
+            }
+        }
         // Check if the content has changed
         if (newContent != ClipboardContent)
         {

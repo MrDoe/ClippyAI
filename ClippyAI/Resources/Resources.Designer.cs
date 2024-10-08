@@ -166,7 +166,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Result:.
+        ///   Looks up a localized string similar to Output:.
         /// </summary>
         public static string Output {
             get {
@@ -382,7 +382,9 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your task has been completed and copied to the clipboard!\n\Result:\n.
+        ///   Looks up a localized string similar to Your task has been completed and copied to the clipboard!
+        ///Result:
+        ///.
         /// </summary>
         public static string TaskCompleted {
             get {

@@ -137,6 +137,8 @@
         <value>Bitte wählen Sie ein Modell aus!</value>
     </data>
     <data name="TaskCompleted" xml:space="preserve">
-        <value>Ihre Aufgabe wurde abgeschlossen und in die Zwischenablage kopiert!\n\nErgebnis:\n</value>
+        <value>Ihre Aufgabe wurde abgeschlossen und in die Zwischenablage kopiert!
+Ergebnis:
+</value>
     </data>
 </root>

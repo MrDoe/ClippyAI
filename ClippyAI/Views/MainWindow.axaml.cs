@@ -22,7 +22,7 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         InitializeComponent();
 
         if (Screens.Primary != null)
-            Height = Screens.Primary.Bounds.Height;
+            Height = Screens.Primary.Bounds.Height - 70;
 
         // poll clipboard every second
         clipboardPollingTimer = new System.Timers.Timer(1000);

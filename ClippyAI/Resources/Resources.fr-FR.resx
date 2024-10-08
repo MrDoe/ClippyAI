@@ -139,6 +139,8 @@
         <value>Choisissez un modèle!</value>
     </data>
     <data name="TaskCompleted" xml:space="preserve">
-        <value>Votre tâche a été terminée et copiée dans le presse-papiers!\n\nRésultat:\n</value>
+        <value>Votre tâche a été terminée et copiée dans le presse-papiers!
+Résultat:
+</value>
     </data>
 </root>

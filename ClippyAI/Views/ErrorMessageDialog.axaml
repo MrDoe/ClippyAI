@@ -10,9 +10,10 @@
     ExtendClientAreaChromeHints="NoChrome"
     ExtendClientAreaTitleBarHeightHint="-1"
     SystemDecorations="BorderOnly"
+    WindowStartupLocation="CenterScreen"
     CanResize="false">
     <StackPanel>
-    <TextBlock Text="Error" FontSize="20" FontWeight="Bold" Margin="10,10,10,10"/>
+    <TextBlock Text="ClippyAI Error" FontSize="20" FontWeight="Bold" Margin="10,10,10,10"/>
     <TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap" Margin="10,0,20,10"/>
     <Button Content="OK" HorizontalContentAlignment="Center" Command="{Binding CloseCommand}" Width="100" HorizontalAlignment="Center"/>
     </StackPanel>

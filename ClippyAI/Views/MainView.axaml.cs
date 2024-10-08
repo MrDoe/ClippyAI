@@ -172,7 +172,7 @@ public partial class MainView : UserControl
 
     private void OnCboOllamaModelSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (!Init || e.RemovedItems.Count == 0)
+        if (!Init)
             return;
 
         var comboBox = (ComboBox)sender!;

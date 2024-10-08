@@ -1,6 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+	<PropertyGroup Condition=" '$(OS)' != 'Windows_NT' ">
+		<TargetFrameworks>net8.0</TargetFrameworks>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
+		<TargetFrameworks>net8.0-windows10.0.17763.0</TargetFrameworks>
+	</PropertyGroup>
+	<PropertyGroup>
     <OutputType>WinExe</OutputType>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
@@ -15,6 +20,12 @@
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
   <ItemGroup>
+    <AvaloniaXaml Remove="Libs\**" />
+    <Compile Remove="Libs\**" />
+    <EmbeddedResource Remove="Libs\**" />
+    <None Remove="Libs\**" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
     <PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
@@ -24,9 +35,11 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="Desktop.Robot_Net8_v" Version="1.5.2" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
-    <PackageReference Include="DesktopNotifications" Version="1.3.1" />
-    <PackageReference Include="DesktopNotifications.FreeDesktop" Version="1.3.1" />
-    <PackageReference Include="DesktopNotifications.Windows" Version="1.3.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Libs\DesktopNotifications\DesktopNotifications.FreeDesktop\DesktopNotifications.FreeDesktop.csproj" />
+    <ProjectReference Include="Libs\DesktopNotifications\DesktopNotifications.Windows\DesktopNotifications.Windows.csproj" />
+    <ProjectReference Include="Libs\DesktopNotifications\DesktopNotifications\DesktopNotifications.csproj" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Resources/Resources.resx">
@@ -45,4 +58,3 @@
     <Exec Command="sed -i 's/internal/public/g' Resources/Resources.Designer.cs" Condition="'$(OS)' == 'Unix'" />
   </Target>
 </Project>
-

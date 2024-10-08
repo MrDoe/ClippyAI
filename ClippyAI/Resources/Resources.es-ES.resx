@@ -139,6 +139,8 @@
         <value>¡Elija un modelo!</value>
     </data>
     <data name="TaskCompleted" xml:space="preserve">
-        <value>Su tarea ha sido completada y copiada al portapapeles!\n\nResultado:\n</value>
+        <value>Su tarea ha sido completada y copiada al portapapeles!
+Resultado:
+</value>
     </data>
 </root>

@@ -47,7 +47,7 @@ public static class OllamaService
     /// <param name="task">The task to perform.</param>
     /// <param name="typeOutput">Whether to simulate typing the output.</param>
     /// <param name="token">The cancellation token.</param>
-    public static async Task<string?> SendRequest(string clipboardData, string task, 
+    public static async Task<string?> SendRequest(string clipboardData, string task,
                                                   string model, bool typeOutput = true,
                                                   CancellationToken token = default)
     {
@@ -98,7 +98,7 @@ public static class OllamaService
         }
         else
         {
-            Console.WriteLine($"Request failed with status: {response.StatusCode}.");
+            throw new Exception($"Request failed with status: {response.StatusCode}.");
         }
         return fullResponse;
     }
@@ -119,12 +119,18 @@ public static class OllamaService
     public static async Task<ObservableCollection<string>> GetModelsAsync(CancellationToken token = default)
     {
         List<string> models = [];
-
-        using var response = await client.GetAsync(
-                             $"{url}/tags",
-                             token).ConfigureAwait(false);
-
-        if (response.IsSuccessStatusCode)
+        HttpResponseMessage? response = null;
+        try
+        {
+            response = await client.GetAsync(
+                                 $"{url}/tags",
+                                 token).ConfigureAwait(false);
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+        if (response != null && response.IsSuccessStatusCode)
         {
             using var stream = await response.Content.ReadAsStreamAsync(token);
             using var reader = new StreamReader(stream);
@@ -146,7 +152,7 @@ public static class OllamaService
         }
         else
         {
-            Console.WriteLine($"Request failed with status: {response.StatusCode}.");
+            Console.WriteLine($"Request failed with status: {response?.StatusCode}.");
         }
 
         // convert list to observable collection

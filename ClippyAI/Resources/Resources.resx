@@ -134,6 +134,8 @@
         <value>Please select a model!</value>
     </data>
     <data name="TaskCompleted" xml:space="preserve">
-        <value>Your task has been completed and copied to the clipboard!\n\Result:\n</value>
+        <value>Your task has been completed and copied to the clipboard!
+Result:
+</value>
     </data>
 </root>
