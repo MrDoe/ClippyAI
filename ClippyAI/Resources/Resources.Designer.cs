@@ -19,21 +19,21 @@ namespace ClippyAI.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Build.Tasks.StronglyTypedResourceBuilder", "15.1.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Resources {
+    internal class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        public Resources() {
+        internal Resources() {
         }
         
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager {
+        internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ClippyAI.Resources.Resources", typeof(Resources).Assembly);
@@ -48,7 +48,7 @@ namespace ClippyAI.Resources {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture {
+        internal static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -60,7 +60,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Auto Mode:.
         /// </summary>
-        public static string AutoMode {
+        internal static string AutoMode {
             get {
                 return ResourceManager.GetString("AutoMode", resourceCulture);
             }
@@ -69,7 +69,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Clipboard.
         /// </summary>
-        public static string Clipboard {
+        internal static string Clipboard {
             get {
                 return ResourceManager.GetString("Clipboard", resourceCulture);
             }
@@ -78,7 +78,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Clipboard Content:.
         /// </summary>
-        public static string ClipboardContent {
+        internal static string ClipboardContent {
             get {
                 return ResourceManager.GetString("ClipboardContent", resourceCulture);
             }
@@ -87,7 +87,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to ClippyAI.
         /// </summary>
-        public static string ClippyAI {
+        internal static string ClippyAI {
             get {
                 return ResourceManager.GetString("ClippyAI", resourceCulture);
             }
@@ -96,7 +96,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Configuration.
         /// </summary>
-        public static string Configuration {
+        internal static string Configuration {
             get {
                 return ResourceManager.GetString("Configuration", resourceCulture);
             }
@@ -105,7 +105,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Data.
         /// </summary>
-        public static string Data {
+        internal static string Data {
             get {
                 return ResourceManager.GetString("Data", resourceCulture);
             }
@@ -114,7 +114,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Disabled.
         /// </summary>
-        public static string Disabled {
+        internal static string Disabled {
             get {
                 return ResourceManager.GetString("Disabled", resourceCulture);
             }
@@ -123,7 +123,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Enabled.
         /// </summary>
-        public static string Enabled {
+        internal static string Enabled {
             get {
                 return ResourceManager.GetString("Enabled", resourceCulture);
             }
@@ -132,7 +132,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Keyboard (experimental).
         /// </summary>
-        public static string Keyboard {
+        internal static string Keyboard {
             get {
                 return ResourceManager.GetString("Keyboard", resourceCulture);
             }
@@ -141,7 +141,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Language:.
         /// </summary>
-        public static string Language {
+        internal static string Language {
             get {
                 return ResourceManager.GetString("Language", resourceCulture);
             }
@@ -150,7 +150,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Model:.
         /// </summary>
-        public static string Model {
+        internal static string Model {
             get {
                 return ResourceManager.GetString("Model", resourceCulture);
             }
@@ -159,7 +159,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Ollama URL:.
         /// </summary>
-        public static string OllamaUrl {
+        internal static string OllamaUrl {
             get {
                 return ResourceManager.GetString("OllamaUrl", resourceCulture);
             }
@@ -168,7 +168,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Output:.
         /// </summary>
-        public static string Output {
+        internal static string Output {
             get {
                 return ResourceManager.GetString("Output", resourceCulture);
             }
@@ -177,7 +177,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Please wait....
         /// </summary>
-        public static string PleaseWait {
+        internal static string PleaseWait {
             get {
                 return ResourceManager.GetString("PleaseWait", resourceCulture);
             }
@@ -186,7 +186,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Response:.
         /// </summary>
-        public static string Response {
+        internal static string Response {
             get {
                 return ResourceManager.GetString("Response", resourceCulture);
             }
@@ -195,7 +195,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Please select a model!.
         /// </summary>
-        public static string SelectModel {
+        internal static string SelectModel {
             get {
                 return ResourceManager.GetString("SelectModel", resourceCulture);
             }
@@ -204,7 +204,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Please select a task!.
         /// </summary>
-        public static string SelectTask {
+        internal static string SelectTask {
             get {
                 return ResourceManager.GetString("SelectTask", resourceCulture);
             }
@@ -213,7 +213,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Task.
         /// </summary>
-        public static string Task {
+        internal static string Task {
             get {
                 return ResourceManager.GetString("Task", resourceCulture);
             }
@@ -222,7 +222,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Write a response to the email..
         /// </summary>
-        public static string Task_1 {
+        internal static string Task_1 {
             get {
                 return ResourceManager.GetString("Task_1", resourceCulture);
             }
@@ -231,7 +231,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Write a response to the email and request a confirmation..
         /// </summary>
-        public static string Task_10 {
+        internal static string Task_10 {
             get {
                 return ResourceManager.GetString("Task_10", resourceCulture);
             }
@@ -240,7 +240,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Write a response to the email and request a rescheduling..
         /// </summary>
-        public static string Task_11 {
+        internal static string Task_11 {
             get {
                 return ResourceManager.GetString("Task_11", resourceCulture);
             }
@@ -249,7 +249,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Explain what it is as precisely as possible..
         /// </summary>
-        public static string Task_12 {
+        internal static string Task_12 {
             get {
                 return ResourceManager.GetString("Task_12", resourceCulture);
             }
@@ -258,7 +258,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Explain where the error lies and how to fix it..
         /// </summary>
-        public static string Task_13 {
+        internal static string Task_13 {
             get {
                 return ResourceManager.GetString("Task_13", resourceCulture);
             }
@@ -267,7 +267,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Explain how it can be improved..
         /// </summary>
-        public static string Task_14 {
+        internal static string Task_14 {
             get {
                 return ResourceManager.GetString("Task_14", resourceCulture);
             }
@@ -276,7 +276,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Custom Task.
         /// </summary>
-        public static string Task_15 {
+        internal static string Task_15 {
             get {
                 return ResourceManager.GetString("Task_15", resourceCulture);
             }
@@ -285,7 +285,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Translate this text to English..
         /// </summary>
-        public static string Task_16 {
+        internal static string Task_16 {
             get {
                 return ResourceManager.GetString("Task_16", resourceCulture);
             }
@@ -294,7 +294,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Translate this text to German..
         /// </summary>
-        public static string Task_17 {
+        internal static string Task_17 {
             get {
                 return ResourceManager.GetString("Task_17", resourceCulture);
             }
@@ -303,7 +303,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Translate this text to French..
         /// </summary>
-        public static string Task_18 {
+        internal static string Task_18 {
             get {
                 return ResourceManager.GetString("Task_18", resourceCulture);
             }
@@ -312,7 +312,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Translate this text to Spanish..
         /// </summary>
-        public static string Task_19 {
+        internal static string Task_19 {
             get {
                 return ResourceManager.GetString("Task_19", resourceCulture);
             }
@@ -321,7 +321,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Write a detailed response to the email..
         /// </summary>
-        public static string Task_2 {
+        internal static string Task_2 {
             get {
                 return ResourceManager.GetString("Task_2", resourceCulture);
             }
@@ -330,7 +330,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Write a response to the email and tell that you already solved the problem..
         /// </summary>
-        public static string Task_20 {
+        internal static string Task_20 {
             get {
                 return ResourceManager.GetString("Task_20", resourceCulture);
             }
@@ -339,7 +339,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Write a response to the email and graciously agree..
         /// </summary>
-        public static string Task_3 {
+        internal static string Task_3 {
             get {
                 return ResourceManager.GetString("Task_3", resourceCulture);
             }
@@ -348,7 +348,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Write a response to the email and politely decline..
         /// </summary>
-        public static string Task_4 {
+        internal static string Task_4 {
             get {
                 return ResourceManager.GetString("Task_4", resourceCulture);
             }
@@ -357,7 +357,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Write a response to the email and request more information..
         /// </summary>
-        public static string Task_5 {
+        internal static string Task_5 {
             get {
                 return ResourceManager.GetString("Task_5", resourceCulture);
             }
@@ -366,7 +366,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Write a response to the email and request a meeting appointment..
         /// </summary>
-        public static string Task_6 {
+        internal static string Task_6 {
             get {
                 return ResourceManager.GetString("Task_6", resourceCulture);
             }
@@ -375,7 +375,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Write a response to the email and say that you will take care of the problem..
         /// </summary>
-        public static string Task_7 {
+        internal static string Task_7 {
             get {
                 return ResourceManager.GetString("Task_7", resourceCulture);
             }
@@ -384,7 +384,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Write a response to the email and say that you cannot solve the problem and refer to Person X..
         /// </summary>
-        public static string Task_8 {
+        internal static string Task_8 {
             get {
                 return ResourceManager.GetString("Task_8", resourceCulture);
             }
@@ -393,7 +393,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Write a response to the email and request a feedback..
         /// </summary>
-        public static string Task_9 {
+        internal static string Task_9 {
             get {
                 return ResourceManager.GetString("Task_9", resourceCulture);
             }
@@ -404,7 +404,7 @@ namespace ClippyAI.Resources {
         ///Result:
         ///.
         /// </summary>
-        public static string TaskCompleted {
+        internal static string TaskCompleted {
             get {
                 return ResourceManager.GetString("TaskCompleted", resourceCulture);
             }
@@ -413,7 +413,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to What I should do for you:.
         /// </summary>
-        public static string TaskLabel {
+        internal static string TaskLabel {
             get {
                 return ResourceManager.GetString("TaskLabel", resourceCulture);
             }
@@ -422,7 +422,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Execute.
         /// </summary>
-        public static string TaskStart {
+        internal static string TaskStart {
             get {
                 return ResourceManager.GetString("TaskStart", resourceCulture);
             }
@@ -431,7 +431,7 @@ namespace ClippyAI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
-        public static string TaskStop {
+        internal static string TaskStop {
             get {
                 return ResourceManager.GetString("TaskStop", resourceCulture);
             }
