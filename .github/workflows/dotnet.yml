@@ -25,6 +25,3 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
-      continue-on-error: true
-    - name: Build2
-      run: dotnet build --no-restore
