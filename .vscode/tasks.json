@@ -3,15 +3,13 @@
     "tasks": [
         {
             "label": "build",
-            "dependsOn": ["build-debug"],
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
                 "${workspaceFolder}/ClippyAI.sln",
                 "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary;ForceNoAlign",
-                "/p:Configuration=Debug"
+                "/consoleloggerparameters:NoSummary;ForceNoAlign"
             ],
             "problemMatcher": "$msCompile"
         },
@@ -24,8 +22,7 @@
                 "${workspaceFolder}/ClippyAI.sln",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary;ForceNoAlign",
-                "/p:Configuration=Debug",
-                "--no-restore"
+                "/p:Configuration=Debug"
             ],
             "problemMatcher": "$msCompile"
         },
