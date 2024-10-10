@@ -30,12 +30,12 @@
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="Desktop.Robot_Net8_v" Version="1.5.2" />
-    <PackageReference Include="DesktopNotificationsNet8" Version="1.3.2" />
-    <PackageReference Include="DesktopNotificationsNet8.Avalonia" Version="1.0.0" />
-    <PackageReference Include="DesktopNotificationsNet8.FreeDesktop" Version="1.0.0" />
-    <PackageReference Include="DesktopNotificationsNet8.Windows" Version="1.3.2" />
+    <PackageReference Include="DesktopNotificationsNet8" Version="1.3.3" />
+    <PackageReference Include="DesktopNotificationsNet8.Avalonia" Version="1.3.3" />
+    <PackageReference Include="DesktopNotificationsNet8.FreeDesktop" Version="1.3.3" />
+    <PackageReference Include="DesktopNotificationsNet8.Windows" Version="1.3.3" />
     <PackageReference Include="NHotkey.Wpf" Version="3.0.0" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.1" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Resources\Resources.Designer.cs">
