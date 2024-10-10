@@ -1,0 +1,3 @@
+[submodule "ClippyAI/Libs/DesktopNotifications"]
+	path = ClippyAI/Libs/DesktopNotifications
+	url = https://github.com/MrDoe/DesktopNotificationsNet8
