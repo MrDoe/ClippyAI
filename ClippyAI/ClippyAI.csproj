@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup Condition=" '$(OS)' != 'Windows_NT' ">
-		<TargetFrameworks>net8.0</TargetFrameworks>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
-		<TargetFrameworks>net8.0-windows10.0.17763.0</TargetFrameworks>
-	</PropertyGroup>
-	<PropertyGroup>
+  <PropertyGroup Condition=" '$(OS)' != 'Windows_NT' ">
+    <TargetFrameworks>net8.0</TargetFrameworks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
+    <TargetFrameworks>net8.0-windows10.0.17763.0</TargetFrameworks>
+  </PropertyGroup>
+  <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
@@ -13,7 +13,7 @@
     <CoreCompileDependsOn>PrepareResources;$(CompileDependsOn)</CoreCompileDependsOn>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
   </PropertyGroup>
-<PropertyGroup>
+  <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <PublishAot>False</PublishAot>
     <PublishTrimmed>False</PublishTrimmed>
@@ -45,12 +45,15 @@
     <ProjectReference Include="Libs\DesktopNotifications\DesktopNotifications\DesktopNotifications.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Resources\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Update="Resources/Resources.resx">
-      <Generator>MSBuild:Compile</Generator>
-      <StronglyTypedFileName>Resources/Resources.Designer.cs</StronglyTypedFileName>
-      <StronglyTypedLanguage>CSharp</StronglyTypedLanguage>
-      <StronglyTypedNamespace>ClippyAI.Resources</StronglyTypedNamespace>
-      <StronglyTypedClassName>Resources</StronglyTypedClassName>
+      <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Resources.de-DE.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

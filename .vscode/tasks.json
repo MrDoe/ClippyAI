@@ -24,7 +24,8 @@
                 "${workspaceFolder}/ClippyAI.sln",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary;ForceNoAlign",
-                "/p:Configuration=Debug"
+                "/p:Configuration=Debug",
+                "--no-restore"
             ],
             "problemMatcher": "$msCompile"
         },
