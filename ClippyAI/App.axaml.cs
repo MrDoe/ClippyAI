@@ -7,10 +7,15 @@ using ClippyAI.Views;
 using System.Configuration;
 using System.Text;
 using System;
+using CommunityToolkit.Mvvm.Input;
 namespace ClippyAI;
 
 public partial class App : Application
 {
+    public App()
+    {
+        DataContext = new ApplicationViewModel();
+    }
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -40,19 +45,13 @@ public partial class App : Application
                 break;
         }
 
-        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopLifetime)
         {
-            desktop.MainWindow = new MainWindow
-            {
-                DataContext = new MainViewModel()
-            };
+            desktopLifetime.MainWindow = new MainWindow { DataContext = new MainViewModel() };
         }
-        else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
+        else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewLifetime)
         {
-            singleViewPlatform.MainView = new MainView
-            {
-                DataContext = new MainViewModel()
-            };
+            singleViewLifetime.MainView = new MainView { DataContext = new MainViewModel() };
         }
 
         base.OnFrameworkInitializationCompleted();

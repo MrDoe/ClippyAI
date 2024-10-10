@@ -8,10 +8,11 @@
         mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
         Width="420" Height="500"
         x:Class="ClippyAI.Views.MainWindow"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="/Assets/bulb.png"
         Title="{x:Static assets:Resources.ClippyAI}"
         Loaded="MainWindow_Loaded"
         Topmost="true"
-        CanResize="false">
+        CanResize="false"
+        ShowInTaskbar="false">
         <views:MainView />
 </Window>

@@ -116,12 +116,12 @@ public partial class MainViewModel : ViewModelBase
                 return;
             }
 
-            // // call ShowNotification method from MainWindow
-            // if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-            // {
-            //     var mainWindow = (MainWindow)desktop.MainWindow!;
-            //     mainWindow.ShowNotification("ClippyAI", Resources.Resources.PleaseWait, true);
-            // }
+            // call ShowNotification method from MainWindow
+            if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                var mainWindow = (MainWindow)desktop.MainWindow!;
+                mainWindow.ShowNotification("ClippyAI", Resources.Resources.PleaseWait, true, false);
+            }
 
             response = await OllamaService.SendRequest(ClipboardContent!,
                                                        task,
@@ -152,7 +152,8 @@ public partial class MainViewModel : ViewModelBase
             if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 var mainWindow = (MainWindow)desktop.MainWindow!;
-                mainWindow.ShowNotification("ClippyAI", Resources.Resources.TaskCompleted + response, false);
+                mainWindow.HideLastNotification();
+                mainWindow.ShowNotification("ClippyAI", Resources.Resources.TaskCompleted + response, false, true);
             }
         }
         IsBusy = false;

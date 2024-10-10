@@ -144,4 +144,7 @@
 Result:
 </value>
     </data>
+    <data name="TaskView" xml:space="preserve">
+        <value>View</value>
+    </data>
 </root>
