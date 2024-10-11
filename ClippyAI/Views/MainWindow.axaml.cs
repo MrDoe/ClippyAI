@@ -42,8 +42,6 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         _notificationManager.NotificationActivated += OnNotificationActivated;
         _notificationManager.NotificationDismissed += OnNotificationDismissed;
 
-        // attach state changed event
-        SizeChanged += MainWindow_StateChanged;
 #if WINDOWS        
         RegisterHotkeyWindows();
 #endif
