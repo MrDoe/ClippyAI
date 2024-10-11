@@ -6,8 +6,9 @@
     Width="1000"
     Height="500"
     Background="Black"
-    WindowStartupLocation="CenterScreen"
-    CanResize="true">
+    CanResize="true"
+    Title="ClippyAI Result"
+    >
     <StackPanel>
     <TextBlock Text="ClippyAI Result" FontSize="20" FontWeight="Bold" Margin="10,10,10,10"/>
     <TextBox Text="{Binding ResultText}" Margin="10,0,20,10" Height="400" Width="950" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" />

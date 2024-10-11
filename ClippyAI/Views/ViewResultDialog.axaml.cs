@@ -18,5 +18,15 @@ public partial class ViewResultDialog : Window
             }
         }
         InitializeComponent();
+        this.Resized += OnResized;
+    }
+
+    private void OnResized(object? sender, WindowResizedEventArgs e)
+    {
+        var screen = Screens.ScreenFromVisual(this);
+        var center = screen!.WorkingArea.Center;
+        var newX = center.X - (this.Bounds.Width / 2);
+        var newY = center.Y - (this.Bounds.Height / 2);
+        this.Position = new PixelPoint((int)newX, (int)newY);
     }
 }
