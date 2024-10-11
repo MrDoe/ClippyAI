@@ -23,6 +23,13 @@ public partial class ViewModelBase : ObservableObject
 
         if (Avalonia.Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+            // show main window if it's minimized
+            if (desktop.MainWindow!.WindowState == Avalonia.Controls.WindowState.Minimized)
+            {
+                desktop.MainWindow.Show();
+                // restore the window if it's minimized
+                desktop.MainWindow.WindowState = Avalonia.Controls.WindowState.Normal;
+            }
             await dialog.ShowDialog(desktop.MainWindow!);
         }
     }

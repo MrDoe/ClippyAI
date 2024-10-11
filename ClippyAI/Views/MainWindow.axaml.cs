@@ -33,7 +33,7 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
             Height = Screens.Primary.Bounds.Height - 70;
 
         // poll clipboard every second
-        clipboardPollingTimer = new System.Timers.Timer(1000);
+        clipboardPollingTimer = new System.Timers.Timer(400);
         clipboardPollingTimer.Elapsed += ClipboardPollingTimer_Elapsed;
 
         // register notification manager
@@ -168,7 +168,7 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
             // open view result dialog with the result
             Dispatcher.UIThread.InvokeAsync(() =>
             {
-                ViewResultDialog viewResultDialog = new ViewResultDialog
+                ViewResultDialog viewResultDialog = new()
                 {
                     DataContext = new ViewResultDialogViewModel(response)
                 };

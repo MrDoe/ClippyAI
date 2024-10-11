@@ -119,7 +119,13 @@
     </data>
     <data name="Task_20" xml:space="preserve">
         <value>Écrire une réponse à l'e-mail et dites que vous avez déjà résolu le problème.</value>
-    </data>    
+    </data>
+    <data name="Task_21" xml:space="preserve">
+        <value>Écrire une réponse à l'e-mail et dire que vous travaillez sur le problème.</value>
+    </data>
+    <data name="Task_22" xml:space="preserve">
+        <value>Résumez ce texte.</value>        
+    </data>        
     <data name="Data" xml:space="preserve">
         <value>Données</value>
     </data>
