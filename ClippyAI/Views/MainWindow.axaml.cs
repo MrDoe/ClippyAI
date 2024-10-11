@@ -13,7 +13,10 @@ using Avalonia.Markup.Xaml;
 using System.Windows.Input;
 using NHotkey;
 using NHotkey.Wpf;
+#if WINDOWS
 using System.Runtime.InteropServices;
+using Windows.Foundation.Metadata;
+#endif
 namespace ClippyAI.Views;
 
 public partial class MainWindow : ReactiveWindow<MainViewModel>
@@ -39,9 +42,9 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         _notificationManager.NotificationActivated += OnNotificationActivated;
         _notificationManager.NotificationDismissed += OnNotificationDismissed;
 
-        // if running on windows
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            RegisterHotkeyWindows();
+#if WINDOWS        
+        RegisterHotkeyWindows();
+#endif
     }
 
     private void InitializeComponent()
@@ -49,6 +52,7 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         AvaloniaXamlLoader.Load(this);
     }
 
+#if WINDOWS    
     private void RegisterHotkeyWindows()
     {
         try
@@ -67,6 +71,7 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         ((MainViewModel)DataContext!).AskClippyCommand.Execute(null);
         e.Handled = true;
     }
+#endif
 
     private void MainWindow_Loaded(object? sender, RoutedEventArgs e)
     {
