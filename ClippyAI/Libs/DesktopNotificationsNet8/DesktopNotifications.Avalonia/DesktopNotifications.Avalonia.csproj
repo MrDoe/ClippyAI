@@ -10,6 +10,7 @@
 
 	<PropertyGroup>
 		<Nullable>enable</Nullable>
+		<EnableWindowsTargeting>true</EnableWindowsTargeting>
 		<LangVersion>latest</LangVersion>
 		<Description>A cross-platform C# library for native desktop "toast" notifications.</Description>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
