@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<!--Note: Dotnet currently does not allow to build on non-windows platforms when a windows TFM is specified-->
+	<PropertyGroup Condition=" '$(OS)' != 'Windows_NT' ">
+		<TargetFramework>net8.0</TargetFramework>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
+		<TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
+		<Description>A cross-platform C# library for native desktop "toast" notifications.</Description>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageProjectUrl>https://github.com/pr8x/DesktopNotifications</PackageProjectUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageId>DesktopNotificationsNet8.Avalonia</PackageId>
+		<Title>DesktopNotificationsNet8.Avalonia</Title>
+		<VersionPrefix>1.3.4</VersionPrefix>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Avalonia" Version="11.1.4" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\DesktopNotifications.FreeDesktop\DesktopNotifications.FreeDesktop.csproj" />
+		<ProjectReference Include="..\DesktopNotifications.Windows\DesktopNotifications.Windows.csproj" />
+		<ProjectReference Include="..\DesktopNotifications\DesktopNotifications.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+</Project>
