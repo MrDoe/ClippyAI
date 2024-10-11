@@ -5,7 +5,7 @@
             "name": "Debug ClippyAI Windows",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
+            "preLaunchTask": "msbuild",
             "program": "${workspaceFolder}/ClippyAI/bin/Debug/net8.0-windows10.0.17763.0/ClippyAI.dll",
             "args": [],
             "cwd": "${workspaceFolder}/ClippyAI",
