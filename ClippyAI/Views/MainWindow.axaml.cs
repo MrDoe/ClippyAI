@@ -42,6 +42,8 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         _notificationManager.NotificationActivated += OnNotificationActivated;
         _notificationManager.NotificationDismissed += OnNotificationDismissed;
 
+        // attach state changed event
+        SizeChanged += MainWindow_StateChanged;
 #if WINDOWS        
         RegisterHotkeyWindows();
 #endif
@@ -86,13 +88,6 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         Hide();
     }
 
-    // hide window when minimized
-    private void MainWindow_StateChanged(object? sender, EventArgs e)
-    {
-        if (WindowState == WindowState.Minimized)
-            Hide();
-    }
-
     private void SetWindowPos()
     {
         // set window position to bottom right corner
@@ -110,6 +105,16 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
     private void MainWindow_Resized(object? sender, EventArgs e)
     {
         SetWindowPos();
+
+        if (WindowState == WindowState.Minimized)
+        {
+            Hide();
+            SystemDecorations = SystemDecorations.None;
+        }
+        else
+        {
+            SystemDecorations = SystemDecorations.Full;
+        }
     }
 
     private void MainWindow_PositionChanged(object? sender, EventArgs e)
