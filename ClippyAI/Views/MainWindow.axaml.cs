@@ -192,7 +192,7 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
             PixelSize windowSize = PixelSize.FromSize(ClientSize, Screens.Primary.Scaling);
 
             Position = new PixelPoint(
-              screenSize.Width - windowSize.Width,
+              screenSize.Width - windowSize.Width - 1,
               0);
         }
     }

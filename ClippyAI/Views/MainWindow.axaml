@@ -10,9 +10,12 @@
         x:Class="ClippyAI.Views.MainWindow"
         Icon="/Assets/bulb.png"
         Title="{x:Static assets:Resources.ClippyAI}"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
         Loaded="MainWindow_Loaded"
         Topmost="true"
         CanResize="false"
-        ShowInTaskbar="false">
+        ShowInTaskbar="false"
+        ExtendClientAreaToDecorationsHint="True">
         <views:MainView />
 </Window>

@@ -5,17 +5,18 @@
              xmlns:vm="clr-namespace:ClippyAI.ViewModels"
              xmlns:resources="clr-namespace:ClippyAI.Resources"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="400"
-             Padding="10"
+             Padding="0"
              x:Class="ClippyAI.Views.MainView"
              x:DataType="vm:MainViewModel"
              Loaded="MainView_Loaded">
   <Design.DataContext>
-    <!-- This only sets the DataContext for the previewer in an IDE,
-         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
     <vm:MainViewModel />
   </Design.DataContext>
+
   <!-- Margins: left, top, right, bottom -->
-  <StackPanel Width="400">
+  <DockPanel Margin="0">
+    <Border CornerRadius="6" BorderBrush="DimGray" Background="Transparent" BorderThickness="1" DockPanel.Dock="Top">
+  <StackPanel Width="400" Margin="0">
       <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
             <Image Source="/Assets/clippy_64_trans.png" Width="50" Height="50" VerticalAlignment="Center" HorizontalAlignment="Left" />
             <Label Content="ClippyAI" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18" />
@@ -88,4 +89,6 @@
         <RadioButton Content="{x:Static resources:Resources.Disabled}" HorizontalAlignment="Left" Margin="10 5 0 0" IsChecked="{Binding !AutoMode}" />
       </StackPanel>
   </StackPanel>
+</Border>
+</DockPanel>
 </UserControl>
