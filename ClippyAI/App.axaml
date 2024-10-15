@@ -24,10 +24,9 @@
                 ToolTipText="Clippy AI">
                 <TrayIcon.Menu>
                     <NativeMenu>
-                        <NativeMenuItem Header="Clippy AI" Command="{Binding ShowWindow}" />
+                        <NativeMenuItem Header="Clippy AI" Command="{Binding ShowWindow}" ToolTipText="Show Clippy AI" />
                         <NativeMenuItemSeparator />
-                        <NativeMenuItem Header="Open" Command="{Binding ShowWindow}" />
-                        <NativeMenuItem Header="Exit" Command="{Binding CloseWindow}" />
+                        <NativeMenuItem Header="Exit" Command="{Binding CloseWindow}" ToolTipText="Stop Clippy AI" />
                     </NativeMenu>
                 </TrayIcon.Menu>
             </TrayIcon>
