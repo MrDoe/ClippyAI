@@ -23,7 +23,7 @@ public partial class ViewResultDialog : Window
 
     private void OnResized(object? sender, WindowResizedEventArgs e)
     {
-        var screen = Screens.ScreenFromVisual(this);
+        var screen = Screens.ScreenFromWindow(this);
         var center = screen!.WorkingArea.Center;
         var newX = center.X - (Bounds.Width / 2);
         var newY = center.Y - (Bounds.Height / 2);

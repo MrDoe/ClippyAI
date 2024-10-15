@@ -10,13 +10,17 @@ using ClippyAI.ViewModels;
 using DesktopNotifications;
 using System.Diagnostics;
 using Avalonia.Markup.Xaml;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+
+#if WINDOWS
 using System.Windows.Input;
 using NHotkey;
 using NHotkey.Wpf;
-#if WINDOWS
-using System.Runtime.InteropServices;
+
 using Windows.Foundation.Metadata;
 #endif
+
 namespace ClippyAI.Views;
 
 public partial class MainWindow : ReactiveWindow<MainViewModel>
@@ -44,6 +48,8 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
 
 #if WINDOWS        
         RegisterHotkeyWindows();
+#elif LINUX
+        RegisterHotkeyLinux();
 #endif
     }
 
@@ -52,7 +58,7 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         AvaloniaXamlLoader.Load(this);
     }
 
-#if WINDOWS    
+#if WINDOWS
     private void RegisterHotkeyWindows()
     {
         try
@@ -67,9 +73,87 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
 
     private void OnHotkeyHandler(object? sender, HotkeyEventArgs e)
     {
+        Console.WriteLine("Hotkey pressed");
+
         // execute relay command AskClippy
-        ((MainViewModel)DataContext!).AskClippyCommand.Execute(null);
+        ((MainViewModel)DataContext!).AskClippy(new CancellationToken());
         e.Handled = true;
+    }
+#endif
+
+#if LINUX
+    const int KeyPress = 2;
+    const long KeyPressMask = (1L << 0);
+    const int False = 0;
+    const int GrabModeAsync = 1;
+    const uint ControlMask = 1 << 2; // Control key modifier
+    const uint AltMask = 1 << 3; // Alt key modifier
+
+    [DllImport("libX11.so", CharSet = CharSet.Unicode)]
+    static extern IntPtr XOpenDisplay(string? display_name);
+
+    [DllImport("libX11.so")]
+    static extern IntPtr XDefaultRootWindow(IntPtr display);
+
+    [DllImport("libX11.so")]
+    static extern uint XKeysymToKeycode(IntPtr display, uint keysym);
+
+    [DllImport("libX11.so")]
+    static extern uint XStringToKeysym(string str);
+
+    [DllImport("libX11.so")]
+    static extern int XGrabKey(IntPtr display, int keycode, uint modifiers, IntPtr grab_window, int owner_events, int pointer_mode, int keyboard_mode);
+
+    [DllImport("libX11.so")]
+    static extern int XSelectInput(IntPtr display, IntPtr window, long event_mask);
+
+    [DllImport("libX11.so")]
+    static extern int XNextEvent(IntPtr display, ref XEvent event_return);
+
+    [StructLayout(LayoutKind.Sequential)]
+    struct XEvent
+    {
+        public int type;
+    }
+
+    private void RegisterHotkeyLinux()
+    {
+        IntPtr display = XOpenDisplay(null);
+        if (display == IntPtr.Zero)
+        {
+            Console.WriteLine("Cannot open X display");
+            return;
+        }
+
+        IntPtr rootWindow = XDefaultRootWindow(display);
+
+        uint keysym = XStringToKeysym("C");
+        int keycode = (int)XKeysymToKeycode(display, keysym);
+
+        XGrabKey(display, keycode, ControlMask | AltMask, rootWindow, False, GrabModeAsync, GrabModeAsync);
+        XSelectInput(display, rootWindow, KeyPressMask);
+
+        Task.Run(() => ListenHotkey(display));
+    }
+
+    private async Task ListenHotkey(IntPtr display)
+    {
+        while (true)
+        {
+            XEvent ev = new();
+            XNextEvent(display, ref ev);
+
+            if (ev.type == KeyPress)
+            {
+                Console.WriteLine("Hotkey pressed");
+
+                // execute relay command AskClippy
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    await ((MainViewModel)DataContext!).AskClippy(new CancellationToken());
+                });
+            }
+        }
     }
 #endif
 
