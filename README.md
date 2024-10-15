@@ -14,9 +14,8 @@ the application the user is running.
 even use this tool completely offline.
 * **Clipboard Integration**: ClippyAI seamlessly integrates with your system's clipboard, capturing text instantly
 after it is copied or cut. Users can send the clipboard contents along with one of the predefined or a custom task
-to the Ollama API.
-* **Keyboard Simulation**: The response is either sent to an integrated output field or can automatically be typed
-into the application window where the user is working. Alternatively, you can just send the output back to the clipboard.
+to the Ollama API. After task execution, the clipboard contents will be overwritten with the output.
+* **Desktop Notifications**: Notifications inform the user about the task status.
 * **Cross-Platform Support**: Developed with .NET and Avalonia, ClippyAI runs on Windows and Linux (X11)
 ensuring that users can enjoy its benefits regardless of their platform.
 
@@ -32,17 +31,16 @@ ensuring that users can enjoy its benefits regardless of their platform.
 **Getting Started**
 
 1. Install Ollama from https://ollama.com.
-2. Run `ollama pull gemma2` on the command line to install the llama3 AI model on your PC.
-3. Clone this repository and build and run this tool. You may need to build the project twice, if you are using VS Code, because it generates the necessary resources files during the first build.
-5. Check the configuration in App.config. The standard values should work fine for most installations.
-6. Run the application.
+2. Run `ollama pull gemma2` on the command line to install the Gemma2 AI model or any other model on your PC.
+3. Download and extract the ZIP file from the latest release.
+4. Run ''setup.exe'' to install and run the application.
 
 **Using ClippyAI**
 
-1. To create a task, simply copy or cut some text from another application (e.g., email, chat, or document).
-2. Choose the desired task type.
-3. Click ''Send'' to send the task to the local Ollama API.
-4. Review and edit your generated task as needed.
+1. Choose the desired task type or define a custom one.
+2. Copy or cut some text from an application (e.g., email, chat, or document) via [Ctrl]+[C].
+3. Click ''Send'' or use [Ctrl]+[Alt]+[C] to send the task to the local LLM.
+4. Review or paste your generated task as needed.
 
 **Disclaimer**
 
