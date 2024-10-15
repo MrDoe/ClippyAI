@@ -10,15 +10,16 @@ using ClippyAI.ViewModels;
 using DesktopNotifications;
 using System.Diagnostics;
 using Avalonia.Markup.Xaml;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 
 #if WINDOWS
 using System.Windows.Input;
 using NHotkey;
 using NHotkey.Wpf;
+#endif
 
-using Windows.Foundation.Metadata;
+#if LINUX
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 #endif
 
 namespace ClippyAI.Views;
@@ -46,11 +47,22 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         _notificationManager.NotificationActivated += OnNotificationActivated;
         _notificationManager.NotificationDismissed += OnNotificationDismissed;
 
+        // Subscribe to the WindowStateChanged event
+        PropertyChanged += MainWindow_PropertyChanged;
+
 #if WINDOWS        
         RegisterHotkeyWindows();
 #elif LINUX
         RegisterHotkeyLinux();
 #endif
+    }
+
+    private void MainWindow_PropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (e.Property == WindowStateProperty)
+        {
+            MainWindow_WindowStateChanged(sender, e);
+        }
     }
 
     private void InitializeComponent()
@@ -71,12 +83,12 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         }
     }
 
-    private void OnHotkeyHandler(object? sender, HotkeyEventArgs e)
+    private async void OnHotkeyHandler(object? sender, HotkeyEventArgs e)
     {
         Console.WriteLine("Hotkey pressed");
 
         // execute relay command AskClippy
-        ((MainViewModel)DataContext!).AskClippy(new CancellationToken());
+        await ((MainViewModel)DataContext!).AskClippy(new CancellationToken());
         e.Handled = true;
     }
 #endif
@@ -191,11 +203,14 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         if (WindowState == WindowState.Minimized)
         {
             Hide();
-            SystemDecorations = SystemDecorations.None;
         }
-        else
+    }
+
+    private void MainWindow_WindowStateChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (WindowState == WindowState.Minimized)
         {
-            SystemDecorations = SystemDecorations.Full;
+            Hide();
         }
     }
 
