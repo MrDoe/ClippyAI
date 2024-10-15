@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup Condition=" '$(OS)' != 'Windows_NT' ">
     <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
@@ -27,8 +27,14 @@
   </PropertyGroup>
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
+    <Content Include="clippyai.desktop" CopyToPublishDirectory="Always">
+      <LinuxPath>/usr/share/applications/clippyai.desktop</LinuxPath>
+    </Content>
+    <Content Include="clippyai.png" CopyToPublishDirectory="Always">
+      <LinuxPath>/usr/share/icons/hicolor/32x32/apps/clippyai.png</LinuxPath>
+    </Content>
   </ItemGroup>
-  <ItemGroup>
+<ItemGroup>
     <AvaloniaXaml Remove="Libs\**" />
     <Compile Remove="Libs\**" />
     <EmbeddedResource Remove="Libs\**" />
@@ -43,9 +49,9 @@
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.1.4" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
     <PackageReference Include="Desktop.Robot_Net8_v" Version="1.5.2" />
-    <PackageReference Include="NHotkey.Wpf" Version="3.0.0" />
+    <PackageReference Include="NHotkey.Wpf" Condition="'$(OS)' == 'Windows_NT'" Version="3.0.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.1" />
-    <PackageReference Include="X11" Version="1.0.6" />
+    <PackageReference Include="X11" Condition="'$(OS)' != 'Windows_NT'" Version="1.0.6" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Libs\DesktopNotificationsNet8\DesktopNotifications.Avalonia\DesktopNotifications.Avalonia.csproj" />
@@ -79,4 +85,8 @@
     <Exec Command="powershell -Command &quot;(Get-Content -path $(ProjectDir)\Resources\Resources.Designer.cs) -replace 'internal', 'public' | Set-Content -Path $(ProjectDir)\Resources\Resources.Designer.cs&quot;" Condition="'$(OS)' == 'Windows_NT'" />
     <Exec Command="sed -i 's/internal/public/g' Resources/Resources.Designer.cs" Condition="'$(OS)' == 'Unix'" />
   </Target>
+  <PropertyGroup>
+    <PostInstallScript>chmod 777 /usr/share/ClippyAI
+chmod 666 /usr/share/ClippyAI/ClippyAI.dll.config</PostInstallScript>  
+  </PropertyGroup>
 </Project>
