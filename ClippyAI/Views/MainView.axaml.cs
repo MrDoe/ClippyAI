@@ -44,6 +44,11 @@ public partial class MainView : UserControl
         var rbAuto = this.FindControl<RadioButton>("rbAuto");
         if (rbAuto != null)
             rbAuto.IsCheckedChanged += OnRbAutoChecked;
+
+        // add event handler for Add Model button click
+        var btnAddModel = this.FindControl<Button>("btnAddModel");
+        if (btnAddModel != null)
+            btnAddModel.Click += OnBtnAddModelClick;
     }
 
     private void MainView_Loaded(object? sender, RoutedEventArgs e)
@@ -202,5 +207,10 @@ public partial class MainView : UserControl
         config.AppSettings.Settings.Add("AutoMode", isChecked.ToString());
         config.Save(ConfigurationSaveMode.Modified);
         ConfigurationManager.RefreshSection("appSettings");
+    }
+
+    private void OnBtnAddModelClick(object? sender, RoutedEventArgs e)
+    {
+        ((MainViewModel)DataContext!).AddModelCommand.Execute(null);
     }
 }
