@@ -243,4 +243,56 @@ public partial class MainViewModel : ViewModelBase
             IsBusy = false;
         }
     }
+
+    [RelayCommand]
+    public async Task AddModel()
+    {
+        try
+        {
+            var models = await OllamaService.GetModelsAsync();
+            ModelItems.Clear();
+            foreach (var model in models)
+            {
+                ModelItems.Add(model);
+            }
+        }
+        catch (Exception e)
+        {
+            ErrorMessages?.Add(e.Message);
+            ShowErrorMessage(e.Message);
+        }
+    }
+
+    [RelayCommand]
+    public async Task AddModelCommand()
+    {
+        try
+        {
+            // call ShowNotification method from MainWindow
+            if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                var mainWindow = (MainWindow)desktop.MainWindow!;
+                mainWindow.ShowNotification("ClippyAI", Resources.Resources.PleaseWait, true, false);
+            }
+
+            var models = await OllamaService.PullModelAsync();
+            ModelItems.Clear();
+            foreach (var model in models)
+            {
+                ModelItems.Add(model);
+            }
+
+            // call HideLastNotification method from MainWindow
+            if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                var mainWindow = (MainWindow)desktop.MainWindow!;
+                mainWindow.HideLastNotification();
+            }
+        }
+        catch (Exception e)
+        {
+            ErrorMessages?.Add(e.Message);
+            ShowErrorMessage(e.Message);
+        }
+    }
 }

@@ -162,4 +162,57 @@ public static class OllamaService
 
         return oc;
     }
+
+    /// <summary>
+    /// Pulls a new model from the Ollama API.
+    /// </summary>
+    /// <param name="token">The cancellation token.</param>
+    /// <returns>The models.</returns>
+    public static async Task<ObservableCollection<string>> PullModelAsync(CancellationToken token = default)
+    {
+        List<string> models = [];
+        HttpResponseMessage? response = null;
+        try
+        {
+            response = await client.PostAsync(
+                                 $"{url}/pull",
+                                 null,
+                                 token).ConfigureAwait(false);
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+        if (response != null && response.IsSuccessStatusCode)
+        {
+            using var stream = await response.Content.ReadAsStreamAsync(token);
+            using var reader = new StreamReader(stream);
+            string? output = await reader.ReadToEndAsync();
+
+            if (output != null)
+            {
+                // only collect model names
+                var deserializedModels = JsonSerializer.Deserialize<OllamaModelRequest>(output)?.models;
+
+                if (deserializedModels != null)
+                {
+                    foreach (var model in deserializedModels)
+                    {
+                        models.Add(model!.name!);
+                    }
+                }
+            }
+        }
+        else
+        {
+            Console.WriteLine($"Request failed with status: {response?.StatusCode}.");
+        }
+
+        // convert list to observable collection
+        var oc = new ObservableCollection<string>();
+        foreach (var item in models)
+            oc.Add(item);
+
+        return oc;
+    }
 }
