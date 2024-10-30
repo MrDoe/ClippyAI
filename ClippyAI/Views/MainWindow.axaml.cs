@@ -94,79 +94,124 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
 #endif
 
 #if LINUX
-    const int KeyPress = 2;
-    const long KeyPressMask = (1L << 0);
-    const int False = 0;
-    const int GrabModeAsync = 1;
-    const uint ControlMask = 1 << 2; // Control key modifier
-    const uint AltMask = 1 << 3; // Alt key modifier
+       // P/Invoke declarations
+        [DllImport("libX11.so")]
+        private static extern IntPtr XOpenDisplay(string? display_name);
 
-    [DllImport("libX11.so", CharSet = CharSet.Unicode)]
-    static extern IntPtr XOpenDisplay(string? display_name);
+        [DllImport("libX11.so")]
+        private static extern IntPtr XDefaultRootWindow(IntPtr display);
 
-    [DllImport("libX11.so")]
-    static extern IntPtr XDefaultRootWindow(IntPtr display);
+        [DllImport("libX11.so")]
+        private static extern uint XStringToKeysym(string? str);
 
-    [DllImport("libX11.so")]
-    static extern uint XKeysymToKeycode(IntPtr display, uint keysym);
+        [DllImport("libX11.so")]
+        private static extern uint XKeysymToKeycode(IntPtr display, uint keysym);
 
-    [DllImport("libX11.so")]
-    static extern uint XStringToKeysym(string str);
+        [DllImport("libX11.so")]
+        private static extern int XGrabKey(IntPtr display, int keycode, uint modifiers, IntPtr grab_window, int owner_events, int pointer_mode, int keyboard_mode);
 
-    [DllImport("libX11.so")]
-    static extern int XGrabKey(IntPtr display, int keycode, uint modifiers, IntPtr grab_window, int owner_events, int pointer_mode, int keyboard_mode);
+        [DllImport("libX11.so")]
+        private static extern void XSelectInput(IntPtr display, IntPtr window, long event_mask);
 
-    [DllImport("libX11.so")]
-    static extern int XSelectInput(IntPtr display, IntPtr window, long event_mask);
+        [DllImport("libX11.so")]
+        private static extern int XNextEvent(IntPtr display, ref XEvent event_return);
 
-    [DllImport("libX11.so")]
-    static extern int XNextEvent(IntPtr display, ref XEvent event_return);
+        [DllImport("libX11.so")]
+        private static extern int XPending(IntPtr display);
 
-    [StructLayout(LayoutKind.Sequential)]
-    struct XEvent
-    {
-        public int type;
-    }
+        // Constants
+        private const int ControlMask = 1 << 2;
+        private const int AltMask = 1 << 3;
+        private const int False = 0;
+        private const int GrabModeAsync = 1;
+        private const long KeyPressMask = 1L << 0;
+        private const int KeyPress = 2;
+
+        [StructLayout(LayoutKind.Sequential)]
+        struct XEvent
+        {
+            public int type;
+            // Other fields can be added here as needed
+        }
 
     private void RegisterHotkeyLinux()
     {
-        IntPtr display = XOpenDisplay(null);
+        var display = XOpenDisplay(null);
         if (display == IntPtr.Zero)
         {
             Console.WriteLine("Cannot open X display");
             return;
         }
+        Console.WriteLine("X display opened successfully.");
 
         IntPtr rootWindow = XDefaultRootWindow(display);
+        Console.WriteLine($"Root window: {rootWindow}");
 
         uint keysym = XStringToKeysym("C");
         int keycode = (int)XKeysymToKeycode(display, keysym);
+        Console.WriteLine($"Keysym: {keysym}, Keycode: {keycode}");
 
-        XGrabKey(display, keycode, ControlMask | AltMask, rootWindow, False, GrabModeAsync, GrabModeAsync);
+        int grabResult = XGrabKey(display, keycode, ControlMask | AltMask, rootWindow, False, GrabModeAsync, GrabModeAsync);
+        if (grabResult != 0)
+        {
+            Console.WriteLine($"Failed to grab keyboard shortcut [Ctrl]+[Alt]+[C]. Is another application using it?");
+            return;
+        }
+        Console.WriteLine("Key grabbed successfully.");
+
         XSelectInput(display, rootWindow, KeyPressMask);
+        Console.WriteLine("Input selected successfully.");
 
         Task.Run(() => ListenHotkey(display));
+        Console.WriteLine("Hotkey listening task started.");
     }
 
-    private async Task ListenHotkey(IntPtr display)
-    {
-        while (true)
+        private async Task ListenHotkey(IntPtr display)
         {
-            XEvent ev = new();
-            XNextEvent(display, ref ev);
-
-            if (ev.type == KeyPress)
+            if (display == IntPtr.Zero)
             {
-                Console.WriteLine("Hotkey pressed");
+                Console.WriteLine("Invalid display pointer.");
+                return;
+            }
 
-                // execute relay command AskClippy
-                await Dispatcher.UIThread.InvokeAsync(async () =>
+            Console.WriteLine("Display pointer is valid. Entering event loop...");
+
+            try
+            {
+                while (true)
                 {
-                    await ((MainViewModel)DataContext!).AskClippy(new CancellationToken());
-                });
+                    XEvent ev = new();
+                    //Console.WriteLine($"Display pointer: {display}");
+
+                    // Check if there are any events pending
+                    int pendingEvents = XPending(display);
+                    if (pendingEvents == 0)
+                    {
+                        //Console.WriteLine("No events pending. Sleeping for a while...");
+                        await Task.Delay(100); // Sleep for 100 milliseconds
+                        continue;
+                    }
+
+                    XNextEvent(display, ref ev);
+                    //Console.WriteLine($"Event received: {ev.type}");
+
+                    if (ev.type == KeyPress)
+                    {
+                        Console.WriteLine("Hotkey pressed");
+
+                        // execute relay command AskClippy
+                        await Dispatcher.UIThread.InvokeAsync(async () =>
+                        {
+                            await ((MainViewModel)DataContext!).AskClippy(new CancellationToken());
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception occurred: {ex.Message}");
             }
         }
-    }
 #endif
 
     private void MainWindow_Loaded(object? sender, RoutedEventArgs e)

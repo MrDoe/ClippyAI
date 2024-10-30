@@ -9,7 +9,6 @@ using ClippyAI.Services;
 using ClippyAI.Views;
 using System.Collections.ObjectModel;
 using System.Configuration;
-using ClippyAI.Views;
 namespace ClippyAI.ViewModels;
 
 public partial class MainViewModel : ViewModelBase
@@ -263,8 +262,8 @@ public partial class MainViewModel : ViewModelBase
             // open input dialog to enter model name
             string? modelName = await InputDialog.Prompt(
                     parentWindow: mainWindow,
-                    title: "Add Model",
-                    caption: "Enter the model name:",
+                    title: "Pull Model",
+                    caption: "Enter the model name to pull:",
                     isRequired: true
                 );
             if(string.IsNullOrEmpty(modelName))

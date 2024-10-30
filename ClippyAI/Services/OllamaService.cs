@@ -260,7 +260,7 @@ public static class OllamaService
                 ShowNotification("Model deletion failed with status: " + response.StatusCode, false, true);
             }
         }
-        catch (Exception e)
+        catch (Exception)
         {
             ShowNotification("Model deletion failed.", false, true);
         }

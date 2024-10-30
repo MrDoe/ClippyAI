@@ -23,7 +23,7 @@ public partial class InputDialogViewModel : ObservableObject
 
     public ReactiveCommand<Unit, Unit> CloseCommand { get; }
 
-    public ReactiveCommand<Unit, Unit> SubmitCommand { get; }
+    public ReactiveCommand<Unit, Unit>? SubmitCommand { get; }
 
     private void CloseWindow()
     {

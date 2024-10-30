@@ -21,12 +21,12 @@ public partial class App : Application
     {
         AvaloniaXamlLoader.Load(this);
     }
-    private Window _mainWindow;
-    private TrayIcon _trayIcon;
+    private Window? _mainWindow;
+    private TrayIcon? _trayIcon;
 
     private void TrayIcon_Clicked(object? sender, EventArgs e)
     {
-        if (_mainWindow.WindowState == WindowState.Minimized || !_mainWindow.IsVisible)
+        if (_mainWindow!.WindowState == WindowState.Minimized || !_mainWindow.IsVisible)
         {
             _mainWindow.Show();
             _mainWindow.WindowState = WindowState.Normal;
