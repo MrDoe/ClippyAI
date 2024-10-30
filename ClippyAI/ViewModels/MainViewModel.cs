@@ -9,6 +9,7 @@ using ClippyAI.Services;
 using ClippyAI.Views;
 using System.Collections.ObjectModel;
 using System.Configuration;
+using ClippyAI.Views;
 namespace ClippyAI.ViewModels;
 
 public partial class MainViewModel : ViewModelBase
@@ -247,14 +248,34 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     public async Task AddModel()
     {
+        MainWindow? mainWindow;
+        if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            mainWindow = (MainWindow)desktop.MainWindow!;
+        }
+        else
+        {
+            return;
+        }
+
         try
         {
-            var models = await OllamaService.GetModelsAsync();
-            ModelItems.Clear();
-            foreach (var model in models)
+            // open input dialog to enter model name
+            string? modelName = await InputDialog.Prompt(
+                    parentWindow: mainWindow,
+                    title: "Add Model",
+                    caption: "Enter the model name:",
+                    isRequired: true
+                );
+            if(string.IsNullOrEmpty(modelName))
             {
-                ModelItems.Add(model);
+                return;
             }
+
+            await OllamaService.PullModelAsync(modelName);
+
+            // update model items
+            ModelItems = OllamaService.GetModels();
         }
         catch (Exception e)
         {
@@ -264,30 +285,27 @@ public partial class MainViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    public async Task AddModelCommand()
+    public async Task DeleteModel()
     {
+        MainWindow? mainWindow;
+        if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            mainWindow = (MainWindow)desktop.MainWindow!;
+        }
+        else
+        {
+            return;
+        }
+
         try
         {
-            // call ShowNotification method from MainWindow
-            if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-            {
-                var mainWindow = (MainWindow)desktop.MainWindow!;
-                mainWindow.ShowNotification("ClippyAI", Resources.Resources.PleaseWait, true, false);
-            }
+            // get selected model
+            string modelName = ModelItems[ModelItems.IndexOf(Model)];
 
-            var models = await OllamaService.PullModelAsync();
-            ModelItems.Clear();
-            foreach (var model in models)
-            {
-                ModelItems.Add(model);
-            }
+            await OllamaService.DeleteModelAsync(modelName);
 
-            // call HideLastNotification method from MainWindow
-            if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-            {
-                var mainWindow = (MainWindow)desktop.MainWindow!;
-                mainWindow.HideLastNotification();
-            }
+            // update model items
+            ModelItems = OllamaService.GetModels();
         }
         catch (Exception e)
         {

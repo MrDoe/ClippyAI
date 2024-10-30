@@ -5,11 +5,7 @@
     Name="ClippyAI"
     x:Class="ClippyAI.App"
     x:DataType="vm:ApplicationViewModel"
-    RequestedThemeVariant="Default"
->
-    <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available
-    options. -->
-
+    RequestedThemeVariant="Default">
     <Application.DataTemplates>
         <local:ViewLocator />
     </Application.DataTemplates>
@@ -17,18 +13,4 @@
     <Application.Styles>
         <FluentTheme />
     </Application.Styles>
-
-    <TrayIcon.Icons>
-        <TrayIcons>
-            <TrayIcon Icon="/Assets/bulb.png" ToolTipText="Clippy AI" >
-                <TrayIcon.Menu>
-                    <NativeMenu>
-                        <NativeMenuItem Header="Clippy AI" Command="{Binding ShowWindow}" />
-                        <NativeMenuItemSeparator />
-                        <NativeMenuItem Header="Exit" Command="{Binding CloseWindow}" />
-                    </NativeMenu>
-                </TrayIcon.Menu>
-            </TrayIcon>
-        </TrayIcons>
-    </TrayIcon.Icons>
 </Application>

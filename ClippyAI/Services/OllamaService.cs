@@ -13,6 +13,9 @@ using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
+using ClippyAI.Views;
 
 namespace ClippyAI.Services;
 
@@ -78,8 +81,8 @@ public static class OllamaService
         {
             Console.WriteLine("Request successful.");
 
-            using var stream = await response.Content.ReadAsStreamAsync(token);
-            using var reader = new StreamReader(stream);
+            using var responseStream = await response.Content.ReadAsStreamAsync(token);
+            using var reader = new StreamReader(responseStream);
 
             string? line;
             while ((line = await reader.ReadLineAsync(token)) != null &&
@@ -126,7 +129,7 @@ public static class OllamaService
                                  $"{url}/tags",
                                  token).ConfigureAwait(false);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             Console.WriteLine(e.Message);
         }
@@ -166,53 +169,110 @@ public static class OllamaService
     /// <summary>
     /// Pulls a new model from the Ollama API.
     /// </summary>
+    /// <param name="modelName">The name of the model to pull.</param>
     /// <param name="token">The cancellation token.</param>
     /// <returns>The models.</returns>
-    public static async Task<ObservableCollection<string>> PullModelAsync(CancellationToken token = default)
+    public static async Task PullModelAsync(string modelName, CancellationToken token = default)
     {
-        List<string> models = [];
-        HttpResponseMessage? response = null;
+        HttpResponseMessage? response;
         try
         {
+            var requestBody = new
+            {
+                name = modelName,
+                insecure = false,
+                stream = true
+            };
+            
+            ShowNotification($"Pulling model {modelName}", true, false);
+
             response = await client.PostAsync(
                                  $"{url}/pull",
-                                 null,
+                                 new StringContent(JsonSerializer.Serialize(requestBody),
+                                 Encoding.UTF8,
+                                 "application/json"),
                                  token).ConfigureAwait(false);
-        }
-        catch(Exception e)
-        {
-            Console.WriteLine(e.Message);
-        }
-        if (response != null && response.IsSuccessStatusCode)
-        {
-            using var stream = await response.Content.ReadAsStreamAsync(token);
-            using var reader = new StreamReader(stream);
-            string? output = await reader.ReadToEndAsync();
 
-            if (output != null)
+            if (response.IsSuccessStatusCode)
             {
-                // only collect model names
-                var deserializedModels = JsonSerializer.Deserialize<OllamaModelRequest>(output)?.models;
+                using var streamContent = await response.Content.ReadAsStreamAsync(token);
+                using var reader = new StreamReader(streamContent);
 
-                if (deserializedModels != null)
+                string? line;
+                while ((line = await reader.ReadLineAsync(token)) != null && !token.IsCancellationRequested)
                 {
-                    foreach (var model in deserializedModels)
+                    if (!string.IsNullOrWhiteSpace(line))
                     {
-                        models.Add(model!.name!);
+                        var statusUpdate = JsonSerializer.Deserialize<Dictionary<string, object>>(line);
+                        string statusMessage = statusUpdate?["status"]?.ToString() + " " + 
+                                               statusUpdate?["completed"]?.ToString() + "/" + 
+                                               statusUpdate?["total"]?.ToString();
+                        ShowNotification(statusMessage, true, false);
+
+                        if (statusUpdate?.ContainsKey("completed") == true)
+                        {
+                            if (statusUpdate["completed"]?.ToString() == statusUpdate["total"]?.ToString())
+                            {
+                                ShowNotification("Model pull completed.", false, false);
+                                break;
+                            }
+                        }
                     }
                 }
             }
+            else
+            {
+                ShowNotification("Model pull failed with status: " + response.StatusCode, false, true);
+            }
         }
-        else
+        catch (Exception)
         {
-            Console.WriteLine($"Request failed with status: {response?.StatusCode}.");
+            ShowNotification("Model pull failed.", false, true);
         }
+    }
 
-        // convert list to observable collection
-        var oc = new ObservableCollection<string>();
-        foreach (var item in models)
-            oc.Add(item);
+    /// <summary>
+    /// Deletes a model from Ollama.
+    /// </summary>
+    /// <param name="modelName">The name of the model to delete.</param>
+    /// <param name="token">The cancellation token.</param>
+    public static async Task DeleteModelAsync(string modelName, CancellationToken token = default)
+    {
+        HttpResponseMessage? response;
+        try
+        {
+            var requestBody = new
+            {
+                name = modelName
+            };
+            var request = new HttpRequestMessage(HttpMethod.Delete, $"{url}/delete")
+            {
+                Content = new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json")
+            };
+            response = await client.SendAsync(request, token).ConfigureAwait(false);
 
-        return oc;
+            if (response.IsSuccessStatusCode)
+            {
+                ShowNotification("Model deleted successfully.", false, false);
+            }
+            else
+            {
+                ShowNotification("Model deletion failed with status: " + response.StatusCode, false, true);
+            }
+        }
+        catch (Exception e)
+        {
+            ShowNotification("Model deletion failed.", false, true);
+        }
+    }
+
+    public static void ShowNotification(string message, bool isBusy, bool isError)
+    {
+        if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            var mainWindow = (MainWindow)desktop.MainWindow!;
+            mainWindow.HideLastNotification();
+            mainWindow.ShowNotification("ClippyAI", message, isBusy, isError);
+        }
     }
 }

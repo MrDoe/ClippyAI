@@ -8,6 +8,7 @@ using System.Configuration;
 using System.Text;
 using System;
 using CommunityToolkit.Mvvm.Input;
+using Avalonia.Controls;
 namespace ClippyAI;
 
 public partial class App : Application
@@ -19,6 +20,21 @@ public partial class App : Application
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
+    }
+    private Window _mainWindow;
+    private TrayIcon _trayIcon;
+
+    private void TrayIcon_Clicked(object? sender, EventArgs e)
+    {
+        if (_mainWindow.WindowState == WindowState.Minimized || !_mainWindow.IsVisible)
+        {
+            _mainWindow.Show();
+            _mainWindow.WindowState = WindowState.Normal;
+        }
+        else
+        {
+            _mainWindow.Hide();
+        }
     }
 
     public override void OnFrameworkInitializationCompleted()
@@ -48,6 +64,42 @@ public partial class App : Application
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopLifetime)
         {
             desktopLifetime.MainWindow = new MainWindow { DataContext = new MainViewModel() };
+            _mainWindow = desktopLifetime.MainWindow;
+
+            _trayIcon = new TrayIcon
+            {
+                Icon = new WindowIcon("Assets/bulb.png"),
+                ToolTipText = "ClippyAI",
+                Menu = []
+            };
+
+            _trayIcon.Menu.Items.Add(new NativeMenuItem
+            {
+                Header = "Show",
+                Command = new RelayCommand(() =>
+                {
+                    if (_mainWindow.WindowState == WindowState.Minimized || !_mainWindow.IsVisible)
+                    {
+                        _mainWindow.Show();
+                        _mainWindow.WindowState = WindowState.Normal;
+                    }
+                    else
+                    {
+                        _mainWindow.Hide();
+                    }
+                })
+            });
+
+            _trayIcon.Menu.Items.Add(new NativeMenuItem
+            {
+                Header = "Exit",
+                Command = new RelayCommand(() =>
+                {
+                    _mainWindow.Close();
+                })
+            });
+            _trayIcon.Clicked += TrayIcon_Clicked;
+            _trayIcon.IsVisible = true;
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewLifetime)
         {
@@ -56,4 +108,6 @@ public partial class App : Application
 
         base.OnFrameworkInitializationCompleted();
     }
+
+
 }

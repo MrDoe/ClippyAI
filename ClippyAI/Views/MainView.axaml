@@ -12,10 +12,10 @@
   <Design.DataContext>
     <vm:MainViewModel />
   </Design.DataContext>
-
+  
   <!-- Margins: left, top, right, bottom -->
   <DockPanel Margin="0">
-    <Border CornerRadius="6" BorderBrush="DimGray" Background="Transparent" BorderThickness="1" DockPanel.Dock="Top">
+    <Border CornerRadius="6" BorderBrush="DimGray" Background="#ee333333" BorderThickness="1" DockPanel.Dock="Top">
   <StackPanel Width="400" Margin="0">
       <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
             <Image Source="/Assets/clippy_64_trans.png" Width="50" Height="50" VerticalAlignment="Center" HorizontalAlignment="Left" />
@@ -31,7 +31,8 @@
             <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1">
                 <ComboBox x:Name="cboOllamaModel" SelectedItem="{Binding Model}" ItemsSource="{Binding ModelItems}"
                       Width="180" />
-                <Button Content="Add Model" Command="{Binding AddModelCommand}" Margin="10,0,0,0" />
+                <Button Content="New" Command="{Binding AddModelCommand}" Margin="10,0,0,0" />
+                <Button Content="Delete" Command="{Binding DeleteModelCommand}" Margin="10,0,0,0" />
             </StackPanel>
             
             <Label Content="{x:Static resources:Resources.Language}" HorizontalAlignment="Left" VerticalAlignment="Center" 
