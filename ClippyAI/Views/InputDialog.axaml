@@ -19,7 +19,7 @@
             <Label Name="lblTitle" Content="Title"/>
         </StackPanel>
         <Label Grid.Row="1" Name="lbl" Margin="0 0 0 10" Content="Value"/>
-        <TextBox Grid.Row="2" Name="txtBox" Watermark="Type.."/>
+        <TextBox Grid.Row="2" Name="txtBox" Watermark="Type.." />
         <StackPanel Grid.Row="3" Margin="0 20 0 0" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Content="OK" Name="btnOK" Click="ButtonOK_Click" Margin="0 0 10 0"/>
             <Button Content="Cancel" Name="btnCancel" Click="ButtonCancel_Click"/>

@@ -36,6 +36,12 @@ public partial class InputDialog : Window
     public InputDialog()
     {
         InitializeComponent();
+        Opened += OnOpened;
+    }
+
+    private void OnOpened(object? sender, EventArgs e)
+    {
+        txtBox.Focus();
     }
 
     private void ButtonOK_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)

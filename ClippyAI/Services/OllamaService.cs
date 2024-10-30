@@ -183,15 +183,15 @@ public static class OllamaService
                 insecure = false,
                 stream = true
             };
-            
+
             ShowNotification($"Pulling model {modelName}", true, false);
 
             response = await client.PostAsync(
-                                 $"{url}/pull",
-                                 new StringContent(JsonSerializer.Serialize(requestBody),
-                                 Encoding.UTF8,
-                                 "application/json"),
-                                 token).ConfigureAwait(false);
+                                             $"{url}/pull",
+                                             new StringContent(JsonSerializer.Serialize(requestBody),
+                                             Encoding.UTF8,
+                                             "application/json"),
+                                             token).ConfigureAwait(false);
 
             if (response.IsSuccessStatusCode)
             {
@@ -199,15 +199,29 @@ public static class OllamaService
                 using var reader = new StreamReader(streamContent);
 
                 string? line;
+                DateTime lastNotificationTime = DateTime.MinValue;
                 while ((line = await reader.ReadLineAsync(token)) != null && !token.IsCancellationRequested)
                 {
                     if (!string.IsNullOrWhiteSpace(line))
                     {
-                        var statusUpdate = JsonSerializer.Deserialize<Dictionary<string, object>>(line);
-                        string statusMessage = statusUpdate?["status"]?.ToString() + " " + 
-                                               statusUpdate?["completed"]?.ToString() + "/" + 
-                                               statusUpdate?["total"]?.ToString();
-                        ShowNotification(statusMessage, true, false);
+                        var statusUpdate = JsonSerializer.Deserialize<Dictionary<string, object>?>(line);
+                        if (statusUpdate == null)
+                            continue;
+
+                        string statusMessage = statusUpdate["status"]?.ToString() ?? "Model pull in progress";
+
+                        if (statusUpdate.TryGetValue("completed", out object? completed) &&
+                           statusUpdate.TryGetValue("total", out object? total))
+                        {
+                            statusMessage += $" ({completed}/{total})";
+                        }
+
+                        // Check if 5 seconds have passed since the last notification
+                        if ((DateTime.Now - lastNotificationTime).TotalSeconds >= 5)
+                        {
+                            ShowNotification(statusMessage, true, false);
+                            lastNotificationTime = DateTime.Now;
+                        }
 
                         if (statusUpdate?.ContainsKey("completed") == true)
                         {
@@ -230,7 +244,7 @@ public static class OllamaService
             ShowNotification("Model pull failed.", false, true);
         }
     }
-
+    
     /// <summary>
     /// Deletes a model from Ollama.
     /// </summary>

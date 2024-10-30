@@ -254,4 +254,10 @@ Result:
   <data name="TaskView" xml:space="preserve">
     <value>View</value>
   </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Pull" xml:space="preserve">
+    <value>Pull</value>
+  </data>
 </root>

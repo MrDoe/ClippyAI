@@ -31,7 +31,7 @@
             <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1">
                 <ComboBox x:Name="cboOllamaModel" SelectedItem="{Binding Model}" ItemsSource="{Binding ModelItems}"
                       Width="180" />
-                <Button Content="New" Command="{Binding AddModelCommand}" Margin="10,0,0,0" />
+                <Button Content="Pull" Command="{Binding AddModelCommand}" Margin="10,0,0,0" />
                 <Button Content="Delete" Command="{Binding DeleteModelCommand}" Margin="10,0,0,0" />
             </StackPanel>
             
@@ -71,7 +71,7 @@
       </StackPanel>
 
       <StackPanel Orientation="Horizontal">
-            <Button Content="{x:Static resources:Resources.TaskStart}" Command="{Binding AskClippyCommand}" HotKey="Ctrl+Alt+C"
+            <Button Content="{x:Static resources:Resources.TaskStart}" Command="{Binding AskClippyCommand}"
                     HorizontalAlignment="Left" Margin="0 10 0 0" />
 
             <Button Content="{x:Static resources:Resources.TaskStop}" Command="{Binding StopClippyTaskCommand}"
