@@ -302,12 +302,11 @@ public partial class MainViewModel : ViewModelBase
             title: "Delete Model",
             caption: "Are you sure you want to delete the selected model?"
         );
-
         if (confirmation != "OK")
         {
             return;
         }
-        
+
         try
         {
             // get selected model
