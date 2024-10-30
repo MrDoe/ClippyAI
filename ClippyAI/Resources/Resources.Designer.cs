@@ -3,7 +3,7 @@
 //     Dieser Code wurde von einem Tool generiert.
 //     Laufzeitversion:4.0.30319.42000
 //
-//     Änderungen an dieser Datei können falsches Verhalten verursachen und gehen verloren, wenn
+//     ï¿½nderungen an dieser Datei kï¿½nnen falsches Verhalten verursachen und gehen verloren, wenn
 //     der Code erneut generiert wird.
 // </auto-generated>
 //------------------------------------------------------------------------------
@@ -13,11 +13,11 @@ namespace ClippyAI.Resources {
     
     
     /// <summary>
-    ///   Eine stark typisierte Ressourcenklasse zum Suchen von lokalisierten Zeichenfolgen usw.
+    /// Eine stark typisierte Ressourcenklasse zum Suchen von lokalisierten Zeichenfolgen usw.
     /// </summary>
     // Diese Klasse wurde von der StronglyTypedResourceBuilder automatisch generiert
-    // -Klasse über ein Tool wie ResGen oder Visual Studio automatisch generiert.
-    // Um einen Member hinzuzufügen oder zu entfernen, bearbeiten Sie die .ResX-Datei und führen dann ResGen
+    // -Klasse ï¿½ber ein Tool wie ResGen oder Visual Studio automatisch generiert.
+    // Um einen Member hinzuzufï¿½gen oder zu entfernen, bearbeiten Sie die .ResX-Datei und fï¿½hren dann ResGen
     // mit der /str-Option erneut aus, oder Sie erstellen Ihr VS-Projekt neu.
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -33,7 +33,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Gibt die zwischengespeicherte ResourceManager-Instanz zurück, die von dieser Klasse verwendet wird.
+        /// Gibt die zwischengespeicherte ResourceManager-Instanz zurï¿½ck, die von dieser Klasse verwendet wird.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
         public static global::System.Resources.ResourceManager ResourceManager {
@@ -47,8 +47,8 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Überschreibt die CurrentUICulture-Eigenschaft des aktuellen Threads für alle
-        ///   Ressourcenzuordnungen, die diese stark typisierte Ressourcenklasse verwenden.
+        /// ï¿½berschreibt die CurrentUICulture-Eigenschaft des aktuellen Threads fï¿½r alle
+        /// Ressourcenzuordnungen, die diese stark typisierte Ressourcenklasse verwenden.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
         public static global::System.Globalization.CultureInfo Culture {
@@ -61,7 +61,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Auto Mode: ähnelt.
+        /// Auto Mode:
         /// </summary>
         public static string AutoMode {
             get {
@@ -70,7 +70,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Clipboard ähnelt.
+        /// Clipboard
         /// </summary>
         public static string Clipboard {
             get {
@@ -79,7 +79,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Clipboard Content: ähnelt.
+        /// Clipboard Content:
         /// </summary>
         public static string ClipboardContent {
             get {
@@ -88,7 +88,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die ClippyAI ähnelt.
+        /// ClippyAI
         /// </summary>
         public static string ClippyAI {
             get {
@@ -97,7 +97,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Configuration ähnelt.
+        /// Configuration
         /// </summary>
         public static string Configuration {
             get {
@@ -106,7 +106,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Data ähnelt.
+        /// Data
         /// </summary>
         public static string Data {
             get {
@@ -115,7 +115,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Disabled ähnelt.
+        /// Disabled
         /// </summary>
         public static string Disabled {
             get {
@@ -124,7 +124,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Enabled ähnelt.
+        /// Enabled
         /// </summary>
         public static string Enabled {
             get {
@@ -133,7 +133,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Keyboard (experimental) ähnelt.
+        /// Keyboard (experimental)
         /// </summary>
         public static string Keyboard {
             get {
@@ -142,7 +142,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Language: ähnelt.
+        /// Language:
         /// </summary>
         public static string Language {
             get {
@@ -151,7 +151,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Model: ähnelt.
+        /// Model:
         /// </summary>
         public static string Model {
             get {
@@ -160,7 +160,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Ollama URL: ähnelt.
+        /// Ollama URL:
         /// </summary>
         public static string OllamaUrl {
             get {
@@ -169,7 +169,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Output: ähnelt.
+        /// Output:
         /// </summary>
         public static string Output {
             get {
@@ -178,7 +178,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Please wait... ähnelt.
+        /// Please wait...
         /// </summary>
         public static string PleaseWait {
             get {
@@ -187,7 +187,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Response: ähnelt.
+        /// Response:
         /// </summary>
         public static string Response {
             get {
@@ -196,7 +196,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Please select a model! ähnelt.
+        /// Please select a model!
         /// </summary>
         public static string SelectModel {
             get {
@@ -205,7 +205,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Please select a task! ähnelt.
+        /// Please select a task!
         /// </summary>
         public static string SelectTask {
             get {
@@ -214,7 +214,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Task ähnelt.
+        /// Task
         /// </summary>
         public static string Task {
             get {
@@ -223,7 +223,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Write a response to the email. ähnelt.
+        /// Write a response to the email.
         /// </summary>
         public static string Task_1 {
             get {
@@ -232,7 +232,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Write a response to the email and request a confirmation. ähnelt.
+        /// Write a response to the email and request a confirmation.
         /// </summary>
         public static string Task_10 {
             get {
@@ -241,7 +241,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Write a response to the email and request a rescheduling. ähnelt.
+        /// Write a response to the email and request a rescheduling.
         /// </summary>
         public static string Task_11 {
             get {
@@ -250,7 +250,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Explain what it is as precisely as possible. ähnelt.
+        /// Explain what it is as precisely as possible.
         /// </summary>
         public static string Task_12 {
             get {
@@ -259,7 +259,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Explain where the error lies and how to fix it. ähnelt.
+        /// Explain where the error lies and how to fix it.
         /// </summary>
         public static string Task_13 {
             get {
@@ -268,7 +268,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Explain how it can be improved. ähnelt.
+        /// Explain how it can be improved.
         /// </summary>
         public static string Task_14 {
             get {
@@ -277,7 +277,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Custom Task ähnelt.
+        /// Custom Task
         /// </summary>
         public static string Task_15 {
             get {
@@ -286,7 +286,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Translate this text to English. ähnelt.
+        /// Translate this text to English.
         /// </summary>
         public static string Task_16 {
             get {
@@ -295,7 +295,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Translate this text to German. ähnelt.
+        /// Translate this text to German.
         /// </summary>
         public static string Task_17 {
             get {
@@ -304,7 +304,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Translate this text to French. ähnelt.
+        /// Translate this text to French.
         /// </summary>
         public static string Task_18 {
             get {
@@ -313,7 +313,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Translate this text to Spanish. ähnelt.
+        /// Translate this text to Spanish.
         /// </summary>
         public static string Task_19 {
             get {
@@ -322,7 +322,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Write a detailed response to the email. ähnelt.
+        /// Write a detailed response to the email.
         /// </summary>
         public static string Task_2 {
             get {
@@ -331,7 +331,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Write a response to the email and tell that you already solved the problem. ähnelt.
+        /// Write a response to the email and tell that you already solved the problem.
         /// </summary>
         public static string Task_20 {
             get {
@@ -340,7 +340,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Write a response to the email and tell that you are working on the problem. ähnelt.
+        /// Write a response to the email and tell that you are working on the problem.
         /// </summary>
         public static string Task_21 {
             get {
@@ -349,7 +349,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Summarize this text. ähnelt.
+        /// Summarize this text.
         /// </summary>
         public static string Task_22 {
             get {
@@ -358,7 +358,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Write a response to the email and graciously agree. ähnelt.
+        /// Write a response to the email and graciously agree.
         /// </summary>
         public static string Task_3 {
             get {
@@ -367,7 +367,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Write a response to the email and politely decline. ähnelt.
+        /// Write a response to the email and politely decline.
         /// </summary>
         public static string Task_4 {
             get {
@@ -376,7 +376,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Write a response to the email and request more information. ähnelt.
+        /// Write a response to the email and request more information.
         /// </summary>
         public static string Task_5 {
             get {
@@ -385,7 +385,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Write a response to the email and request a meeting appointment. ähnelt.
+        /// Write a response to the email and request a meeting appointment.
         /// </summary>
         public static string Task_6 {
             get {
@@ -394,7 +394,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Write a response to the email and say that you will take care of the problem. ähnelt.
+        /// Write a response to the email and say that you will take care of the problem.
         /// </summary>
         public static string Task_7 {
             get {
@@ -403,7 +403,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Write a response to the email and say that you cannot solve the problem and refer to Person X. ähnelt.
+        /// Write a response to the email and say that you cannot solve the problem and refer to Person X.
         /// </summary>
         public static string Task_8 {
             get {
@@ -412,7 +412,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Write a response to the email and request a feedback. ähnelt.
+        /// Write a response to the email and request a feedback.
         /// </summary>
         public static string Task_9 {
             get {
@@ -421,9 +421,9 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Your task has been completed and copied to the clipboard!
+        /// Your task has been completed and copied to the clipboard!
         ///Result:
-        /// ähnelt.
+        ///
         /// </summary>
         public static string TaskCompleted {
             get {
@@ -432,7 +432,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die What I should do for you: ähnelt.
+        /// What I should do for you:
         /// </summary>
         public static string TaskLabel {
             get {
@@ -441,7 +441,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Execute ähnelt.
+        /// Execute
         /// </summary>
         public static string TaskStart {
             get {
@@ -450,7 +450,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Cancel ähnelt.
+        /// Cancel
         /// </summary>
         public static string TaskStop {
             get {
@@ -459,11 +459,23 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die View ähnelt.
+        /// View
         /// </summary>
         public static string TaskView {
             get {
                 return ResourceManager.GetString("TaskView", resourceCulture);
+            }
+        }
+
+        public static string Delete {
+            get {
+                return ResourceManager.GetString("Delete", resourceCulture);
+            }
+        }
+
+        public static string Pull {
+            get {
+                return ResourceManager.GetString("Pull", resourceCulture);
             }
         }
     }

@@ -296,6 +296,18 @@ public partial class MainViewModel : ViewModelBase
             return;
         }
 
+        // confirm deletion
+        string? confirmation = await InputDialog.Confirm(
+            parentWindow: mainWindow,
+            title: "Delete Model",
+            caption: "Are you sure you want to delete the selected model?"
+        );
+
+        if (confirmation != "OK")
+        {
+            return;
+        }
+        
         try
         {
             // get selected model
