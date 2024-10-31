@@ -28,10 +28,13 @@
   </PropertyGroup>
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
-    <Content Include="clippyai.desktop" CopyToPublishDirectory="Always">
+    <Content Include="bulb.png" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Always">
+      <LinuxPath>/usr/share/ClippyAI/Assets/bulb.png</LinuxPath>
+    </Content>
+    <Content Include="clippyai.desktop" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Always">
       <LinuxPath>/usr/share/applications/clippyai.desktop</LinuxPath>
     </Content>
-    <Content Include="clippyai.png" CopyToPublishDirectory="Always">
+    <Content Include="clippyai.png" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Always">
       <LinuxPath>/usr/share/icons/hicolor/32x32/apps/clippyai.png</LinuxPath>
     </Content>
   </ItemGroup>

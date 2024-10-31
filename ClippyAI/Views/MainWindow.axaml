@@ -8,7 +8,7 @@
         mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
         Width="420" Height="500"
         x:Class="ClippyAI.Views.MainWindow"
-        Icon="/Assets/bulb.png"
+        Icon="avares://ClippyAI/Assets/bulb.png"
         Title="{x:Static assets:Resources.ClippyAI}"
         TransparencyLevelHint="AcrylicBlur"
         Background="Transparent"

@@ -9,6 +9,8 @@ using System.Text;
 using System;
 using CommunityToolkit.Mvvm.Input;
 using Avalonia.Controls;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 namespace ClippyAI;
 
 public partial class App : Application
@@ -66,9 +68,12 @@ public partial class App : Application
             desktopLifetime.MainWindow = new MainWindow { DataContext = new MainViewModel() };
             _mainWindow = desktopLifetime.MainWindow;
 
+            var iconUri = new Uri("avares://ClippyAI/Assets/bulb.png");
+            var bitmap = new Bitmap(AssetLoader.Open(iconUri));
+
             _trayIcon = new TrayIcon
             {
-                Icon = new WindowIcon("Assets/bulb.png"),
+                Icon = new WindowIcon(bitmap),
                 ToolTipText = "ClippyAI",
                 Menu = []
             };

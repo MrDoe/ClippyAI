@@ -3,6 +3,7 @@ Version=1.0
 Name=ClippyAI
 Comment=An AI assistant application
 Exec=/usr/share/ClippyAI/ClippyAI
+Path=/usr/share/ClippyAI
 Icon=/usr/share/icons/hicolor/32x32/apps/clippyai.png
 Terminal=false
 Type=Application
