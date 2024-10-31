@@ -64,30 +64,18 @@
     <ProjectReference Include="Libs\DesktopNotificationsNet8\DesktopNotifications\DesktopNotifications.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Update="Resources\Resources.resx">
+      <Generator>MSBuild:Compile</Generator>
+      <StronglyTypedFileName>Resources\Resources.Designer.cs</StronglyTypedFileName>
+			<StronglyTypedLanguage>CSharp</StronglyTypedLanguage>
+			<StronglyTypedNamespace>ClippyAI.Resources</StronglyTypedNamespace>
+			<StronglyTypedClassName>Resources</StronglyTypedClassName>
+    </EmbeddedResource>
     <Compile Update="Resources\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Update="Resources\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources\Resources.Designer.cs</LastGenOutput>
-      <StronglyTypedFileName>Resources\Resources.Designer.cs</StronglyTypedFileName>
-			<StronglyTypedLanguage>CSharp</StronglyTypedLanguage>
-			<StronglyTypedNamespace>ClippyAI.Resources</StronglyTypedNamespace>
-			<StronglyTypedClassName>Resources</StronglyTypedClassName>      
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Resources.de-DE.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Resources.es-ES.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Resources.fr-FR.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
   </ItemGroup>
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="powershell -Command &quot;(Get-Content -path $(ProjectDir)\Resources\Resources.Designer.cs) -replace 'internal', 'public' | Set-Content -Path $(ProjectDir)\Resources\Resources.Designer.cs&quot;" Condition="'$(OS)' == 'Windows_NT'" />
