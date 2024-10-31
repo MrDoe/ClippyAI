@@ -2,14 +2,15 @@ using System;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using Avalonia.Input;
+using Avalonia.Controls.ApplicationLifetimes;
 namespace ClippyAI.Views;
 
 public partial class InputDialog : Window
 {
     private bool _isInputRequired = false;
-    Func<string, bool>? _beforeClosing;
+    private Func<string, bool>? _beforeClosing;
+    private Window? parentWindow;
     public bool TextBoxVisible
     {
         get => txtBox.IsVisible;
@@ -19,40 +20,64 @@ public partial class InputDialog : Window
     public InputDialog()
     {
         InitializeComponent();
+
+        // position the window above the MainWindow
+        if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            var mainWindow = desktop.MainWindow;
+            if (mainWindow != null)
+            {
+                Position = new PixelPoint(
+                    mainWindow.Position.X - 488,
+                    mainWindow.Position.Y + 20);
+            }
+        }
+
         Opened += OnOpened;
         TextBoxVisible = true;
     }
-    
-    public static async Task<string?> Prompt(Window parentWindow, string title, string caption,
+
+    public static async Task<string?> Prompt(Window parentWindow, string title, string caption, string subtext = "",
                                              bool isRequired = true, string initialValue = "",
                                              Func<string, bool>? beforeClosing = null)
     {
-        var window = new InputDialog
+        if (parentWindow == null)
         {
+            throw new ArgumentNullException(nameof(parentWindow));
+        }
+        var inputDialog = new InputDialog()
+        {
+            parentWindow = parentWindow,
             _isInputRequired = isRequired,
             Title = title
         };
-        window.lbl.Content = caption;
-        window.txtBox.Text = initialValue;
-        window._beforeClosing = beforeClosing;
-        var result = await window.ShowDialog<string?>(parentWindow);
+        inputDialog.lbl.Content = caption;
+        inputDialog.txtBox.Text = initialValue;
+        inputDialog.lblSubText.Content = subtext;
+        inputDialog._beforeClosing = beforeClosing;
+        var result = await inputDialog.ShowDialog<string?>(parentWindow);
         return result;
     }
 
     public static async Task<string> Confirm(Window parentWindow, string title, string caption)
     {
-        var window = new InputDialog
+        var inputDialog = new InputDialog()
         {
+            parentWindow = parentWindow,
+            _isInputRequired = false,
             Title = title
         };
-        window.lbl.Content = caption;
-        window.TextBoxVisible = false;
-        window.Height = 120;
+        inputDialog.lbl.Content = caption;
+        inputDialog.TextBoxVisible = false;
+        inputDialog.Height = 120;
+        inputDialog.lblSubText.Content = "";
+        inputDialog.btnOK.Content = ClippyAI.Resources.Resources.Yes;
+        inputDialog.btnCancel.Content = ClippyAI.Resources.Resources.No;
 
-        var result = await window.ShowDialog<string>(parentWindow);
+        var result = await inputDialog.ShowDialog<string>(parentWindow);
         return result;
     }
-    
+
     private void OnOpened(object? sender, EventArgs e)
     {
         txtBox.Focus();
@@ -62,7 +87,6 @@ public partial class InputDialog : Window
     {
         if (_isInputRequired && string.IsNullOrWhiteSpace(txtBox.Text))
         {
-            txtBox.Watermark = "Error: Please provide a value!";
             return;
         }
 
@@ -70,8 +94,8 @@ public partial class InputDialog : Window
         {
             return;
         }
-        if(TextBoxVisible == false)
-            Close("OK");
+        if (TextBoxVisible == false)
+            Close(ClippyAI.Resources.Resources.Yes);
         else
             Close(txtBox.Text);
     }
@@ -86,8 +110,8 @@ public partial class InputDialog : Window
 
     private void ButtonCancel_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        if(TextBoxVisible == false)
-            Close("Cancel");
+        if (TextBoxVisible == false)
+            Close(ClippyAI.Resources.Resources.No);
         else
             Close(null);
     }

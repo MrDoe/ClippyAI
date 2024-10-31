@@ -1,21 +1,47 @@
 <Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:ClippyAI.ViewModels"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:views="clr-namespace:ClippyAI.Views"
-        xmlns:assets="clr-namespace:ClippyAI.Resources"
-        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
-        Width="420" Height="500"
-        x:Class="ClippyAI.Views.MainWindow"
-        Icon="avares://ClippyAI/Assets/bulb.png"
-        Title="{x:Static assets:Resources.ClippyAI}"
-        TransparencyLevelHint="AcrylicBlur"
-        Background="Transparent"
-        Loaded="MainWindow_Loaded"
-        Topmost="true"
-        CanResize="false"
-        ShowInTaskbar="false"
-        ExtendClientAreaToDecorationsHint="True">
-        <views:MainView />
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:ClippyAI.ViewModels"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:views="clr-namespace:ClippyAI.Views"
+    xmlns:assets="clr-namespace:ClippyAI.Resources"
+    mc:Ignorable="d"
+    Width="420" Height="500"
+    x:Class="ClippyAI.Views.MainWindow"
+    Icon="avares://ClippyAI/Assets/bulb.png"
+    Title="{x:Static assets:Resources.ClippyAI}"
+    TransparencyLevelHint="AcrylicBlur"
+    Background="Transparent"
+    Loaded="MainWindow_Loaded"
+    CanResize="false"
+    ShowInTaskbar="false"
+    ExtendClientAreaToDecorationsHint="True"
+    ExtendClientAreaChromeHints="NoChrome">
+
+    <Border CornerRadius="6" BorderBrush="DimGray" Background="#e9333333" BorderThickness="1"
+        DockPanel.Dock="Top">
+        <DockPanel Margin="0">
+            <StackPanel Orientation="Vertical">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Minimize Button -->
+                    <Button Grid.Column="1" Content="_" Width="30" Click="MinimizeButton_Click" Padding="11 5 5 5"
+                        Background="Transparent" Foreground="White" VerticalAlignment="Center" FontSize="12" FontWeight="Bold"
+                        BorderBrush="Transparent" />
+
+                    <!-- Close Button -->
+                    <Button Grid.Column="2" Content="x" Width="30" Click="CloseButton_Click" FontWeight="Bold"
+                        Background="Transparent" Foreground="White" VerticalAlignment="Center" Padding="11 5 5 5"
+                        BorderBrush="Transparent" FontSize="12"/>
+                </Grid>
+                <!-- Main Content -->
+                <views:MainView Margin="0,-20,0,0" />
+            </StackPanel>
+        </DockPanel>
+    </Border>
 </Window>

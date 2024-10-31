@@ -262,8 +262,9 @@ public partial class MainViewModel : ViewModelBase
             // open input dialog to enter model name
             string? modelName = await InputDialog.Prompt(
                     parentWindow: mainWindow,
-                    title: "Pull Model",
-                    caption: "Enter the model name to pull:",
+                    title: Resources.Resources.PullModel,
+                    caption: Resources.Resources.EnterModelName,
+                    subtext: Resources.Resources.PullModelSubText,
                     isRequired: true
                 );
             if(string.IsNullOrEmpty(modelName))
@@ -299,8 +300,8 @@ public partial class MainViewModel : ViewModelBase
         // confirm deletion
         string? confirmation = await InputDialog.Confirm(
             parentWindow: mainWindow,
-            title: "Delete Model",
-            caption: "Are you sure you want to delete the selected model?"
+            title: Resources.Resources.DeleteModel,
+            caption: Resources.Resources.ConfirmDeleteModel
         );
         if (confirmation != "OK")
         {

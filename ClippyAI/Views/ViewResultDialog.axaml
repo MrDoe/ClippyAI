@@ -7,11 +7,12 @@
     Height="500"
     Background="Black"
     CanResize="true"
-    Title="ClippyAI Result"
-    >
+    Title="ClippyAI Result">
     <StackPanel>
-    <TextBlock Text="ClippyAI Result" FontSize="20" FontWeight="Bold" Margin="10,10,10,10"/>
-    <TextBox Text="{Binding ResultText}" Margin="10,0,20,10" Height="400" Width="950" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" />
-    <Button Content="OK" HorizontalContentAlignment="Center" Command="{Binding CloseCommand}" Width="100" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+        <TextBlock Text="ClippyAI Result" FontSize="20" FontWeight="Bold" Margin="10,10,10,10" />
+        <TextBox Text="{Binding ResultText}" Margin="10,0,20,10" Height="400" Width="950"
+            TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+        <Button Content="OK" HorizontalContentAlignment="Center" Command="{Binding CloseCommand}"
+            Width="100" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
     </StackPanel>
 </Window>

@@ -10,6 +10,7 @@ using ClippyAI.ViewModels;
 using DesktopNotifications;
 using System.Diagnostics;
 using Avalonia.Markup.Xaml;
+using Avalonia.Input;
 
 #if WINDOWS
 using System.Windows.Input;
@@ -29,10 +30,15 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
     public readonly System.Timers.Timer clipboardPollingTimer;
     private readonly INotificationManager _notificationManager;
     private Notification? _lastNotification { get; set; }
-
+    public new string Title
+    {
+        get => base.Title!;
+        set => base.Title = value;
+    }
     public MainWindow()
     {
         InitializeComponent();
+        DataContext = this;
 
         if (Screens.Primary != null)
             Height = Screens.Primary.Bounds.Height - 70;
@@ -75,7 +81,7 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
     {
         try
         {
-            HotkeyManager.Current.AddOrReplace("Ctrl+Alt+C", Key.C, ModifierKeys.Control | ModifierKeys.Alt, OnHotkeyHandler);
+            HotkeyManager.Current.AddOrReplace("Ctrl+Alt+C", System.Windows.Input.Key.C, ModifierKeys.Control | ModifierKeys.Alt, OnHotkeyHandler);
         }
         catch (Exception ex)
         {
@@ -372,6 +378,21 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         }
         catch (Exception)
         {
+        }
+    }
+
+    private void MinimizeButton_Click(object? sender, RoutedEventArgs e)
+    {
+        WindowState = WindowState.Minimized;
+    }
+
+    private async void CloseButton_Click(object? sender, RoutedEventArgs e)
+    {
+        // confirm closing the application
+        string? result = await InputDialog.Confirm(this, ClippyAI.Resources.Resources.CloseApplication, ClippyAI.Resources.Resources.ConfirmClose);
+        if (result == ClippyAI.Resources.Resources.Yes)
+        {
+            Close();
         }
     }
 }

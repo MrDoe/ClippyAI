@@ -71,18 +71,22 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="Resources/Resources.resx">
+    <EmbeddedResource Update="Resources\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <LastGenOutput>Resources\Resources.Designer.cs</LastGenOutput>
+      <StronglyTypedFileName>Resources\Resources.Designer.cs</StronglyTypedFileName>
+			<StronglyTypedLanguage>CSharp</StronglyTypedLanguage>
+			<StronglyTypedNamespace>ClippyAI.Resources</StronglyTypedNamespace>
+			<StronglyTypedClassName>Resources</StronglyTypedClassName>      
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Resources.de-DE.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
+      <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Resources.es-ES.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
+      <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Resources.fr-FR.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
+      <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
   </ItemGroup>
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">

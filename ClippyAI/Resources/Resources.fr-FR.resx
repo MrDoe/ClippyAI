@@ -20,7 +20,6 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0,
             Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-
     <data name="ClipboardContent" xml:space="preserve">
         <value>Contenu du Clipboard:</value>
     </data>
@@ -124,8 +123,8 @@
         <value>Écrire une réponse à l'e-mail et dire que vous travaillez sur le problème.</value>
     </data>
     <data name="Task_22" xml:space="preserve">
-        <value>Résumez ce texte.</value>        
-    </data>        
+        <value>Résumez ce texte.</value>
+    </data>
     <data name="Data" xml:space="preserve">
         <value>Données</value>
     </data>
@@ -158,10 +157,61 @@ Résultat:
     <data name="TaskView" xml:space="preserve">
         <value>Voir</value>
     </data>
-  <data name="Delete" xml:space="preserve">
-    <value>Supprimer</value>
-  </data>
-  <data name="Pull" xml:space="preserve">
-    <value>Pull</value>
-  </data> 
+    <data name="Delete" xml:space="preserve">
+        <value>Supprimer</value>
+    </data>
+    <data name="DeleteModel" xml:space="preserve">
+        <value>Supprimer le modèle</value>
+    </data>
+    <data name="ConfirmDelete" xml:space="preserve">
+        <value>Voulez-vous vraiment supprimer le modèle?</value>
+    </data>
+    <data name="Pull" xml:space="preserve">
+        <value>Pull</value>
+    </data>
+    <data name="Yes" xml:space="preserve">
+        <value>Oui</value>
+    </data>
+    <data name="No" xml:space="preserve">
+        <value>Non</value>
+    </data>
+    <data name="Error" xml:space="preserve">
+        <value>Erreur</value>
+    </data>
+    <data name="ErrorMessage" xml:space="preserve">
+        <value>Une erreur s'est produite. Veuillez réessayer.</value>
+    </data>
+    <data name="OK" xml:space="preserve">
+        <value>OK</value>
+    </data>
+    <data name="Cancel" xml:space="preserve">
+        <value>Annuler</value>
+    </data>
+    <data name="ConfirmClose" xml:space="preserve">
+        <value>Voulez-vous vraiment fermer ClippyAI?</value>
+    </data>
+    <data name="ConfirmDeleteModel" xml:space="preserve">
+        <value>Voulez-vous vraiment supprimer le modèle?</value>
+    </data>
+    <data name="CloseApplication" xml:space="preserve">
+        <value>Fermer ClippyAI</value>
+    </data>
+    <data name="PullModel" xml:space="preserve">
+        <value>Tirer un modèle</value>
+    </data>
+    <data name="EnterModelName" xml:space="preserve">
+        <value>Entrez le nom du modèle:</value>
+    </data>
+    <data name="PullingModel" xml:space="preserve">
+        <value>Tirer le modèle...</value>
+    </data>
+    <data name="PullingModelFailed" xml:space="preserve">
+        <value>Le tirage du modèle a échoué.</value>
+    </data>
+    <data name="PullingModelSucceeded" xml:space="preserve">
+        <value>Le tirage du modèle a réussi.</value>
+    </data>
+    <data name="PullModelSubText" xml:space="preserve">
+        <value>Visitez https://ollama.ai/models pour voir les modèles disponibles.</value>
+    </data>
 </root>

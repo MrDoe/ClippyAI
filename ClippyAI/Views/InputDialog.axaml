@@ -1,28 +1,30 @@
 <Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d"
-		d:DesignWidth="475" Width="475"
-		d:DesignHeight="150" Height="150"
-        x:Class="ClippyAI.Views.InputDialog"
-        Title=""
-		WindowStartupLocation="CenterScreen"
-		ExtendClientAreaToDecorationsHint="True"
-		ExtendClientAreaChromeHints="NoChrome"
-		ExtendClientAreaTitleBarHeightHint="0"
-		CanResize="False"
-		KeyDown="Window_KeyDown"
-        TransparencyLevelHint="AcrylicBlur"
-        Background="Transparent">
-<Border CornerRadius="6" BorderBrush="DimGray" BorderThickness="1" Background="#e0333333">
-    <Grid RowDefinitions="Auto,Auto,Auto,Auto" Margin="10">
-        <Label Grid.Row="1" Name="lbl" Margin="0 0 0 10" Content="Value"/>
-        <TextBox Grid.Row="2" Name="txtBox" Watermark="Type.."/>
-        <StackPanel Grid.Row="3" Margin="0 20 0 0" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="OK" Name="btnOK" Click="ButtonOK_Click" Margin="0 0 10 0"/>
-            <Button Content="Cancel" Name="btnCancel" Click="ButtonCancel_Click"/>
-        </StackPanel>
-    </Grid>
-</Border>
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignWidth="475" Width="475"
+    d:DesignHeight="170" Height="170"
+    x:Class="ClippyAI.Views.InputDialog"
+    Title=""
+    ExtendClientAreaToDecorationsHint="True"
+    ExtendClientAreaChromeHints="NoChrome"
+    ExtendClientAreaTitleBarHeightHint="0"
+    CanResize="False"
+    KeyDown="Window_KeyDown"
+    TransparencyLevelHint="AcrylicBlur"
+    Topmost="True"
+    Background="Transparent">
+    <Border CornerRadius="6" BorderBrush="DimGray" BorderThickness="1" Background="#e0333333">
+        <Grid RowDefinitions="Auto,Auto,Auto,Auto" Margin="10">
+            <Label Grid.Row="1" Name="lbl" Content="Value" Margin="0 0 0 10" />
+            <TextBox Grid.Row="2" Name="txtBox" Margin="0 0 0 10" />
+            <Label Grid.Row="3" Name="lblSubText" Content="Value" />
+            <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right"
+                Margin="0 35 0 0">
+                <Button Name="btnOK" Content="OK" Click="ButtonOK_Click" Margin="0 0 10 0" />
+                <Button Name="btnCancel" Content="Cancel" Click="ButtonCancel_Click" />
+            </StackPanel>
+        </Grid>
+    </Border>
 </Window>

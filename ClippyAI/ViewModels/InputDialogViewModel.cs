@@ -33,9 +33,4 @@ public partial class InputDialogViewModel : ObservableObject
             desktop.Windows.FirstOrDefault(w => w is InputDialog)?.Close();
         }
     }
-
-    private void Submit()
-    {
-        // submit the input
-    }
 }
