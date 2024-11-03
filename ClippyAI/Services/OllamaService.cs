@@ -16,6 +16,7 @@ using System.Collections.ObjectModel;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using ClippyAI.Views;
+using Npgsql;
 
 namespace ClippyAI.Services;
 
@@ -32,6 +33,7 @@ public static class OllamaService
 
     private static readonly string? url = ConfigurationManager.AppSettings?.Get("OllamaUrl");
     private static readonly string? system = ConfigurationManager.AppSettings?.Get("System");
+    private static readonly string? connectionString = ConfigurationManager.AppSettings?.Get("PostgreSQLConnectionString");
 
     /// <summary>
     /// Simulates typing the given text.
@@ -288,5 +290,36 @@ public static class OllamaService
             mainWindow.HideLastNotification();
             mainWindow.ShowNotification("ClippyAI", message, isBusy, isError);
         }
+    }
+
+    /// <summary>
+    /// Stores the embedding in the PostgreSQL vector database.
+    /// </summary>
+    /// <param name="embedding">The embedding to store.</param>
+    public static async Task StoreEmbedding(string embedding)
+    {
+        await using var conn = new NpgsqlConnection(connectionString);
+        await conn.OpenAsync();
+
+        var cmd = new NpgsqlCommand("INSERT INTO embeddings (embedding) VALUES (@embedding)", conn);
+        cmd.Parameters.AddWithValue("embedding", embedding);
+        await cmd.ExecuteNonQueryAsync();
+    }
+
+    /// <summary>
+    /// Retrieves the most relevant email template using embeddings from the PostgreSQL vector database.
+    /// </summary>
+    /// <param name="queryEmbedding">The query embedding to use for retrieval.</param>
+    /// <returns>The most relevant email template.</returns>
+    public static async Task<string?> RetrieveRelevantEmailTemplate(string queryEmbedding)
+    {
+        await using var conn = new NpgsqlConnection(connectionString);
+        await conn.OpenAsync();
+
+        var cmd = new NpgsqlCommand("SELECT embedding FROM embeddings ORDER BY embedding <-> @queryEmbedding LIMIT 1", conn);
+        cmd.Parameters.AddWithValue("queryEmbedding", queryEmbedding);
+
+        var result = await cmd.ExecuteScalarAsync();
+        return result?.ToString();
     }
 }

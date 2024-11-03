@@ -112,5 +112,9 @@
             <RadioButton Content="{x:Static resources:Resources.Disabled}"
                 HorizontalAlignment="Left" Margin="10 5 0 0" IsChecked="{Binding !AutoMode}" />
         </StackPanel>
+
+        <Label Content="Store Answers as Embeddings" HorizontalAlignment="Left"
+            FontSize="16" Margin="0 10 0 0" />
+        <CheckBox IsChecked="{Binding StoreAsEmbeddings}" HorizontalAlignment="Left" />
     </StackPanel>
 </UserControl>

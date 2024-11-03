@@ -69,6 +69,9 @@ public partial class MainViewModel : ViewModelBase
     [ObservableProperty]
     private string _model = ConfigurationManager.AppSettings["OllamaModel"] ?? "gemma2:latest";
 
+    [ObservableProperty]
+    private bool _storeAsEmbeddings = false;
+
     private void PopulateTasks()
     {
         // iterate over Resources and add Tasks to ComboBox
@@ -128,6 +131,11 @@ public partial class MainViewModel : ViewModelBase
                                                        model,
                                                        KeyboardOutputSelected,
                                                        _askClippyCts.Token); // Use the token from _askClippyCts
+
+            if (StoreAsEmbeddings)
+            {
+                await OllamaService.StoreEmbedding(response);
+            }
         }
         catch (OperationCanceledException)
         {
