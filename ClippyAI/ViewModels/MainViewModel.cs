@@ -16,6 +16,7 @@ public partial class MainViewModel : ViewModelBase
     public MainViewModel()
     {
         PopulateTasks();
+        StoreAsEmbeddings = false; // Initialize the property
     }
 
     private CancellationTokenSource _askClippyCts = new();
