@@ -133,9 +133,10 @@ public partial class MainViewModel : ViewModelBase
                                                        KeyboardOutputSelected,
                                                        _askClippyCts.Token); // Use the token from _askClippyCts
 
-            if (StoreAsEmbeddings)
+            if (!string.IsNullOrEmpty(response) && StoreAsEmbeddings)
             {
-                await OllamaService.StoreEmbedding(response);
+                string question = task + " " + ClipboardContent!;
+                await OllamaService.StoreEmbedding(question, response);
             }
         }
         catch (OperationCanceledException)

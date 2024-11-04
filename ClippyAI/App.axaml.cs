@@ -11,6 +11,7 @@ using CommunityToolkit.Mvvm.Input;
 using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using ClippyAI.Services;
 namespace ClippyAI;
 
 public partial class App : Application
@@ -105,6 +106,9 @@ public partial class App : Application
             });
             _trayIcon.Clicked += TrayIcon_Clicked;
             _trayIcon.IsVisible = true;
+
+            // initialize the Ollama Embedding Service
+            OllamaService.InitializeEmbeddings();
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewLifetime)
         {
@@ -113,6 +117,4 @@ public partial class App : Application
 
         base.OnFrameworkInitializationCompleted();
     }
-
-
 }
