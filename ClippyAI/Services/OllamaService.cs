@@ -339,13 +339,14 @@ public static class OllamaService
     /// Initializes the PostgreSQL vector database.
     /// </summary>
     /// <returns>The task.</returns>
-    public static async Task InitializeEmbeddings()
+    public static void InitializeEmbeddings()
     {
-        await using var conn = new NpgsqlConnection(connectionString);
-        await conn.OpenAsync();
+        using var conn = new NpgsqlConnection(connectionString);
+        conn.Open();
+
         // Install the pgai extension if it doesn't exist
         var cmd = new NpgsqlCommand("CREATE EXTENSION IF NOT EXISTS ai CASCADE", conn);
-        await cmd.ExecuteNonQueryAsync();
+        cmd.ExecuteNonQuery();
 
         // drop table if it exists
         //cmd = new NpgsqlCommand("DROP TABLE IF EXISTS clippy", conn);
@@ -360,17 +361,16 @@ public static class OllamaService
                 embedding_question vector(768),
                 embedding_answer vector(768)
             )", conn);
-        await cmd.ExecuteNonQueryAsync();
+        cmd.ExecuteNonQuery();
 
-        // Create the index if it doesn't exist
-        cmd = new NpgsqlCommand(@"
-            CREATE INDEX IF NOT EXISTS embedding_question_idx ON clippy USING gist(embedding_question)", conn);
-        await cmd.ExecuteNonQueryAsync();
+        // // Create the index if it doesn't exist
+        // cmd = new NpgsqlCommand(@"
+        //     CREATE INDEX IF NOT EXISTS embedding_question_idx ON clippy USING gist(embedding_question)", conn);
+        // cmd.ExecuteNonQuery();
 
-        // Create the index if it doesn't exist
-        cmd = new NpgsqlCommand(@"
-            CREATE INDEX IF NOT EXISTS embedding_answer_idx ON clippy USING gist(embedding_answer)", conn);
-        await cmd.ExecuteNonQueryAsync();
-
+        // // Create the index if it doesn't exist
+        // cmd = new NpgsqlCommand(@"
+        //     CREATE INDEX IF NOT EXISTS embedding_answer_idx ON clippy USING gist(embedding_answer)", conn);
+        // cmd.ExecuteNonQuery();
     }
 }

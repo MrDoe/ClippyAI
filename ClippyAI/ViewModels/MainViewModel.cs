@@ -127,6 +127,23 @@ public partial class MainViewModel : ViewModelBase
                 mainWindow.ShowNotification("ClippyAI", Resources.Resources.PleaseWait, true, false);
             }
 
+            // try to get response from embedded model first
+            if (StoreAsEmbeddings)
+            {
+                string question = task + " " + ClipboardContent!;
+                response = await OllamaService.RetrieveAnswerForQuestion(question);
+                if (response != null)
+                {
+                    if (TextBoxOutputSelected)
+                    {
+                        ClipboardContent = response;
+                        await ClipboardService.SetText(ClipboardContent);
+                    }
+                    IsBusy = false;
+                    return;
+                }
+            }
+
             response = await OllamaService.SendRequest(ClipboardContent!,
                                                        task,
                                                        model,
