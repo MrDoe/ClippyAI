@@ -19,20 +19,34 @@ after it is copied or cut. After activation, te clipboard's content will then be
 **Example Use Cases**
 
 * Copy an email and let ClippyAI write the response
-* Copy some code from an IDE to find an error
-* Explain a compilcated text in more easy words
-* Translate a text to another language
+* Copy some code from an IDE and let ClippyAI find an error
+* Explain a complicated text to understand it better
+* Translate a text into another language
 * Summarize a long text in a few sentences
 
 ![Clippy Example](./Images/clippy.png)
 
 **Getting Started**
 
-1. Install Ollama from https://ollama.com.
-2. Run `ollama pull gemma2` on the command line to install the Gemma2 AI model or any other model on your PC.
-3. Download and extract the ZIP file from the latest release.
-4. Run ''setup.exe'' on Windows or the .deb/.rpm packages on Linux to install the application.
+
+1. Install Ollama from [https://ollama.com/download](https://ollama.com/download).
+
+2. Download the latest release of ClippyAI for your OS (Windows or Linux).
+
+3. Run ''setup.exe'' on Windows or install the .deb/.rpm packages on Linux/X11 systems.
+
+***Install PostgreSQL with pgai***
+
+4.1. Install the PostgreSQL webserver and the pgai packages. See [](https://postgres.ai) for manual installation instructions.
+
+4.2. If you are a Docker user, simply execute 'docker-compose up'.
+
 5. Run ''ClippyAI'' from the start menu of your OS.
+
+6. Click on ''Options'', the ''Pull'' button and enter 'gemma2' to download and install the Gemma2 AI model to your local PC.
+
+7. Pull also the 'noemic-embed-text' model which will be used for embeddings.
+
 
 **Using ClippyAI**
 
