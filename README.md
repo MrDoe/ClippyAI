@@ -35,7 +35,7 @@ after it is copied or cut. The clipboard's content can then be sent along with a
 
 3. Run ''setup.exe'' on Windows or install the .deb/.rpm packages on Linux/X11 systems.
 
-**Install PostgreSQL with pgai**
+Install PostgreSQL with pgai
 
 4.1 Install the PostgreSQL webserver and the pgai packages. See [https://github.com/timescale/pgai](https://github.com/timescale/pgai) for installation instructions.
 
@@ -45,7 +45,7 @@ after it is copied or cut. The clipboard's content can then be sent along with a
 
 5. Edit the PostgreSQL connection string of the ClippyAI.conf file to enter the server address and user credentials.
 
-**Pull LLMs**
+Pull LLMs
 
 6. Run ''ClippyAI'' from the start menu of your OS and click on the tray icon to open it.
 
