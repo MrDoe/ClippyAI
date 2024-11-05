@@ -32,6 +32,7 @@ public static class OllamaService
     private static readonly string? url = ConfigurationManager.AppSettings?.Get("OllamaUrl");
     private static readonly string? system = ConfigurationManager.AppSettings?.Get("System");
     private static readonly string? connectionString = ConfigurationManager.AppSettings?.Get("PostgreSQLConnectionString");
+    private static readonly bool? useEmbeddings = (ConfigurationManager.AppSettings?.Get("UseEmbeddings")) == "true";
 
     /// <summary>
     /// Sends a request to the Ollama API.

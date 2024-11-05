@@ -108,7 +108,10 @@ public partial class App : Application
             _trayIcon.IsVisible = true;
 
             // initialize the Ollama Embedding Service
-            OllamaService.InitializeEmbeddings();
+            if(ConfigurationManager.AppSettings["UseEmbeddings"] == "true")
+            {
+                OllamaService.InitializeEmbeddings();
+            }
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewLifetime)
         {
