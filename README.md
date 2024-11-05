@@ -30,24 +30,16 @@ after it is copied or cut. The clipboard's content can then be sent along with a
 **Getting Started**
 
 1. Install Ollama from [https://ollama.com/download](https://ollama.com/download).
-
 2. Download the latest release of ClippyAI for your OS (Windows or Linux).
-
 3. Run ''setup.exe'' on Windows or install the .deb/.rpm packages on Linux/X11 systems.
-
-  1. Install the PostgreSQL webserver and the pgai packages. See [https://github.com/timescale/pgai](https://github.com/timescale/pgai) for installation instructions. 4.1
-
-  2. If you are a Docker user, clone or download this repository and execute 'docker-compose up' from the ClippyAI/Docker directory to install PostgreSQL with pgai as a container.
-
-  3. Optionally, you can also use a cloud based PostgreSQL database from Timescale.
-
+4. Install PostgreSQL and pgai.
+    1. Install the PostgreSQL webserver and the pgai packages. See [https://github.com/timescale/pgai](https://github.com/timescale/pgai) for installation instructions. 4.1
+    2. If you are a Docker user, clone or download this repository and execute 'docker-compose up' from the ClippyAI/Docker directory to install PostgreSQL with pgai as a container.
+    3. Optionally, you can also use a cloud based PostgreSQL database from Timescale.
 5. Edit the PostgreSQL connection string of the ClippyAI.conf file to enter the server address and user credentials.
-
 6. Run ''ClippyAI'' from the start menu of your OS and click on the tray icon to open it.
-
 7. Click on ''Options'', the ''Pull'' button and enter 'gemma2' to let ClippyAI download and install the Google Gemma2 AI model to your local PC. Please be patient, as the downloading can take a few minutes, depending on how fast your internet connection is.
-
-8. Do the same again with the 'noemic-embed-text' model, which will be used for embeddings.
+8. Do the same again with the ''noemic-embed-text'' model, which will be used for embeddings.
 
 **Using ClippyAI**
 
