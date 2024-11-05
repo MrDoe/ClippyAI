@@ -35,7 +35,7 @@ after it is copied or cut. The clipboard's content can then be sent along with a
 
 3. Run ''setup.exe'' on Windows or install the .deb/.rpm packages on Linux/X11 systems.
 
-  1. Install the PostgreSQL webserver and the pgai packages. See [https://github.com/timescale/pgai](https://github.com/timescale/pgai) for installation instructions.
+  1. Install the PostgreSQL webserver and the pgai packages. See [https://github.com/timescale/pgai](https://github.com/timescale/pgai) for installation instructions. 4.1
 
   2. If you are a Docker user, clone or download this repository and execute 'docker-compose up' from the ClippyAI/Docker directory to install PostgreSQL with pgai as a container.
 
