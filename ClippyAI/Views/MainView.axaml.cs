@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
+using ClippyAI.Services;
 using ClippyAI.ViewModels;
 namespace ClippyAI.Views;
 
@@ -49,11 +50,22 @@ public partial class MainView : UserControl
         var btnAddModel = this.FindControl<Button>("btnAddModel");
         if (btnAddModel != null)
             btnAddModel.Click += OnBtnAddModelClick;
+
+        // add event handler for clipboard content changed
+        var txtOutput = this.FindControl<TextBox>("txtOutput");
+        if (txtOutput != null)
+            txtOutput.TextChanged += OnTxtClipboardContentChanged;
     }
 
-    private void MainView_Loaded(object? sender, RoutedEventArgs e)
+    private async void MainView_Loaded(object? sender, RoutedEventArgs e)
     {        
         Init = true;
+
+        if(Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            ((MainViewModel)DataContext!).mainWindow = (MainWindow)desktop.MainWindow!;
+
+        // set embeddings count
+        ((MainViewModel)DataContext!).EmbeddingsCount = await OllamaService.GetEmbeddingsCount();
     }
 
     private void OnCboLanguageSelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -81,6 +93,18 @@ public partial class MainView : UserControl
             return;
         
         UrlHasChanged = true;
+    }
+
+    private void OnTxtClipboardContentChanged(object? sender, RoutedEventArgs e)
+    {
+        if (!Init)
+            return;
+
+        // update clipboard content in view model
+        ((MainViewModel)DataContext!).ClipboardContent = txtOutput.Text!;
+
+        // update clipboard content
+        ClipboardService.SetText(txtOutput.Text!);
     }
 
     private void OnTxtOllamaUrlLostFocus(object? sender, RoutedEventArgs e)

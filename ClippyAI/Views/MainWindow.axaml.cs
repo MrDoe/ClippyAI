@@ -10,7 +10,6 @@ using ClippyAI.ViewModels;
 using DesktopNotifications;
 using System.Diagnostics;
 using Avalonia.Markup.Xaml;
-using Avalonia.Input;
 
 #if WINDOWS
 using System.Windows.Input;
@@ -39,9 +38,6 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
     {
         InitializeComponent();
         DataContext = this;
-
-        if (Screens.Primary != null)
-            Height = Screens.Primary.Bounds.Height - 70;
 
         // poll clipboard every second
         clipboardPollingTimer = new System.Timers.Timer(400);
@@ -116,6 +112,9 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         [DllImport("libX11.so")]
         private static extern int XGrabKey(IntPtr display, int keycode, uint modifiers, IntPtr grab_window, int owner_events, int pointer_mode, int keyboard_mode);
 
+        [DllImport("libX11")]
+        private static extern int XUngrabKey(IntPtr display, int keycode, uint modifiers, IntPtr grab_window);
+
         [DllImport("libX11.so")]
         private static extern void XSelectInput(IntPtr display, IntPtr window, long event_mask);
 
@@ -156,9 +155,11 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         uint keysym = XStringToKeysym("C");
         int keycode = (int)XKeysymToKeycode(display, keysym);
         Console.WriteLine($"Keysym: {keysym}, Keycode: {keycode}");
+        
+        XUngrabKey(display, keycode, ControlMask | AltMask, rootWindow);
 
         int grabResult = XGrabKey(display, keycode, ControlMask | AltMask, rootWindow, False, GrabModeAsync, GrabModeAsync);
-        if (grabResult != 0)
+        if (grabResult != 1)
         {
             Console.WriteLine($"Failed to grab keyboard shortcut [Ctrl]+[Alt]+[C]. Is another application using it?");
             return;
@@ -187,19 +188,7 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
                 while (true)
                 {
                     XEvent ev = new();
-                    //Console.WriteLine($"Display pointer: {display}");
-
-                    // Check if there are any events pending
-                    int pendingEvents = XPending(display);
-                    if (pendingEvents == 0)
-                    {
-                        //Console.WriteLine("No events pending. Sleeping for a while...");
-                        await Task.Delay(100); // Sleep for 100 milliseconds
-                        continue;
-                    }
-
                     XNextEvent(display, ref ev);
-                    //Console.WriteLine($"Event received: {ev.type}");
 
                     if (ev.type == KeyPress)
                     {
@@ -224,11 +213,11 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
     {
         // set window position to bottom right corner
         SetWindowPos();
+
         clipboardPollingTimer.Start();
 
         PositionChanged += MainWindow_PositionChanged;
-        Resized += MainWindow_Resized;
-
+                
         // hide the window
         Hide();
     }
@@ -240,20 +229,12 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         {
             // get primary screen size
             PixelSize screenSize = Screens.Primary.Bounds.Size;
+            Height = screenSize.Height;
             PixelSize windowSize = PixelSize.FromSize(ClientSize, Screens.Primary.Scaling);
 
             Position = new PixelPoint(
               screenSize.Width - windowSize.Width - 1,
               0);
-        }
-    }
-    private void MainWindow_Resized(object? sender, EventArgs e)
-    {
-        SetWindowPos();
-
-        if (WindowState == WindowState.Minimized)
-        {
-            Hide();
         }
     }
 
@@ -263,6 +244,7 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         {
             Hide();
         }
+        SetWindowPos();
     }
 
     private void MainWindow_PositionChanged(object? sender, EventArgs e)

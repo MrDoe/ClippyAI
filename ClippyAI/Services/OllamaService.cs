@@ -7,8 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Configuration;
 using ClippyAI.Models;
-using Desktop.Robot;
-using Desktop.Robot.Extensions;
 using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -36,31 +34,20 @@ public static class OllamaService
     private static readonly string? connectionString = ConfigurationManager.AppSettings?.Get("PostgreSQLConnectionString");
 
     /// <summary>
-    /// Simulates typing the given text.
-    /// </summary>
-    /// <param name="text">The text to type.</param>
-    private static void SimulateTyping(string text)
-    {
-        var robot = new Robot();
-        robot.Type(text, 80);
-    }
-
-    /// <summary>
     /// Sends a request to the Ollama API.
     /// </summary>
-    /// <param name="clipboardData">The clipboard data to send.</param>
+    /// <param name="input">The clipboard data to send.</param>
     /// <param name="task">The task to perform.</param>
     /// <param name="typeOutput">Whether to simulate typing the output.</param>
     /// <param name="token">The cancellation token.</param>
-    public static async Task<string?> SendRequest(string clipboardData, string task,
-                                                  string model, bool typeOutput = true,
-                                                  CancellationToken token = default)
+    public static async Task<string?> SendRequest(string input, string task,
+                                                  string model, CancellationToken token = default)
     {
         string? fullResponse = null;
 
         OllamaRequest body = new()
         {
-            prompt = $"# TEXT\n\n'''{clipboardData}'''\n# TASK\n\n'{task}'",
+            prompt = $"# TEXT\n\n'''{input}'''\n# TASK\n\n'{task}'",
             model = model,
             system = system,
             stream = true,
@@ -95,9 +82,6 @@ public static class OllamaService
                     var responseObj = JsonSerializer.Deserialize<OllamaResponse>(line);
                     string? responseText = responseObj?.response;
                     fullResponse += responseText;
-
-                    if (typeOutput)
-                        SimulateTyping(responseText!);
                 }
             }
         }
@@ -302,8 +286,22 @@ public static class OllamaService
         await using var conn = new NpgsqlConnection(connectionString);
         await conn.OpenAsync();
 
-        // Insert the clipboard text and generate the embedding in a single command
+        // check if no similar embeddings exist
         var cmd = new NpgsqlCommand(@"
+            SELECT COUNT(*) 
+            FROM clippy
+            WHERE embedding_question <-> ai.ollama_embed('nomic-embed-text', @question) <= 1
+            AND embedding_answer <-> ai.ollama_embed('nomic-embed-text', @answer) <= 1", conn);
+        cmd.Parameters.AddWithValue("question", question);
+        cmd.Parameters.AddWithValue("answer", answer);
+        var count = Convert.ToInt32(await cmd.ExecuteScalarAsync());
+        if (count > 0)
+        {
+            throw new Exception("Similar embedding already exists.");
+        }
+
+        // Insert the clipboard text and generate the embedding in a single command
+        cmd = new NpgsqlCommand(@"
             INSERT INTO clippy (question, answer, embedding_question, embedding_answer)
             SELECT @question,
                    @answer,
@@ -315,24 +313,35 @@ public static class OllamaService
     }
 
     /// <summary>
-    /// Retrieves the most similar clipboard text using embeddings from the PostgreSQL vector database.
+    /// Retrieves the 5 most similar answers by using embeddings from the PostgreSQL vector database.
     /// </summary>
-    /// <param name="queryEmbedding">The query embedding to use for retrieval.</param>
+    /// <param name="question">The query embedding to use for retrieval.</param>
+    /// <param name="threshold">The threshold for similarity.</param>
     /// <returns>The most similar clipboard text.</returns>
-    public static async Task<string?> RetrieveAnswerForQuestion(string question)
+    public static async Task<List<string>> RetrieveAnswersForQuestion(string question, float threshold)
     {
         await using var conn = new NpgsqlConnection(connectionString);
         await conn.OpenAsync();
 
         var cmd = new NpgsqlCommand(@"
-            SELECT answer 
-            FROM clippy 
-            ORDER BY embedding_question <-> ai.ollama_embed('nomic-embed-text', @question) 
-            LIMIT 1", conn);
-        cmd.Parameters.AddWithValue("question", question);
+        SELECT answer 
+        FROM clippy
+        WHERE embedding_question <-> ai.ollama_embed('nomic-embed-text', @question) <= @threshold
+        ORDER BY embedding_question <-> ai.ollama_embed('nomic-embed-text', @question)
+        LIMIT 10", conn);
 
-        var result = await cmd.ExecuteScalarAsync();
-        return result?.ToString();
+        cmd.Parameters.AddWithValue("question", question);
+        cmd.Parameters.AddWithValue("threshold", threshold);
+
+        var result = await cmd.ExecuteReaderAsync();
+        
+        // generate a list of answers
+        List<string> answers = [];
+        while (await result.ReadAsync())
+        {
+            answers.Add(result.GetString(0));
+        }
+        return answers;
     }
 
     /// <summary>
@@ -372,5 +381,31 @@ public static class OllamaService
         // cmd = new NpgsqlCommand(@"
         //     CREATE INDEX IF NOT EXISTS embedding_answer_idx ON clippy USING gist(embedding_answer)", conn);
         // cmd.ExecuteNonQuery();
+    }
+
+    /// <summary>
+    /// Deletes all embeddings from the PostgreSQL vector database.
+    /// </summary>
+    /// <returns>The task.</returns>
+    public static async Task ClearEmbeddings()
+    {
+        await using var conn = new NpgsqlConnection(connectionString);
+        await conn.OpenAsync();
+
+        var cmd = new NpgsqlCommand("DELETE FROM clippy", conn);
+        await cmd.ExecuteNonQueryAsync();
+    }
+
+    /// <summary>
+    /// Get total number of embeddings in the PostgreSQL vector database.
+    /// </summary>
+    /// <returns>The number of embeddings.</returns>
+    public static async Task<int> GetEmbeddingsCount()
+    {
+        await using var conn = new NpgsqlConnection(connectionString);
+        await conn.OpenAsync();
+
+        var cmd = new NpgsqlCommand("SELECT COUNT(*) FROM clippy", conn);
+        return Convert.ToInt32(await cmd.ExecuteScalarAsync());
     }
 }

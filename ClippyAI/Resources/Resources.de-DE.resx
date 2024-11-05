@@ -212,4 +212,7 @@ Ergebnis:
     <data name="PullModelSubText" xml:space="preserve">
         <value>Besuchen Sie https://ollama.ai/models, um die verfügbaren Modelle zu sehen.</value>
     </data>
+        <data name="Threshold" xml:space="preserve">
+        <value>Schwellwert:</value>
+    </data>
 </root>

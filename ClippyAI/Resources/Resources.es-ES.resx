@@ -212,4 +212,7 @@
     <data name="PullModelSubText" xml:space="preserve">
         <value>Visite https://ollama.ai/models para ver los modelos disponibles.</value>
     </data>
+    <data name="Threshold" xml:space="preserve">
+        <value>Umbral:</value>
+    </data>
 </root>

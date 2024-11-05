@@ -214,4 +214,7 @@ Résultat:
     <data name="PullModelSubText" xml:space="preserve">
         <value>Visitez https://ollama.ai/models pour voir les modèles disponibles.</value>
     </data>
+    <data name="Threshold" xml:space="preserve">
+        <value>Seuil:</value>
+    </data>
 </root>

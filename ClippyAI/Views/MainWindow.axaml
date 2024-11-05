@@ -6,20 +6,23 @@
     xmlns:views="clr-namespace:ClippyAI.Views"
     xmlns:assets="clr-namespace:ClippyAI.Resources"
     mc:Ignorable="d"
-    Width="420" Height="500"
+    Width="420" Height="1080"
     x:Class="ClippyAI.Views.MainWindow"
     Icon="avares://ClippyAI/Assets/bulb.png"
     Title="{x:Static assets:Resources.ClippyAI}"
     TransparencyLevelHint="AcrylicBlur"
     Background="Transparent"
     Loaded="MainWindow_Loaded"
-    CanResize="false"
-    ShowInTaskbar="false"
+    CanResize="False"
+    ShowInTaskbar="False"
     ExtendClientAreaToDecorationsHint="True"
-    ExtendClientAreaChromeHints="NoChrome">
+    ExtendClientAreaChromeHints="NoChrome"
+    ExtendClientAreaTitleBarHeightHint="-1"
+    SystemDecorations="BorderOnly">
 
     <Border CornerRadius="6" BorderBrush="DimGray" Background="#e9333333" BorderThickness="1"
-        DockPanel.Dock="Top">
+        DockPanel.Dock="Top" Height="1080">
+        <ScrollViewer>
         <DockPanel Margin="0">
             <StackPanel Orientation="Vertical">
                 <Grid>
@@ -43,5 +46,6 @@
                 <views:MainView Margin="0,-20,0,0" />
             </StackPanel>
         </DockPanel>
+        </ScrollViewer>
     </Border>
 </Window>

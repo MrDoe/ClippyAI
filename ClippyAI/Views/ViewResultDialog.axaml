@@ -5,14 +5,16 @@
     xmlns:vm="clr-namespace:ClippyAI.ViewModels"
     Width="1000"
     Height="500"
-    Background="Black"
-    CanResize="true"
+    Background="Transparent"
+    CanResize="True"
     Title="ClippyAI Result">
+    <Border CornerRadius="6" BorderBrush="DimGray" Background="#e9333333" BorderThickness="1">
     <StackPanel>
-        <TextBlock Text="ClippyAI Result" FontSize="20" FontWeight="Bold" Margin="10,10,10,10" />
+        <TextBlock Text="Result:" FontSize="20" FontWeight="Bold" Margin="10,10,10,10" />
         <TextBox Text="{Binding ResultText}" Margin="10,0,20,10" Height="400" Width="950"
             TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" />
         <Button Content="OK" HorizontalContentAlignment="Center" Command="{Binding CloseCommand}"
             Width="100" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
     </StackPanel>
+    </Border>
 </Window>

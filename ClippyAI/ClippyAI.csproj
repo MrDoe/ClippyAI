@@ -45,14 +45,14 @@
     <None Remove="Libs\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.1.4" />
-    <PackageReference Include="Avalonia.Desktop" Version="11.1.4" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.4" />
-    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.1.4" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="11.1.4" />
-    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.1.4" />
+    <PackageReference Include="Avalonia" Version="11.2.0" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.2.0" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.0" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.0" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="11.2.0" />
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.0" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
-    <PackageReference Include="Desktop.Robot_Net8_v" Version="1.5.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
     <PackageReference Include="NHotkey.Wpf" Condition="'$(OS)' == 'Windows_NT'" Version="3.0.0" />
     <PackageReference Include="Npgsql" Version="8.0.5" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.1" />
@@ -82,6 +82,15 @@
     <Exec Command="powershell -Command &quot;(Get-Content -path $(ProjectDir)\Resources\Resources.Designer.cs) -replace 'internal', 'public' | Set-Content -Path $(ProjectDir)\Resources\Resources.Designer.cs&quot;" Condition="'$(OS)' == 'Windows_NT'" />
     <Exec Command="sed -i 's/internal/public/g' Resources/Resources.Designer.cs" Condition="'$(OS)' == 'Unix'" />
   </Target>
+  <Target Name="ClickOnceAvaloniaXaml" AfterTargets="InjectAvaloniaXamlOutput" Condition="'@(AvaloniaResource)@(AvaloniaXaml)' != '' AND $(EnableAvaloniaXamlCompilation) != false">
+  <ItemGroup>
+    <!-- ClickOnce support -->
+    <_DeploymentManifestEntryPoint Remove="@(_DeploymentManifestEntryPoint)" />
+    <_DeploymentManifestEntryPoint Include="@(_AvaloniaXamlCompiledAssembly)">
+      <TargetPath>$(TargetFileName)</TargetPath>
+    </_DeploymentManifestEntryPoint>
+  </ItemGroup>
+</Target>
   <PropertyGroup>
     <PostInstallScript>chmod 777 /usr/share/ClippyAI
 chmod 666 /usr/share/ClippyAI/ClippyAI.dll.config</PostInstallScript>  

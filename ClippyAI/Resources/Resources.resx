@@ -252,4 +252,7 @@ Result:
     <data name="PullModelSubText" xml:space="preserve">
         <value>Visit https://ollama.ai/models to see available models.</value>
     </data>
+    <data name="Threshold" xml:space="preserve">
+        <value>Threshold:</value>
+    </data>
 </root>

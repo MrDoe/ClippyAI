@@ -29,7 +29,7 @@ public partial class InputDialog : Window
             {
                 Position = new PixelPoint(
                     mainWindow.Position.X - 488,
-                    mainWindow.Position.Y + 20);
+                    mainWindow.Position.Y + 500);
             }
         }
 
