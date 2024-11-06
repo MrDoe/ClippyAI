@@ -6,7 +6,7 @@ embed_ollama:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - ./embed_ollama:/var/lib/postgresql/data
+      - ./embed_ollama:/var/lib/PostgreSql/data
     environment:
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=ClippyAI

@@ -292,6 +292,15 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to PostgreSql Connection:.
+        /// </summary>
+        public static string PostgreSqlConnection {
+            get {
+                return ResourceManager.GetString("PostgreSqlConnection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pull.
         /// </summary>
         public static string Pull {
@@ -632,6 +641,15 @@ namespace ClippyAI.Resources {
         public static string Threshold {
             get {
                 return ResourceManager.GetString("Threshold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Embeddings.
+        /// </summary>
+        public static string UseEmbeddings {
+            get {
+                return ResourceManager.GetString("UseEmbeddings", resourceCulture);
             }
         }
         

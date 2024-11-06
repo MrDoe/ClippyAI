@@ -5,7 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
 using ClippyAI.Services;
-using ClippyAI.ViewModels;
+using ClippyAI.Views;
 namespace ClippyAI.Views;
 
 public partial class MainView : UserControl
@@ -55,6 +55,11 @@ public partial class MainView : UserControl
         var txtOutput = this.FindControl<TextBox>("txtOutput");
         if (txtOutput != null)
             txtOutput.TextChanged += OnTxtClipboardContentChanged;
+        
+        // add event handler for PostgreSqlConnection text changed
+        var txtPostgreSqlConnection = this.FindControl<TextBox>("txtPostgreConnection");
+        if (txtPostgreSqlConnection != null)
+            txtPostgreSqlConnection.TextChanged += OnTxtPostgreConnectionChanged;
     }
 
     private async void MainView_Loaded(object? sender, RoutedEventArgs e)
@@ -65,7 +70,9 @@ public partial class MainView : UserControl
             ((MainViewModel)DataContext!).mainWindow = (MainWindow)desktop.MainWindow!;
 
         // set embeddings count
-        ((MainViewModel)DataContext!).EmbeddingsCount = await OllamaService.GetEmbeddingsCount();
+        int embeddingsCount = await OllamaService.GetEmbeddingsCount();
+        if(embeddingsCount >= 0)
+            ((MainViewModel)DataContext!).EmbeddingsCount = embeddingsCount;
     }
 
     private void OnCboLanguageSelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -236,5 +243,21 @@ public partial class MainView : UserControl
     private void OnBtnAddModelClick(object? sender, RoutedEventArgs e)
     {
         ((MainViewModel)DataContext!).AddModelCommand.Execute(null);
+    }
+
+    private void OnTxtPostgreConnectionChanged(object? sender, RoutedEventArgs e)
+    {
+        if (!Init)
+            return;
+
+        var txtPostgreSqlConnection = (TextBox)sender!;
+        ((MainViewModel)DataContext!).PostgreSqlConnection = txtPostgreSqlConnection.Text!;
+
+        // update PostgreSqlConnection in configuration file
+        var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+        config.AppSettings.Settings.Remove("PostgreSqlConnection");
+        config.AppSettings.Settings.Add("PostgreSqlConnection", txtPostgreSqlConnection.Text);
+        config.Save(ConfigurationSaveMode.Modified);
+        ConfigurationManager.RefreshSection("appSettings");
     }
 }

@@ -1,27 +1,28 @@
 <Window xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:vm="using:ClippyAI.ViewModels"
+    xmlns:vm="using:ClippyAI.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="clr-namespace:ClippyAI.Views"
     xmlns:assets="clr-namespace:ClippyAI.Resources"
     mc:Ignorable="d"
-    Width="420" Height="1080"
+    Width="420"
     x:Class="ClippyAI.Views.MainWindow"
     Icon="avares://ClippyAI/Assets/bulb.png"
     Title="{x:Static assets:Resources.ClippyAI}"
     TransparencyLevelHint="AcrylicBlur"
     Background="Transparent"
     Loaded="MainWindow_Loaded"
-    CanResize="False"
+    CanResize="True"
     ShowInTaskbar="False"
     ExtendClientAreaToDecorationsHint="True"
     ExtendClientAreaChromeHints="NoChrome"
     ExtendClientAreaTitleBarHeightHint="-1"
-    SystemDecorations="BorderOnly">
+    SystemDecorations="BorderOnly"
+    >
 
-    <Border CornerRadius="6" BorderBrush="DimGray" Background="#e9333333" BorderThickness="1"
-        DockPanel.Dock="Top" Height="1080">
+    <Border x:Name="border" CornerRadius="6" BorderBrush="DimGray" Background="#e9333333" BorderThickness="1"
+        DockPanel.Dock="Top">
         <ScrollViewer>
         <DockPanel Margin="0">
             <StackPanel Orientation="Vertical">

@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using System.Globalization;
-using ClippyAI.ViewModels;
 using ClippyAI.Views;
 using System.Configuration;
 using System.Text;
@@ -12,6 +11,7 @@ using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using ClippyAI.Services;
+using ClippyAI.Views;
 namespace ClippyAI;
 
 public partial class App : Application

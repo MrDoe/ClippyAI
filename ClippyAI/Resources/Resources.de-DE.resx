@@ -215,4 +215,10 @@ Ergebnis:
         <data name="Threshold" xml:space="preserve">
         <value>Schwellwert:</value>
     </data>
+    <data name="UseEmbeddings" xml:space="preserve">
+        <value>Embeddings verwenden</value>
+    </data>
+    <data name="PostgreSqlConnection" xml:space="preserve">
+        <value>PostgreSql-Verbindung:</value>
+    </data>
 </root>

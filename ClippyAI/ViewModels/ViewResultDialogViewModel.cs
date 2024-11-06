@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using ReactiveUI;
 using System.Linq;
 using System.Reactive;
-namespace ClippyAI.ViewModels;
+namespace ClippyAI.Views;
 
 public partial class ViewResultDialogViewModel : ObservableObject
 {

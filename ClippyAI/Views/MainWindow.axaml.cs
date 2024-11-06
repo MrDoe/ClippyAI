@@ -6,7 +6,6 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.ReactiveUI;
 using Avalonia.Threading;
-using ClippyAI.ViewModels;
 using DesktopNotifications;
 using System.Diagnostics;
 using Avalonia.Markup.Xaml;
@@ -37,7 +36,7 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
     public MainWindow()
     {
         InitializeComponent();
-        DataContext = this;
+        DataContext = new MainViewModel();
 
         // poll clipboard every second
         clipboardPollingTimer = new System.Timers.Timer(400);
@@ -96,48 +95,48 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
 #endif
 
 #if LINUX
-       // P/Invoke declarations
-        [DllImport("libX11.so")]
-        private static extern IntPtr XOpenDisplay(string? display_name);
+    // P/Invoke declarations
+    [DllImport("libX11.so")]
+    private static extern IntPtr XOpenDisplay(string? display_name);
 
-        [DllImport("libX11.so")]
-        private static extern IntPtr XDefaultRootWindow(IntPtr display);
+    [DllImport("libX11.so")]
+    private static extern IntPtr XDefaultRootWindow(IntPtr display);
 
-        [DllImport("libX11.so")]
-        private static extern uint XStringToKeysym(string? str);
+    [DllImport("libX11.so")]
+    private static extern uint XStringToKeysym(string? str);
 
-        [DllImport("libX11.so")]
-        private static extern uint XKeysymToKeycode(IntPtr display, uint keysym);
+    [DllImport("libX11.so")]
+    private static extern uint XKeysymToKeycode(IntPtr display, uint keysym);
 
-        [DllImport("libX11.so")]
-        private static extern int XGrabKey(IntPtr display, int keycode, uint modifiers, IntPtr grab_window, int owner_events, int pointer_mode, int keyboard_mode);
+    [DllImport("libX11.so")]
+    private static extern int XGrabKey(IntPtr display, int keycode, uint modifiers, IntPtr grab_window, int owner_events, int pointer_mode, int keyboard_mode);
 
-        [DllImport("libX11")]
-        private static extern int XUngrabKey(IntPtr display, int keycode, uint modifiers, IntPtr grab_window);
+    [DllImport("libX11")]
+    private static extern int XUngrabKey(IntPtr display, int keycode, uint modifiers, IntPtr grab_window);
 
-        [DllImport("libX11.so")]
-        private static extern void XSelectInput(IntPtr display, IntPtr window, long event_mask);
+    [DllImport("libX11.so")]
+    private static extern void XSelectInput(IntPtr display, IntPtr window, long event_mask);
 
-        [DllImport("libX11.so")]
-        private static extern int XNextEvent(IntPtr display, ref XEvent event_return);
+    [DllImport("libX11.so")]
+    private static extern int XNextEvent(IntPtr display, ref XEvent event_return);
 
-        [DllImport("libX11.so")]
-        private static extern int XPending(IntPtr display);
+    [DllImport("libX11.so")]
+    private static extern int XPending(IntPtr display);
 
-        // Constants
-        private const int ControlMask = 1 << 2;
-        private const int AltMask = 1 << 3;
-        private const int False = 0;
-        private const int GrabModeAsync = 1;
-        private const long KeyPressMask = 1L << 0;
-        private const int KeyPress = 2;
+    // Constants
+    private const int ControlMask = 1 << 2;
+    private const int AltMask = 1 << 3;
+    private const int False = 0;
+    private const int GrabModeAsync = 1;
+    private const long KeyPressMask = 1L << 0;
+    private const int KeyPress = 2;
 
-        [StructLayout(LayoutKind.Sequential)]
-        struct XEvent
-        {
-            public int type;
-            // Other fields can be added here as needed
-        }
+    [StructLayout(LayoutKind.Sequential)]
+    struct XEvent
+    {
+        public int type;
+        // Other fields can be added here as needed
+    }
 
     private void RegisterHotkeyLinux()
     {
@@ -155,7 +154,7 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         uint keysym = XStringToKeysym("C");
         int keycode = (int)XKeysymToKeycode(display, keysym);
         Console.WriteLine($"Keysym: {keysym}, Keycode: {keycode}");
-        
+
         XUngrabKey(display, keycode, ControlMask | AltMask, rootWindow);
 
         int grabResult = XGrabKey(display, keycode, ControlMask | AltMask, rootWindow, False, GrabModeAsync, GrabModeAsync);
@@ -173,69 +172,77 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         Console.WriteLine("Hotkey listening task started.");
     }
 
-        private async Task ListenHotkey(IntPtr display)
+    private async Task ListenHotkey(IntPtr display)
+    {
+        if (display == IntPtr.Zero)
         {
-            if (display == IntPtr.Zero)
-            {
-                Console.WriteLine("Invalid display pointer.");
-                return;
-            }
+            Console.WriteLine("Invalid display pointer.");
+            return;
+        }
 
-            Console.WriteLine("Display pointer is valid. Entering event loop...");
+        Console.WriteLine("Display pointer is valid. Entering event loop...");
 
-            try
+        try
+        {
+            while (true)
             {
-                while (true)
+                XEvent ev = new();
+                XNextEvent(display, ref ev);
+
+                if (ev.type == KeyPress)
                 {
-                    XEvent ev = new();
-                    XNextEvent(display, ref ev);
+                    Console.WriteLine("Hotkey pressed");
 
-                    if (ev.type == KeyPress)
+                    // execute relay command AskClippy
+                    Dispatcher.UIThread.Post(async () =>
                     {
-                        Console.WriteLine("Hotkey pressed");
-
-                        // execute relay command AskClippy
-                        await Dispatcher.UIThread.InvokeAsync(async () =>
-                        {
-                            await ((MainViewModel)DataContext!).AskClippy(new CancellationToken());
-                        });
-                    }
+                        await ((MainViewModel)DataContext!).AskClippy(new CancellationToken());
+                    });
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Exception occurred: {ex.Message}");
-            }
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception occurred: {ex.Message}");
+        }
+    }
 #endif
 
     private void MainWindow_Loaded(object? sender, RoutedEventArgs e)
     {
-        // set window position to bottom right corner
+        // set window position to top left corner
         SetWindowPos();
 
         clipboardPollingTimer.Start();
 
         PositionChanged += MainWindow_PositionChanged;
-                
+
         // hide the window
         Hide();
     }
 
     private void SetWindowPos()
     {
-        // set window position to bottom right corner
-        if (Screens.Primary != null)
-        {
-            // get primary screen size
-            PixelSize screenSize = Screens.Primary.Bounds.Size;
-            Height = screenSize.Height;
-            PixelSize windowSize = PixelSize.FromSize(ClientSize, Screens.Primary.Scaling);
+        PixelSize screenSize = Screens.Primary!.Bounds.Size;
+        Height = screenSize.Height;
+        Position = new PixelPoint(0, 0);
 
-            Position = new PixelPoint(
-              screenSize.Width - windowSize.Width - 1,
-              0);
-        }
+        // set height of the border element
+        //Border border = this.FindControl<Border>("border")!;
+        //border.Height = Height;
+
+        // set window position to bottom right corner
+        // if (Screens.Primary != null)
+        // {
+        //     // get primary screen size
+        //     PixelSize screenSize = Screens.Primary.Bounds.Size;
+        //     Height = screenSize.Height;
+        //     PixelSize windowSize = PixelSize.FromSize(ClientSize, Screens.Primary.Scaling);
+
+        //     Position = new PixelPoint(
+        //       screenSize.Width - windowSize.Width - 1,
+        //       0);
+        // }
     }
 
     private void MainWindow_WindowStateChanged(object? sender, AvaloniaPropertyChangedEventArgs e)

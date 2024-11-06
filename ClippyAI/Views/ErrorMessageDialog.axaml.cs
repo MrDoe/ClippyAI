@@ -14,7 +14,7 @@ public partial class ErrorMessageDialog : Window
             if (mainWindow != null)
             {
                 Position = new PixelPoint(
-                    mainWindow.Position.X - 200,
+                    mainWindow.Position.X + 200,
                     mainWindow.Position.Y + 400);
             }
         }

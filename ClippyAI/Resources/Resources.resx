@@ -255,4 +255,10 @@ Result:
     <data name="Threshold" xml:space="preserve">
         <value>Threshold:</value>
     </data>
+    <data name="UseEmbeddings" xml:space="preserve">
+        <value>Use Embeddings</value>
+    </data>
+    <data name="PostgreSqlConnection" xml:space="preserve">
+        <value>PostgreSql Connection:</value>
+    </data>
 </root>

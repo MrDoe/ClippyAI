@@ -8,7 +8,8 @@ using ClippyAI.Views;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Collections.Generic;
-namespace ClippyAI.ViewModels;
+using ClippyAI.Models;
+namespace ClippyAI.Views;
 
 public partial class MainViewModel : ViewModelBase
 {
@@ -28,10 +29,10 @@ public partial class MainViewModel : ViewModelBase
     private string? _clipboardContent = "";
 
     [ObservableProperty]
-    private string _input;
+    private string? _input;
 
     [ObservableProperty]
-    private string output;
+    private string? _output;
 
     [ObservableProperty]
     private int _caretIndex;
@@ -70,6 +71,9 @@ public partial class MainViewModel : ViewModelBase
     private string _model = ConfigurationManager.AppSettings["OllamaModel"] ?? "gemma2:latest";
 
     [ObservableProperty]
+    private string _PostgreSqlConnection = ConfigurationManager.AppSettings["PostgreSqlConnection"] ?? "";
+
+    [ObservableProperty]
     private bool _useEmbeddings = true;
 
     [ObservableProperty]
@@ -84,12 +88,15 @@ public partial class MainViewModel : ViewModelBase
     [ObservableProperty]
     private int _embeddingsCount = 0;
 
-    private bool lastOutputGenerated = false;
+    [ObservableProperty]
+    private bool _useAsRefinement = false;
+
+    private bool _lastOutputGenerated = false;
 
     /// <summary>
     /// List of responseList retrieved from vector database
     /// </summary>
-    private List<string> responseList = [];
+    private List<Embedding> _responseList = [];
 
     /// <summary>
     /// Index of the current response in responseList
@@ -99,15 +106,7 @@ public partial class MainViewModel : ViewModelBase
     /// <summary>
     /// Full task string for storage in database
     /// </summary>
-    private string fullTask = "";
-
-    /// <summary>
-    /// Get embeddings count from database
-    /// </summary>
-    public async Task GetEmbeddingsCount()
-    {
-        EmbeddingsCount = await OllamaService.GetEmbeddingsCount();
-    }
+    private string _fullTask = "";
 
     private void PopulateTasks()
     {
@@ -124,7 +123,6 @@ public partial class MainViewModel : ViewModelBase
             }
         }
     }
-
     private string GetFullTask()
     {
         string task;
@@ -141,7 +139,7 @@ public partial class MainViewModel : ViewModelBase
             IsBusy = false;
             return "";
         }
-        fullTask = Task + " " + Input!;
+        _fullTask = Task + " " + Input!;
 
         return task;
     }
@@ -151,9 +149,9 @@ public partial class MainViewModel : ViewModelBase
     {
         IsBusy = true;
         ErrorMessages?.Clear();
-        responseList.Clear();
+        _responseList.Clear();
         string? response = null;
-        lastOutputGenerated = false;
+        _lastOutputGenerated = false;
 
         // get task string
         string task = GetFullTask();
@@ -172,16 +170,16 @@ public partial class MainViewModel : ViewModelBase
                 return;
             }
        
-            mainWindow.ShowNotification("ClippyAI", Resources.Resources.PleaseWait, true, false);
+            mainWindow!.ShowNotification("ClippyAI", Resources.Resources.PleaseWait, true, false);
 
             // try to get response from embedded model first
             if (UseEmbeddings)
             {
-                responseList = await OllamaService.RetrieveAnswersForQuestion(fullTask, Threshold);
-                if (responseList.Count > 0)
+                _responseList = await OllamaService.RetrieveAnswersForQuestion(_fullTask, Threshold);
+                if (_responseList.Count > 0)
                 {
                     _responseIndex = 0;
-                    await SetResponse(responseList[_responseIndex]);
+                    await SetResponse(_responseList[0].Answer);
                     return;
                 }
             }
@@ -193,7 +191,7 @@ public partial class MainViewModel : ViewModelBase
             
             if (!string.IsNullOrEmpty(response) && StoreResponsesAsEmbeddings)
             {
-                await OllamaService.StoreEmbedding(fullTask, response);
+                await OllamaService.StoreEmbedding(_fullTask, response);
                 ++EmbeddingsCount;
             }
         }
@@ -211,8 +209,8 @@ public partial class MainViewModel : ViewModelBase
 
         if (response != null)
         {
-            lastOutputGenerated = true;
-            responseList.Add(response);
+            _lastOutputGenerated = true;
+            _responseList.Add(new Embedding { Id = 0, Answer = response });
             await SetResponse(response);
         }
     }
@@ -228,15 +226,15 @@ public partial class MainViewModel : ViewModelBase
         // call ShowNotification method from MainWindow
         if (showNotification)
         {
-            mainWindow.HideLastNotification();
+            mainWindow!.HideLastNotification();
             mainWindow.ShowNotification("ClippyAI", Resources.Resources.TaskCompleted + response, false, true);
         }
 
         // update response counter
-        if(lastOutputGenerated)
+        if(_lastOutputGenerated)
             ResponseCounter = "      *";
         else
-            ResponseCounter = $"{_responseIndex + 1} / {responseList.Count}";
+            ResponseCounter = $"{_responseIndex + 1} / {_responseList.Count}";
 
         IsBusy = false;
     }
@@ -247,19 +245,19 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     public async Task GetNextResponse()
     {
-        if(lastOutputGenerated)
+        if(_lastOutputGenerated)
         {
             return;
         }
 
-        if (responseList.Count > 0)
+        if (_responseList.Count > 0)
         {
             _responseIndex++;
-            if (_responseIndex >= responseList.Count)
+            if (_responseIndex >= _responseList.Count)
             {
                 _responseIndex = 0;
             }
-            await SetResponse(responseList[_responseIndex], false);
+            await SetResponse(_responseList[_responseIndex].Answer, false);
         }
     }
 
@@ -356,7 +354,7 @@ public partial class MainViewModel : ViewModelBase
         {
             // open input dialog to enter model name
             string? modelName = await InputDialog.Prompt(
-                    parentWindow: mainWindow,
+                    parentWindow: mainWindow!,
                     title: Resources.Resources.PullModel,
                     caption: Resources.Resources.EnterModelName,
                     subtext: Resources.Resources.PullModelSubText,
@@ -384,7 +382,7 @@ public partial class MainViewModel : ViewModelBase
     {
         // confirm deletion
         string? confirmation = await InputDialog.Confirm(
-            parentWindow: mainWindow,
+            parentWindow: mainWindow!,
             title: Resources.Resources.DeleteModel,
             caption: Resources.Resources.ConfirmDeleteModel
         );
@@ -413,22 +411,27 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     public async Task ThumbUp()
     {
-        if (responseList.Count > 0 && _responseIndex >= 0)
+        if(string.IsNullOrEmpty(Output))
+        {
+            return;
+        }
+
+        if (_responseList.Count > 0 && _responseIndex >= 0)
         {
             try
             {
                 GetFullTask();
-                await OllamaService.StoreEmbedding(fullTask, Output);
+                await OllamaService.StoreEmbedding(_fullTask, Output);
             }
             catch (Exception e)
             {
                 ErrorMessages?.Add(e.Message);
-                mainWindow.ShowNotification("ClippyAI", e.Message, false, false);
+                mainWindow!.ShowNotification("ClippyAI", e.Message, false, false);
                 return;
             }
 
             ++EmbeddingsCount;
-            mainWindow.ShowNotification("ClippyAI", "Result successfully stored as template in database!", false, false);
+            mainWindow!.ShowNotification("ClippyAI", "Result successfully stored as template in database!", false, false);
         }
     }
 
@@ -445,7 +448,7 @@ public partial class MainViewModel : ViewModelBase
     {
         // confirm deletion
         string? confirmation = await InputDialog.Confirm(
-            parentWindow: mainWindow,
+            parentWindow: mainWindow!,
             title: "Delete Embeddings",
             caption: "Do you really want to delete all embeddings?"
         );
@@ -459,7 +462,7 @@ public partial class MainViewModel : ViewModelBase
         {
             await OllamaService.ClearEmbeddings();
             EmbeddingsCount = 0;
-            mainWindow.ShowNotification("ClippyAI", "Embeddings successfully deleted!", false, false);
+            mainWindow!.ShowNotification("ClippyAI", "Embeddings successfully deleted!", false, false);
         }
         catch (Exception e)
         {

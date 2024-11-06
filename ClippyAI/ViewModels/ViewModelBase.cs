@@ -1,8 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
-using ClippyAI.Views;
 using Avalonia.Controls.ApplicationLifetimes;
-namespace ClippyAI.ViewModels;
+namespace ClippyAI.Views;
 
 public partial class ViewModelBase : ObservableObject
 {

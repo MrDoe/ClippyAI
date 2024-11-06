@@ -1,7 +1,7 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using ClippyAI.ViewModels;
+using ClippyAI.Views;
 namespace ClippyAI;
 
 public class ViewLocator : IDataTemplate

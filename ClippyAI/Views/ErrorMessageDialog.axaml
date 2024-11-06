@@ -2,7 +2,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     x:Class="ClippyAI.Views.ErrorMessageDialog"
     x:DataType="vm:ErrorMessageDialogViewModel"
-    xmlns:vm="clr-namespace:ClippyAI.ViewModels"
+    xmlns:vm="clr-namespace:ClippyAI.Views"
     Width="500"
     Height="150"
     Background="DimGray"
