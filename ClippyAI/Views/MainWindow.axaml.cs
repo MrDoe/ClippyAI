@@ -54,7 +54,7 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
 #if WINDOWS        
         RegisterHotkeyWindows();
 #elif LINUX
-        RegisterHotkeyLinux();
+        //RegisterHotkeyLinux();
 #endif
     }
 

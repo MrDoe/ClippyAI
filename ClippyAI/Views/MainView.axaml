@@ -62,10 +62,11 @@
 
         <!-- Start/Stop buttons -->
         <StackPanel Orientation="Horizontal">
-            <Button Content="{x:Static resources:Resources.TaskStart}"
+            <Button Content="{x:Static resources:Resources.TaskStart}" HotKey="Ctrl+Alt+C"
                 Command="{Binding AskClippyCommand}"
                 HorizontalAlignment="Left" Margin="0 10 0 0"
-                ToolTip.Tip="Start the selected task" />
+                ToolTip.Tip="Start the selected task">
+            </Button>
 
             <Button Content="{x:Static resources:Resources.TaskStop}"
                 Command="{Binding StopClippyTaskCommand}"
