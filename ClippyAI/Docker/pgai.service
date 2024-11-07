@@ -1,0 +1,20 @@
+# Example file for installing a service for docker-compose
+# copy the docker-compose.yml file to /etc/pgai/docker-compose.yml
+# copy this file to /etc/systemd/system/pgai.service
+# run `systemctl enable pgai` to enable the service
+# run `systemctl start pgai` to start the service
+[Unit]
+Description=PGAI Service
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/etc/pgai
+ExecStart=/usr/local/bin/docker-compose -f /etc/pgai/docker-compose.yml up -d
+ExecStop=/usr/local/bin/docker-compose -f /etc/pgai/docker-compose.yml down
+Restart=always
+RestartSec=3
+User=root
+
+[Install]
+WantedBy=multi-user.target

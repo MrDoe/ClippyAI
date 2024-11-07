@@ -30,21 +30,34 @@ after it is copied or cut. The clipboard's content can then be sent along with a
 **Getting Started**
 
 1. Install Ollama from [https://ollama.com/download](https://ollama.com/download).
-2. Set the environment variable OLLAMA_HOST=0.0.0.0 and restart the Ollama application.
-3. Download the latest release of ClippyAI for your OS (Windows or Linux).
-4. Run `setup.exe` on Windows or install the .deb/.rpm packages on Linux/X11 systems.
-5. Install PostgreSql and pgai.
-    1. Install the PostgreSql webserver and the pgai packages. See [https://github.com/timescale/pgai](https://github.com/timescale/pgai) for installation instructions. 4.1
-    2. If you are a Docker user, clone or download this repository and execute `docker-compose up` from the `ClippyAI/Docker` directory to install PostgreSql with pgai as a container.
-    3. Optionally, you can also use a cloud based PostgreSql database from Timescale.
-6. Edit the PostgreSql connection string of the ClippyAI.conf file to enter the server address and user credentials.
-7. Run `ClippyAI` from the start menu of your OS and click on the tray icon to open it.
-8. Click on `Options`, the `Pull` button and enter `gemma2` to let ClippyAI download and install the Google Gemma2 AI model to your local PC. Please be patient, as the downloading can take a few minutes, depending on how fast your internet connection is.
-9. Do the same again with the `nomic-embed-text` model, which will be used for embeddings.
+2. Download the latest release of ClippyAI for your OS (Windows or Linux).
+3. Run `setup.exe` on Windows or install the .deb/.rpm packages on Linux/X11 systems.
+4. Run `ClippyAI` from the start menu of your OS and click on the tray icon to open it.
+5. Click on `Options`, the `Pull` button and enter `gemma2` to let ClippyAI download and install the Google Gemma2 AI model to your local PC.
+Please be patient, as the downloading can take a few minutes, depending on how fast your internet connection is.
+6. Uncheck `Use Embeddings`, if you want to use the application without caching via an embedding database.
+
+**Setting Up Embedding Database (optional)**
+1. Install PostgreSQL database and pgai:
+    1. Install via Docker (recommended):
+        1. Download the [https://raw.githubusercontent.com/MrDoe/ClippyAI/refs/heads/main/ClippyAI/Docker/docker-compose.yml](docker-compose.yml) file from this repository.
+        2. Open the command prompt/terminal and execute `docker-compose up` from the download directory. 
+    2. Manual installation
+        1. See [https://github.com/timescale/pgai](https://github.com/timescale/pgai) for specific installation instructions.
+    3. Cloud-based database from Timescale:
+        1. Go to [https://www.timescale.com/cloud](https://www.timescale.com/cloud) for setup instructions.
+2. Set the environment variable for Ollama
+    - Windows: Add `OLLAMA_HOST=0.0.0.0` to the user or system environment variables.
+    - Linux:
+        1. Edit file `/etc/systemd/system/ollama.service`.
+        2. Add `Environment="OLLAMA_HOST=0.0.0.0"` after `Environment="PATH=..."`.
+        3. Execute `sudo systemctl daemon-reload && sudo systemctl restart ollama`.
+3. Start ClippyAI and edit the Postgres SQL connection string if necessary. Default values should be fine for installations via `docker-compose`.
+9. Click on `Options`, the `Pull` button and enter `nomic-embed-text`, which is mandatory for calculating the embeddings.
 
 **Using ClippyAI**
 
-1. Choose the task from the dropdown list.
+1. Choose a task from the dropdown list.
 2. Copy or cut some text from an application (e.g., email, chat, or document) via [Ctrl]+[C].
 3. Click `Send` or use the keyboard shortcut [Ctrl]+[Alt]+[C] to send the clipboard contents with the task to the local LLM.
 4. Review or paste ([Ctrl]+[V]) your generated task in the application where you need it.
@@ -58,7 +71,6 @@ If you encounter any issues or having questions or new ideas about using ClippyA
 **Future Plans**
 
 Go to the issues page on this Github repo to see things I've planned for the future.
-
 
 **Developers Wanted!**
 

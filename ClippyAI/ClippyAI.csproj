@@ -13,7 +13,7 @@
     <CoreCompileDependsOn>PrepareResources;$(CompileDependsOn)</CoreCompileDependsOn>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
-    <Version>1.0.2</Version>
+    <Version>1.1.0</Version>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
