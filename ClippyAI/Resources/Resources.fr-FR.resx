@@ -223,4 +223,7 @@ Résultat:
     <data name="PostgreSqlConnection" xml:space="preserve">
         <value>Connexion PostgreSql:</value>
     </data>
+    <data name="PostgresOllamaUrl" xml:space="preserve">
+        <value>URL Postgres Ollama:</value>
+    </data>
 </root>

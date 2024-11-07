@@ -32,6 +32,7 @@ public static class OllamaService
     private static readonly string? url = ConfigurationManager.AppSettings?.Get("OllamaUrl");
     private static readonly string? system = ConfigurationManager.AppSettings?.Get("System");
     private static readonly string? connectionString = ConfigurationManager.AppSettings?.Get("PostgreSqlConnection");
+    private static readonly string? pgOllamaUrl = ConfigurationManager.AppSettings?.Get("PostgresOllamaUrl");
 
     /// <summary>
     /// Sends a request to the Ollama API.
@@ -354,6 +355,11 @@ public static class OllamaService
     /// <returns>The task.</returns>
     public static void InitializeEmbeddings()
     {
+        if(pgOllamaUrl == null)
+        {
+            throw new Exception("PostgresOllamaUrl is not set.");
+        }
+        
         using var conn = new NpgsqlConnection(connectionString);
         conn.Open();
 
@@ -380,13 +386,20 @@ public static class OllamaService
         cmd = new NpgsqlCommand(@"
             CREATE INDEX IF NOT EXISTS idx_clippy_embedding_question
             ON clippy
-            USING ivfflat(embedding_question, 32)", conn);
+            USING ivfflat(embedding_question vector_cosine_ops)
+            WITH (lists = 100)", conn);
         cmd.ExecuteNonQuery();
 
         cmd = new NpgsqlCommand(@"
             CREATE INDEX IF NOT EXISTS idx_clippy_embedding_answer
             ON clippy
-            USING ivfflat(embedding_answer, 32)", conn);
+            USING ivfflat(embedding_answer vector_cosine_ops)
+            WITH (lists = 100)", conn);
+        cmd.ExecuteNonQuery();
+
+        // set docker host for the ai extension
+        cmd = new NpgsqlCommand("SELECT set_config('ai.ollama_host', @host, false)", conn);
+        cmd.Parameters.AddWithValue("host", pgOllamaUrl);
         cmd.ExecuteNonQuery();
     }
 

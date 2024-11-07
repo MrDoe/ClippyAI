@@ -292,6 +292,15 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ollama URL for Postgres:.
+        /// </summary>
+        public static string PostgresOllamaUrl {
+            get {
+                return ResourceManager.GetString("PostgresOllamaUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to PostgreSql Connection:.
         /// </summary>
         public static string PostgreSqlConnection {

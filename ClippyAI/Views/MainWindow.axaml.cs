@@ -193,12 +193,23 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
                 {
                     Console.WriteLine("Hotkey pressed");
 
-                    // execute relay command AskClippy
-                    Dispatcher.UIThread.Post(async () =>
+                    try
                     {
-                        await ((MainViewModel)DataContext!).AskClippy(new CancellationToken());
-                    });
+                        // execute relay command AskClippy
+                        Dispatcher.UIThread.Post(async () =>
+                        {
+                            await ((MainViewModel)DataContext!).AskClippy(new CancellationToken());
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Exception occurred: {ex.Message}");
+
+                        // restart the hotkey listening task
+                        Task.Run(() => ListenHotkey(display));
+                    }
                 }
+                Task.Delay(100).Wait();
             }
         }
         catch (Exception ex)

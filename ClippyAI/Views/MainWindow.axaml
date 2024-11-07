@@ -9,7 +9,7 @@
     Width="420"
     x:Class="ClippyAI.Views.MainWindow"
     Icon="avares://ClippyAI/Assets/bulb.png"
-    Title="{x:Static assets:Resources.ClippyAI}"
+    Title="ClippyAI"
     TransparencyLevelHint="AcrylicBlur"
     Background="Transparent"
     Loaded="MainWindow_Loaded"

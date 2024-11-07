@@ -60,6 +60,16 @@ public partial class MainView : UserControl
         var txtPostgreSqlConnection = this.FindControl<TextBox>("txtPostgreConnection");
         if (txtPostgreSqlConnection != null)
             txtPostgreSqlConnection.TextChanged += OnTxtPostgreConnectionChanged;
+
+        // add event handler for PostgresOllamaUrl text changed
+        var txtPostgresOllamaUrl = this.FindControl<TextBox>("txtPostgresOllamaUrl");
+        if (txtPostgresOllamaUrl != null)
+            txtPostgresOllamaUrl.TextChanged += OnTxtPostgresOllamaUrlChanged;
+
+        // add event handler for StoreAllResponses checkbox checked
+        var chkStoreAllResponses = this.FindControl<CheckBox>("chkStoreAllResponses");
+        if (chkStoreAllResponses != null)
+            chkStoreAllResponses.Checked += OnChkStoreAllResponsesChecked;
     }
 
     private async void MainView_Loaded(object? sender, RoutedEventArgs e)
@@ -257,6 +267,39 @@ public partial class MainView : UserControl
         var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
         config.AppSettings.Settings.Remove("PostgreSqlConnection");
         config.AppSettings.Settings.Add("PostgreSqlConnection", txtPostgreSqlConnection.Text);
+        config.Save(ConfigurationSaveMode.Modified);
+        ConfigurationManager.RefreshSection("appSettings");
+    }
+
+    private void OnTxtPostgresOllamaUrlChanged(object? sender, RoutedEventArgs e)
+    {
+        if (!Init)
+            return;
+
+        var txtPostgresOllamaUrl = (TextBox)sender!;
+        ((MainViewModel)DataContext!).PostgresOllamaUrl = txtPostgresOllamaUrl.Text!;
+
+        // update PostgresOllamaUrl in configuration file
+        var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+        config.AppSettings.Settings.Remove("PostgresOllamaUrl");
+        config.AppSettings.Settings.Add("PostgresOllamaUrl", txtPostgresOllamaUrl.Text);
+        config.Save(ConfigurationSaveMode.Modified);
+        ConfigurationManager.RefreshSection("appSettings");
+    }
+
+    private void OnChkStoreAllResponsesChecked(object? sender, RoutedEventArgs e)
+    {
+        if (!Init)
+            return;
+
+        var chkStoreAllResponses = (CheckBox)sender!;
+        bool isChecked = chkStoreAllResponses.IsChecked ?? false;
+        ((MainViewModel)DataContext!).StoreAllResponses = isChecked;
+
+        // save to configuration file
+        var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+        config.AppSettings.Settings.Remove("StoreAllResponses");
+        config.AppSettings.Settings.Add("StoreAllResponses", isChecked.ToString());
         config.Save(ConfigurationSaveMode.Modified);
         ConfigurationManager.RefreshSection("appSettings");
     }

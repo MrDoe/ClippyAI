@@ -74,13 +74,16 @@ public partial class MainViewModel : ViewModelBase
     private string _PostgreSqlConnection = ConfigurationManager.AppSettings["PostgreSqlConnection"] ?? "";
 
     [ObservableProperty]
-    private bool _useEmbeddings = true;
+    private string _PostgresOllamaUrl = ConfigurationManager.AppSettings["PostgresOllamaUrl"] ?? "";
+
+    [ObservableProperty]
+    private bool _useEmbeddings = ConfigurationManager.AppSettings["UseEmbeddings"] == "True";
+
+    [ObservableProperty]
+    private bool _storeAllResponses = ConfigurationManager.AppSettings["StoreAllResponses"] == "True";
 
     [ObservableProperty]
     private string _responseCounter = "0 / 0";
-
-    [ObservableProperty]
-    private bool _storeResponsesAsEmbeddings = false;
 
     [ObservableProperty]
     private float _threshold = 8.0f;
@@ -189,7 +192,7 @@ public partial class MainViewModel : ViewModelBase
                                                        model,
                                                        _askClippyCts.Token); // Use the token from _askClippyCts
             
-            if (!string.IsNullOrEmpty(response) && StoreResponsesAsEmbeddings)
+            if (!string.IsNullOrEmpty(response) && StoreAllResponses)
             {
                 await OllamaService.StoreEmbedding(_fullTask, response);
                 ++EmbeddingsCount;
