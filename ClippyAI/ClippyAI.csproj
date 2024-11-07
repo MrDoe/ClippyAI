@@ -66,8 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Resources\Resources.resx">
-      <Generator>MSBuild:Compile</Generator>
-      <StronglyTypedFileName>Resources\Resources.Designer.cs</StronglyTypedFileName>
+      <Generator>PublicResXFileCodeGenerator</Generator>      <StronglyTypedFileName>Resources.Designer.cs</StronglyTypedFileName>
 			<StronglyTypedLanguage>CSharp</StronglyTypedLanguage>
 			<StronglyTypedNamespace>ClippyAI.Resources</StronglyTypedNamespace>
 			<StronglyTypedClassName>Resources</StronglyTypedClassName>
