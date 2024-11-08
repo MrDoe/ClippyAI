@@ -180,7 +180,7 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
             return;
         }
 
-        Console.WriteLine("Display pointer is valid. Entering event loop...");
+        //Console.WriteLine("Display pointer is valid. Entering event loop...");
 
         try
         {
@@ -206,7 +206,7 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
                         Console.WriteLine($"Exception occurred: {ex.Message}");
 
                         // restart the hotkey listening task
-                        Task.Run(() => ListenHotkey(display));
+                        await Task.Run(() => ListenHotkey(display));
                     }
                 }
                 Task.Delay(100).Wait();
@@ -237,23 +237,6 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         PixelSize screenSize = Screens.Primary!.Bounds.Size;
         Height = screenSize.Height;
         Position = new PixelPoint(0, 0);
-
-        // set height of the border element
-        //Border border = this.FindControl<Border>("border")!;
-        //border.Height = Height;
-
-        // set window position to bottom right corner
-        // if (Screens.Primary != null)
-        // {
-        //     // get primary screen size
-        //     PixelSize screenSize = Screens.Primary.Bounds.Size;
-        //     Height = screenSize.Height;
-        //     PixelSize windowSize = PixelSize.FromSize(ClientSize, Screens.Primary.Scaling);
-
-        //     Position = new PixelPoint(
-        //       screenSize.Width - windowSize.Width - 1,
-        //       0);
-        // }
     }
 
     private void MainWindow_WindowStateChanged(object? sender, AvaloniaPropertyChangedEventArgs e)

@@ -92,7 +92,7 @@ public partial class MainViewModel : ViewModelBase
     private int _embeddingsCount = 0;
 
     [ObservableProperty]
-    private bool _useAsRefinement = false;
+    private float _responseDistance = 0.0f;
 
     private bool _lastOutputGenerated = false;
 
@@ -237,8 +237,10 @@ public partial class MainViewModel : ViewModelBase
         if(_lastOutputGenerated)
             ResponseCounter = "      *";
         else
+        {
+            ResponseDistance = (float)Math.Round(_responseList[_responseIndex].Distance, 2);
             ResponseCounter = $"{_responseIndex + 1} / {_responseList.Count}";
-
+        }
         IsBusy = false;
     }
 
@@ -429,12 +431,47 @@ public partial class MainViewModel : ViewModelBase
             catch (Exception e)
             {
                 ErrorMessages?.Add(e.Message);
-                mainWindow!.ShowNotification("ClippyAI", e.Message, false, false);
+                mainWindow!.ShowNotification("ClippyAI", e.Message, false, true);
                 return;
             }
 
             ++EmbeddingsCount;
             mainWindow!.ShowNotification("ClippyAI", "Result successfully stored as template in database!", false, false);
+        }
+    }
+
+    [RelayCommand]
+    public async Task ThumbDown()
+    {
+        if(string.IsNullOrEmpty(Output))
+        {
+            return;
+        }
+
+        if (_responseList.Count > 0 && _responseIndex >= 0)
+        {
+            try
+            {
+                await OllamaService.DeleteEmbedding(_responseList[_responseIndex].Id);
+            }
+            catch (Exception e)
+            {
+                ErrorMessages?.Add(e.Message);
+                mainWindow!.ShowNotification("ClippyAI", e.Message, false, true);
+                return;
+            }
+
+            _responseList.RemoveAt(_responseIndex);
+            if (_responseList.Count > 0)
+            {
+                _responseIndex = 0;
+                await SetResponse(_responseList[0].Answer);
+            }
+            else
+            {
+                Output = "";
+                mainWindow!.ShowNotification("ClippyAI", "Result successfully deleted from database!", false, false);
+            }
         }
     }
 

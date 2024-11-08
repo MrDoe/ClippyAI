@@ -41,7 +41,7 @@ public partial class MainView : UserControl
             txtOllamaUrl.LostFocus += OnTxtOllamaUrlLostFocus;
         }
 
-        // add event handler for auto mode radio button checked
+        // add event handler for automatic mode radio button checked
         var rbAuto = this.FindControl<RadioButton>("rbAuto");
         if (rbAuto != null)
             rbAuto.IsCheckedChanged += OnRbAutoChecked;

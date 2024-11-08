@@ -11,7 +11,6 @@ using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using ClippyAI.Services;
-using ClippyAI.Views;
 namespace ClippyAI;
 
 public partial class App : Application
@@ -24,7 +23,7 @@ public partial class App : Application
     {
         AvaloniaXamlLoader.Load(this);
     }
-    private Window? _mainWindow;
+    private MainWindow? _mainWindow;
     private TrayIcon? _trayIcon;
 
     private void TrayIcon_Clicked(object? sender, EventArgs e)
@@ -64,10 +63,10 @@ public partial class App : Application
                 break;
         }
 
-        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopLifetime)
+        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktopLifetime.MainWindow = new MainWindow { DataContext = new MainViewModel() };
-            _mainWindow = desktopLifetime.MainWindow;
+            _mainWindow = new MainWindow { DataContext = new MainViewModel() };
+            desktop.MainWindow = _mainWindow;
 
             var iconUri = new Uri("avares://ClippyAI/Assets/bulb.png");
             var bitmap = new Bitmap(AssetLoader.Open(iconUri));
@@ -110,7 +109,14 @@ public partial class App : Application
             // initialize the Ollama Embedding Service
             if(ConfigurationManager.AppSettings["UseEmbeddings"] == "True")
             {
-                OllamaService.InitializeEmbeddings();
+                try
+                {
+                    OllamaService.InitializeEmbeddings();
+                }
+                catch(Exception ex)
+                {
+                    _mainWindow.ShowNotification("ClippyAI", ex.Message, false, true);
+                }
             }
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewLifetime)
@@ -120,4 +126,5 @@ public partial class App : Application
 
         base.OnFrameworkInitializationCompleted();
     }
+
 }

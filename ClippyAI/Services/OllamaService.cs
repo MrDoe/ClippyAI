@@ -59,6 +59,7 @@ public static class OllamaService
         };
         Console.WriteLine("Sending request...");
 
+        // send the request
         using var response = await client.PostAsync(
                              url + "/generate",
                              new StringContent(JsonSerializer.Serialize(body),
@@ -89,8 +90,16 @@ public static class OllamaService
         {
             throw new Exception($"Request failed with status: {response.StatusCode}.");
         }
+
+        // remove double quotes from the beginning and end of the response
+        if (fullResponse != null)
+        {
+            fullResponse = fullResponse.Trim('"').Trim('\'');
+        }
+
         return fullResponse;
     }
+
     /// <summary>
     /// Get models from the Ollama API.
     /// </summary>
@@ -324,7 +333,11 @@ public static class OllamaService
         await conn.OpenAsync();
 
         var cmd = new NpgsqlCommand(@"
-        SELECT id, answer, embedding_answer::text
+        SELECT 
+            id, 
+            answer, 
+            embedding_answer::text, 
+            embedding_question <-> ai.ollama_embed('nomic-embed-text', @question) as distance
         FROM clippy
         WHERE embedding_question <-> ai.ollama_embed('nomic-embed-text', @question) <= @threshold
         ORDER BY embedding_question <-> ai.ollama_embed('nomic-embed-text', @question)
@@ -343,7 +356,8 @@ public static class OllamaService
             {
                 Id = result.GetInt32(0),
                 Answer = result.GetString(1),
-                AnswerVector = result.GetString(2)
+                AnswerVector = result.GetString(2),
+                Distance = result.GetFloat(3)
             });
         }
         return answers;
@@ -437,5 +451,20 @@ public static class OllamaService
         }
 
         return count;
+    }
+
+    /// <summary>
+    /// Delete an embedding from the PostgreSql vector database.
+    /// </summary>
+    /// <param name="id">The id of the embedding to delete.</param>
+    /// <returns>The task.</returns>
+    public static async Task DeleteEmbedding(int id)
+    {
+        await using var conn = new NpgsqlConnection(connectionString);
+        await conn.OpenAsync();
+
+        var cmd = new NpgsqlCommand("DELETE FROM clippy WHERE id = @id", conn);
+        cmd.Parameters.AddWithValue("id", id);
+        await cmd.ExecuteNonQueryAsync();
     }
 }
