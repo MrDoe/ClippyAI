@@ -47,7 +47,8 @@ Please be patient, as the downloading can take a few minutes, depending on how f
   3. Cloud-based database from Timescale:
     - Go to [https://www.timescale.com/cloud](https://www.timescale.com/cloud) for setup instructions.
 2. Set the environment variable for Ollama
-  - Windows: Add `OLLAMA_HOST=0.0.0.0` to the user or system environment variables.
+  - Windows:
+    - Add `OLLAMA_HOST=0.0.0.0` to the user or system environment variables.
   - Linux:
     1. Edit file `/etc/systemd/system/ollama.service`.
     2. Add `Environment="OLLAMA_HOST=0.0.0.0"` after `Environment="PATH=..."`.
