@@ -40,8 +40,8 @@ Please be patient, as the downloading can take a few minutes, depending on how f
 **Setting Up Embedding Database (optional)**
 1. Install PostgreSQL database and pgai:
   1. Install via Docker (recommended):
-    1. Download the [https://raw.githubusercontent.com/MrDoe/ClippyAI/refs/heads/main/ClippyAI/Docker/docker-compose.yml](docker-compose.yml) file from this repository.
-    2. Open the command prompt/terminal and execute `docker-compose up` from the download directory. 
+    - Download the [https://raw.githubusercontent.com/MrDoe/ClippyAI/refs/heads/main/ClippyAI/Docker/docker-compose.yml](docker-compose.yml) file from this repository.
+    - Open the command prompt/terminal and execute `docker-compose up` from the download directory. 
   2. Manual installation
     - See [https://github.com/timescale/pgai](https://github.com/timescale/pgai) for specific installation instructions.
   3. Cloud-based database from Timescale:
