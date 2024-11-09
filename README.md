@@ -49,6 +49,7 @@ Please be patient, as the downloading can take a few minutes, depending on how f
 2. Set the environment variable for Ollama
     - Windows:
         - Add `OLLAMA_HOST=0.0.0.0` to the user or system environment variables.
+        - Restart Ollama.
     - Linux:
         - Edit file `/etc/systemd/system/ollama.service`.
         - Add `Environment="OLLAMA_HOST=0.0.0.0"` after `Environment="PATH=..."`.
