@@ -43,16 +43,16 @@ Please be patient, as the downloading can take a few minutes, depending on how f
       - Download the [https://raw.githubusercontent.com/MrDoe/ClippyAI/refs/heads/main/ClippyAI/Docker/docker-compose.yml](docker-compose.yml) file from this repository.
       - Open the command prompt/terminal and execute `docker-compose up` from the download directory. 
   2. Manual installation
-    - See [https://github.com/timescale/pgai](https://github.com/timescale/pgai) for specific installation instructions.
+      - See [https://github.com/timescale/pgai](https://github.com/timescale/pgai) for specific installation instructions.
   3. Cloud-based database from Timescale:
-    - Go to [https://www.timescale.com/cloud](https://www.timescale.com/cloud) for setup instructions.
+      - Go to [https://www.timescale.com/cloud](https://www.timescale.com/cloud) for setup instructions.
 2. Set the environment variable for Ollama
     - Windows:
-      - Add `OLLAMA_HOST=0.0.0.0` to the user or system environment variables.
+        - Add `OLLAMA_HOST=0.0.0.0` to the user or system environment variables.
     - Linux:
-      1. Edit file `/etc/systemd/system/ollama.service`.
-      2. Add `Environment="OLLAMA_HOST=0.0.0.0"` after `Environment="PATH=..."`.
-      3. Execute `sudo systemctl daemon-reload && sudo systemctl restart ollama`.
+        1. Edit file `/etc/systemd/system/ollama.service`.
+        2. Add `Environment="OLLAMA_HOST=0.0.0.0"` after `Environment="PATH=..."`.
+        3. Execute `sudo systemctl daemon-reload && sudo systemctl restart ollama`.
 3. Start ClippyAI and edit the Postgres SQL connection string if necessary. Default values should be fine for installations via `docker-compose`.
 9. Click on `Options`, the `Pull` button and enter `nomic-embed-text`, which is mandatory for calculating the embeddings.
 
