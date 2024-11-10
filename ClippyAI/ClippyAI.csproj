@@ -64,20 +64,29 @@
     <ProjectReference Include="Libs\DesktopNotificationsNet8\DesktopNotifications.Windows\DesktopNotifications.Windows.csproj" />
     <ProjectReference Include="Libs\DesktopNotificationsNet8\DesktopNotifications\DesktopNotifications.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Update="Resources\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <StronglyTypedFileName>Resources\Resources.Designer.cs</StronglyTypedFileName>
+	<ItemGroup>
+		<Compile Update="Resources\Resource.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resource.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Resources\Resource.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<PublicClass>true</PublicClass>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Resources\Resource.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<PublicClass>true</PublicClass>
+			<StronglyTypedFileName>Resources\Resource.Designer.cs</StronglyTypedFileName>
 			<StronglyTypedLanguage>CSharp</StronglyTypedLanguage>
 			<StronglyTypedNamespace>ClippyAI.Resources</StronglyTypedNamespace>
 			<StronglyTypedClassName>Resources</StronglyTypedClassName>
-    </EmbeddedResource>
-    <Compile Update="Resources\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
+			<LastGenOutput>Resource.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="powershell -Command &quot;(Get-Content -path $(ProjectDir)\Resources\Resources.Designer.cs) -replace 'internal', 'public' | Set-Content -Path $(ProjectDir)\Resources\Resources.Designer.cs&quot;" Condition="'$(OS)' == 'Windows_NT'" />
     <Exec Command="sed -i 's/internal/public/g' Resources/Resources.Designer.cs" Condition="'$(OS)' == 'Unix'" />
