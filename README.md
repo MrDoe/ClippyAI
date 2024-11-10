@@ -25,7 +25,7 @@ after it is copied or cut. The clipboard's content can then be sent along with a
 * Translate a text into another language
 * Summarize a long text in a few sentences
 
-![Clippy Example](./Images/clippy.png)
+![Clippy Example Screenshot](./Images/clippy.png)
 
 **Getting Started**
 
