@@ -336,11 +336,11 @@ public static class OllamaService
         SELECT 
             id, 
             answer, 
-            embedding_answer::text, 
+            embedding_answer::text as answer_vector, 
             embedding_question <-> ai.ollama_embed('nomic-embed-text', @question) as distance
         FROM clippy
         WHERE embedding_question <-> ai.ollama_embed('nomic-embed-text', @question) <= @threshold
-        ORDER BY embedding_question <-> ai.ollama_embed('nomic-embed-text', @question)
+        ORDER BY 4
         LIMIT 10", conn);
 
         cmd.Parameters.AddWithValue("question", question);
