@@ -32,16 +32,16 @@ after it is copied or cut. The clipboard's content can then be sent along with a
 1. Install Ollama from [https://ollama.com/download](https://ollama.com/download).
 2. Download the latest release of ClippyAI for your OS (Windows or Linux).
 3. Run `setup.exe` on Windows or install the .deb/.rpm packages on Linux/X11 systems.
-4. Run `ClippyAI` from the start menu of your OS and click on the tray icon to open it.
-5. Click on `Options`, the `Pull` button and enter `gemma2` to let ClippyAI download and install the Google Gemma2 AI model to your local PC.
-Please be patient, as the downloading can take a few minutes, depending on how fast your internet connection is.
-6. Uncheck `Use Embeddings`, if you want to use the application without caching via an embedding database.
+4. Before running on linux systems, be sure that the X11 libs are installed, e.g. on Ubuntu: `sudo apt install -y libx11-6 libx11-dev`.
+5. Run `ClippyAI` from the start menu of your OS and click on the tray icon to open it.
+6. Click on `Options`, the `Pull` button and enter `gemma2` to let ClippyAI download and install the Google Gemma2 AI model to your local PC. Please be patient, as the downloading can take a few minutes, depending on how fast your internet connection is.
+7. Uncheck `Use Embeddings`, if you want to use the application without caching via an embedding vector database, otherwise follow the instructions in the next section.
 
 **Setting Up Embedding Database (optional)**
 1. Install PostgreSQL database and pgai:
   1. Install via Docker (recommended):
       - Download the [https://raw.githubusercontent.com/MrDoe/ClippyAI/refs/heads/main/ClippyAI/Docker/docker-compose.yml](docker-compose.yml) file from this repository.
-      - Open the command prompt/terminal and execute `docker-compose up` from the download directory. 
+      - Open the command prompt/terminal and execute `docker-compose up` from the download directory.
   2. Manual installation
       - See [https://github.com/timescale/pgai](https://github.com/timescale/pgai) for specific installation instructions.
   3. Cloud-based database from Timescale:
@@ -55,7 +55,7 @@ Please be patient, as the downloading can take a few minutes, depending on how f
         - Add `Environment="OLLAMA_HOST=0.0.0.0"` after `Environment="PATH=..."`.
         - Execute `sudo systemctl daemon-reload && sudo systemctl restart ollama`.
 3. Start ClippyAI and edit the Postgres SQL connection string if necessary. Default values should be fine for installations via `docker-compose`.
-9. Click on `Options`, the `Pull` button and enter `nomic-embed-text`, which is mandatory for calculating the embeddings.
+4. Click on `Options`, the `Pull` button and enter `nomic-embed-text`, which is mandatory for calculating the embeddings.
 
 **Using ClippyAI**
 
