@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   embed_ollama:
-      image: timescale/timescaledb-ha:pg16
+      image: timescale/timescaledb-ha:pg16.4-ts2.17.2-all-oss
       container_name: embed_ollama
       ports:
         - "5432:5432"
