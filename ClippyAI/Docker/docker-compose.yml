@@ -1,14 +1,16 @@
-embed_ollama:
-    image: timescale/timescaledb-ha:pg16
-    container_name: embed_ollama
-    ports:
-      - "5432:5432"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    volumes:
-      - ./embed_ollama:/var/lib/PostgreSql/data
-    environment:
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=ClippyAI
-      - POSTGRES_USER=clippy
-    command: "postgres -c ai.ollama_host=http://host.docker.internal:11434"
+version: '3.8'
+services:
+  embed_ollama:
+      image: timescale/timescaledb-ha:pg16.4-ts2.17.2-all-oss
+      container_name: embed_ollama
+      ports:
+        - "5432:5432"
+      extra_hosts:
+        - "host.docker.internal:host-gateway"
+      volumes:
+        - ./embed_ollama:/var/lib/PostgreSql/data
+      environment:
+        - POSTGRES_PASSWORD=password
+        - POSTGRES_DB=ClippyAI
+        - POSTGRES_USER=clippy
+      command: "postgres -c ai.ollama_host=http://host.docker.internal:11434"
