@@ -69,7 +69,7 @@ public partial class MainView : UserControl
         // add event handler for StoreAllResponses checkbox checked
         var chkStoreAllResponses = this.FindControl<CheckBox>("chkStoreAllResponses");
         if (chkStoreAllResponses != null)
-            chkStoreAllResponses.Checked += OnChkStoreAllResponsesChecked;
+            chkStoreAllResponses.IsCheckedChanged += OnChkStoreAllResponsesChecked;
     }
 
     private async void MainView_Loaded(object? sender, RoutedEventArgs e)

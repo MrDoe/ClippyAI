@@ -106,11 +106,6 @@ public partial class MainViewModel : ViewModelBase
     /// </summary>
     private int _responseIndex = 0;
 
-    /// <summary>
-    /// Full task string for storage in database
-    /// </summary>
-    private string _fullTask = "";
-
     private void PopulateTasks()
     {
         // iterate over Resources and add Tasks to ComboBox
@@ -142,7 +137,6 @@ public partial class MainViewModel : ViewModelBase
             IsBusy = false;
             return "";
         }
-        _fullTask = Task + " " + Input!;
 
         return task;
     }
@@ -158,10 +152,6 @@ public partial class MainViewModel : ViewModelBase
 
         // get task string
         string task = GetFullTask();
-        if(string.IsNullOrEmpty(task))
-        {
-            return;
-        }
 
         try
         {
@@ -176,9 +166,9 @@ public partial class MainViewModel : ViewModelBase
             mainWindow!.ShowNotification("ClippyAI", Resources.Resources.PleaseWait, true, false);
 
             // try to get response from embedded model first
-            if (UseEmbeddings)
+            if (UseEmbeddings && !string.IsNullOrEmpty(Input))
             {
-                _responseList = await OllamaService.RetrieveAnswersForQuestion(_fullTask, Threshold);
+                _responseList = await OllamaService.RetrieveAnswersForTask(Task, Input, Threshold);
                 if (_responseList.Count > 0)
                 {
                     _responseIndex = 0;
@@ -190,11 +180,12 @@ public partial class MainViewModel : ViewModelBase
             response = await OllamaService.SendRequest(Input!,
                                                        task,
                                                        model,
-                                                       _askClippyCts.Token); // Use the token from _askClippyCts
+                                                       _askClippyCts.Token);
             
-            if (!string.IsNullOrEmpty(response) && StoreAllResponses)
+            if (!string.IsNullOrEmpty(response) && !string.IsNullOrEmpty(Task) && 
+                !string.IsNullOrEmpty(Input) && StoreAllResponses)
             {
-                await OllamaService.StoreEmbedding(_fullTask, response);
+                await OllamaService.StoreEmbedding(Task, Input, response);
                 ++EmbeddingsCount;
             }
         }
@@ -421,12 +412,12 @@ public partial class MainViewModel : ViewModelBase
             return;
         }
 
-        if (_responseList.Count > 0 && _responseIndex >= 0)
+        if (_responseList.Count > 0 && _responseIndex >= 0 && !string.IsNullOrEmpty(Task) && !string.IsNullOrEmpty(Input))
         {
             try
             {
                 GetFullTask();
-                await OllamaService.StoreEmbedding(_fullTask, Output);
+                await OllamaService.StoreEmbedding(Task, Input, Output);
             }
             catch (Exception e)
             {
@@ -478,9 +469,18 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     public async Task Regenerate()
     {
-        UseEmbeddings = false;
+        bool embeddingsUsed = UseEmbeddings;
+        if(embeddingsUsed)
+        {
+            UseEmbeddings = false;
+        }
+
         await AskClippy(_askClippyCts.Token);
-        UseEmbeddings = true;
+        
+        if(embeddingsUsed)
+        {
+            UseEmbeddings = true;
+        }
     }
 
     [RelayCommand]
