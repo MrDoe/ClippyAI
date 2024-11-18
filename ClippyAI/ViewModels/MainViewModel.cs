@@ -9,6 +9,9 @@ using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Collections.Generic;
 using ClippyAI.Models;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia;
+using Avalonia.Controls;
 namespace ClippyAI.Views;
 
 public partial class MainViewModel : ViewModelBase
@@ -144,6 +147,20 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     public async Task AskClippy(CancellationToken token)
     {
+        if(string.IsNullOrEmpty(Input))
+        {
+            // get text from clipboard
+            if (await ClipboardService.GetText() is { } clipboardText)
+            {
+                Input = clipboardText;
+                ClipboardService.LastInput = clipboardText;
+            }
+        }
+        if(string.IsNullOrEmpty(Input))
+        {
+            return;
+        }
+
         IsBusy = true;
         ErrorMessages?.Clear();
         _responseList.Clear();
@@ -162,8 +179,16 @@ public partial class MainViewModel : ViewModelBase
                 IsBusy = false;
                 return;
             }
-       
-            mainWindow!.ShowNotification("ClippyAI", Resources.Resources.PleaseWait, true, false);
+            
+            if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                var mainWindow = (MainWindow)desktop.MainWindow!;
+                mainWindow!.ShowNotification("ClippyAI", Resources.Resources.PleaseWait, true, false);
+            }
+            else
+            {
+                throw new NullReferenceException("Missing MainWindow instance.");
+            }
 
             // try to get response from embedded model first
             if (UseEmbeddings && !string.IsNullOrEmpty(Input))
@@ -176,7 +201,7 @@ public partial class MainViewModel : ViewModelBase
                     return;
                 }
             }
-
+            
             response = await OllamaService.SendRequest(Input!,
                                                        task,
                                                        model,
@@ -213,15 +238,24 @@ public partial class MainViewModel : ViewModelBase
     {
         ClipboardContent = response;
         Output = response;
-
+        ClipboardService.LastResponse = response;
+        
         // Update the clipboard content
         await ClipboardService.SetText(ClipboardContent);
 
         // call ShowNotification method from MainWindow
         if (showNotification)
         {
-            mainWindow!.HideLastNotification();
-            mainWindow.ShowNotification("ClippyAI", Resources.Resources.TaskCompleted + response, false, true);
+            if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                var mainWindow = (MainWindow)desktop.MainWindow!;
+                mainWindow!.HideLastNotification();
+                mainWindow.ShowNotification("ClippyAI", Resources.Resources.TaskCompleted + response, false, true);
+            }
+            else
+            {
+                throw new NullReferenceException("Missing MainWindow instance.");
+            }
         }
 
         // update response counter

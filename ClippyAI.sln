@@ -7,13 +7,23 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClippyAI", "ClippyAI\Clippy
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3DA99C4E-89E3-4049-9C22-0A7EC60D83D8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopNotifications", "ClippyAI\Libs\DesktopNotificationsNet8\DesktopNotifications\DesktopNotifications.csproj", "{B844CA6F-3A08-4E49-920D-756F40AF10FB}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ClippyAI", "ClippyAI", "{11AE1984-7585-419C-95CA-DA0AD4FC422E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopNotifications.Avalonia", "ClippyAI\Libs\DesktopNotificationsNet8\DesktopNotifications.Avalonia\DesktopNotifications.Avalonia.csproj", "{7F4EDEB0-268C-46F9-B0A1-6E48BBC23FAC}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{79326F61-549D-4530-9339-52A9B7411B7A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopNotifications.FreeDesktop", "ClippyAI\Libs\DesktopNotificationsNet8\DesktopNotifications.FreeDesktop\DesktopNotifications.FreeDesktop.csproj", "{8A5E1C8B-4339-4885-936C-9A6F0E7ADF03}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "evdev-sharp", "evdev-sharp", "{F59C9571-F3AF-495D-B752-19093AB66800}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopNotifications.Windows", "ClippyAI\Libs\DesktopNotificationsNet8\DesktopNotifications.Windows\DesktopNotifications.Windows.csproj", "{B13533EB-9AE6-4C72-945E-2A4D51CF38A7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EvDevSharp", "ClippyAI\Libs\evdev-sharp\EvDevSharp\EvDevSharp.csproj", "{12BAD43E-349D-4741-A3D1-D285BDE8D50A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DesktopNotificationsNet8", "DesktopNotificationsNet8", "{15F4A4A6-822D-464A-A0A3-1529A32B3B38}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopNotifications", "ClippyAI\Libs\DesktopNotificationsNet8\DesktopNotifications\DesktopNotifications.csproj", "{9275360D-BB58-46F7-9859-312AE12A08CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopNotifications.Avalonia", "ClippyAI\Libs\DesktopNotificationsNet8\DesktopNotifications.Avalonia\DesktopNotifications.Avalonia.csproj", "{9D0E8599-6F60-498B-BC31-89B77950C265}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopNotifications.FreeDesktop", "ClippyAI\Libs\DesktopNotificationsNet8\DesktopNotifications.FreeDesktop\DesktopNotifications.FreeDesktop.csproj", "{D0251316-D7A4-42B4-BB54-03235797C8A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopNotifications.Windows", "ClippyAI\Libs\DesktopNotificationsNet8\DesktopNotifications.Windows\DesktopNotifications.Windows.csproj", "{CB924AB6-C0ED-4149-AEBC-DF14A4BCC6C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,25 +35,40 @@ Global
 		{EBFA8512-1EA5-4D8C-B4AC-AB5B48A6D568}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBFA8512-1EA5-4D8C-B4AC-AB5B48A6D568}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBFA8512-1EA5-4D8C-B4AC-AB5B48A6D568}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B844CA6F-3A08-4E49-920D-756F40AF10FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B844CA6F-3A08-4E49-920D-756F40AF10FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B844CA6F-3A08-4E49-920D-756F40AF10FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B844CA6F-3A08-4E49-920D-756F40AF10FB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7F4EDEB0-268C-46F9-B0A1-6E48BBC23FAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7F4EDEB0-268C-46F9-B0A1-6E48BBC23FAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7F4EDEB0-268C-46F9-B0A1-6E48BBC23FAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7F4EDEB0-268C-46F9-B0A1-6E48BBC23FAC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8A5E1C8B-4339-4885-936C-9A6F0E7ADF03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8A5E1C8B-4339-4885-936C-9A6F0E7ADF03}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8A5E1C8B-4339-4885-936C-9A6F0E7ADF03}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8A5E1C8B-4339-4885-936C-9A6F0E7ADF03}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B13533EB-9AE6-4C72-945E-2A4D51CF38A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B13533EB-9AE6-4C72-945E-2A4D51CF38A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B13533EB-9AE6-4C72-945E-2A4D51CF38A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B13533EB-9AE6-4C72-945E-2A4D51CF38A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12BAD43E-349D-4741-A3D1-D285BDE8D50A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12BAD43E-349D-4741-A3D1-D285BDE8D50A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12BAD43E-349D-4741-A3D1-D285BDE8D50A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12BAD43E-349D-4741-A3D1-D285BDE8D50A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9275360D-BB58-46F7-9859-312AE12A08CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9275360D-BB58-46F7-9859-312AE12A08CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9275360D-BB58-46F7-9859-312AE12A08CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9275360D-BB58-46F7-9859-312AE12A08CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D0E8599-6F60-498B-BC31-89B77950C265}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D0E8599-6F60-498B-BC31-89B77950C265}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D0E8599-6F60-498B-BC31-89B77950C265}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D0E8599-6F60-498B-BC31-89B77950C265}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0251316-D7A4-42B4-BB54-03235797C8A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0251316-D7A4-42B4-BB54-03235797C8A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0251316-D7A4-42B4-BB54-03235797C8A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0251316-D7A4-42B4-BB54-03235797C8A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB924AB6-C0ED-4149-AEBC-DF14A4BCC6C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB924AB6-C0ED-4149-AEBC-DF14A4BCC6C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB924AB6-C0ED-4149-AEBC-DF14A4BCC6C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB924AB6-C0ED-4149-AEBC-DF14A4BCC6C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{EBFA8512-1EA5-4D8C-B4AC-AB5B48A6D568} = {11AE1984-7585-419C-95CA-DA0AD4FC422E}
+		{79326F61-549D-4530-9339-52A9B7411B7A} = {11AE1984-7585-419C-95CA-DA0AD4FC422E}
+		{F59C9571-F3AF-495D-B752-19093AB66800} = {79326F61-549D-4530-9339-52A9B7411B7A}
+		{12BAD43E-349D-4741-A3D1-D285BDE8D50A} = {F59C9571-F3AF-495D-B752-19093AB66800}
+		{15F4A4A6-822D-464A-A0A3-1529A32B3B38} = {79326F61-549D-4530-9339-52A9B7411B7A}
+		{9275360D-BB58-46F7-9859-312AE12A08CF} = {15F4A4A6-822D-464A-A0A3-1529A32B3B38}
+		{9D0E8599-6F60-498B-BC31-89B77950C265} = {15F4A4A6-822D-464A-A0A3-1529A32B3B38}
+		{D0251316-D7A4-42B4-BB54-03235797C8A2} = {15F4A4A6-822D-464A-A0A3-1529A32B3B38}
+		{CB924AB6-C0ED-4149-AEBC-DF14A4BCC6C2} = {15F4A4A6-822D-464A-A0A3-1529A32B3B38}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {83CB65B8-011F-4ED7-BCD3-A6CFA935EF7E}

@@ -295,13 +295,15 @@ public static class OllamaService
     {
         await using var conn = new NpgsqlConnection(connectionString);
         await conn.OpenAsync();
+        
+        clipboard_data = clipboard_data.Trim('\n').Trim();
 
         // check if no similar embeddings exist
         var cmd = new NpgsqlCommand(@"
-            SELECT COUNT(*) 
+            SELECT COUNT(*)
             FROM clippy
             WHERE task = @task
-            embedding_clipboard_data <-> ai.ollama_embed('nomic-embed-text', @clipboard_data) <= 1",
+            AND embedding_clipboard_data <-> ai.ollama_embed('nomic-embed-text', @clipboard_data) <= 1",
         conn);
 
         cmd.Parameters.AddWithValue("task", task);
@@ -316,14 +318,14 @@ public static class OllamaService
         // Insert the clipboard text and generate the embedding in a single command
         cmd = new NpgsqlCommand(@"
             INSERT INTO clippy (task, clipboard_data, answer, embedding_clipboard_data)
-            SELECT @task
+            VALUES (@task,
                    @clipboard_data,
                    @answer,
-                   ai.ollama_embed('nomic-embed-text', @clipboard_data)", conn);
+                   ai.ollama_embed('nomic-embed-text', @clipboard_data))", conn);
 
+        cmd.Parameters.AddWithValue("task", task);
         cmd.Parameters.AddWithValue("clipboard_data", clipboard_data);
         cmd.Parameters.AddWithValue("answer", answer);        
-        cmd.Parameters.AddWithValue("task", task);
         await cmd.ExecuteNonQueryAsync();
     }
 
@@ -366,8 +368,7 @@ public static class OllamaService
             {
                 Id = result.GetInt32(0),
                 Answer = result.GetString(1),
-                AnswerVector = result.GetString(2),
-                Distance = result.GetFloat(3)
+                Distance = result.GetFloat(2)
             });
         }
         return answers;
@@ -392,8 +393,8 @@ public static class OllamaService
         cmd.ExecuteNonQuery();
 
         // drop table if it exists (for debugging)
-        cmd = new NpgsqlCommand("DROP TABLE IF EXISTS clippy", conn);
-        cmd.ExecuteNonQuery();
+        // cmd = new NpgsqlCommand("DROP TABLE IF EXISTS clippy", conn);
+        // cmd.ExecuteNonQuery();
 
         // Create the table if it doesn't exist
         cmd = new NpgsqlCommand(@"
