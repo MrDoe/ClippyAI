@@ -4,3 +4,6 @@
 [submodule "ClippyAI/Libs/EvDevSharp"]
 	path = ClippyAI/Libs/EvDevSharp
 	url = https://github.com/afshin-parsa/evdev-sharp
+[submodule "ClippyAI/Libs/evdev-sharp"]
+	path = ClippyAI/Libs/evdev-sharp
+	url = https://github.com/MrDoe/evdev-sharp
