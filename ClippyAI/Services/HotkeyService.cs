@@ -1,20 +1,13 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Runtime.Versioning;
 using System.Threading;
-using System.Threading.Tasks;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Input;
 using Avalonia.Threading;
 using ClippyAI.Views;
 using EvDevSharp;
 namespace ClippyAI.Services;
-
 [SupportedOSPlatform("linux")]
 public class HotkeyService
 {
@@ -42,6 +35,9 @@ public class HotkeyService
         }
     }
 
+    /// <summary>
+    /// Setup hotkey device
+    /// </summary>
     public void SetupHotkeyDevice()
     {
         if (!OperatingSystem.IsLinux())
@@ -57,27 +53,22 @@ public class HotkeyService
             return;
         }
 
-        for (int i = 0; i < devices.Count; i++)
-        {
-            Console.WriteLine($"{i}) {devices[i].Name}");
-        }
-
         // get all keyboard devices
         var keyboards = devices.Where(d => d.GuessedDeviceType == EvDevGuessedDeviceType.Keyboard &&
                                       d.Name!.ToLower().Contains("keyboard")).ToList();
 
-        if (!keyboards.Any())
+        if (!keyboards.Any()) // no keyboard device was found
         {
             Console.WriteLine("No keyboard device was found.");
             return;
         }
-        else if (keyboards.Count == 1)
+        else if (keyboards.Count == 1) // only one keyboard device was found
         {
             Console.WriteLine("Keyboard device:");
             Console.WriteLine(keyboards[0].Name);
             Keyboard = keyboards[0];
         }
-        else
+        else // multiple keyboard devices were found
         {
             for (int i = 0; i < keyboards.Count; i++)
             {
@@ -120,9 +111,30 @@ public class HotkeyService
             //Console.WriteLine("C key is pressed.");
         }
 
-        // check if [Ctrl]+[Alt]+[C] hotkey is pressed
-        int index = LastKeys.Count - 1;
-        if (index > 2 && LastKeys[index] == "C" && LastKeys[index - 1] == "Alt" && LastKeys[index - 2] == "Ctrl")
+        if(LastKeys.Count < 3)
+            return;
+
+        // check if [Ctrl]+[Alt]+[C] hotkey is pressed in a row
+        bool foundCtrl = false;
+        bool foundAlt = false;
+        bool foundC = false;
+        for(int i = 0; i < LastKeys.Count; i++)
+        {
+            switch(LastKeys[i])
+            {
+                case "Ctrl":
+                    foundCtrl = true;
+                break;
+                case "Alt":
+                    foundAlt = true;
+                break;
+                case "C":
+                    foundC = true;
+                break;
+            }
+        }
+        
+        if (foundCtrl && foundAlt && foundC)
         {
             Console.WriteLine("Hotkey pressed");
             LastKeys.Clear();
