@@ -290,7 +290,7 @@ public static class OllamaService
     /// </summary>
     /// <param name="question">The question/task to store.</param>
     /// <param name="answer">The answer to store.</param>
-    public static async Task StoreEmbedding(string question, string answer)
+    public static async Task StoreSqlEmbedding(string question, string answer)
     {
         await using var conn = new NpgsqlConnection(connectionString);
         await conn.OpenAsync();
