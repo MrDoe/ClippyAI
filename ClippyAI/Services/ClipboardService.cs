@@ -7,6 +7,9 @@ namespace ClippyAI.Services;
 
 public static class ClipboardService
 {
+    public static string LastResponse { get; set; } = string.Empty;
+    public static string LastInput { get; set; } = string.Empty;
+
     /// <summary>
     /// Sets the text content of the clipboard.
     /// </summary>
@@ -16,6 +19,9 @@ public static class ClipboardService
         if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop ||
             desktop.MainWindow?.Clipboard is not { } provider)
             throw new NullReferenceException("Missing Clipboard instance.");
+
+        if(text != LastInput)
+            LastInput = text ?? string.Empty;
 
         await provider.SetTextAsync(text);
     }

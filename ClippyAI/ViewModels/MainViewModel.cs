@@ -9,6 +9,9 @@ using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Collections.Generic;
 using ClippyAI.Models;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia;
+using Avalonia.Controls;
 namespace ClippyAI.Views;
 
 public partial class MainViewModel : ViewModelBase
@@ -106,11 +109,6 @@ public partial class MainViewModel : ViewModelBase
     /// </summary>
     private int _responseIndex = 0;
 
-    /// <summary>
-    /// Full task string for storage in database
-    /// </summary>
-    private string _fullTask = "";
-
     private void PopulateTasks()
     {
         // iterate over Resources and add Tasks to ComboBox
@@ -142,7 +140,6 @@ public partial class MainViewModel : ViewModelBase
             IsBusy = false;
             return "";
         }
-        _fullTask = Task + " " + Input!;
 
         return task;
     }
@@ -150,6 +147,20 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     public async Task AskClippy(CancellationToken token)
     {
+        if(string.IsNullOrEmpty(Input))
+        {
+            // get text from clipboard
+            if (await ClipboardService.GetText() is { } clipboardText)
+            {
+                Input = clipboardText;
+                ClipboardService.LastInput = clipboardText;
+            }
+        }
+        if(string.IsNullOrEmpty(Input))
+        {
+            return;
+        }
+
         IsBusy = true;
         ErrorMessages?.Clear();
         _responseList.Clear();
@@ -158,10 +169,6 @@ public partial class MainViewModel : ViewModelBase
 
         // get task string
         string task = GetFullTask();
-        if(string.IsNullOrEmpty(task))
-        {
-            return;
-        }
 
         try
         {
@@ -172,13 +179,21 @@ public partial class MainViewModel : ViewModelBase
                 IsBusy = false;
                 return;
             }
-       
-            mainWindow!.ShowNotification("ClippyAI", Resources.Resources.PleaseWait, true, false);
+            
+            if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                var mainWindow = (MainWindow)desktop.MainWindow!;
+                mainWindow!.ShowNotification("ClippyAI", Resources.Resources.PleaseWait, true, false);
+            }
+            else
+            {
+                throw new NullReferenceException("Missing MainWindow instance.");
+            }
 
             // try to get response from embedded model first
-            if (UseEmbeddings)
+            if (UseEmbeddings && !string.IsNullOrEmpty(Input))
             {
-                _responseList = await OllamaService.RetrieveAnswersForQuestion(_fullTask, Threshold);
+                _responseList = await OllamaService.RetrieveAnswersForTask(Task, Input, Threshold);
                 if (_responseList.Count > 0)
                 {
                     _responseIndex = 0;
@@ -186,15 +201,16 @@ public partial class MainViewModel : ViewModelBase
                     return;
                 }
             }
-
+            
             response = await OllamaService.SendRequest(Input!,
                                                        task,
                                                        model,
-                                                       _askClippyCts.Token); // Use the token from _askClippyCts
+                                                       _askClippyCts.Token);
             
-            if (!string.IsNullOrEmpty(response) && StoreAllResponses)
+            if (!string.IsNullOrEmpty(response) && !string.IsNullOrEmpty(Task) && 
+                !string.IsNullOrEmpty(Input) && StoreAllResponses)
             {
-                await OllamaService.StoreEmbedding(_fullTask, response);
+                await OllamaService.StoreEmbedding(Task, Input, response);
                 ++EmbeddingsCount;
             }
         }
@@ -222,15 +238,24 @@ public partial class MainViewModel : ViewModelBase
     {
         ClipboardContent = response;
         Output = response;
-
+        ClipboardService.LastResponse = response;
+        
         // Update the clipboard content
         await ClipboardService.SetText(ClipboardContent);
 
         // call ShowNotification method from MainWindow
         if (showNotification)
         {
-            mainWindow!.HideLastNotification();
-            mainWindow.ShowNotification("ClippyAI", Resources.Resources.TaskCompleted + response, false, true);
+            if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                var mainWindow = (MainWindow)desktop.MainWindow!;
+                mainWindow!.HideLastNotification();
+                mainWindow.ShowNotification("ClippyAI", Resources.Resources.TaskCompleted + response, false, true);
+            }
+            else
+            {
+                throw new NullReferenceException("Missing MainWindow instance.");
+            }
         }
 
         // update response counter
@@ -421,12 +446,12 @@ public partial class MainViewModel : ViewModelBase
             return;
         }
 
-        if (_responseList.Count > 0 && _responseIndex >= 0)
+        if (_responseList.Count > 0 && _responseIndex >= 0 && !string.IsNullOrEmpty(Task) && !string.IsNullOrEmpty(Input))
         {
             try
             {
                 GetFullTask();
-                await OllamaService.StoreEmbedding(_fullTask, Output);
+                await OllamaService.StoreEmbedding(Task, Input, Output);
             }
             catch (Exception e)
             {
@@ -478,9 +503,18 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     public async Task Regenerate()
     {
-        UseEmbeddings = false;
+        bool embeddingsUsed = UseEmbeddings;
+        if(embeddingsUsed)
+        {
+            UseEmbeddings = false;
+        }
+
         await AskClippy(_askClippyCts.Token);
-        UseEmbeddings = true;
+        
+        if(embeddingsUsed)
+        {
+            UseEmbeddings = true;
+        }
     }
 
     [RelayCommand]

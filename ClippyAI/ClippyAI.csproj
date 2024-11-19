@@ -59,6 +59,7 @@
     <PackageReference Include="X11" Condition="'$(OS)' != 'Windows_NT'" Version="1.0.6" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Libs\evdev-sharp\EvDevSharp\EvDevSharp.csproj" />
     <ProjectReference Include="Libs\DesktopNotificationsNet8\DesktopNotifications.Avalonia\DesktopNotifications.Avalonia.csproj" />
     <ProjectReference Include="Libs\DesktopNotificationsNet8\DesktopNotifications.FreeDesktop\DesktopNotifications.FreeDesktop.csproj" />
     <ProjectReference Include="Libs\DesktopNotificationsNet8\DesktopNotifications.Windows\DesktopNotifications.Windows.csproj" />

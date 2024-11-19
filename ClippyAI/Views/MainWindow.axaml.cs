@@ -19,6 +19,8 @@ using NHotkey.Wpf;
 #if LINUX
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using ClippyAI.Services;
+using System.Runtime.Versioning;
 #endif
 
 namespace ClippyAI.Views;
@@ -54,7 +56,8 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
 #if WINDOWS        
         RegisterHotkeyWindows();
 #elif LINUX
-        //RegisterHotkeyLinux();
+        if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            RegisterHotkeyLinux();
 #endif
     }
 
@@ -76,7 +79,9 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
     {
         try
         {
-            HotkeyManager.Current.AddOrReplace("Ctrl+Alt+C", System.Windows.Input.Key.C, ModifierKeys.Control | ModifierKeys.Alt, OnHotkeyHandler);
+            HotkeyManager.Current.AddOrReplace("Ctrl+Alt+C", 
+                System.Windows.Input.Key.C, ModifierKeys.Control | ModifierKeys.Alt, 
+                OnHotkeyHandler);
         }
         catch (Exception ex)
         {
@@ -95,127 +100,12 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
 #endif
 
 #if LINUX
-    // P/Invoke declarations
-    [DllImport("libX11.so")]
-    private static extern IntPtr XOpenDisplay(string? display_name);
+    private HotkeyService? HotkeyService;
 
-    [DllImport("libX11.so")]
-    private static extern IntPtr XDefaultRootWindow(IntPtr display);
-
-    [DllImport("libX11.so")]
-    private static extern uint XStringToKeysym(string? str);
-
-    [DllImport("libX11.so")]
-    private static extern uint XKeysymToKeycode(IntPtr display, uint keysym);
-
-    [DllImport("libX11.so")]
-    private static extern int XGrabKey(IntPtr display, int keycode, uint modifiers, IntPtr grab_window, int owner_events, int pointer_mode, int keyboard_mode);
-
-    [DllImport("libX11")]
-    private static extern int XUngrabKey(IntPtr display, int keycode, uint modifiers, IntPtr grab_window);
-
-    [DllImport("libX11.so")]
-    private static extern void XSelectInput(IntPtr display, IntPtr window, long event_mask);
-
-    [DllImport("libX11.so")]
-    private static extern int XNextEvent(IntPtr display, ref XEvent event_return);
-
-    [DllImport("libX11.so")]
-    private static extern int XPending(IntPtr display);
-
-    // Constants
-    private const int ControlMask = 1 << 2;
-    private const int AltMask = 1 << 3;
-    private const int False = 0;
-    private const int GrabModeAsync = 1;
-    private const long KeyPressMask = 1L << 0;
-    private const int KeyPress = 2;
-
-    [StructLayout(LayoutKind.Sequential)]
-    struct XEvent
-    {
-        public int type;
-        // Other fields can be added here as needed
-    }
-
+    [SupportedOSPlatform("linux")]
     private void RegisterHotkeyLinux()
     {
-        var display = XOpenDisplay(null);
-        if (display == IntPtr.Zero)
-        {
-            Console.WriteLine("Cannot open X display");
-            return;
-        }
-        Console.WriteLine("X display opened successfully.");
-
-        IntPtr rootWindow = XDefaultRootWindow(display);
-        Console.WriteLine($"Root window: {rootWindow}");
-
-        uint keysym = XStringToKeysym("C");
-        int keycode = (int)XKeysymToKeycode(display, keysym);
-        Console.WriteLine($"Keysym: {keysym}, Keycode: {keycode}");
-
-        XUngrabKey(display, keycode, ControlMask | AltMask, rootWindow);
-
-        int grabResult = XGrabKey(display, keycode, ControlMask | AltMask, rootWindow, False, GrabModeAsync, GrabModeAsync);
-        if (grabResult != 1)
-        {
-            Console.WriteLine($"Failed to grab keyboard shortcut [Ctrl]+[Alt]+[C]. Is another application using it?");
-            return;
-        }
-        Console.WriteLine("Key grabbed successfully.");
-
-        XSelectInput(display, rootWindow, KeyPressMask);
-        Console.WriteLine("Input selected successfully.");
-
-        Task.Run(() => ListenHotkey(display));
-        Console.WriteLine("Hotkey listening task started.");
-    }
-
-    private async Task ListenHotkey(IntPtr display)
-    {
-        if (display == IntPtr.Zero)
-        {
-            Console.WriteLine("Invalid display pointer.");
-            return;
-        }
-
-        //Console.WriteLine("Display pointer is valid. Entering event loop...");
-
-        try
-        {
-            while (true)
-            {
-                XEvent ev = new();
-                XNextEvent(display, ref ev);
-
-                if (ev.type == KeyPress)
-                {
-                    Console.WriteLine("Hotkey pressed");
-
-                    try
-                    {
-                        // execute relay command AskClippy
-                        Dispatcher.UIThread.Post(async () =>
-                        {
-                            await ((MainViewModel)DataContext!).AskClippy(new CancellationToken());
-                        });
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Exception occurred: {ex.Message}");
-
-                        // restart the hotkey listening task
-                        await Task.Run(() => ListenHotkey(display));
-                    }
-                }
-                Task.Delay(100).Wait();
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Exception occurred: {ex.Message}");
-        }
+        HotkeyService = new HotkeyService(this);
     }
 #endif
 
@@ -245,11 +135,26 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         {
             Hide();
         }
+
+        // set output to ClipboardService.LastResponse
+        if (DataContext is MainViewModel viewModel)
+        {
+            viewModel.Input = ClipboardService.LastInput;
+            viewModel.Output = ClipboardService.LastResponse;
+        }
+
         SetWindowPos();
     }
 
     private void MainWindow_PositionChanged(object? sender, EventArgs e)
     {
+        // set output to ClipboardService.LastResponse
+        if (DataContext is MainViewModel viewModel)
+        {
+            viewModel.Input = ClipboardService.LastInput;
+            viewModel.Output = ClipboardService.LastResponse;
+        }
+
         SetWindowPos();
     }
 
@@ -345,8 +250,9 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
             await _notificationManager.ShowNotification(nf);
             _lastNotification = nf;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            throw new InvalidOperationException("Failed to show notification", ex);
         }
     }
 

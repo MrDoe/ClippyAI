@@ -288,21 +288,27 @@ public static class OllamaService
     /// <summary>
     /// Stores the clipboard text and generates the embedding in the PostgreSql vector database.
     /// </summary>
-    /// <param name="question">The question/task to store.</param>
+    /// <param name="task">The task that was executed.</param>
+    /// <param name="clipboard_data">The clipboard_data/task to store.</param>
     /// <param name="answer">The answer to store.</param>
-    public static async Task StoreSqlEmbedding(string question, string answer)
+    public static async Task StoreSqlEmbedding(string task, string clipboard_data, string answer)
     {
         await using var conn = new NpgsqlConnection(connectionString);
         await conn.OpenAsync();
+        
+        clipboard_data = clipboard_data.Trim('\n').Trim();
 
         // check if no similar embeddings exist
         var cmd = new NpgsqlCommand(@"
-            SELECT COUNT(*) 
+            SELECT COUNT(*)
             FROM clippy
-            WHERE embedding_question <-> ai.ollama_embed('nomic-embed-text', @question) <= 1
-            AND embedding_answer <-> ai.ollama_embed('nomic-embed-text', @answer) <= 1", conn);
-        cmd.Parameters.AddWithValue("question", question);
-        cmd.Parameters.AddWithValue("answer", answer);
+            WHERE task = @task
+            AND embedding_clipboard_data <-> ai.ollama_embed('nomic-embed-text', @clipboard_data) <= 1",
+        conn);
+
+        cmd.Parameters.AddWithValue("task", task);
+        cmd.Parameters.AddWithValue("clipboard_data", clipboard_data);
+
         var count = Convert.ToInt32(await cmd.ExecuteScalarAsync());
         if (count > 0)
         {
@@ -311,23 +317,25 @@ public static class OllamaService
 
         // Insert the clipboard text and generate the embedding in a single command
         cmd = new NpgsqlCommand(@"
-            INSERT INTO clippy (question, answer, embedding_question, embedding_answer)
-            SELECT @question,
+            INSERT INTO clippy (task, clipboard_data, answer, embedding_clipboard_data)
+            VALUES (@task,
+                   @clipboard_data,
                    @answer,
-                   ai.ollama_embed('nomic-embed-text', @question),
-                   ai.ollama_embed('nomic-embed-text', @answer)", conn);
-        cmd.Parameters.AddWithValue("question", question);
-        cmd.Parameters.AddWithValue("answer", answer);
+                   ai.ollama_embed('nomic-embed-text', @clipboard_data))", conn);
+
+        cmd.Parameters.AddWithValue("task", task);
+        cmd.Parameters.AddWithValue("clipboard_data", clipboard_data);
+        cmd.Parameters.AddWithValue("answer", answer);        
         await cmd.ExecuteNonQueryAsync();
     }
 
     /// <summary>
     /// Retrieves the most similar answers by using embeddings from the PostgreSql vector database.
     /// </summary>
-    /// <param name="question">The question to use for retrieval.</param>
+    /// <param name="clipboard_data">The clipboard_data to use for retrieval.</param>
     /// <param name="threshold">The threshold for similarity.</param>
     /// <returns>The most similar answers as list of embeddings</returns>
-    public static async Task<List<Embedding>> RetrieveAnswersForQuestion(string question, float threshold)
+    public static async Task<List<Embedding>> RetrieveAnswersForTask(string task, string clipboard_data, float threshold)
     {
         await using var conn = new NpgsqlConnection(connectionString);
         await conn.OpenAsync();
@@ -336,14 +344,18 @@ public static class OllamaService
         SELECT 
             id, 
             answer, 
-            embedding_answer::text as answer_vector, 
-            embedding_question <-> ai.ollama_embed('nomic-embed-text', @question) as distance
+            embedding_clipboard_data <-> 
+                ai.ollama_embed('nomic-embed-text', @clipboard_data) as distance
         FROM clippy
-        WHERE embedding_question <-> ai.ollama_embed('nomic-embed-text', @question) <= @threshold
-        ORDER BY 4
+        WHERE 
+            task = @task 
+        AND embedding_clipboard_data <-> 
+            ai.ollama_embed('nomic-embed-text', @clipboard_data) <= @threshold
+        ORDER BY 3
         LIMIT 10", conn);
-
-        cmd.Parameters.AddWithValue("question", question);
+        
+        cmd.Parameters.AddWithValue("task", task);
+        cmd.Parameters.AddWithValue("clipboard_data", clipboard_data);
         cmd.Parameters.AddWithValue("threshold", threshold);
 
         var result = await cmd.ExecuteReaderAsync();
@@ -356,8 +368,7 @@ public static class OllamaService
             {
                 Id = result.GetInt32(0),
                 Answer = result.GetString(1),
-                AnswerVector = result.GetString(2),
-                Distance = result.GetFloat(3)
+                Distance = result.GetFloat(2)
             });
         }
         return answers;
@@ -382,33 +393,26 @@ public static class OllamaService
         cmd.ExecuteNonQuery();
 
         // drop table if it exists (for debugging)
-        //cmd = new NpgsqlCommand("DROP TABLE IF EXISTS clippy", conn);
-        //await cmd.ExecuteNonQueryAsync();
+        // cmd = new NpgsqlCommand("DROP TABLE IF EXISTS clippy", conn);
+        // cmd.ExecuteNonQuery();
 
         // Create the table if it doesn't exist
         cmd = new NpgsqlCommand(@"
             CREATE TABLE IF NOT EXISTS clippy (
                 id int not null primary key generated by default as identity,
-                question TEXT NOT NULL,
+                task TEXT NOT NULL,
+                clipboard_data TEXT NOT NULL,
                 answer TEXT NOT NULL,
-                embedding_question vector(768),
-                embedding_answer vector(768)
+                embedding_clipboard_data vector(768)
             )", conn);
         cmd.ExecuteNonQuery();
 
         // Create the index if it doesn't exist
         cmd = new NpgsqlCommand(@"
-            CREATE INDEX IF NOT EXISTS idx_clippy_embedding_question
+            CREATE INDEX IF NOT EXISTS idx_clippy_embedding_clipboard_data
             ON clippy
-            USING ivfflat(embedding_question vector_cosine_ops)
-            WITH (lists = 100)", conn);
-        cmd.ExecuteNonQuery();
-
-        cmd = new NpgsqlCommand(@"
-            CREATE INDEX IF NOT EXISTS idx_clippy_embedding_answer
-            ON clippy
-            USING ivfflat(embedding_answer vector_cosine_ops)
-            WITH (lists = 100)", conn);
+            USING ivfflat(embedding_clipboard_data vector_cosine_ops)
+            WITH (lists = 20)", conn);
         cmd.ExecuteNonQuery();
 
         // set docker host for the ai extension
