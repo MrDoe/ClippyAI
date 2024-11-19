@@ -9,6 +9,7 @@ using Avalonia.Threading;
 using DesktopNotifications;
 using System.Diagnostics;
 using Avalonia.Markup.Xaml;
+using ClippyAI.Services;
 
 #if WINDOWS
 using System.Windows.Input;
@@ -19,7 +20,6 @@ using NHotkey.Wpf;
 #if LINUX
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using ClippyAI.Services;
 using System.Runtime.Versioning;
 #endif
 

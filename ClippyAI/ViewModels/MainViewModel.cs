@@ -210,7 +210,7 @@ public partial class MainViewModel : ViewModelBase
             if (!string.IsNullOrEmpty(response) && !string.IsNullOrEmpty(Task) && 
                 !string.IsNullOrEmpty(Input) && StoreAllResponses)
             {
-                await OllamaService.StoreEmbedding(Task, Input, response);
+                await OllamaService.StoreSqlEmbedding(Task, Input, response);
                 ++EmbeddingsCount;
             }
         }
@@ -451,7 +451,7 @@ public partial class MainViewModel : ViewModelBase
             try
             {
                 GetFullTask();
-                await OllamaService.StoreEmbedding(Task, Input, Output);
+                await OllamaService.StoreSqlEmbedding(Task, Input, Output);
             }
             catch (Exception e)
             {
