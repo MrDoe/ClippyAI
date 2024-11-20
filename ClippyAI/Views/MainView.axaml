@@ -250,6 +250,11 @@
                             ToolTip.Tip="Displays the number of embeddings" />
                     </StackPanel>
                 </StackPanel>
+
+                <!-- Configure Hotkey Device button -->
+                <Button Content="Configure Hotkey Device" Command="{Binding ConfigureHotkeyDeviceCommand}"
+                    HorizontalAlignment="Left" Margin="0 10 0 0"
+                    ToolTip.Tip="Configure the hotkey device for Linux systems" />
             </StackPanel>
         </Expander>
     </StackPanel>

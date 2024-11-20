@@ -38,7 +38,7 @@ public class HotkeyService
     /// <summary>
     /// Setup hotkey device
     /// </summary>
-    public void SetupHotkeyDevice()
+    public async void SetupHotkeyDevice()
     {
         if (!OperatingSystem.IsLinux())
         {
@@ -65,27 +65,29 @@ public class HotkeyService
         }
         else // multiple keyboard devices were found
         {
-            for (int i = 0; i < keyboards.Count; i++)
+            var keyboardNames = keyboards.Select(k => k.Name).ToList();
+            var selectedDeviceName = await InputDialog.Prompt(
+                parentWindow: null!,
+                title: "Select Keyboard Device",
+                caption: "Please select a keyboard device:",
+                subtext: string.Join("\n", keyboardNames),
+                isRequired: true
+            );
+
+            if (string.IsNullOrEmpty(selectedDeviceName))
             {
-                var device = keyboards[i];
-
-                Console.WriteLine("Current device:");
-                Console.WriteLine(device.Name);
-                Console.WriteLine("Press [X] to test, if it is the right keyboard device or press [ENTER] for testing next device.");
-
-
-                device.OnKeyEvent += OnDetectKeyboard;
-                device.StopMonitoring();
-                device.StartMonitoring();
-
-                // wait for the user to press [ENTER]
-                Console.ReadLine();
-
-                if (Keyboard != null)
-                {
-                    break;
-                }
+                throw new Exception("No keyboard device was selected.");
             }
+
+            Keyboard = keyboards.FirstOrDefault(k => k.Name == selectedDeviceName);
+        }
+
+        if (Keyboard != null)
+        {
+            // save to configuration file
+            ConfigurationManager.AppSettings?.Set("LinuxKeyboardDevice", Keyboard.Name);
+
+            StartMonitoring();
         }
     }
 
@@ -144,24 +146,6 @@ public class HotkeyService
             {
                 Console.WriteLine($"Failed to execute AskClippy: {ex.Message}");
             }
-        }
-    }
-    private void OnDetectKeyboard(object sender, OnKeyEventArgs e)
-    {
-        var device = (EvDevDevice)sender;
-
-        //Console.WriteLine($"Key: {e.Key}\tValue: {e.Value}");
-
-        if (e.Key.ToString() == "KEY_X" && e.Value.ToString() == "KeyDown")
-        {
-            Console.WriteLine("Selected device:");
-            Console.WriteLine(device.Name);
-            Keyboard = device;
-
-            // save to configuration file
-            ConfigurationManager.AppSettings?.Set("LinuxKeyboardDevice", device.Name);
-
-            StartMonitoring();
         }
     }
 

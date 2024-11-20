@@ -548,12 +548,7 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     public async Task ConfigureHotkeyDevice()
     {
-        string? confirmation = await InputDialog.Prompt(
-                    parentWindow: mainWindow!,
-                    title: Resources.Resources.PullModel,
-                    caption: Resources.Resources.EnterModelName,
-                    subtext: Resources.Resources.PullModelSubText,
-                    isRequired: true
-                );
-        }
+        var hotkeyService = new HotkeyService(mainWindow!);
+        await hotkeyService.SetupHotkeyDevice();
     }
+}
