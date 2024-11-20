@@ -13,7 +13,7 @@
     <CoreCompileDependsOn>PrepareResources;$(CompileDependsOn)</CoreCompileDependsOn>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -56,7 +56,6 @@
     <PackageReference Include="NHotkey.Wpf" Condition="'$(OS)' == 'Windows_NT'" Version="3.0.0" />
     <PackageReference Include="Npgsql" Version="8.0.5" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.1" />
-    <PackageReference Include="X11" Condition="'$(OS)' != 'Windows_NT'" Version="1.0.6" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Libs\evdev-sharp\EvDevSharp\EvDevSharp.csproj" />
