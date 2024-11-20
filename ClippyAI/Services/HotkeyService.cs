@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Linq;
 using System.Runtime.Versioning;
 using System.Threading;
+using System.Threading.Tasks;
+using Avalonia.Input;
 using Avalonia.Threading;
 using ClippyAI.Views;
 using EvDevSharp;
@@ -14,9 +17,11 @@ public class HotkeyService
     private EvDevDevice? Keyboard;
     private IList<string> LastKeys = [];
     private MainViewModel? DataContext;
+    private MainWindow? Window;
     public HotkeyService(MainWindow window)
     {
-        DataContext = window.DataContext as MainViewModel;
+        Window = window;
+        DataContext = Window.DataContext as MainViewModel;
 
         // get keyboard device from configuration file
         Keyboard = ConfigurationManager.AppSettings?.Get("LinuxKeyboardDevice") switch
@@ -38,7 +43,7 @@ public class HotkeyService
     /// <summary>
     /// Setup hotkey device
     /// </summary>
-    public async void SetupHotkeyDevice()
+    public async Task SetupHotkeyDevice()
     {
         if (!OperatingSystem.IsLinux())
         {
@@ -62,21 +67,32 @@ public class HotkeyService
         else if (keyboards.Count == 1) // only one keyboard device was found
         {
             Keyboard = keyboards[0];
+            Window!.HideLastNotification();
+            Window.ShowNotification("ClippyAI", $"Keyboard device detected: {Keyboard.Name}", false, false);
         }
         else // multiple keyboard devices were found
         {
             var keyboardNames = keyboards.Select(k => k.Name).ToList();
+            if(keyboardNames == null)
+            {
+                throw new Exception("No keyboard device was found.");
+            }
+            // convert to ObservableCollection
+            var keyboardNamesCollection = new ObservableCollection<string>(keyboardNames!);
+            
             var selectedDeviceName = await InputDialog.Prompt(
-                parentWindow: null!,
+                parentWindow: Window!,
                 title: "Select Keyboard Device",
-                caption: "Please select a keyboard device:",
-                subtext: string.Join("\n", keyboardNames),
-                isRequired: true
+                caption: "Select a keyboard device:",
+                subtext: "Please test it after clicking OK by pressing [Ctrl]+[Alt]+[C] hotkey.",
+                isRequired: true,
+                initialValue: Keyboard?.Name ?? "",
+                comboBoxItems: keyboardNamesCollection
             );
 
             if (string.IsNullOrEmpty(selectedDeviceName))
             {
-                throw new Exception("No keyboard device was selected.");
+                return;
             }
 
             Keyboard = keyboards.FirstOrDefault(k => k.Name == selectedDeviceName);
@@ -86,7 +102,6 @@ public class HotkeyService
         {
             // save to configuration file
             ConfigurationManager.AppSettings?.Set("LinuxKeyboardDevice", Keyboard.Name);
-
             StartMonitoring();
         }
     }
@@ -109,26 +124,27 @@ public class HotkeyService
         if(LastKeys.Count < 3)
             return;
 
-        // check if [Ctrl]+[Alt]+[C] hotkey is pressed in a row
         bool foundCtrl = false;
         bool foundAlt = false;
         bool foundC = false;
-        for(int i = 0; i < LastKeys.Count; i++)
+
+        // check if [Ctrl]+[Alt]+[C] hotkey is pressed in a row (only in this order)
+        for (int i = 0; i < LastKeys.Count; i++)
         {
-            switch(LastKeys[i])
+            if (LastKeys[i] == "Ctrl")
             {
-                case "Ctrl":
-                    foundCtrl = true;
-                break;
-                case "Alt":
-                    foundAlt = true;
-                break;
-                case "C":
-                    foundC = true;
-                break;
+                foundCtrl = true;
+            }
+            else if (LastKeys[i] == "Alt" && foundCtrl)
+            {
+                foundAlt = true;
+            }
+            else if (LastKeys[i] == "C" && foundAlt)
+            {
+                foundC = true;
             }
         }
-        
+
         if (foundCtrl && foundAlt && foundC)
         {
             Console.WriteLine("Hotkey pressed");
@@ -159,11 +175,10 @@ public class HotkeyService
             Console.WriteLine("No keyboard device was found.");
             return;
         }
-
-        // remove previous event handler
-        Keyboard.OnKeyEvent -= OnDetectKeyboard;
+        
+        Keyboard.OnKeyEvent -= OnKeyEvent;
+        Keyboard.StopMonitoring();
         Keyboard.OnKeyEvent += OnKeyEvent;
-
         Keyboard.StartMonitoring();
     }
 }

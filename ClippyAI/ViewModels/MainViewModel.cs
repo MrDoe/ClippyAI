@@ -548,6 +548,12 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     public async Task ConfigureHotkeyDevice()
     {
+        // only for Linux
+        if (!OperatingSystem.IsLinux())
+        {
+            ErrorMessages?.Add("This feature is only supported on Linux.");
+            return;
+        }
         var hotkeyService = new HotkeyService(mainWindow!);
         await hotkeyService.SetupHotkeyDevice();
     }

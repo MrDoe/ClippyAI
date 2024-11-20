@@ -150,8 +150,7 @@
         <value>Choisissez un modèle!</value>
     </data>
     <data name="TaskCompleted" xml:space="preserve">
-        <value>Votre tâche a été terminée et copiée dans le presse-papiers!
-Résultat:
+        <value>Résultat:
 </value>
     </data>
     <data name="TaskView" xml:space="preserve">

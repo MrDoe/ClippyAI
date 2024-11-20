@@ -25,7 +25,7 @@
         </StackPanel>
         
         <!-- Input -->
-        <Label Content="Input:" Margin="0 0 0 3"
+        <Label Content="Clipboard Contents (Input):" Margin="0 0 0 3"
             HorizontalAlignment="Left"
             FontSize="14" />
         <TextBox x:Name="txtInput" Text="{Binding Input}"

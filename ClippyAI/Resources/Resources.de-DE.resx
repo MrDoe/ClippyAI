@@ -148,8 +148,7 @@
         <value>Bitte wählen Sie ein Modell aus!</value>
     </data>
     <data name="TaskCompleted" xml:space="preserve">
-        <value>Ihre Aufgabe wurde abgeschlossen und in die Zwischenablage kopiert!
-Ergebnis:
+        <value>Ergebnis:
 </value>
     </data>
     <data name="TaskView" xml:space="preserve">

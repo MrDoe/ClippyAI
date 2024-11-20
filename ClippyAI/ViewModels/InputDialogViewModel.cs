@@ -2,6 +2,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using ClippyAI.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using ReactiveUI;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 namespace ClippyAI.Views;

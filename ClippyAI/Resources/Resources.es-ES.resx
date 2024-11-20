@@ -150,7 +150,8 @@
         <value>¡Elija un modelo!</value>
     </data>
     <data name="TaskCompleted" xml:space="preserve">
-        <value>Su tarea ha sido completada y copiada al portapapeles!Resultado:</value>
+        <value>Resultado:
+</value>
     </data>
     <data name="TaskView" xml:space="preserve">
         <value>Ver</value>

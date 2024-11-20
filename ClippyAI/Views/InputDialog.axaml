@@ -18,7 +18,8 @@
     <Border CornerRadius="6" BorderBrush="DimGray" BorderThickness="1" Background="#e0333333">
         <Grid RowDefinitions="Auto,Auto,Auto,Auto" Margin="10">
             <Label Grid.Row="1" Name="lbl" Content="Value" Margin="0 0 0 10" />
-            <TextBox Grid.Row="2" Name="txtBox" Margin="0 0 0 10" />
+            <TextBox Grid.Row="2" Name="txtBox" Margin="0 0 0 10" Width="400" />
+            <ComboBox Grid.Row="2" Name="cboInput" Margin="0 0 0 10" Width="400" IsVisible="False" />
             <Label Grid.Row="3" Name="lblSubText" Content="Value" />
             <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right"
                 Margin="0 35 0 0">

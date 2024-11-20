@@ -19,7 +19,6 @@ using NHotkey.Wpf;
 
 #if LINUX
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using System.Runtime.Versioning;
 #endif
 
@@ -35,6 +34,12 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         get => base.Title!;
         set => base.Title = value;
     }
+    
+    private void InitializeComponent()
+    {
+        AvaloniaXamlLoader.Load(this);
+    }
+
     public MainWindow()
     {
         InitializeComponent();
@@ -59,19 +64,6 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             RegisterHotkeyLinux();
 #endif
-    }
-
-    private void MainWindow_PropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
-    {
-        if (e.Property == WindowStateProperty)
-        {
-            MainWindow_WindowStateChanged(sender, e);
-        }
-    }
-
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
     }
 
 #if WINDOWS
@@ -115,7 +107,6 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         SetWindowPos();
 
         clipboardPollingTimer.Start();
-
         PositionChanged += MainWindow_PositionChanged;
 
         // hide the window
@@ -128,6 +119,21 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         Height = screenSize.Height;
         Position = new PixelPoint(0, 0);
     }
+    
+    private void MainWindow_PropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        // set output to ClipboardService.LastResponse
+        if (DataContext is MainViewModel viewModel)
+        {
+            viewModel.Input = ClipboardService.LastInput;
+            viewModel.Output = ClipboardService.LastResponse;
+        }
+
+        if (e.Property == WindowStateProperty)
+        {
+            MainWindow_WindowStateChanged(sender, e);
+        }
+    }
 
     private void MainWindow_WindowStateChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
@@ -135,26 +141,11 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         {
             Hide();
         }
-
-        // set output to ClipboardService.LastResponse
-        if (DataContext is MainViewModel viewModel)
-        {
-            viewModel.Input = ClipboardService.LastInput;
-            viewModel.Output = ClipboardService.LastResponse;
-        }
-
         SetWindowPos();
     }
 
     private void MainWindow_PositionChanged(object? sender, EventArgs e)
     {
-        // set output to ClipboardService.LastResponse
-        if (DataContext is MainViewModel viewModel)
-        {
-            viewModel.Input = ClipboardService.LastInput;
-            viewModel.Output = ClipboardService.LastResponse;
-        }
-
         SetWindowPos();
     }
 

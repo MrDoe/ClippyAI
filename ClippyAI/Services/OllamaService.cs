@@ -312,7 +312,8 @@ public static class OllamaService
         var count = Convert.ToInt32(await cmd.ExecuteScalarAsync());
         if (count > 0)
         {
-            throw new Exception("Similar embedding already exists.");
+            Console.WriteLine("Similar embedding already exists.");
+            return;
         }
 
         // Insert the clipboard text and generate the embedding in a single command
