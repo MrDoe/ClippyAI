@@ -147,7 +147,7 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     public async Task AskClippy(CancellationToken token)
     {
-        if(string.IsNullOrEmpty(Input))
+        if (string.IsNullOrEmpty(Input))
         {
             // get text from clipboard
             if (await ClipboardService.GetText() is { } clipboardText)
@@ -156,7 +156,7 @@ public partial class MainViewModel : ViewModelBase
                 ClipboardService.LastInput = clipboardText;
             }
         }
-        if(string.IsNullOrEmpty(Input))
+        if (string.IsNullOrEmpty(Input))
         {
             return;
         }
@@ -179,7 +179,7 @@ public partial class MainViewModel : ViewModelBase
                 IsBusy = false;
                 return;
             }
-            
+
             if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 var mainWindow = (MainWindow)desktop.MainWindow!;
@@ -201,13 +201,13 @@ public partial class MainViewModel : ViewModelBase
                     return;
                 }
             }
-            
+
             response = await OllamaService.SendRequest(Input!,
                                                        task,
                                                        model,
                                                        _askClippyCts.Token);
-            
-            if (!string.IsNullOrEmpty(response) && !string.IsNullOrEmpty(Task) && 
+
+            if (!string.IsNullOrEmpty(response) && !string.IsNullOrEmpty(Task) &&
                 !string.IsNullOrEmpty(Input) && StoreAllResponses)
             {
                 await OllamaService.StoreSqlEmbedding(Task, Input, response);
@@ -239,7 +239,7 @@ public partial class MainViewModel : ViewModelBase
         ClipboardContent = response;
         Output = response;
         ClipboardService.LastResponse = response;
-        
+
         // Update the clipboard content
         await ClipboardService.SetText(ClipboardContent);
 
@@ -259,7 +259,7 @@ public partial class MainViewModel : ViewModelBase
         }
 
         // update response counter
-        if(_lastOutputGenerated)
+        if (_lastOutputGenerated)
             ResponseCounter = "      *";
         else
         {
@@ -275,7 +275,7 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     public async Task GetNextResponse()
     {
-        if(_lastOutputGenerated)
+        if (_lastOutputGenerated)
         {
             return;
         }
@@ -441,7 +441,7 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     public async Task ThumbUp()
     {
-        if(string.IsNullOrEmpty(Output))
+        if (string.IsNullOrEmpty(Output))
         {
             return;
         }
@@ -468,7 +468,7 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     public async Task ThumbDown()
     {
-        if(string.IsNullOrEmpty(Output))
+        if (string.IsNullOrEmpty(Output))
         {
             return;
         }
@@ -504,14 +504,14 @@ public partial class MainViewModel : ViewModelBase
     public async Task Regenerate()
     {
         bool embeddingsUsed = UseEmbeddings;
-        if(embeddingsUsed)
+        if (embeddingsUsed)
         {
             UseEmbeddings = false;
         }
 
         await AskClippy(_askClippyCts.Token);
-        
-        if(embeddingsUsed)
+
+        if (embeddingsUsed)
         {
             UseEmbeddings = true;
         }
@@ -544,4 +544,16 @@ public partial class MainViewModel : ViewModelBase
             ShowErrorMessage(e.Message);
         }
     }
-}
+
+    [RelayCommand]
+    public async Task ConfigureHotkeyDevice()
+    {
+        string? confirmation = await InputDialog.Prompt(
+                    parentWindow: mainWindow!,
+                    title: Resources.Resources.PullModel,
+                    caption: Resources.Resources.EnterModelName,
+                    subtext: Resources.Resources.PullModelSubText,
+                    isRequired: true
+                );
+        }
+    }

@@ -42,15 +42,13 @@ public class HotkeyService
     {
         if (!OperatingSystem.IsLinux())
         {
-            Console.WriteLine("This program is only supported on Linux.");
-            return;
+            throw new Exception("This program is only supported on Linux.");
         }
 
         var devices = EvDevDevice.GetDevices().OrderBy(d => d.DevicePath).ToList();
         if (!devices.Any())
         {
-            Console.WriteLine("No device was found.");
-            return;
+            throw new Exception("Devices are not queryable!");
         }
 
         // get all keyboard devices
@@ -59,13 +57,10 @@ public class HotkeyService
 
         if (!keyboards.Any()) // no keyboard device was found
         {
-            Console.WriteLine("No keyboard device was found.");
-            return;
+            throw new Exception("No keyboard device was found.");
         }
         else if (keyboards.Count == 1) // only one keyboard device was found
         {
-            Console.WriteLine("Keyboard device:");
-            Console.WriteLine(keyboards[0].Name);
             Keyboard = keyboards[0];
         }
         else // multiple keyboard devices were found
@@ -77,6 +72,7 @@ public class HotkeyService
                 Console.WriteLine("Current device:");
                 Console.WriteLine(device.Name);
                 Console.WriteLine("Press [X] to test, if it is the right keyboard device or press [ENTER] for testing next device.");
+
 
                 device.OnKeyEvent += OnDetectKeyboard;
                 device.StopMonitoring();
@@ -98,17 +94,14 @@ public class HotkeyService
         if (e.Key == EvDevKeyCode.KEY_LEFTCTRL && e.Value == EvDevKeyValue.KeyDown)
         {
             LastKeys.Add("Ctrl");
-            //Console.WriteLine("Ctrl key is pressed.");
         }
         else if (e.Key == EvDevKeyCode.KEY_LEFTALT && e.Value == EvDevKeyValue.KeyDown)
         {
             LastKeys.Add("Alt");
-            //Console.WriteLine("Alt key is pressed.");
         }
         else if (e.Key == EvDevKeyCode.KEY_C && e.Value == EvDevKeyValue.KeyDown)
         {
             LastKeys.Add("C");
-            //Console.WriteLine("C key is pressed.");
         }
 
         if(LastKeys.Count < 3)
