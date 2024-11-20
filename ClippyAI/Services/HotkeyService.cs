@@ -14,9 +14,12 @@ public class HotkeyService
     private EvDevDevice? Keyboard;
     private IList<string> LastKeys = [];
     private MainViewModel? DataContext;
+    private MainWindow? Window;
+
     public HotkeyService(MainWindow window)
     {
-        DataContext = window.DataContext as MainViewModel;
+        Window = window;
+        DataContext = Window.DataContext as MainViewModel;
 
         // get keyboard device from configuration file
         Keyboard = ConfigurationManager.AppSettings?.Get("LinuxKeyboardDevice") switch
@@ -38,7 +41,7 @@ public class HotkeyService
     /// <summary>
     /// Setup hotkey device
     /// </summary>
-    public async void SetupHotkeyDevice()
+    public async Task SetupHotkeyDevice()
     {
         if (!OperatingSystem.IsLinux())
         {
@@ -67,7 +70,7 @@ public class HotkeyService
         {
             var keyboardNames = keyboards.Select(k => k.Name).ToList();
             var selectedDeviceName = await InputDialog.Prompt(
-                parentWindow: null!,
+                parentWindow: Window!,
                 title: "Select Keyboard Device",
                 caption: "Please select a keyboard device:",
                 subtext: string.Join("\n", keyboardNames),
