@@ -39,7 +39,7 @@ after it is copied or cut. The clipboard's content can then be sent along with a
 **Setting Up Embedding Database (optional)**
 1. Install PostgreSQL database and pgai:
   1. Install via Docker (recommended):
-      - Download the [https://raw.githubusercontent.com/MrDoe/ClippyAI/refs/heads/main/ClippyAI/Docker/docker-compose.yml](docker-compose.yml) file from this repository.
+      - Download the [docker-compose.yml](https://github.com/MrDoe/ClippyAI/blob/main/ClippyAI/Docker/docker-compose.yml) file from this repository.
       - Open the command prompt/terminal and execute `docker-compose up` from the download directory.
   2. Manual installation
       - See [https://github.com/timescale/pgai](https://github.com/timescale/pgai) for specific installation instructions.
