@@ -65,7 +65,7 @@ after it is copied or cut. The clipboard's content can then be sent along with a
 
 **Disclaimer**
 
-This tool is in an early development phase. Use it at your own risk. We take no responsibility, if it accidently deletes or overwrites your currently opened documents. (Take special care with the experimental keyboard output.
+This tool is in an early development phase. Use it at your own risk. We take no responsibility, if it accidently deletes or overwrites your currently opened documents or if your LLM creates faulty or dangerous content.
 
 If you encounter any issues or having questions or new ideas about using ClippyAI, please open an issue here on GitHub.
 
