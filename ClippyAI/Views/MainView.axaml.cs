@@ -66,6 +66,11 @@ public partial class MainView : UserControl
         if (txtPostgresOllamaUrl != null)
             txtPostgresOllamaUrl.TextChanged += OnTxtPostgresOllamaUrlChanged;
 
+        // add event hanlder for UseEmbeddings
+        var chkUseEmbeddings = this.FindControl<CheckBox>("chkUseEmbeddings");
+        if (chkUseEmbeddings != null)
+            chkUseEmbeddings.IsCheckedChanged += OnChkUseEmbeddingsChecked;
+
         // add event handler for StoreAllResponses checkbox checked
         var chkStoreAllResponses = this.FindControl<CheckBox>("chkStoreAllResponses");
         if (chkStoreAllResponses != null)
@@ -300,6 +305,23 @@ public partial class MainView : UserControl
         var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
         config.AppSettings.Settings.Remove("StoreAllResponses");
         config.AppSettings.Settings.Add("StoreAllResponses", isChecked.ToString());
+        config.Save(ConfigurationSaveMode.Modified);
+        ConfigurationManager.RefreshSection("appSettings");
+    }
+
+    private void OnChkUseEmbeddingsChecked(object? sender, RoutedEventArgs e)
+    {
+        if (!Init)
+            return;
+
+        var chkUseEmbeddings = (CheckBox)sender!;
+        bool isChecked = chkUseEmbeddings.IsChecked ?? false;
+        ((MainViewModel)DataContext!).UseEmbeddings = isChecked;
+
+        // save to configuration file
+        var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+        config.AppSettings.Settings.Remove("UseEmbeddings");
+        config.AppSettings.Settings.Add("UseEmbeddings", isChecked.ToString());
         config.Save(ConfigurationSaveMode.Modified);
         ConfigurationManager.RefreshSection("appSettings");
     }

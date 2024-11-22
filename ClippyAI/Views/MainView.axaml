@@ -195,7 +195,7 @@
 
                     <!-- Use Embeddings -->
                     <StackPanel Orientation="Horizontal">
-                        <CheckBox IsChecked="{Binding UseEmbeddings}" HorizontalAlignment="Left"
+                        <CheckBox x:Name="chkUseEmbeddings" IsChecked="{Binding UseEmbeddings}" HorizontalAlignment="Left"
                             ToolTip.Tip="Embeddings are used like a cache for a faster retrieval of possible answers." />
                         <Label Content="Use Embeddings" HorizontalAlignment="Left"
                             FontSize="14" Margin="0 4 0 0" />
