@@ -64,6 +64,71 @@
             "problemMatcher": "$msCompile"
         },
         {
+            "label": "publish-linux-deb",
+            "dependsOn": "",
+            "command": "dotnet-deb",
+            "type": "process",
+            "args": [
+                "-c",
+                "Release"
+            ],
+            "options":{
+                "cwd": "${workspaceFolder}/ClippyAI"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "publish-linux-rpm",
+            "dependsOn": "",
+            "command": "dotnet-rpm",
+            "type": "process",
+            "args": [
+                "-c",
+                "Release"
+            ],
+            "options":{
+                "cwd": "${workspaceFolder}/ClippyAI"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "publish-linux-tar",
+            "dependsOn": "",
+            "command": "dotnet-tarball",
+            "type": "process",
+            "args": [
+                "-c",
+                "Release"
+            ],
+            "options":{
+                "cwd": "${workspaceFolder}/ClippyAI"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "publish-linux",
+            "dependsOn": ["publish-linux-deb", "publish-linux-rpm", "publish-linux-tar"],
+            "dependsOrder": "sequence",
+            "command": "",
+            "type": "shell",
+            "args": [
+                "echo",
+                "Done"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "run",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "run",
+                "--project",
+                "${workspaceFolder}/ClippyAI/ClippyAI.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
             "label": "watch",
             "command": "dotnet",
             "type": "process",
