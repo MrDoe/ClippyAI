@@ -14,6 +14,7 @@
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <Version>1.1.1</Version>
+    <ApplicationIcon>bulb.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>

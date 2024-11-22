@@ -68,7 +68,7 @@ public partial class App : Application
             _mainWindow = new MainWindow { DataContext = new MainViewModel() };
             desktop.MainWindow = _mainWindow;
 
-            var iconUri = new Uri("avares://ClippyAI/Assets/bulb.png");
+            var iconUri = new Uri("avares://ClippyAI/Assets/bulb.ico");
             var bitmap = new Bitmap(AssetLoader.Open(iconUri));
 
             _trayIcon = new TrayIcon
