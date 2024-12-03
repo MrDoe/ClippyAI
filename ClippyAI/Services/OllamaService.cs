@@ -345,12 +345,12 @@ public static class OllamaService
         SELECT 
             id, 
             answer, 
-            embedding_clipboard_data <-> 
+            embedding_clipboard_data <=> 
                 ai.ollama_embed('nomic-embed-text', @clipboard_data) as distance
         FROM clippy
         WHERE 
             task = @task 
-        AND embedding_clipboard_data <-> 
+        AND embedding_clipboard_data <=> 
             ai.ollama_embed('nomic-embed-text', @clipboard_data) <= @threshold
         ORDER BY 3
         LIMIT 10", conn);
