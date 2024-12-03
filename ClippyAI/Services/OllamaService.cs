@@ -325,8 +325,8 @@ public static class OllamaService
                    ai.ollama_embed('nomic-embed-text', @clipboard_data))", conn);
 
         cmd.Parameters.AddWithValue("task", task);
-        cmd.Parameters.AddWithValue("clipboard_data", clipboard_data);
-        cmd.Parameters.AddWithValue("answer", answer);        
+        cmd.Parameters.AddWithValue("clipboard_data", "search_document: " + clipboard_data);
+        cmd.Parameters.AddWithValue("answer", answer);
         await cmd.ExecuteNonQueryAsync();
     }
 
@@ -356,7 +356,7 @@ public static class OllamaService
         LIMIT 10", conn);
         
         cmd.Parameters.AddWithValue("task", task);
-        cmd.Parameters.AddWithValue("clipboard_data", clipboard_data);
+        cmd.Parameters.AddWithValue("clipboard_data", "search_query: " + clipboard_data);
         cmd.Parameters.AddWithValue("threshold", threshold);
 
         var result = await cmd.ExecuteReaderAsync();
