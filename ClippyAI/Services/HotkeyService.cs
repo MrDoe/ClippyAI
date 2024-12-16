@@ -18,6 +18,10 @@ public class HotkeyService
     private IList<string> LastKeys = [];
     private MainViewModel? DataContext;
     private MainWindow? Window;
+    private DateTime lastCtrl = DateTime.Now;
+    private DateTime lastAlt = DateTime.Now;
+    private DateTime lastC = DateTime.Now;
+
     public HotkeyService(MainWindow window)
     {
         Window = window;
@@ -111,14 +115,17 @@ public class HotkeyService
         if (e.Key == EvDevKeyCode.KEY_LEFTCTRL && e.Value == EvDevKeyValue.KeyDown)
         {
             LastKeys.Add("Ctrl");
+            lastCtrl = DateTime.Now;
         }
         else if (e.Key == EvDevKeyCode.KEY_LEFTALT && e.Value == EvDevKeyValue.KeyDown)
         {
             LastKeys.Add("Alt");
+            lastAlt = DateTime.Now;
         }
         else if (e.Key == EvDevKeyCode.KEY_C && e.Value == EvDevKeyValue.KeyDown)
         {
             LastKeys.Add("C");
+            lastC = DateTime.Now;
         }
 
         if(LastKeys.Count < 3)
@@ -145,7 +152,10 @@ public class HotkeyService
             }
         }
 
-        if (foundCtrl && foundAlt && foundC)
+        if (foundCtrl && foundAlt && foundC && 
+            DateTime.Now.Subtract(lastCtrl).TotalSeconds < 3 &&
+            DateTime.Now.Subtract(lastAlt).TotalSeconds < 3 && 
+            DateTime.Now.Subtract(lastC).TotalSeconds < 3)
         {
             Console.WriteLine("Hotkey pressed");
             LastKeys.Clear();
