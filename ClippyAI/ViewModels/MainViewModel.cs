@@ -89,7 +89,7 @@ public partial class MainViewModel : ViewModelBase
     private string _responseCounter = "0 / 0";
 
     [ObservableProperty]
-    private float _threshold = 8.0f;
+    private float _threshold = 0.2f;
 
     [ObservableProperty]
     private int _embeddingsCount = 0;
@@ -356,13 +356,14 @@ public partial class MainViewModel : ViewModelBase
             }
         }
         // Check if the content has changed
-        if (newContent != ClipboardContent)
+        if (!string.IsNullOrEmpty(newContent) && newContent != ClipboardContent)
         {
             IsBusy = true;
 
             // Update the property
             ClipboardContent = newContent;
             Input = newContent ?? "";
+            ClipboardService.LastInput = newContent ?? "";
 
             if (AutoMode && initialized)
             {
@@ -372,9 +373,8 @@ public partial class MainViewModel : ViewModelBase
             {
                 initialized = true;
             }
-
-            IsBusy = false;
         }
+        IsBusy = false;
     }
 
     [RelayCommand]

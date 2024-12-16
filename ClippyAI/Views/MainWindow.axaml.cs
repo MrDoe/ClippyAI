@@ -46,7 +46,7 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         DataContext = new MainViewModel();
 
         // poll clipboard every second
-        clipboardPollingTimer = new System.Timers.Timer(400);
+        clipboardPollingTimer = new System.Timers.Timer(500);
         clipboardPollingTimer.Elapsed += ClipboardPollingTimer_Elapsed;
 
         // register notification manager
@@ -125,8 +125,10 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         // set output to ClipboardService.LastResponse
         if (DataContext is MainViewModel viewModel)
         {
-            viewModel.Input = ClipboardService.LastInput;
-            viewModel.Output = ClipboardService.LastResponse;
+            if(!string.IsNullOrEmpty(ClipboardService.LastInput))
+                viewModel.Input = ClipboardService.LastInput;
+            if(!string.IsNullOrEmpty(ClipboardService.LastResponse))
+                viewModel.Output = ClipboardService.LastResponse;
         }
 
         if (e.Property == WindowStateProperty)
@@ -160,9 +162,9 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
                 await ((MainViewModel)DataContext!).UpdateClipboardContent(CancellationToken.None);
             });
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            // ignore
+            Console.WriteLine(ex.Message);
         }
     }
 
