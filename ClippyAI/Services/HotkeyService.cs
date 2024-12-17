@@ -76,11 +76,8 @@ public class HotkeyService
         }
         else // multiple keyboard devices were found
         {
-            var keyboardNames = keyboards.Select(k => k.Name).ToList();
-            if(keyboardNames == null)
-            {
-                throw new Exception("No keyboard device was found.");
-            }
+            var keyboardNames = keyboards.Select(k => k.Name).ToList() ?? throw new Exception("No keyboard device was found.");
+
             // convert to ObservableCollection
             var keyboardNamesCollection = new ObservableCollection<string>(keyboardNames!);
             
@@ -105,7 +102,11 @@ public class HotkeyService
         if (Keyboard != null)
         {
             // save to configuration file
-            ConfigurationManager.AppSettings?.Set("LinuxKeyboardDevice", Keyboard.Name);
+            var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            config.AppSettings.Settings.Remove("LinuxKeyboardDevice");
+            config.AppSettings.Settings.Add("LinuxKeyboardDevice", Keyboard.Name);
+            config.Save(ConfigurationSaveMode.Modified);
+            ConfigurationManager.RefreshSection("appSettings");
             StartMonitoring();
         }
     }
