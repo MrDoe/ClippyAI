@@ -556,5 +556,6 @@ public partial class MainViewModel : ViewModelBase
             return;
         }
         hotkeyService = new HotkeyService(mainWindow!);
+        await hotkeyService.SetupHotkeyDevice();
     }
 }

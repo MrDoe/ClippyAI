@@ -34,11 +34,7 @@ public class HotkeyService
             _ => null
         };
 
-        if (Keyboard == null)
-        {
-            SetupHotkeyDevice();
-        }
-        else
+        if(Keyboard != null)
         {
             StartMonitoring();
         }
