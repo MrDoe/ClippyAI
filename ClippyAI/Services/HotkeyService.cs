@@ -47,7 +47,7 @@ public class HotkeyService
     {
         if (!OperatingSystem.IsLinux())
         {
-            throw new Exception("This program is only supported on Linux.");
+            throw new Exception("This feature is only supported on Linux.");
         }
 
         var devices = EvDevDevice.GetDevices().OrderBy(d => d.DevicePath).ToList();
