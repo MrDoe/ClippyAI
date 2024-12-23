@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="ClippyAI.Views.SettingsView">
+    <StackPanel>
+        <TextBlock Text="SSH Settings" FontWeight="Bold" Margin="0,0,0,10"/>
+        <TextBlock Text="SSH Server URL:"/>
+        <TextBox Text="{Binding SSHServerUrl}" Margin="0,0,0,10"/>
+        <TextBlock Text="SSH Port:"/>
+        <TextBox Text="{Binding SSHPort}" Margin="0,0,0,10"/>
+        <TextBlock Text="Local Tunnel:"/>
+        <TextBox Text="{Binding LocalTunnel}" Margin="0,0,0,10"/>
+        <TextBlock Text="Remote Tunnel:"/>
+        <TextBox Text="{Binding RemoteTunnel}" Margin="0,0,0,10"/>
+        <TextBlock Text="Public Key:"/>
+        <TextBox Text="{Binding PublicKey}" Margin="0,0,0,10"/>
+        <CheckBox Content="Enable SSH Tunnel" IsChecked="{Binding SSHTunnel}" Margin="0,0,0,10"/>
+    </StackPanel>
+</UserControl>
