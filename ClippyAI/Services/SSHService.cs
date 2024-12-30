@@ -11,6 +11,7 @@ namespace ClippyAI.Services
 
         public void Connect()
         {
+            string sshUsername = ConfigurationManager.AppSettings["SSHUsername"] ?? throw new ArgumentNullException("SSHUsername");
             string sshServerUrl = ConfigurationManager.AppSettings["SSHServerUrl"] ?? throw new ArgumentNullException("SSHServerUrl");
             int sshPort = int.Parse(ConfigurationManager.AppSettings["SSHPort"] ?? throw new ArgumentNullException("SSHPort"));
             bool sshTunnel = bool.Parse(ConfigurationManager.AppSettings["SSHTunnel"] ?? throw new ArgumentNullException("SSHTunnel"));
@@ -18,9 +19,11 @@ namespace ClippyAI.Services
             if (!sshTunnel)
                 return;
 
-            _sshClient = new SshClient(sshServerUrl, sshPort, "username", "password");
+            _sshClient = new SshClient(sshServerUrl, sshPort, sshUsername, "password");
             _sshClient.Connect();
 
+            // split tunnel variable
+            
             _forwardedPort = new ForwardedPortLocal("127.0.0.1", 3306, "remote.server.com", 3306);
             _sshClient.AddForwardedPort(_forwardedPort);
             _forwardedPort.Start();

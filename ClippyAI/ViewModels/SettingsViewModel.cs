@@ -12,25 +12,22 @@ namespace ClippyAI.ViewModels
         private string _sshPort = ConfigurationManager.AppSettings["SSHPort"] ?? string.Empty;
 
         [ObservableProperty]
-        private string _localTunnel = ConfigurationManager.AppSettings["LocalTunnel"] ?? string.Empty;
+        private string _sshLocalTunnel = ConfigurationManager.AppSettings["SSHLocalTunnel"] ?? string.Empty;
 
         [ObservableProperty]
-        private string _remoteTunnel = ConfigurationManager.AppSettings["RemoteTunnel"] ?? string.Empty;
+        private string _sshRemoteTunnel = ConfigurationManager.AppSettings["SSHRemoteTunnel"] ?? string.Empty;
 
         [ObservableProperty]
-        private string _publicKey = ConfigurationManager.AppSettings["PublicKey"] ?? string.Empty;
-
-        [ObservableProperty]
-        private bool _sshTunnel = bool.Parse(ConfigurationManager.AppSettings["SSHTunnel"] ?? "false");
+        private string _sshPublicKey = ConfigurationManager.AppSettings["SSHPublicKey"] ?? string.Empty;
 
         public void SaveSettings()
         {
             var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             config.AppSettings.Settings["SSHServerUrl"].Value = SSHServerUrl;
             config.AppSettings.Settings["SSHPort"].Value = SSHPort;
-            config.AppSettings.Settings["LocalTunnel"].Value = LocalTunnel;
-            config.AppSettings.Settings["RemoteTunnel"].Value = RemoteTunnel;
-            config.AppSettings.Settings["PublicKey"].Value = PublicKey;
+            config.AppSettings.Settings["SSHLocalTunnel"].Value = SSHLocalTunnel;
+            config.AppSettings.Settings["SSHRemoteTunnel"].Value = SSHRemoteTunnel;
+            config.AppSettings.Settings["SSHPublicKey"].Value = SSHPublicKey;
             config.AppSettings.Settings["SSHTunnel"].Value = SSHTunnel.ToString();
             config.Save(ConfigurationSaveMode.Modified);
             ConfigurationManager.RefreshSection("appSettings");
@@ -40,9 +37,9 @@ namespace ClippyAI.ViewModels
         {
             SSHServerUrl = ConfigurationManager.AppSettings["SSHServerUrl"] ?? string.Empty;
             SSHPort = ConfigurationManager.AppSettings["SSHPort"] ?? string.Empty;
-            LocalTunnel = ConfigurationManager.AppSettings["LocalTunnel"] ?? string.Empty;
-            RemoteTunnel = ConfigurationManager.AppSettings["RemoteTunnel"] ?? string.Empty;
-            PublicKey = ConfigurationManager.AppSettings["PublicKey"] ?? string.Empty;
+            SSHLocalTunnel = ConfigurationManager.AppSettings["SSHLocalTunnel"] ?? string.Empty;
+            SSHRemoteTunnel = ConfigurationManager.AppSettings["SSHRemoteTunnel"] ?? string.Empty;
+            SSHPublicKey = ConfigurationManager.AppSettings["SSHPublicKey"] ?? string.Empty;
             SSHTunnel = bool.Parse(ConfigurationManager.AppSettings["SSHTunnel"] ?? "false");
         }
     }
