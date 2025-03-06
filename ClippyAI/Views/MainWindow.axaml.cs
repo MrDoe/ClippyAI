@@ -74,6 +74,9 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
             HotkeyManager.Current.AddOrReplace("Ctrl+Alt+C", 
                 System.Windows.Input.Key.C, ModifierKeys.Control | ModifierKeys.Alt, 
                 OnHotkeyHandler);
+            HotkeyManager.Current.AddOrReplace("Ctrl+Caret", 
+                System.Windows.Input.Key.Oem6, ModifierKeys.Control, 
+                OnAnalyzeVideoHotkeyHandler);
         }
         catch (Exception ex)
         {
@@ -89,6 +92,15 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         await ((MainViewModel)DataContext!).AskClippy(new CancellationToken());
         e.Handled = true;
     }
+
+    private async void OnAnalyzeVideoHotkeyHandler(object? sender, HotkeyEventArgs e)
+    {
+        Console.WriteLine("Analyze video hotkey pressed");
+
+        // execute relay command AnalyzeVideo
+        await ((MainViewModel)DataContext!).AnalyzeVideo(new CancellationToken());
+        e.Handled = true;
+    }
 #endif
 
 #if LINUX
@@ -98,6 +110,14 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
     private void RegisterHotkeyLinux()
     {
         HotkeyService = new HotkeyService(this);
+    }
+
+    private async void OnAnalyzeVideoHotkeyHandler(object? sender, EventArgs e)
+    {
+        Console.WriteLine("Analyze video hotkey pressed");
+
+        // execute relay command AnalyzeVideo
+        await ((MainViewModel)DataContext!).CaptureAndAnalyze();
     }
 #endif
 
@@ -277,4 +297,5 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
             Close();
         }
     }
-}
+
+ }

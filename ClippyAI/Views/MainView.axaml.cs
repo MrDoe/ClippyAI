@@ -1,5 +1,7 @@
 using System.Configuration;
 using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -75,6 +77,30 @@ public partial class MainView : UserControl
         var chkStoreAllResponses = this.FindControl<CheckBox>("chkStoreAllResponses");
         if (chkStoreAllResponses != null)
             chkStoreAllResponses.IsCheckedChanged += OnChkStoreAllResponsesChecked;
+
+        // add event handler for video device text changed
+        var txtVideoDevice = this.FindControl<TextBox>("txtVideoDevice");
+        if (txtVideoDevice != null)
+            txtVideoDevice.TextChanged += OnTxtVideoDeviceChanged;
+
+        // add event handler for vision model text changed
+        var txtVisionModel = this.FindControl<TextBox>("txtVisionModel");
+        if (txtVisionModel != null)
+            txtVisionModel.TextChanged += OnTxtVisionModelChanged;
+
+        // add event handler for vision prompt text changed
+        var txtVisionPrompt = this.FindControl<TextBox>("txtVisionPrompt");
+        if (txtVisionPrompt != null)
+            txtVisionPrompt.TextChanged += OnTxtVisionPromptChanged;
+
+        // add event handler for video device selection changed
+        var cboVideoDevice = this.FindControl<ComboBox>("cboVideoDevice");
+        if (cboVideoDevice != null)
+            cboVideoDevice.SelectionChanged += OnCboVideoDeviceSelectionChanged;
+
+        var btnShowCamera = this.FindControl<Button>("btnShowCamera");
+        if (btnShowCamera != null)
+            btnShowCamera.Click += OnBtnShowCameraClick;
     }
 
     private async void MainView_Loaded(object? sender, RoutedEventArgs e)
@@ -88,6 +114,15 @@ public partial class MainView : UserControl
         int embeddingsCount = await OllamaService.GetEmbeddingsCount();
         if(embeddingsCount >= 0)
             ((MainViewModel)DataContext!).EmbeddingsCount = embeddingsCount;
+
+        // Start monitoring clipboard content
+        var viewModel = (MainViewModel)DataContext!;
+        var cancellationTokenSource = new CancellationTokenSource();
+        while (true)
+        {
+            await viewModel.UpdateClipboardContent(cancellationTokenSource.Token);
+            await Task.Delay(1000); // Poll every second
+        }
     }
 
     private void OnCboLanguageSelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -324,5 +359,75 @@ public partial class MainView : UserControl
         config.AppSettings.Settings.Add("UseEmbeddings", isChecked.ToString());
         config.Save(ConfigurationSaveMode.Modified);
         ConfigurationManager.RefreshSection("appSettings");
+    }
+
+    private void OnTxtVideoDeviceChanged(object? sender, RoutedEventArgs e)
+    {
+        if (!Init)
+            return;
+
+        var txtVideoDevice = (TextBox)sender!;
+        ((MainViewModel)DataContext!).VideoDevice = txtVideoDevice.Text!;
+
+        // update VideoDevice in configuration file
+        var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+        config.AppSettings.Settings.Remove("VideoDevice");
+        config.AppSettings.Settings.Add("VideoDevice", txtVideoDevice.Text);
+        config.Save(ConfigurationSaveMode.Modified);
+        ConfigurationManager.RefreshSection("appSettings");
+    }
+
+    private void OnTxtVisionModelChanged(object? sender, RoutedEventArgs e)
+    {
+        if (!Init)
+            return;
+
+        var txtVisionModel = (TextBox)sender!;
+        ((MainViewModel)DataContext!).VisionModel = txtVisionModel.Text!;
+
+        // update VisionModel in configuration file
+        var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+        config.AppSettings.Settings.Remove("VisionModel");
+        config.AppSettings.Settings.Add("VisionModel", txtVisionModel.Text);
+        config.Save(ConfigurationSaveMode.Modified);
+        ConfigurationManager.RefreshSection("appSettings");
+    }
+
+    private void OnTxtVisionPromptChanged(object? sender, RoutedEventArgs e)
+    {
+        if (!Init)
+            return;
+
+        var txtVisionPrompt = (TextBox)sender!;
+        ((MainViewModel)DataContext!).VisionPrompt = txtVisionPrompt.Text!;
+
+        // update VisionPrompt in configuration file
+        var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+        config.AppSettings.Settings.Remove("VisionPrompt");
+        config.AppSettings.Settings.Add("VisionPrompt", txtVisionPrompt.Text);
+        config.Save(ConfigurationSaveMode.Modified);
+        ConfigurationManager.RefreshSection("appSettings");
+    }
+
+    private void OnCboVideoDeviceSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (!Init)
+            return;
+
+        var comboBox = (ComboBox)sender!;
+        var selectedItem = (string)comboBox.SelectedItem!;
+        ((MainViewModel)DataContext!).VideoDevice = selectedItem;
+
+        // update VideoDevice in configuration file
+        var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+        config.AppSettings.Settings.Remove("VideoDevice");
+        config.AppSettings.Settings.Add("VideoDevice", selectedItem);
+        config.Save(ConfigurationSaveMode.Modified);
+        ConfigurationManager.RefreshSection("appSettings");
+    }
+
+    private void OnBtnShowCameraClick(object? sender, RoutedEventArgs e)
+    {
+        ((MainViewModel)DataContext!).ShowCameraCommand.Execute(null);
     }
 }

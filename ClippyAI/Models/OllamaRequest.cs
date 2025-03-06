@@ -40,5 +40,6 @@ public class OllamaRequest
     public string? system { get; set; }
     public bool? stream { get; set; }
     public string? keep_alive { get; set; }
+    public string[]? images { get; set; }
     public OllamaModelOptions? options { get; set; }
 }

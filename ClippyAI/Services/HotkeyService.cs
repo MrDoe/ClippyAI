@@ -21,6 +21,7 @@ public class HotkeyService
     private DateTime lastCtrl = DateTime.Now;
     private DateTime lastAlt = DateTime.Now;
     private DateTime lastC = DateTime.Now;
+    private DateTime lastCaret = DateTime.Now;
 
     public HotkeyService(MainWindow window)
     {
@@ -124,6 +125,11 @@ public class HotkeyService
             LastKeys.Add("C");
             lastC = DateTime.Now;
         }
+        else if (e.Key == EvDevKeyCode.KEY_GRAVE && e.Value == EvDevKeyValue.KeyDown)
+        {
+            LastKeys.Add("Caret");
+            lastCaret = DateTime.Now;
+        }
 
         if(LastKeys.Count < 3)
             return;
@@ -131,6 +137,7 @@ public class HotkeyService
         bool foundCtrl = false;
         bool foundAlt = false;
         bool foundC = false;
+        bool foundCaret = false;
 
         // check if [Ctrl]+[Alt]+[C] hotkey is pressed in a row (only in this order)
         for (int i = 0; i < LastKeys.Count; i++)
@@ -146,6 +153,10 @@ public class HotkeyService
             else if (LastKeys[i] == "C" && foundAlt)
             {
                 foundC = true;
+            }
+            else if (LastKeys[i] == "Caret" && foundCtrl)
+            {
+                foundCaret = true;
             }
         }
 
@@ -169,6 +180,30 @@ public class HotkeyService
             {
                 Console.WriteLine($"Failed to execute AskClippy: {ex.Message}");
             }
+        }
+        else if (foundCaret && 
+                DateTime.Now.Subtract(lastCtrl).TotalSeconds < 3 && 
+                DateTime.Now.Subtract(lastCaret).TotalSeconds < 3)
+        {
+            Console.WriteLine("Ctrl + ^ hotkey pressed");
+            LastKeys.Clear();
+
+            // execute relay command CaptureAndAnalyze
+            try
+            {
+                Dispatcher.UIThread.Post(() =>
+                {
+                    DataContext?.CaptureAndAnalyze();
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to execute CaptureAndAnalyze: {ex.Message}");
+            }
+        }
+        else
+        {
+            LastKeys.Clear();
         }
     }
 

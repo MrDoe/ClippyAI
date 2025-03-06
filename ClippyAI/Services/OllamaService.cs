@@ -29,10 +29,24 @@ public static class OllamaService
         Timeout = TimeSpan.FromMinutes(5)
     };
 
-    private static readonly string? url = ConfigurationManager.AppSettings?.Get("OllamaUrl");
-    private static readonly string? system = ConfigurationManager.AppSettings?.Get("System");
-    private static readonly string? connectionString = ConfigurationManager.AppSettings?.Get("PostgreSqlConnection");
-    private static readonly string? pgOllamaUrl = ConfigurationManager.AppSettings?.Get("PostgresOllamaUrl");
+    private static string? url = ConfigurationManager.AppSettings?.Get("OllamaUrl");
+    private static string? system = ConfigurationManager.AppSettings?.Get("System");
+    private static string? connectionString = ConfigurationManager.AppSettings?.Get("PostgreSqlConnection");
+    private static string? pgOllamaUrl = ConfigurationManager.AppSettings?.Get("PostgresOllamaUrl");
+    private static string? videoDevice = ConfigurationManager.AppSettings?.Get("VideoDevice");
+    private static string? visionModel = ConfigurationManager.AppSettings?.Get("VisionModel");
+    private static string? visionPrompt = ConfigurationManager.AppSettings?.Get("VisionPrompt");
+
+    private static void UpdateConfig()
+    {
+        url = ConfigurationManager.AppSettings?.Get("OllamaUrl");
+        system = ConfigurationManager.AppSettings?.Get("System");
+        connectionString = ConfigurationManager.AppSettings?.Get("PostgreSqlConnection");
+        pgOllamaUrl = ConfigurationManager.AppSettings?.Get("PostgresOllamaUrl");
+        videoDevice = ConfigurationManager.AppSettings?.Get("VideoDevice");
+        visionModel = ConfigurationManager.AppSettings?.Get("VisionModel");
+        visionPrompt = ConfigurationManager.AppSettings?.Get("VisionPrompt");
+    }
 
     /// <summary>
     /// Sends a request to the Ollama API.
@@ -293,6 +307,8 @@ public static class OllamaService
     /// <param name="answer">The answer to store.</param>
     public static async Task StoreSqlEmbedding(string task, string clipboard_data, string answer)
     {
+        UpdateConfig();
+        
         await using var conn = new NpgsqlConnection(connectionString);
         await conn.OpenAsync();
         
@@ -338,6 +354,8 @@ public static class OllamaService
     /// <returns>The most similar answers as list of embeddings</returns>
     public static async Task<List<Embedding>> RetrieveAnswersForTask(string task, string clipboard_data, float threshold)
     {
+        UpdateConfig();
+
         await using var conn = new NpgsqlConnection(connectionString);
         await conn.OpenAsync();
 
@@ -381,6 +399,8 @@ public static class OllamaService
     /// <returns>The task.</returns>
     public static void InitializeEmbeddings()
     {
+        UpdateConfig();
+
         if(pgOllamaUrl == null)
         {
             throw new Exception("PostgresOllamaUrl is not set.");
@@ -471,5 +491,54 @@ public static class OllamaService
         var cmd = new NpgsqlCommand("DELETE FROM clippy WHERE id = @id", conn);
         cmd.Parameters.AddWithValue("id", id);
         await cmd.ExecuteNonQueryAsync();
+    }
+
+    /// <summary>
+    /// Analyze an image using the Ollama API.
+    /// </summary>
+    /// <param name="image">The image to analyze.</param>
+    /// <returns>The analysis result.</returns>
+    public static async Task<string> AnalyzeImage(byte[] image)
+    {
+        UpdateConfig();
+
+        OllamaRequest body = new()
+        {
+            images = [Convert.ToBase64String(image)],
+            model = visionModel ?? "llama3.2-vision",
+            prompt = visionPrompt ?? "Detect what you can find in the image. Use markdown to format the text.",
+            stream = false,
+            keep_alive = "5m",
+        };
+
+        // send the request
+        using var response = await client.PostAsync(
+                             url + "/generate",
+                             new StringContent(JsonSerializer.Serialize(body),
+                             Encoding.UTF8,
+                             "application/json")).ConfigureAwait(false);
+
+        if (response.IsSuccessStatusCode)
+        {
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+            using var reader = new StreamReader(responseStream);
+
+            string? line;
+            string fullResponse = "";
+            while ((line = await reader.ReadLineAsync()) != null)
+            {
+                if (!string.IsNullOrWhiteSpace(line))
+                {
+                    var responseObj = JsonSerializer.Deserialize<OllamaResponse>(line);
+                    string? responseText = responseObj?.response;
+                    fullResponse += responseText;
+                }
+            }
+            return fullResponse;
+        }
+        else
+        {
+            throw new Exception($"Request failed with status: {response.StatusCode}.");
+        }
     }
 }

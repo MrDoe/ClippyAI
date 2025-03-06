@@ -12,6 +12,14 @@ using ClippyAI.Models;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia;
 using Avalonia.Controls;
+using Emgu.CV;
+using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
+using System.Linq;
+using DirectShowLib;
+using Avalonia.Media.Imaging;
+using System.IO;
+
 namespace ClippyAI.Views;
 
 public partial class MainViewModel : ViewModelBase
@@ -19,6 +27,7 @@ public partial class MainViewModel : ViewModelBase
     public MainViewModel()
     {
         PopulateTasks();
+        LoadVideoDevices();
     }
 
     public MainWindow? mainWindow;
@@ -97,6 +106,27 @@ public partial class MainViewModel : ViewModelBase
 
     [ObservableProperty]
     private float _responseDistance = 0.0f;
+
+    [ObservableProperty]
+    private string _videoDevice = ConfigurationManager.AppSettings["VideoDevice"] ?? "";
+
+    [ObservableProperty]
+    private string _visionModel = ConfigurationManager.AppSettings["VisionModel"] ?? "llama3.2-vision";
+
+    [ObservableProperty]
+    private string _visionPrompt = ConfigurationManager.AppSettings["VisionPrompt"] ?? "Detect what you can find in the image. Use markdown to format the text.";
+
+    [ObservableProperty]
+    private ObservableCollection<string> _videoDevices = new ObservableCollection<string>();
+
+    [ObservableProperty]
+    private Bitmap? _clipboardImage;
+
+    [ObservableProperty]
+    private bool _isTextInputVisible = true;
+
+    [ObservableProperty]
+    private bool _isImageInputVisible = false;
 
     private bool _lastOutputGenerated = false;
 
@@ -339,15 +369,17 @@ public partial class MainViewModel : ViewModelBase
 
         // Get the clipboard content
         string? newContent;
+        Bitmap? newImage = null;
         try
         {
             newContent = await ClipboardService.GetText();
+            newImage = await ClipboardService.GetImage();
         }
         catch (Exception e)
         {
             if (e is InvalidOperationException)
             {
-                // Ignore the exception if the clipboard does not contain text
+                // Ignore the exception if the clipboard does not contain text or image
                 return;
             }
             else
@@ -375,6 +407,20 @@ public partial class MainViewModel : ViewModelBase
                 initialized = true;
             }
         }
+
+        // Check if the image has changed
+        if (newImage != null && newImage != ClipboardImage)
+        {
+            ClipboardImage = newImage;
+            IsImageInputVisible = true;
+            IsTextInputVisible = false;
+        }
+        else
+        {
+            IsImageInputVisible = false;
+            IsTextInputVisible = true;
+        }
+
         IsBusy = false;
     }
 
@@ -557,5 +603,94 @@ public partial class MainViewModel : ViewModelBase
         }
         hotkeyService = new HotkeyService(mainWindow!);
         await hotkeyService.SetupHotkeyDevice();
+    }
+
+    [RelayCommand]
+    public async Task CaptureAndAnalyze()
+    {
+        try
+        {
+            byte[] frame;
+
+            // Check if there is an image in the clipboard
+            if (ClipboardImage != null)
+            {
+                using var ms = new MemoryStream();
+                ClipboardImage.Save(ms);
+                frame = ms.ToArray();
+            }
+            else
+            {
+                // Capture a frame from the webcam
+                frame = CaptureFrame();
+            }
+
+            // Send the frame to Ollama for analysis
+            var analysisResult = await OllamaService.AnalyzeImage(frame);
+
+            // Store the analysis result in the clipboard
+            await ClipboardService.SetText(analysisResult);
+            Output = analysisResult;
+            mainWindow!.ShowNotification("ClippyAI", analysisResult, false, true);
+        }
+        catch (Exception ex)
+        {
+            ErrorMessages?.Add(ex.Message);
+            ShowErrorMessage(ex.Message);
+        }
+    }
+
+    private static byte[] CaptureFrame()
+    {
+        using var capture = new VideoCapture(0, VideoCapture.API.V4L2);
+        capture.Set(CapProp.FrameWidth, 640);
+        capture.Set(CapProp.FrameHeight, 480);
+        
+        if (!capture.IsOpened)
+        {
+            throw new Exception("Could not open video device");
+        }
+
+        using var frame = new Mat();
+        capture.Read(frame);
+        if (frame.IsEmpty)
+        {
+            throw new Exception("Failed to capture image");
+        }
+
+        return frame.ToImage<Bgr, byte>().ToJpegData();
+    }
+
+    private void LoadVideoDevices()
+    {
+        var devices = new List<string>();
+        // Platform-independent way to get video devices
+        if (OperatingSystem.IsWindows())
+        {
+            // Windows-specific code to get video devices
+            var systemDeviceEnum = Array.Empty<DsDevice>();
+            systemDeviceEnum = DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice);
+            devices.AddRange(systemDeviceEnum.Select(device => device.Name));
+        }
+        else if (OperatingSystem.IsLinux() || OperatingSystem.IsMacOS())
+        {
+            // Unix-based systems code to get video devices
+            for (int i = 0; i < 10; ++i)
+            {
+                var devicePath = $"/dev/video{i}";
+                if (File.Exists(devicePath))
+                {
+                    devices.Add(devicePath);
+                }
+            }
+        }
+        VideoDevices = [.. devices];
+    }
+
+    [RelayCommand]
+    public void ShowCamera()
+    {
+        var cameraWindow = new CameraWindow();
+        cameraWindow.Show();
     }
 }
