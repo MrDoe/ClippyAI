@@ -640,9 +640,22 @@ public partial class MainViewModel : ViewModelBase
         }
     }
 
-    private static byte[] CaptureFrame()
+    private byte[] CaptureFrame()
     {
-        using var capture = new VideoCapture(0, VideoCapture.API.V4L2);
+        VideoCapture capture;
+
+        // check if Linux
+        if (OperatingSystem.IsLinux())
+        {
+            // Use V4L2 API for Linux
+            capture = new VideoCapture(VideoDevice, VideoCapture.API.V4L2);
+        }
+        else
+        {
+            // Use DirectShow API for Windows
+            capture = new VideoCapture(VideoDevice, VideoCapture.API.DShow);
+        }
+       
         capture.Set(CapProp.FrameWidth, 640);
         capture.Set(CapProp.FrameHeight, 480);
         

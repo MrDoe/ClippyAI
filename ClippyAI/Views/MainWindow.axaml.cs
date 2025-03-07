@@ -98,7 +98,7 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         Console.WriteLine("Analyze video hotkey pressed");
 
         // execute relay command AnalyzeVideo
-        await ((MainViewModel)DataContext!).AnalyzeVideo(new CancellationToken());
+        await ((MainViewModel)DataContext!).CaptureAndAnalyze();
         e.Handled = true;
     }
 #endif
