@@ -5,22 +5,35 @@ using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using System;
+using System.Configuration;
 using System.Threading.Tasks;
 
 namespace ClippyAI.Views
 {
     public partial class CameraWindow : Window
     {
-        private VideoCapture _capture;
-        private bool _isCapturing;
+        private VideoCapture Capture;
+        private string VideoDevice = ConfigurationManager.AppSettings["VideoDevice"] ?? "";
+        private bool IsCapturing;
 
         public CameraWindow()
         {
             InitializeComponent();
-            _capture = new VideoCapture(0, VideoCapture.API.V4L2);
-            _capture.Set(CapProp.FrameWidth, 640);
-            _capture.Set(CapProp.FrameHeight, 480);
-            _isCapturing = true;
+
+            if (OperatingSystem.IsLinux())
+            {
+                // Use V4L2 API for Linux
+                Capture = new VideoCapture(VideoDevice, VideoCapture.API.V4L2);
+            }
+            else
+            {
+                // Use DirectShow API for Windows
+                // TODO: Add a way to select the camera device
+                Capture = new VideoCapture(0, VideoCapture.API.DShow);
+            }
+            Capture.Set(CapProp.FrameWidth, 640);
+            Capture.Set(CapProp.FrameHeight, 480);
+            IsCapturing = true;
             Task.Run(CaptureLoop);
         }
 
@@ -31,39 +44,52 @@ namespace ClippyAI.Views
 
         private async Task CaptureLoop()
         {
-            while (_isCapturing)
+            while (IsCapturing)
             {
-                using var frame = new Mat();
-                _capture.Read(frame);
-                if (!frame.IsEmpty)
+                try
                 {
-                    Emgu.CV.Image<Bgr, byte> image = frame.ToImage<Bgr, byte>();
-                    
-                    // convert Emgu.CV.Image to Avalonia.Media.Imaging.Bitmap
-                    // there is no .ToBitmap() or similar method in Emgu.CV
-                    // so we have to convert it by other means
-                    
-                    byte[] jpgImage = image.ToJpegData();
-                    using var ms = new System.IO.MemoryStream(jpgImage);
-                    var bitmap = new Avalonia.Media.Imaging.Bitmap(ms);
-
-                    await Dispatcher.UIThread.InvokeAsync(() =>
+                    using var frame = new Mat();
+                    Capture.Read(frame);
+                    if (!frame.IsEmpty)
                     {
-                        var imgCamera = this.FindControl<Image>("imgCamera");
-                        if(imgCamera != null)
+                        // Process image data in background thread
+                        Emgu.CV.Image<Bgr, byte> image = frame.ToImage<Bgr, byte>();
+                        byte[] jpgImage = image.ToJpegData();
+
+                        // Move all UI operations including bitmap creation to the UI thread
+                        await Dispatcher.UIThread.InvokeAsync(() =>
                         {
-                            imgCamera.Source = bitmap;
-                        }
-                    });
+                            try
+                            {
+                                using var ms = new System.IO.MemoryStream(jpgImage);
+                                var bitmap = new Avalonia.Media.Imaging.Bitmap(ms);
+
+                                var imgCamera = this.FindControl<Image>("imgCamera");
+                                if (imgCamera != null)
+                                {
+                                    imgCamera.Source = bitmap;
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"UI update error: {ex.Message}");
+                            }
+                        });
+                    }
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Capture error: {ex.Message}");
+                }
+
                 await Task.Delay(30);
             }
         }
 
         protected override void OnClosed(EventArgs e)
         {
-            _isCapturing = false;
-            _capture.Dispose();
+            IsCapturing = false;
+            Capture.Dispose();
             base.OnClosed(e);
         }
     }

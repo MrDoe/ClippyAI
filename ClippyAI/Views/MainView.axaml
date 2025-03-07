@@ -85,12 +85,17 @@
             <Button Content="Analyze Image" 
                 Command="{Binding CaptureAndAnalyzeCommand}"
                 HorizontalAlignment="Left" Margin="10 10 0 0"
-                ToolTip.Tip="Capture a webcam image and analyze it" />
+                ToolTip.Tip="Analyze image in the clipboard or from webcam feed" />
 
-            <Button Content="Show Camera" 
+            <Button Content="View Webcam" 
                 Command="{Binding ShowCameraCommand}"
                 HorizontalAlignment="Left" Margin="10 10 0 0"
-                ToolTip.Tip="Show the webcam video capture stream" />
+                ToolTip.Tip="Show the webcam video feed" />
+
+            <Button Content="Capture Screenshot" 
+                Command="{Binding CaptureScreenshotCommand}"
+                HorizontalAlignment="Left" Margin="10 10 0 0"
+                ToolTip.Tip="Capture a screenshot" IsVisible="false" />
         </StackPanel>
 
         <!-- Output -->

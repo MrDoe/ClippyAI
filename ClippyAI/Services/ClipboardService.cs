@@ -62,7 +62,7 @@ public static class ClipboardService
 
         // Check if the clipboard contains image data
         var formats = await clipboard.GetFormatsAsync();
-        if (!formats.Contains("image/png") && !formats.Contains("PNG"))
+        if (!formats.Contains("image") && !formats.Contains("PNG"))
             return null;
 
         // Get the image data from the clipboard

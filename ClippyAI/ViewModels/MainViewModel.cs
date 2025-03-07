@@ -4,14 +4,12 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ClippyAI.Services;
-using ClippyAI.Views;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Collections.Generic;
 using ClippyAI.Models;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia;
-using Avalonia.Controls;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
@@ -19,7 +17,6 @@ using System.Linq;
 using DirectShowLib;
 using Avalonia.Media.Imaging;
 using System.IO;
-
 namespace ClippyAI.Views;
 
 public partial class MainViewModel : ViewModelBase
@@ -117,7 +114,7 @@ public partial class MainViewModel : ViewModelBase
     private string _visionPrompt = ConfigurationManager.AppSettings["VisionPrompt"] ?? "Detect what you can find in the image. Use markdown to format the text.";
 
     [ObservableProperty]
-    private ObservableCollection<string> _videoDevices = new ObservableCollection<string>();
+    private ObservableCollection<string> _videoDevices = [];
 
     [ObservableProperty]
     private Bitmap? _clipboardImage;
@@ -705,5 +702,11 @@ public partial class MainViewModel : ViewModelBase
     {
         var cameraWindow = new CameraWindow();
         cameraWindow.Show();
+    }
+
+    [RelayCommand]
+    public void CaptureScreenshot()
+    {
+        throw new NotImplementedException("This feature is not implemented yet.");
     }
 }
