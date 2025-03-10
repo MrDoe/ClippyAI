@@ -225,4 +225,7 @@
     <data name="PostgresOllamaUrl" xml:space="preserve">
         <value>URL de Ollama Postgres:</value>
     </data>
+    <data name="AnalyzeImage" xml:space="preserve">
+        <value>Analizar imagen</value>
+    </data>
 </root>

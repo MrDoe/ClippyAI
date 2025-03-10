@@ -452,6 +452,12 @@ public partial class MainViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    public void RefreshModels()
+    {
+        ModelItems = OllamaService.GetModels();
+    }
+
+    [RelayCommand]
     public async Task DeleteModel()
     {
         // confirm deletion
@@ -605,6 +611,17 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     public async Task CaptureAndAnalyze()
     {
+        // show notification to the user
+        if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            var mainWindow = (MainWindow)desktop.MainWindow!;
+            mainWindow!.ShowNotification("ClippyAI", Resources.Resources.AnalyzeImage, true, false);
+        }
+        else
+        {
+            throw new NullReferenceException("Missing MainWindow instance.");
+        }
+
         try
         {
             byte[] frame;
@@ -641,17 +658,41 @@ public partial class MainViewModel : ViewModelBase
     {
         VideoCapture capture;
 
-        // check if Linux
         if (OperatingSystem.IsLinux())
         {
             // Use V4L2 API for Linux
             capture = new VideoCapture(VideoDevice, VideoCapture.API.V4L2);
         }
+        else if(OperatingSystem.IsWindows()) // Use DirectShow API for Windows
+        {
+            // get the number of the video device from its name
+            if (string.IsNullOrEmpty(VideoDevice))
+            {
+                VideoDevice = "0"; // default to the first camera
+            }
+            
+            // Try to find the device number by name
+            int deviceNumber;
+            if (!int.TryParse(VideoDevice, out deviceNumber))
+            {
+                // If the device name is not a number, try to find it by name
+                var devices = new System.Collections.Generic.List<string>();
+                var systemDeviceEnum = DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice);
+                foreach (var device in systemDeviceEnum)
+                {
+                    devices.Add(device.Name);
+                }
+
+                deviceNumber = Array.IndexOf(devices.ToArray(), VideoDevice);
+            }
+            capture = new VideoCapture(deviceNumber, VideoCapture.API.DShow);
+        }
         else
         {
-            // Use DirectShow API for Windows
-            capture = new VideoCapture(VideoDevice, VideoCapture.API.DShow);
+            // Use the default API for other platforms
+            capture = new VideoCapture(VideoDevice);
         }
+
        
         capture.Set(CapProp.FrameWidth, 640);
         capture.Set(CapProp.FrameHeight, 480);
@@ -695,6 +736,12 @@ public partial class MainViewModel : ViewModelBase
             }
         }
         VideoDevices = [.. devices];
+    }
+
+    [RelayCommand]
+    public void RefreshVideoDevices()
+    {
+        LoadVideoDevices();
     }
 
     [RelayCommand]

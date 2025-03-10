@@ -21,7 +21,7 @@ public class HotkeyService
     private DateTime lastCtrl = DateTime.Now;
     private DateTime lastAlt = DateTime.Now;
     private DateTime lastC = DateTime.Now;
-    private DateTime lastCaret = DateTime.Now;
+    private DateTime lastA = DateTime.Now;
 
     public HotkeyService(MainWindow window)
     {
@@ -125,10 +125,10 @@ public class HotkeyService
             LastKeys.Add("C");
             lastC = DateTime.Now;
         }
-        else if (e.Key == EvDevKeyCode.KEY_GRAVE && e.Value == EvDevKeyValue.KeyDown)
+        else if (e.Key == EvDevKeyCode.KEY_A && e.Value == EvDevKeyValue.KeyDown)
         {
-            LastKeys.Add("Caret");
-            lastCaret = DateTime.Now;
+            LastKeys.Add("A");
+            lastA = DateTime.Now;
         }
 
         if(LastKeys.Count < 3)
@@ -137,7 +137,7 @@ public class HotkeyService
         bool foundCtrl = false;
         bool foundAlt = false;
         bool foundC = false;
-        bool foundCaret = false;
+        bool foundA = false;
 
         // check if [Ctrl]+[Alt]+[C] hotkey is pressed in a row (only in this order)
         for (int i = 0; i < LastKeys.Count; i++)
@@ -154,9 +154,9 @@ public class HotkeyService
             {
                 foundC = true;
             }
-            else if (LastKeys[i] == "Caret" && foundCtrl)
+            else if (LastKeys[i] == "A" && foundAlt)
             {
-                foundCaret = true;
+                foundA = true; // updated from foundA to foundA
             }
         }
 
@@ -181,11 +181,12 @@ public class HotkeyService
                 Console.WriteLine($"Failed to execute AskClippy: {ex.Message}");
             }
         }
-        else if (foundCaret && 
+        else if (foundA && 
                 DateTime.Now.Subtract(lastCtrl).TotalSeconds < 3 && 
-                DateTime.Now.Subtract(lastCaret).TotalSeconds < 3)
+                DateTime.Now.Subtract(lastAlt).TotalSeconds < 3 && 
+                DateTime.Now.Subtract(lastA).TotalSeconds < 3)
         {
-            Console.WriteLine("Ctrl + ^ hotkey pressed");
+            Console.WriteLine("Ctrl + Alt + A hotkey pressed");
             LastKeys.Clear();
 
             // execute relay command CaptureAndAnalyze

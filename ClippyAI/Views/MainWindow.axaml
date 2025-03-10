@@ -6,7 +6,7 @@
     xmlns:views="clr-namespace:ClippyAI.Views"
     xmlns:assets="clr-namespace:ClippyAI.Resources"
     mc:Ignorable="d"
-    Width="420"
+    Width="510"
     x:Class="ClippyAI.Views.MainWindow"
     Icon="avares://ClippyAI/Assets/bulb.png"
     Title="ClippyAI"

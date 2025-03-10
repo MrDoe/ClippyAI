@@ -74,8 +74,8 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
             HotkeyManager.Current.AddOrReplace("Ctrl+Alt+C", 
                 System.Windows.Input.Key.C, ModifierKeys.Control | ModifierKeys.Alt, 
                 OnHotkeyHandler);
-            HotkeyManager.Current.AddOrReplace("Ctrl+Caret", 
-                System.Windows.Input.Key.Oem6, ModifierKeys.Control, 
+            HotkeyManager.Current.AddOrReplace("Ctrl+Alt+A", 
+                System.Windows.Input.Key.A, ModifierKeys.Control | ModifierKeys.Alt,
                 OnAnalyzeVideoHotkeyHandler);
         }
         catch (Exception ex)
@@ -297,5 +297,4 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
             Close();
         }
     }
-
  }

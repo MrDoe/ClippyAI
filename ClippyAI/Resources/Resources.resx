@@ -263,4 +263,7 @@
     <data name="PostgresOllamaUrl" xml:space="preserve">
         <value>Ollama URL for Postgres:</value>
     </data>
+    <data name="AnalyzeImage" xml:space="preserve">
+        <value>Analyze Image</value>
+    </data>
 </root>

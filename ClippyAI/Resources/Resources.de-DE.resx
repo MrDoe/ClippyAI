@@ -211,7 +211,7 @@
     <data name="PullModelSubText" xml:space="preserve">
         <value>Besuchen Sie https://ollama.ai/models, um die verfügbaren Modelle zu sehen.</value>
     </data>
-        <data name="Threshold" xml:space="preserve">
+    <data name="Threshold" xml:space="preserve">
         <value>Schwellwert:</value>
     </data>
     <data name="UseEmbeddings" xml:space="preserve">
@@ -222,5 +222,8 @@
     </data>
     <data name="PostgresOllamaUrl" xml:space="preserve">
         <value>Postgres Ollama-URL:</value>
+    </data>
+    <data name="AnalyzeImage" xml:space="preserve">
+        <value>Analysiere Bild</value>
     </data>
 </root>

@@ -671,5 +671,14 @@ namespace ClippyAI.Resources {
                 return ResourceManager.GetString("Yes", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Analyze image.
+        /// </summary>
+        public static string AnalyzeImage {
+            get {
+                return ResourceManager.GetString("AnalyzeImage", resourceCulture);
+            }
+        }
     }
 }

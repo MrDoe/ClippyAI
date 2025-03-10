@@ -156,12 +156,6 @@ public partial class MainView : UserControl
     {
         if (!Init)
             return;
-
-        // update clipboard content in view model
-        //((MainViewModel)DataContext!).ClipboardContent = txtOutput.Text!;
-
-        // update clipboard content
-        //ClipboardService.SetText(txtOutput.Text!);
     }
 
     private void OnTxtOllamaUrlLostFocus(object? sender, RoutedEventArgs e)
