@@ -62,7 +62,8 @@ after it is copied or cut. The clipboard's content can then be sent along with a
 
 1. Choose a task from the dropdown list.
 2. Copy or cut some text from an application (e.g., email, chat, or document) via [Ctrl]+[C].
-3. Click `Send` or use the keyboard shortcut [Ctrl]+[Alt]+[C] to send the clipboard contents with the task to the local LLM.
+3. Click `Send` or use the keyboard shortcut [Ctrl]+[Alt]+[C] to send the clipboard contents with the task to the local LLM or
+   click `Analyze Image` to send the image in the clipboard or a webcam image to a local vision LLM.
 4. Review or paste ([Ctrl]+[V]) your generated task in the application where you need it.
 
 **Disclaimer**
