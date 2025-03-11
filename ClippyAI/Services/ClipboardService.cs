@@ -43,7 +43,7 @@ public static class ClipboardService
 
         // deny other content than text
         string[] formats = await provider.GetFormatsAsync();
-        if (!formats.Contains("Text"))
+        if (formats == null || !formats.Contains("Text"))
         {
             return null; 
         }
@@ -62,7 +62,7 @@ public static class ClipboardService
 
         // Check if the clipboard contains image data
         var formats = await clipboard.GetFormatsAsync();
-        if (!formats.Contains("image") && !formats.Contains("PNG"))
+        if (formats == null || (!formats.Contains("image") && !formats.Contains("PNG")))
             return null;
 
         // Get the image data from the clipboard

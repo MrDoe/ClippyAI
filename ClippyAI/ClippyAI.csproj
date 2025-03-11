@@ -13,7 +13,7 @@
     <CoreCompileDependsOn>PrepareResources;$(CompileDependsOn)</CoreCompileDependsOn>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
-    <Version>1.1.2</Version>
+    <Version>1.2.1</Version>
     <ApplicationIcon>bulb.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
