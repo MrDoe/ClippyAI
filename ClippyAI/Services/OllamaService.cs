@@ -253,7 +253,7 @@ public static class OllamaService
             ShowNotification("Model pull failed.", false, true);
         }
     }
-    
+
     /// <summary>
     /// Deletes a model from Ollama.
     /// </summary>
@@ -308,10 +308,10 @@ public static class OllamaService
     public static async Task StoreSqlEmbedding(string task, string clipboard_data, string answer)
     {
         UpdateConfig();
-        
+
         await using var conn = new NpgsqlConnection(connectionString);
         await conn.OpenAsync();
-        
+
         clipboard_data = clipboard_data.Trim('\n').Trim();
 
         // check if no similar embeddings exist
@@ -372,13 +372,13 @@ public static class OllamaService
             ai.ollama_embed('nomic-embed-text', @clipboard_data) <= @threshold
         ORDER BY 3
         LIMIT 10", conn);
-        
+
         cmd.Parameters.AddWithValue("task", task);
         cmd.Parameters.AddWithValue("clipboard_data", "search_query: " + clipboard_data);
         cmd.Parameters.AddWithValue("threshold", threshold);
 
         var result = await cmd.ExecuteReaderAsync();
-        
+
         // generate a list of answers
         List<Embedding> answers = [];
         while (await result.ReadAsync())
@@ -401,11 +401,11 @@ public static class OllamaService
     {
         UpdateConfig();
 
-        if(pgOllamaUrl == null)
+        if (pgOllamaUrl == null)
         {
             throw new Exception("PostgresOllamaUrl is not set.");
         }
-        
+
         using var conn = new NpgsqlConnection(connectionString);
         conn.Open();
 
@@ -470,7 +470,7 @@ public static class OllamaService
             var cmd = new NpgsqlCommand("SELECT COUNT(*) FROM clippy", conn);
             count = Convert.ToInt32(await cmd.ExecuteScalarAsync());
         }
-        catch(Exception)
+        catch (Exception)
         {
             return -1;
         }

@@ -35,7 +35,7 @@ public class HotkeyService
             _ => null
         };
 
-        if(Keyboard != null)
+        if (Keyboard != null)
         {
             StartMonitoring();
         }
@@ -77,7 +77,7 @@ public class HotkeyService
 
             // convert to ObservableCollection
             var keyboardNamesCollection = new ObservableCollection<string>(keyboardNames!);
-            
+
             var selectedDeviceName = await InputDialog.Prompt(
                 parentWindow: Window!,
                 title: "Select Keyboard Device",
@@ -131,7 +131,7 @@ public class HotkeyService
             lastA = DateTime.Now;
         }
 
-        if(LastKeys.Count < 3)
+        if (LastKeys.Count < 3)
             return;
 
         bool foundCtrl = false;
@@ -160,9 +160,9 @@ public class HotkeyService
             }
         }
 
-        if (foundCtrl && foundAlt && foundC && 
+        if (foundCtrl && foundAlt && foundC &&
             DateTime.Now.Subtract(lastCtrl).TotalSeconds < 3 &&
-            DateTime.Now.Subtract(lastAlt).TotalSeconds < 3 && 
+            DateTime.Now.Subtract(lastAlt).TotalSeconds < 3 &&
             DateTime.Now.Subtract(lastC).TotalSeconds < 3)
         {
             Console.WriteLine("Hotkey pressed");
@@ -181,9 +181,9 @@ public class HotkeyService
                 Console.WriteLine($"Failed to execute AskClippy: {ex.Message}");
             }
         }
-        else if (foundA && 
-                DateTime.Now.Subtract(lastCtrl).TotalSeconds < 3 && 
-                DateTime.Now.Subtract(lastAlt).TotalSeconds < 3 && 
+        else if (foundA &&
+                DateTime.Now.Subtract(lastCtrl).TotalSeconds < 3 &&
+                DateTime.Now.Subtract(lastAlt).TotalSeconds < 3 &&
                 DateTime.Now.Subtract(lastA).TotalSeconds < 3)
         {
             Console.WriteLine("Ctrl + Alt + A hotkey pressed");
@@ -218,7 +218,7 @@ public class HotkeyService
             Console.WriteLine("No keyboard device was found.");
             return;
         }
-        
+
         Keyboard.OnKeyEvent -= OnKeyEvent;
         Keyboard.StopMonitoring();
         Keyboard.OnKeyEvent += OnKeyEvent;

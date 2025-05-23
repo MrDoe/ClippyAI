@@ -663,14 +663,14 @@ public partial class MainViewModel : ViewModelBase
             // Use V4L2 API for Linux
             capture = new VideoCapture(VideoDevice, VideoCapture.API.V4L2);
         }
-        else if(OperatingSystem.IsWindows()) // Use DirectShow API for Windows
+        else if (OperatingSystem.IsWindows()) // Use DirectShow API for Windows
         {
             // get the number of the video device from its name
             if (string.IsNullOrEmpty(VideoDevice))
             {
                 VideoDevice = "0"; // default to the first camera
             }
-            
+
             // Try to find the device number by name
             int deviceNumber;
             if (!int.TryParse(VideoDevice, out deviceNumber))
@@ -693,10 +693,10 @@ public partial class MainViewModel : ViewModelBase
             capture = new VideoCapture(VideoDevice);
         }
 
-       
+
         capture.Set(CapProp.FrameWidth, 640);
         capture.Set(CapProp.FrameHeight, 480);
-        
+
         if (!capture.IsOpened)
         {
             throw new Exception("Could not open video device");

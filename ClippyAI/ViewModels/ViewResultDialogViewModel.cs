@@ -25,7 +25,7 @@ public partial class ViewResultDialogViewModel : ObservableObject
         if (Avalonia.Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.Windows.FirstOrDefault(w => w is ViewResultDialog)?.Close();
-            
+
             // hide main window if it's minimized
             if (desktop.MainWindow!.WindowState == Avalonia.Controls.WindowState.Minimized)
             {

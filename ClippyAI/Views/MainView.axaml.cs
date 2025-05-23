@@ -57,7 +57,7 @@ public partial class MainView : UserControl
         var txtOutput = this.FindControl<TextBox>("txtOutput");
         if (txtOutput != null)
             txtOutput.TextChanged += OnTxtClipboardContentChanged;
-        
+
         // add event handler for PostgreSqlConnection text changed
         var txtPostgreSqlConnection = this.FindControl<TextBox>("txtPostgreConnection");
         if (txtPostgreSqlConnection != null)
@@ -104,15 +104,15 @@ public partial class MainView : UserControl
     }
 
     private async void MainView_Loaded(object? sender, RoutedEventArgs e)
-    {        
+    {
         Init = true;
 
-        if(Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             ((MainViewModel)DataContext!).mainWindow = (MainWindow)desktop.MainWindow!;
 
         // set embeddings count
         int embeddingsCount = await OllamaService.GetEmbeddingsCount();
-        if(embeddingsCount >= 0)
+        if (embeddingsCount >= 0)
             ((MainViewModel)DataContext!).EmbeddingsCount = embeddingsCount;
 
         // Start monitoring clipboard content
@@ -146,9 +146,9 @@ public partial class MainView : UserControl
 
     private void OnTxtOllamaUrlTextChanged(object? sender, RoutedEventArgs e)
     {
-         if (!Init)
+        if (!Init)
             return;
-        
+
         UrlHasChanged = true;
     }
 
@@ -193,7 +193,7 @@ public partial class MainView : UserControl
             command = "\"" + fullPath + "\" \"" + entryAssemblyPath + "\"";
             command = $"/C \"{command}\"";
         }
-        
+
         if (System.Environment.OSVersion.Platform == System.PlatformID.Unix)
         {
             fileName = "/bin/bash";

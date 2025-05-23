@@ -70,8 +70,8 @@ public partial class InputDialog : Window
             _isInputRequired = isRequired,
             Title = title
         };
-        
-        if(comboBoxItems != null)
+
+        if (comboBoxItems != null)
         {
             // Hide the text box and show the combo box
             inputDialog.txtBox.IsVisible = false;
@@ -116,18 +116,18 @@ public partial class InputDialog : Window
     {
         string? value;
 
-        if(TextBoxVisible)
+        if (TextBoxVisible)
         {
-            value = string.IsNullOrEmpty(txtBox.Text)? null : txtBox.Text;
+            value = string.IsNullOrEmpty(txtBox.Text) ? null : txtBox.Text;
         }
-        else if(ComboBoxVisible)
+        else if (ComboBoxVisible)
         {
             value = cboInput.SelectedValue!.ToString();
-            value = string.IsNullOrEmpty(value)? null : value;
+            value = string.IsNullOrEmpty(value) ? null : value;
         }
         else
             value = ClippyAI.Resources.Resources.Yes;
-        
+
         if (_isInputRequired && string.IsNullOrEmpty(value))
         {
             return;

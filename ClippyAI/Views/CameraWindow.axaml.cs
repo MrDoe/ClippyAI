@@ -25,14 +25,14 @@ public partial class CameraWindow : Window
             // Use V4L2 API for Linux
             Capture = new VideoCapture(VideoDevice, VideoCapture.API.V4L2);
         }
-        else if(OperatingSystem.IsWindows()) // Use DirectShow API for Windows
+        else if (OperatingSystem.IsWindows()) // Use DirectShow API for Windows
         {
             // get the number of the video device from its name
             if (string.IsNullOrEmpty(VideoDevice))
             {
                 VideoDevice = "0"; // default to the first camera
             }
-            
+
             // Try to find the device number by name
             int deviceNumber;
             if (!int.TryParse(VideoDevice, out deviceNumber))

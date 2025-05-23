@@ -107,13 +107,13 @@ public partial class App : Application
             _trayIcon.IsVisible = true;
 
             // initialize the Ollama Embedding Service
-            if(ConfigurationManager.AppSettings["UseEmbeddings"] == "True")
+            if (ConfigurationManager.AppSettings["UseEmbeddings"] == "True")
             {
                 try
                 {
                     OllamaService.InitializeEmbeddings();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     _mainWindow.ShowNotification("ClippyAI", ex.Message, false, true);
                 }

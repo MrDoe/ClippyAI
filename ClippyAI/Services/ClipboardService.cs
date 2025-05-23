@@ -45,7 +45,7 @@ public static class ClipboardService
         string[] formats = await provider.GetFormatsAsync();
         if (formats == null || !formats.Contains("Text"))
         {
-            return null; 
+            return null;
         }
         return await provider.GetTextAsync();
     }
@@ -77,7 +77,7 @@ public static class ClipboardService
         data ??= await clipboard.GetDataAsync("image/webp");
         data ??= await clipboard.GetDataAsync("image/ico");
         data ??= await clipboard.GetDataAsync("image/icon");
-        if(data == null)
+        if (data == null)
             return null;
         else if (data is byte[] imageData)
         {

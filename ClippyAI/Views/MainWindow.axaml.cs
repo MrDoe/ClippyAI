@@ -34,7 +34,7 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         get => base.Title!;
         set => base.Title = value;
     }
-    
+
     private void InitializeComponent()
     {
         AvaloniaXamlLoader.Load(this);
@@ -61,7 +61,7 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
 #if WINDOWS        
         RegisterHotkeyWindows();
 #elif LINUX
-        if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             RegisterHotkeyLinux();
 #endif
     }
@@ -139,15 +139,15 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         Height = screenSize.Height;
         Position = new PixelPoint(0, 0);
     }
-    
+
     private void MainWindow_PropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
         // set output to ClipboardService.LastResponse
         if (DataContext is MainViewModel viewModel)
         {
-            if(!string.IsNullOrEmpty(ClipboardService.LastInput))
+            if (!string.IsNullOrEmpty(ClipboardService.LastInput))
                 viewModel.Input = ClipboardService.LastInput;
-            if(!string.IsNullOrEmpty(ClipboardService.LastResponse))
+            if (!string.IsNullOrEmpty(ClipboardService.LastResponse))
                 viewModel.Output = ClipboardService.LastResponse;
         }
 
@@ -297,4 +297,4 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
             Close();
         }
     }
- }
+}
