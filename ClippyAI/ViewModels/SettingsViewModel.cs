@@ -6,19 +6,22 @@ namespace ClippyAI.ViewModels
     public partial class SettingsViewModel : ObservableObject
     {
         [ObservableProperty]
-        private string _sshServerUrl = ConfigurationManager.AppSettings["SSHServerUrl"] ?? string.Empty;
+        private string _sSHServerUrl = ConfigurationManager.AppSettings["SSHServerUrl"] ?? string.Empty;
 
         [ObservableProperty]
-        private string _sshPort = ConfigurationManager.AppSettings["SSHPort"] ?? string.Empty;
+        private string _sSHPort = ConfigurationManager.AppSettings["SSHPort"] ?? string.Empty;
 
         [ObservableProperty]
-        private string _sshLocalTunnel = ConfigurationManager.AppSettings["SSHLocalTunnel"] ?? string.Empty;
+        private string _sSHLocalTunnel = ConfigurationManager.AppSettings["SSHLocalTunnel"] ?? string.Empty;
 
         [ObservableProperty]
-        private string _sshRemoteTunnel = ConfigurationManager.AppSettings["SSHRemoteTunnel"] ?? string.Empty;
+        private string _sSHRemoteTunnel = ConfigurationManager.AppSettings["SSHRemoteTunnel"] ?? string.Empty;
 
         [ObservableProperty]
-        private string _sshPublicKey = ConfigurationManager.AppSettings["SSHPublicKey"] ?? string.Empty;
+        private string _sSHPublicKey = ConfigurationManager.AppSettings["SSHPublicKey"] ?? string.Empty;
+
+        [ObservableProperty]
+        private bool _sSHTunnel = bool.Parse(ConfigurationManager.AppSettings["SSHTunnel"] ?? "false");
 
         public void SaveSettings()
         {
