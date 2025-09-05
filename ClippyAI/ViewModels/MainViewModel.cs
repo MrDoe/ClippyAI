@@ -230,7 +230,7 @@ public partial class MainViewModel : ViewModelBase
                 }
             }
 
-            response = await OllamaService.SendRequest(Input!,
+            response = await OllamaService.SendRequestForTask(Input!,
                                                        task,
                                                        model,
                                                        _askClippyCts.Token);

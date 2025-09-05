@@ -49,26 +49,90 @@ public static class OllamaService
     }
 
     /// <summary>
+    /// Gets task-specific configuration from the database if available, otherwise returns null.
+    /// </summary>
+    /// <param name="taskName">The name of the task to look up configuration for.</param>
+    /// <returns>TaskConfiguration object if found, null otherwise.</returns>
+    public static TaskConfiguration? GetTaskConfiguration(string taskName)
+    {
+        try
+        {
+            return ConfigurationService.GetTaskConfiguration(taskName);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error getting task configuration: {ex.Message}");
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Sends a request to the Ollama API using task-specific configuration if available.
+    /// </summary>
+    /// <param name="input">The clipboard data to send.</param>
+    /// <param name="task">The task to perform.</param>
+    /// <param name="model">The model to use.</param>
+    /// <param name="token">The cancellation token.</param>
+    public static async Task<string?> SendRequestForTask(string input, string task,
+                                                         string model, CancellationToken token = default)
+    {
+        // Try to find a task configuration that matches
+        var taskConfig = GetTaskConfiguration(task);
+        return await SendRequestWithConfig(input, task, model, taskConfig, token);
+    }
+
+    /// <summary>
     /// Sends a request to the Ollama API.
     /// </summary>
     /// <param name="input">The clipboard data to send.</param>
     /// <param name="task">The task to perform.</param>
-    /// <param name="typeOutput">Whether to simulate typing the output.</param>
+    /// <param name="model">The model to use.</param>
     /// <param name="token">The cancellation token.</param>
     public static async Task<string?> SendRequest(string input, string task,
                                                   string model, CancellationToken token = default)
     {
+        return await SendRequestWithConfig(input, task, model, null, token);
+    }
+
+    /// <summary>
+    /// Sends a request to the Ollama API with enhanced configuration options.
+    /// </summary>
+    /// <param name="input">The clipboard data to send.</param>
+    /// <param name="task">The task to perform.</param>
+    /// <param name="model">The model to use.</param>
+    /// <param name="taskConfig">Optional task-specific configuration. If null, uses default config.</param>
+    /// <param name="token">The cancellation token.</param>
+    public static async Task<string?> SendRequestWithConfig(string input, string task,
+                                                           string model, TaskConfiguration? taskConfig = null, 
+                                                           CancellationToken token = default)
+    {
         string? fullResponse = null;
+        
+        // Load advanced configuration options
+        var temperature = taskConfig?.Temperature ?? Convert.ToDouble(ConfigurationManager.AppSettings["Temperature"] ?? "0.8");
+        var maxLength = taskConfig?.MaxLength ?? Convert.ToInt32(ConfigurationManager.AppSettings["MaxLength"] ?? "2048");
+        var topP = taskConfig?.TopP ?? Convert.ToDouble(ConfigurationManager.AppSettings["TopP"] ?? "0.9");
+        var topK = taskConfig?.TopK ?? Convert.ToInt32(ConfigurationManager.AppSettings["TopK"] ?? "40");
+        var repeatPenalty = taskConfig?.RepeatPenalty ?? Convert.ToDouble(ConfigurationManager.AppSettings["RepeatPenalty"] ?? "1.1");
+        var numCtx = taskConfig?.NumCtx ?? Convert.ToInt32(ConfigurationManager.AppSettings["NumCtx"] ?? "2048");
+        var systemPrompt = taskConfig?.SystemPrompt ?? system;
+        var modelToUse = taskConfig?.Model ?? model;
+
         OllamaRequest body = new()
         {
             prompt = $"# TEXT\n\n'''{input.Trim()}'''\n# TASK\n\n'{task.Trim()}'",
-            model = model,
-            system = system,
+            model = modelToUse,
+            system = systemPrompt,
             stream = true,
             keep_alive = "60m",
             options = new OllamaModelOptions()
             {
-                num_ctx = 512
+                temperature = temperature,
+                num_predict = maxLength,
+                top_p = topP,
+                top_k = topK,
+                repeat_penalty = repeatPenalty,
+                num_ctx = numCtx
             }
         };
         Console.WriteLine("Sending request...");
