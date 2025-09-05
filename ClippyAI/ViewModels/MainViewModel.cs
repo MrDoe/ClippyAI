@@ -230,7 +230,7 @@ public partial class MainViewModel : ViewModelBase
                 }
             }
 
-            response = await OllamaService.SendRequest(Input!,
+            response = await OllamaService.SendRequestForTask(Input!,
                                                        task,
                                                        model,
                                                        _askClippyCts.Token);
@@ -755,5 +755,19 @@ public partial class MainViewModel : ViewModelBase
     public void CaptureScreenshot()
     {
         throw new NotImplementedException("This feature is not implemented yet.");
+    }
+
+    [RelayCommand]
+    public async Task OpenConfiguration()
+    {
+        var dialog = new ConfigurationDialog()
+        {
+            DataContext = new ConfigurationDialogViewModel()
+        };
+        
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            await dialog.ShowDialog(desktop.MainWindow!);
+        }
     }
 }

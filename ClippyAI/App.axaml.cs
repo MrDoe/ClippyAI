@@ -65,6 +65,9 @@ public partial class App : Application
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+            // Initialize configuration database
+            ClippyAI.Services.ConfigurationService.InitializeDatabase();
+            
             _mainWindow = new MainWindow { DataContext = new MainViewModel() };
             desktop.MainWindow = _mainWindow;
 

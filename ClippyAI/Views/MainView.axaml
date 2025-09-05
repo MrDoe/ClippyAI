@@ -22,6 +22,11 @@
                 FontSize="16" />
             <Label Content=" - Your AI Companion" HorizontalAlignment="Right" VerticalAlignment="Center"
                 FontSize="14" />
+            <Button Content="⚙️ Config" 
+                Command="{Binding OpenConfigurationCommand}"
+                HorizontalAlignment="Right" VerticalAlignment="Center" 
+                Margin="80 0 0 0"
+                ToolTip.Tip="Open Configuration Dialog" />
         </StackPanel>
         
         <!-- Input -->
