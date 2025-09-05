@@ -1,0 +1,162 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:ClippyAI.Views"
+        x:Class="ClippyAI.Views.ConfigurationDialog"
+        x:DataType="vm:ConfigurationDialogViewModel"
+        Title="Configuration"
+        Width="600" Height="700"
+        WindowStartupLocation="CenterOwner">
+
+    <Grid RowDefinitions="*,Auto">
+        <!-- Main content -->
+        <TabControl Grid.Row="0" Margin="10">
+            
+            <!-- General Settings Tab -->
+            <TabItem Header="General">
+                <ScrollViewer>
+                    <StackPanel Margin="10">
+                        <Label Content="Ollama Settings" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                        
+                        <Label Content="Ollama URL:"/>
+                        <TextBox Text="{Binding OllamaUrl}" Margin="0,0,0,10" 
+                                 ToolTip.Tip="URL for Ollama API"/>
+                        
+                        <Label Content="Default Model:"/>
+                        <TextBox Text="{Binding OllamaModel}" Margin="0,0,0,10"
+                                 ToolTip.Tip="Default Ollama model to use"/>
+                        
+                        <Label Content="Default Language:"/>
+                        <TextBox Text="{Binding DefaultLanguage}" Margin="0,0,0,10"/>
+                        
+                        <CheckBox IsChecked="{Binding AutoMode}" Content="Auto Mode" Margin="0,0,0,10"
+                                  ToolTip.Tip="Enable automatic mode"/>
+                        
+                        <Label Content="Default Task:"/>
+                        <TextBox Text="{Binding DefaultTask}" Height="60" TextWrapping="Wrap"
+                                 AcceptsReturn="True" Margin="0,0,0,10"
+                                 ToolTip.Tip="Default task description"/>
+                        
+                        <Label Content="System Prompt:"/>
+                        <TextBox Text="{Binding SystemPrompt}" Height="120" TextWrapping="Wrap"
+                                 AcceptsReturn="True" Margin="0,0,0,10"
+                                 ToolTip.Tip="System prompt for the AI model"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Advanced Settings Tab -->
+            <TabItem Header="Advanced">
+                <ScrollViewer>
+                    <StackPanel Margin="10">
+                        <Label Content="Model Parameters" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                        
+                        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                            <Label Grid.Row="0" Grid.Column="0" Content="Temperature:" VerticalAlignment="Center"/>
+                            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+                                <Slider Value="{Binding Temperature}" Minimum="0" Maximum="2" Width="150" 
+                                        TickFrequency="0.1" ToolTip.Tip="Controls randomness in output"/>
+                                <TextBox Text="{Binding Temperature}" Width="60" Margin="10,0,0,0"/>
+                            </StackPanel>
+                            
+                            <Label Grid.Row="1" Grid.Column="0" Content="Max Length:" VerticalAlignment="Center" Margin="0,10,0,0"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MaxLength}" Width="100" 
+                                     HorizontalAlignment="Left" Margin="0,10,0,0"
+                                     ToolTip.Tip="Maximum number of tokens to generate"/>
+                            
+                            <Label Grid.Row="2" Grid.Column="0" Content="Top P:" VerticalAlignment="Center" Margin="0,10,0,0"/>
+                            <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="0,10,0,0">
+                                <Slider Value="{Binding TopP}" Minimum="0" Maximum="1" Width="150" 
+                                        TickFrequency="0.1" ToolTip.Tip="Nucleus sampling parameter"/>
+                                <TextBox Text="{Binding TopP}" Width="60" Margin="10,0,0,0"/>
+                            </StackPanel>
+                            
+                            <Label Grid.Row="3" Grid.Column="0" Content="Top K:" VerticalAlignment="Center" Margin="0,10,0,0"/>
+                            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding TopK}" Width="100" 
+                                     HorizontalAlignment="Left" Margin="0,10,0,0"
+                                     ToolTip.Tip="Top-k sampling parameter"/>
+                            
+                            <Label Grid.Row="4" Grid.Column="0" Content="Repeat Penalty:" VerticalAlignment="Center" Margin="0,10,0,0"/>
+                            <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" Margin="0,10,0,0">
+                                <Slider Value="{Binding RepeatPenalty}" Minimum="0.5" Maximum="2" Width="150" 
+                                        TickFrequency="0.1" ToolTip.Tip="Penalty for repeating tokens"/>
+                                <TextBox Text="{Binding RepeatPenalty}" Width="60" Margin="10,0,0,0"/>
+                            </StackPanel>
+                            
+                            <Label Grid.Row="5" Grid.Column="0" Content="Context Length:" VerticalAlignment="Center" Margin="0,10,0,0"/>
+                            <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding NumCtx}" Width="100" 
+                                     HorizontalAlignment="Left" Margin="0,10,0,0"
+                                     ToolTip.Tip="Context window size"/>
+                        </Grid>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Embeddings Tab -->
+            <TabItem Header="Embeddings">
+                <ScrollViewer>
+                    <StackPanel Margin="10">
+                        <Label Content="Vector Database Settings" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                        
+                        <CheckBox IsChecked="{Binding UseEmbeddings}" Content="Use Embeddings" Margin="0,0,0,10"
+                                  ToolTip.Tip="Enable vector database for faster response retrieval"/>
+                        
+                        <CheckBox IsChecked="{Binding StoreAllResponses}" Content="Store All Responses" Margin="0,0,0,10"
+                                  ToolTip.Tip="Store all AI responses as embeddings"/>
+                        
+                        <Label Content="PostgreSQL Connection String:"/>
+                        <TextBox Text="{Binding PostgreSqlConnection}" Height="60" TextWrapping="Wrap"
+                                 AcceptsReturn="True" Margin="0,0,0,10"
+                                 ToolTip.Tip="PostgreSQL connection string"/>
+                        
+                        <Label Content="PostgreSQL Ollama URL:"/>
+                        <TextBox Text="{Binding PostgresOllamaUrl}" Margin="0,0,0,10"
+                                 ToolTip.Tip="Ollama URL accessible from PostgreSQL"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Vision Tab -->
+            <TabItem Header="Vision">
+                <ScrollViewer>
+                    <StackPanel Margin="10">
+                        <Label Content="Vision Settings" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                        
+                        <Label Content="Vision Model:"/>
+                        <TextBox Text="{Binding VisionModel}" Margin="0,0,0,10"
+                                 ToolTip.Tip="Model to use for image analysis"/>
+                        
+                        <Label Content="Video Device:"/>
+                        <TextBox Text="{Binding VideoDevice}" Margin="0,0,0,10"
+                                 ToolTip.Tip="Video device path (e.g., /dev/video0)"/>
+                        
+                        <Label Content="Vision Prompt:"/>
+                        <TextBox Text="{Binding VisionPrompt}" Height="100" TextWrapping="Wrap"
+                                 AcceptsReturn="True" Margin="0,0,0,10"
+                                 ToolTip.Tip="Default prompt for image analysis"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- System Tab -->
+            <TabItem Header="System">
+                <ScrollViewer>
+                    <StackPanel Margin="10">
+                        <Label Content="System Settings" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                        
+                        <Label Content="Linux Keyboard Device:"/>
+                        <TextBox Text="{Binding LinuxKeyboardDevice}" Margin="0,0,0,10"
+                                 ToolTip.Tip="Linux keyboard device for hotkey handling"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+            <Button Name="SaveButton" Content="Save" Margin="0,0,10,0" 
+                    Width="80" IsDefault="True"/>
+            <Button Name="CancelButton" Content="Cancel" Width="80" 
+                    IsCancel="True"/>
+        </StackPanel>
+    </Grid>
+</Window>

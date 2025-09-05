@@ -756,4 +756,18 @@ public partial class MainViewModel : ViewModelBase
     {
         throw new NotImplementedException("This feature is not implemented yet.");
     }
+
+    [RelayCommand]
+    public async Task OpenConfiguration()
+    {
+        var dialog = new ConfigurationDialog()
+        {
+            DataContext = new ConfigurationDialogViewModel()
+        };
+        
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            await dialog.ShowDialog(desktop.MainWindow!);
+        }
+    }
 }
