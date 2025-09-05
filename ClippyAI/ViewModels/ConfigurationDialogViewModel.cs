@@ -4,6 +4,8 @@ using System.Configuration;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ClippyAI.Models;
+using ClippyAI.Services;
 
 namespace ClippyAI.Views;
 
@@ -69,6 +71,113 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
 
     [ObservableProperty]
     private int _numCtx = Convert.ToInt32(ConfigurationManager.AppSettings["NumCtx"] ?? "2048");
+
+    // Task-specific configurations
+    [ObservableProperty]
+    private ObservableCollection<TaskConfiguration> _taskConfigurations = new();
+
+    [ObservableProperty]
+    private TaskConfiguration? _selectedTaskConfiguration;
+
+    [ObservableProperty]
+    private string _newTaskName = string.Empty;
+
+    public bool IsTaskSelected => SelectedTaskConfiguration != null;
+
+    partial void OnSelectedTaskConfigurationChanged(TaskConfiguration? value)
+    {
+        OnPropertyChanged(nameof(IsTaskSelected));
+    }
+
+    public ConfigurationDialogViewModel()
+    {
+        LoadTaskConfigurations();
+    }
+
+    private void LoadTaskConfigurations()
+    {
+        try
+        {
+            ConfigurationService.InitializeDatabase();
+            var tasks = ConfigurationService.GetAllTaskConfigurations();
+            TaskConfigurations.Clear();
+            foreach (var task in tasks)
+            {
+                TaskConfigurations.Add(task);
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle error - could show error dialog
+            System.Diagnostics.Debug.WriteLine($"Error loading task configurations: {ex.Message}");
+        }
+    }
+
+    [RelayCommand]
+    private void AddNewTask()
+    {
+        if (string.IsNullOrWhiteSpace(NewTaskName))
+            return;
+
+        var newTask = new TaskConfiguration
+        {
+            TaskName = NewTaskName,
+            SystemPrompt = SystemPrompt,
+            Model = OllamaModel,
+            Temperature = Temperature,
+            MaxLength = MaxLength,
+            TopP = TopP,
+            TopK = TopK,
+            RepeatPenalty = RepeatPenalty,
+            NumCtx = NumCtx
+        };
+
+        try
+        {
+            ConfigurationService.SaveTaskConfiguration(newTask);
+            TaskConfigurations.Add(newTask);
+            SelectedTaskConfiguration = newTask;
+            NewTaskName = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error saving task configuration: {ex.Message}");
+        }
+    }
+
+    [RelayCommand]
+    private void DeleteTask()
+    {
+        if (SelectedTaskConfiguration == null)
+            return;
+
+        try
+        {
+            ConfigurationService.DeleteTaskConfiguration(SelectedTaskConfiguration.TaskName);
+            TaskConfigurations.Remove(SelectedTaskConfiguration);
+            SelectedTaskConfiguration = null;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error deleting task configuration: {ex.Message}");
+        }
+    }
+
+    [RelayCommand]
+    private void SaveTaskConfiguration()
+    {
+        if (SelectedTaskConfiguration == null)
+            return;
+
+        try
+        {
+            ConfigurationService.SaveTaskConfiguration(SelectedTaskConfiguration);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error updating task configuration: {ex.Message}");
+        }
+    }
 
     public void Save()
     {

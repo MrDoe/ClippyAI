@@ -149,6 +149,94 @@
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
+
+            <!-- Task Configurations Tab -->
+            <TabItem Header="Tasks">
+                <Grid RowDefinitions="Auto,*,Auto" Margin="10">
+                    <!-- Header -->
+                    <Label Grid.Row="0" Content="Task-Specific Configurations" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                    
+                    <!-- Main content -->
+                    <Grid Grid.Row="1" ColumnDefinitions="250,*">
+                        <!-- Left panel - Task list -->
+                        <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                            <Label Content="Tasks:" FontWeight="Bold" Margin="0,0,0,5"/>
+                            <ListBox ItemsSource="{Binding TaskConfigurations}" 
+                                     SelectedItem="{Binding SelectedTaskConfiguration}"
+                                     Height="300" Margin="0,0,0,10">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding TaskName}" />
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            
+                            <!-- New task -->
+                            <Label Content="New Task Name:"/>
+                            <TextBox Text="{Binding NewTaskName}" Margin="0,0,0,5"/>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="Add" Command="{Binding AddNewTaskCommand}" Margin="0,0,5,0" Width="60"/>
+                                <Button Content="Delete" Command="{Binding DeleteTaskCommand}" Width="60"/>
+                            </StackPanel>
+                        </StackPanel>
+                        
+                        <!-- Right panel - Task details -->
+                        <ScrollViewer Grid.Column="1" IsEnabled="{Binding IsTaskSelected}">
+                            <StackPanel>
+                                <Label Content="Task Configuration" FontWeight="Bold" Margin="0,0,0,10"/>
+                                
+                                <Label Content="Task Name:"/>
+                                <TextBox Text="{Binding SelectedTaskConfiguration.TaskName}" Margin="0,0,0,10" IsReadOnly="True"/>
+                                
+                                <Label Content="System Prompt:"/>
+                                <TextBox Text="{Binding SelectedTaskConfiguration.SystemPrompt}" Height="120" 
+                                         TextWrapping="Wrap" AcceptsReturn="True" Margin="0,0,0,10"/>
+                                
+                                <Label Content="Model:"/>
+                                <TextBox Text="{Binding SelectedTaskConfiguration.Model}" Margin="0,0,0,10"/>
+                                
+                                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+                                    <Label Grid.Row="0" Grid.Column="0" Content="Temperature:"/>
+                                    <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+                                        <Slider Value="{Binding SelectedTaskConfiguration.Temperature}" 
+                                                Minimum="0" Maximum="2" Width="100"/>
+                                        <TextBox Text="{Binding SelectedTaskConfiguration.Temperature}" Width="60" Margin="5,0,0,0"/>
+                                    </StackPanel>
+                                    
+                                    <Label Grid.Row="1" Grid.Column="0" Content="Max Length:" Margin="0,10,0,0"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SelectedTaskConfiguration.MaxLength}" 
+                                             Width="100" HorizontalAlignment="Left" Margin="0,10,0,0"/>
+                                    
+                                    <Label Grid.Row="2" Grid.Column="0" Content="Top P:" Margin="0,10,0,0"/>
+                                    <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="0,10,0,0">
+                                        <Slider Value="{Binding SelectedTaskConfiguration.TopP}" 
+                                                Minimum="0" Maximum="1" Width="100"/>
+                                        <TextBox Text="{Binding SelectedTaskConfiguration.TopP}" Width="60" Margin="5,0,0,0"/>
+                                    </StackPanel>
+                                    
+                                    <Label Grid.Row="3" Grid.Column="0" Content="Top K:" Margin="0,10,0,0"/>
+                                    <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding SelectedTaskConfiguration.TopK}" 
+                                             Width="100" HorizontalAlignment="Left" Margin="0,10,0,0"/>
+                                    
+                                    <Label Grid.Row="4" Grid.Column="0" Content="Repeat Penalty:" Margin="0,10,0,0"/>
+                                    <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" Margin="0,10,0,0">
+                                        <Slider Value="{Binding SelectedTaskConfiguration.RepeatPenalty}" 
+                                                Minimum="0.5" Maximum="2" Width="100"/>
+                                        <TextBox Text="{Binding SelectedTaskConfiguration.RepeatPenalty}" Width="60" Margin="5,0,0,0"/>
+                                    </StackPanel>
+                                    
+                                    <Label Grid.Row="5" Grid.Column="0" Content="Context Length:" Margin="0,10,0,0"/>
+                                    <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding SelectedTaskConfiguration.NumCtx}" 
+                                             Width="100" HorizontalAlignment="Left" Margin="0,10,0,0"/>
+                                </Grid>
+                                
+                                <Button Content="Save Task" Command="{Binding SaveTaskConfigurationCommand}" 
+                                        HorizontalAlignment="Left" Margin="0,20,0,0" Width="100"/>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
+                </Grid>
+            </TabItem>
         </TabControl>
 
         <!-- Buttons -->
