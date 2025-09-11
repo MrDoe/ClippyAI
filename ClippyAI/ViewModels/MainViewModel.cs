@@ -592,7 +592,7 @@ public partial class MainViewModel : ViewModelBase
             }
 
             ++EmbeddingsCount;
-            mainWindow!.ShowNotification("ClippyAI", "Result successfully stored as template in database!", false, false);
+            mainWindow!.ShowNotification("ClippyAI", ClippyAI.Resources.Resources.ResultStoredSuccessfully, false, false);
         }
     }
 

@@ -3,17 +3,18 @@
     x:Class="ClippyAI.Views.ViewResultDialog"
     x:DataType="vm:ViewResultDialogViewModel"
     xmlns:vm="clr-namespace:ClippyAI.Views"
+    xmlns:resources="clr-namespace:ClippyAI.Resources"
     Width="1000"
     Height="500"
     Background="Transparent"
     CanResize="True"
-    Title="ClippyAI Result">
+    Title="{x:Static resources:Resources.ClippyAIResult}">
     <Border CornerRadius="6" BorderBrush="DimGray" Background="#e9333333" BorderThickness="1">
     <StackPanel>
-        <TextBlock Text="Result:" FontSize="20" FontWeight="Bold" Margin="10,10,10,10" />
+        <TextBlock Text="{x:Static resources:Resources.Result}" FontSize="20" FontWeight="Bold" Margin="10,10,10,10" />
         <TextBox Text="{Binding ResultText}" Margin="10,0,20,10" Height="400" Width="950"
             TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" />
-        <Button Content="OK" HorizontalContentAlignment="Center" Command="{Binding CloseCommand}"
+        <Button Content="{x:Static resources:Resources.OK}" HorizontalContentAlignment="Center" Command="{Binding CloseCommand}"
             Width="100" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
     </StackPanel>
     </Border>

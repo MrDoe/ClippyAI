@@ -259,7 +259,7 @@ public static class OllamaService
                 stream = true
             };
 
-            ShowNotification($"Pulling model {modelName}", true, false);
+            ShowNotification(string.Format(ClippyAI.Resources.Resources.PullingModelStatus, modelName), true, false);
 
             response = await client.PostAsync(
                                              $"{url}/pull",
@@ -302,7 +302,7 @@ public static class OllamaService
                         {
                             if (statusUpdate["completed"]?.ToString() == statusUpdate["total"]?.ToString())
                             {
-                                ShowNotification("Model pull completed.", false, false);
+                                ShowNotification(ClippyAI.Resources.Resources.ModelPullCompleted, false, false);
                                 break;
                             }
                         }
@@ -311,12 +311,12 @@ public static class OllamaService
             }
             else
             {
-                ShowNotification("Model pull failed with status: " + response.StatusCode, false, true);
+                ShowNotification(string.Format(ClippyAI.Resources.Resources.ModelPullFailedWithStatus, response.StatusCode), false, true);
             }
         }
         catch (Exception)
         {
-            ShowNotification("Model pull failed.", false, true);
+            ShowNotification(ClippyAI.Resources.Resources.ModelPullFailed, false, true);
         }
     }
 
@@ -342,16 +342,16 @@ public static class OllamaService
 
             if (response.IsSuccessStatusCode)
             {
-                ShowNotification("Model deleted successfully.", false, false);
+                ShowNotification(ClippyAI.Resources.Resources.ModelDeletedSuccessfully, false, false);
             }
             else
             {
-                ShowNotification("Model deletion failed with status: " + response.StatusCode, false, true);
+                ShowNotification(string.Format(ClippyAI.Resources.Resources.ModelDeletionFailedWithStatus, response.StatusCode), false, true);
             }
         }
         catch (Exception)
         {
-            ShowNotification("Model deletion failed.", false, true);
+            ShowNotification(ClippyAI.Resources.Resources.ModelDeletionFailed, false, true);
         }
     }
 
