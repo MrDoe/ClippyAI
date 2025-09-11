@@ -13,6 +13,41 @@ public static class ClipboardService
 {
     public static string LastResponse { get; set; } = string.Empty;
     public static string LastInput { get; set; } = string.Empty;
+    
+    // Cache to avoid unnecessary clipboard API calls
+    private static string[]? _lastFormats = null;
+    private static DateTime _lastFormatsCheck = DateTime.MinValue;
+    private const int FORMATS_CACHE_MS = 100; // Cache formats for 100ms to reduce API calls
+
+    /// <summary>
+    /// Gets the available clipboard formats with caching to reduce API calls.
+    /// </summary>
+    /// <returns>Array of available formats or null if unavailable.</returns>
+    private static async Task<string[]?> GetFormatsWithCache()
+    {
+        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop ||
+            desktop.MainWindow?.Clipboard is not { } provider)
+            return null;
+
+        // Use cached formats if they're recent enough
+        var now = DateTime.UtcNow;
+        if (_lastFormats != null && (now - _lastFormatsCheck).TotalMilliseconds < FORMATS_CACHE_MS)
+        {
+            return _lastFormats;
+        }
+
+        try
+        {
+            _lastFormats = await provider.GetFormatsAsync();
+            _lastFormatsCheck = now;
+            return _lastFormats;
+        }
+        catch
+        {
+            _lastFormats = null;
+            return null;
+        }
+    }
 
     /// <summary>
     /// Sets the text content of the clipboard.
@@ -34,16 +69,15 @@ public static class ClipboardService
     /// Gets the text content of the clipboard.
     /// </summary>
     /// <returns>The text content of the clipboard.</returns>
-
     public static async Task<string?> GetText()
     {
         if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop ||
             desktop.MainWindow?.Clipboard is not { } provider)
             throw new NullReferenceException("Missing Clipboard instance.");
 
-        // deny other content than text
-        string[] formats = await provider.GetFormatsAsync();
-        if (formats == null || !formats.Contains("Text"))
+        // Check formats with caching to reduce API calls
+        string[] formats = await GetFormatsWithCache() ?? [];
+        if (!formats.Contains("Text"))
         {
             return null;
         }
@@ -60,9 +94,9 @@ public static class ClipboardService
             desktop.MainWindow?.Clipboard is not { } clipboard)
             return null;
 
-        // Check if the clipboard contains image data
-        var formats = await clipboard.GetFormatsAsync();
-        if (formats == null || (!formats.Contains("image") && !formats.Contains("PNG")))
+        // Check formats with caching to reduce API calls
+        var formats = await GetFormatsWithCache() ?? [];
+        if (!formats.Contains("image") && !formats.Contains("PNG"))
             return null;
 
         // Get the image data from the clipboard
