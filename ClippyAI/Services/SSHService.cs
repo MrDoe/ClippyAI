@@ -1,5 +1,4 @@
 using Renci.SshNet;
-using System;
 using System.Configuration;
 
 namespace ClippyAI.Services
@@ -11,10 +10,10 @@ namespace ClippyAI.Services
 
         public void Connect()
         {
-            string sshUsername = ConfigurationManager.AppSettings["SSHUsername"] ?? throw new ArgumentNullException("SSHUsername");
-            string sshServerUrl = ConfigurationManager.AppSettings["SSHServerUrl"] ?? throw new ArgumentNullException("SSHServerUrl");
-            int sshPort = int.Parse(ConfigurationManager.AppSettings["SSHPort"] ?? throw new ArgumentNullException("SSHPort"));
-            bool sshTunnel = bool.Parse(ConfigurationManager.AppSettings["SSHTunnel"] ?? throw new ArgumentNullException("SSHTunnel"));
+            string sshUsername = ConfigurationManager.AppSettings["SSHUsername"] ?? "";
+            string sshServerUrl = ConfigurationManager.AppSettings["SSHServerUrl"] ?? "";
+            int sshPort = int.Parse(ConfigurationManager.AppSettings["SSHPort"]?? "0");
+            bool sshTunnel = bool.Parse(ConfigurationManager.AppSettings["SSHTunnel"] ?? "false");
 
             if (!sshTunnel)
                 return;
