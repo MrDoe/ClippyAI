@@ -25,6 +25,7 @@ public partial class App : Application
     }
     private MainWindow? _mainWindow;
     private TrayIcon? _trayIcon;
+    private SSHService? _sshService;
 
     private void TrayIcon_Clicked(object? sender, EventArgs e)
     {
@@ -121,6 +122,10 @@ public partial class App : Application
                     _mainWindow.ShowNotification("ClippyAI", ex.Message, false, true);
                 }
             }
+
+            // Initialize SSHService
+            _sshService = new SSHService();
+            _sshService.Connect();
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewLifetime)
         {

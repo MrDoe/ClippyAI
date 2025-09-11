@@ -62,6 +62,7 @@
     <PackageReference Include="NHotkey.Wpf" Condition="'$(OS)' == 'Windows_NT'" Version="3.0.0" />
     <PackageReference Include="Npgsql" Version="8.0.5" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.1" />
+    <PackageReference Include="SSH.NET" Version="2020.0.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Libs\evdev-sharp\EvDevSharp\EvDevSharp.csproj" />
