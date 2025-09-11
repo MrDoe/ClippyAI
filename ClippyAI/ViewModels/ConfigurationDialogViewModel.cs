@@ -54,9 +54,19 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     [ObservableProperty]
     private string _linuxKeyboardDevice = ConfigurationManager.AppSettings["LinuxKeyboardDevice"] ?? "";
 
+    [ObservableProperty]
+    private string _embeddingModel = ConfigurationManager.AppSettings["EmbeddingModel"] ?? "nomic-embed-text";
+
+    // Collections for dropdowns
+    [ObservableProperty]
+    private ObservableCollection<string> _languageItems = new(new[] { "English", "Deutsch", "Français", "Español", "Italiano", "Português", "中文", "日本語", "한국어", "Русский" });
+
+    [ObservableProperty]
+    private ObservableCollection<string> _availableTasks = new();
+
     // New advanced configuration options
     [ObservableProperty]
-    private double _temperature = Convert.ToDouble(ConfigurationManager.AppSettings["Temperature"] ?? "0.8");
+    private double _temperature = Convert.ToDouble(ConfigurationManager.AppSettings["Temperature"] ?? "1.0");
 
     [ObservableProperty]
     private int _maxLength = Convert.ToInt32(ConfigurationManager.AppSettings["MaxLength"] ?? "2048");
@@ -106,7 +116,17 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     public ConfigurationDialogViewModel()
     {
         LoadTaskConfigurations();
+        PopulateAvailableTasks();
         InitializeCollections();
+    }
+
+    private void PopulateAvailableTasks()
+    {
+        AvailableTasks.Clear();
+        foreach (var task in TaskConfigurations)
+        {
+            AvailableTasks.Add(task.TaskName);
+        }
     }
 
     private async void InitializeCollections()
@@ -127,6 +147,7 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
             {
                 TaskConfigurations.Add(task);
             }
+            PopulateAvailableTasks();
         }
         catch (Exception ex)
         {
@@ -158,6 +179,7 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
         {
             ConfigurationService.SaveTaskConfiguration(newTask);
             TaskConfigurations.Add(newTask);
+            PopulateAvailableTasks();
             SelectedTaskConfiguration = newTask;
             NewTaskName = string.Empty;
         }
@@ -177,6 +199,7 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
         {
             ConfigurationService.DeleteTaskConfiguration(SelectedTaskConfiguration.TaskName);
             TaskConfigurations.Remove(SelectedTaskConfiguration);
+            PopulateAvailableTasks();
             SelectedTaskConfiguration = null;
         }
         catch (Exception ex)
@@ -345,6 +368,7 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
         UpdateConfigValue(config, "RepeatPenalty", RepeatPenalty.ToString());
         UpdateConfigValue(config, "NumCtx", NumCtx.ToString());
         UpdateConfigValue(config, "Threshold", Threshold.ToString());
+        UpdateConfigValue(config, "EmbeddingModel", EmbeddingModel);
 
         config.Save(ConfigurationSaveMode.Modified);
         ConfigurationManager.RefreshSection("appSettings");

@@ -36,6 +36,7 @@ public static class OllamaService
     private static string? videoDevice = ConfigurationManager.AppSettings?.Get("VideoDevice");
     private static string? visionModel = ConfigurationManager.AppSettings?.Get("VisionModel");
     private static string? visionPrompt = ConfigurationManager.AppSettings?.Get("VisionPrompt");
+    private static string? embeddingModel = ConfigurationManager.AppSettings?.Get("EmbeddingModel");
 
     private static void UpdateConfig()
     {
@@ -46,6 +47,7 @@ public static class OllamaService
         videoDevice = ConfigurationManager.AppSettings?.Get("VideoDevice");
         visionModel = ConfigurationManager.AppSettings?.Get("VisionModel");
         visionPrompt = ConfigurationManager.AppSettings?.Get("VisionPrompt");
+        embeddingModel = ConfigurationManager.AppSettings?.Get("EmbeddingModel");
     }
 
     /// <summary>
@@ -383,11 +385,12 @@ public static class OllamaService
             SELECT COUNT(*)
             FROM clippy
             WHERE task = @task
-            AND embedding_clipboard_data <-> ai.ollama_embed('nomic-embed-text', @clipboard_data) <= 1",
+            AND embedding_clipboard_data <-> ai.ollama_embed(@embedding_model, @clipboard_data) <= 1",
         conn);
 
         cmd.Parameters.AddWithValue("task", task);
         cmd.Parameters.AddWithValue("clipboard_data", clipboard_data);
+        cmd.Parameters.AddWithValue("embedding_model", embeddingModel ?? "nomic-embed-text");
 
         var count = Convert.ToInt32(await cmd.ExecuteScalarAsync());
         if (count > 0)
@@ -402,11 +405,12 @@ public static class OllamaService
             VALUES (@task,
                    @clipboard_data,
                    @answer,
-                   ai.ollama_embed('nomic-embed-text', @clipboard_data))", conn);
+                   ai.ollama_embed(@embedding_model, @clipboard_data))", conn);
 
         cmd.Parameters.AddWithValue("task", task);
         cmd.Parameters.AddWithValue("clipboard_data", "search_document: " + clipboard_data);
         cmd.Parameters.AddWithValue("answer", answer);
+        cmd.Parameters.AddWithValue("embedding_model", embeddingModel ?? "nomic-embed-text");
         await cmd.ExecuteNonQueryAsync();
     }
 
@@ -428,18 +432,19 @@ public static class OllamaService
             id, 
             answer, 
             embedding_clipboard_data <=> 
-                ai.ollama_embed('nomic-embed-text', @clipboard_data) as distance
+                ai.ollama_embed(@embedding_model, @clipboard_data) as distance
         FROM clippy
         WHERE 
             task = @task 
         AND embedding_clipboard_data <=> 
-            ai.ollama_embed('nomic-embed-text', @clipboard_data) <= @threshold
+            ai.ollama_embed(@embedding_model, @clipboard_data) <= @threshold
         ORDER BY 3
         LIMIT 10", conn);
 
         cmd.Parameters.AddWithValue("task", task);
         cmd.Parameters.AddWithValue("clipboard_data", "search_query: " + clipboard_data);
         cmd.Parameters.AddWithValue("threshold", threshold);
+        cmd.Parameters.AddWithValue("embedding_model", embeddingModel ?? "nomic-embed-text");
 
         var result = await cmd.ExecuteReaderAsync();
 

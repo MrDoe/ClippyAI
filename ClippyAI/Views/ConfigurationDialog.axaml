@@ -34,15 +34,15 @@
                         </StackPanel>
                         
                         <Label Content="Default Language:"/>
-                        <TextBox Text="{Binding DefaultLanguage}" Margin="0,0,0,10"/>
+                        <ComboBox ItemsSource="{Binding LanguageItems}" SelectedItem="{Binding DefaultLanguage}" 
+                                  Margin="0,0,0,10" ToolTip.Tip="Select the default language"/>
                         
                         <CheckBox IsChecked="{Binding AutoMode}" Content="Auto Mode" Margin="0,0,0,10"
                                   ToolTip.Tip="Enable automatic mode"/>
                         
                         <Label Content="Default Task:"/>
-                        <TextBox Text="{Binding DefaultTask}" Height="60" TextWrapping="Wrap"
-                                 AcceptsReturn="True" Margin="0,0,0,10"
-                                 ToolTip.Tip="Default task description"/>
+                        <ComboBox ItemsSource="{Binding AvailableTasks}" SelectedItem="{Binding DefaultTask}" 
+                                  Margin="0,0,0,10" ToolTip.Tip="Select the default task"/>
                         
                         <Label Content="System Prompt:"/>
                         <TextBox Text="{Binding SystemPrompt}" Height="120" TextWrapping="Wrap"
@@ -119,6 +119,11 @@
                         <Label Content="PostgreSQL Ollama URL:"/>
                         <TextBox Text="{Binding PostgresOllamaUrl}" Margin="0,0,0,10"
                                  ToolTip.Tip="Ollama URL accessible from PostgreSQL"/>
+                        
+                        <Label Content="Embedding Model:"/>
+                        <TextBox Text="{Binding EmbeddingModel}" Margin="0,0,0,10"
+                                 ToolTip.Tip="Model to use for generating embeddings" 
+                                 IsEnabled="{Binding UseEmbeddings}"/>
                         
                         <!-- Threshold -->
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,10,0,0">

@@ -24,6 +24,7 @@ public partial class MainViewModel : ViewModelBase
     public MainViewModel()
     {
         PopulateTasks();
+        LoadTaskConfigurations();
         LoadVideoDevices();
     }
 
@@ -52,6 +53,12 @@ public partial class MainViewModel : ViewModelBase
 
     [ObservableProperty]
     private ObservableCollection<string> taskItems = [];
+
+    [ObservableProperty]
+    private ObservableCollection<TaskConfiguration> _taskConfigurations = [];
+
+    [ObservableProperty]
+    private TaskConfiguration? _selectedTaskConfiguration;
 
     [ObservableProperty]
     private string _customTask = "";
@@ -152,15 +159,49 @@ public partial class MainViewModel : ViewModelBase
             }
         }
     }
+
+    private void LoadTaskConfigurations()
+    {
+        try
+        {
+            ConfigurationService.InitializeDatabase();
+            var tasks = ConfigurationService.GetAllTaskConfigurations();
+            TaskConfigurations.Clear();
+            foreach (var task in tasks)
+            {
+                TaskConfigurations.Add(task);
+            }
+            
+            // Set default task configuration if configured
+            var defaultTaskName = ConfigurationManager.AppSettings["DefaultTask"];
+            if (!string.IsNullOrEmpty(defaultTaskName))
+            {
+                SelectedTaskConfiguration = TaskConfigurations.FirstOrDefault(t => t.TaskName == defaultTaskName);
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error loading task configurations: {ex.Message}");
+        }
+    }
     private string GetFullTask()
     {
         string task;
 
-        // user defined task
-        if (Task == Resources.Resources.Task_15)
+        // Use selected task configuration if available
+        if (SelectedTaskConfiguration != null)
+        {
+            task = SelectedTaskConfiguration.TaskName;
+        }
+        // Fall back to legacy task system
+        else if (Task == Resources.Resources.Task_15)
+        {
             task = CustomTask;
+        }
         else
+        {
             task = Task;
+        }
 
         if (string.IsNullOrEmpty(task))
         {
@@ -221,7 +262,7 @@ public partial class MainViewModel : ViewModelBase
             // try to get response from embedded model first
             if (UseEmbeddings && !string.IsNullOrEmpty(Input))
             {
-                _responseList = await OllamaService.RetrieveAnswersForTask(Task, Input, Threshold);
+                _responseList = await OllamaService.RetrieveAnswersForTask(task, Input, Threshold);
                 if (_responseList.Count > 0)
                 {
                     _responseIndex = 0;
@@ -230,15 +271,27 @@ public partial class MainViewModel : ViewModelBase
                 }
             }
 
-            response = await OllamaService.SendRequestForTask(Input!,
-                                                       task,
-                                                       model,
-                                                       _askClippyCts.Token);
+            // Use task configuration if available, otherwise use the current model
+            if (SelectedTaskConfiguration != null)
+            {
+                response = await OllamaService.SendRequestWithConfig(Input!,
+                                                           SelectedTaskConfiguration.SystemPrompt,
+                                                           SelectedTaskConfiguration.Model,
+                                                           SelectedTaskConfiguration,
+                                                           _askClippyCts.Token);
+            }
+            else
+            {
+                response = await OllamaService.SendRequestForTask(Input!,
+                                                           task,
+                                                           model,
+                                                           _askClippyCts.Token);
+            }
 
-            if (!string.IsNullOrEmpty(response) && !string.IsNullOrEmpty(Task) &&
+            if (!string.IsNullOrEmpty(response) && !string.IsNullOrEmpty(task) &&
                 !string.IsNullOrEmpty(Input) && StoreAllResponses)
             {
-                await OllamaService.StoreSqlEmbedding(Task, Input, response);
+                await OllamaService.StoreSqlEmbedding(task, Input, response);
                 ++EmbeddingsCount;
             }
         }
