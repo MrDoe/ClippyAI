@@ -1,4 +1,5 @@
 using Renci.SshNet;
+using System;
 using System.Configuration;
 
 namespace ClippyAI.Services
@@ -10,22 +11,50 @@ namespace ClippyAI.Services
 
         public void Connect()
         {
+            string sshSetting = ConfigurationManager.AppSettings["UseSSH"] ?? "false";
             string sshUsername = ConfigurationManager.AppSettings["SSHUsername"] ?? "";
             string sshServerUrl = ConfigurationManager.AppSettings["SSHServerUrl"] ?? "";
-            int sshPort = int.Parse(ConfigurationManager.AppSettings["SSHPort"]?? "0");
-            bool sshTunnel = bool.Parse(ConfigurationManager.AppSettings["SSHTunnel"] ?? "false");
+            int sshPort = int.Parse(ConfigurationManager.AppSettings["SSHPort"] ?? "0");
+            string sshLocalTunnel = ConfigurationManager.AppSettings["SSHLocalTunnel"] ?? "";
+            string sshRemoteTunnel = ConfigurationManager.AppSettings["SSHRemoteTunnel"] ?? "";
+            string sshPrivateKeyFile = ConfigurationManager.AppSettings["SSHPrivateKeyFile"] ?? "";
 
-            if (!sshTunnel)
+            if (!sshSetting.Equals("true", StringComparison.OrdinalIgnoreCase) || string.IsNullOrWhiteSpace(sshUsername) ||
+                 string.IsNullOrWhiteSpace(sshServerUrl) || sshPort == 0 || string.IsNullOrWhiteSpace(sshLocalTunnel))
                 return;
 
-            _sshClient = new SshClient(sshServerUrl, sshPort, sshUsername, "password");
+            // connect via public key
+            var keyFile = new PrivateKeyFile(Environment.ExpandEnvironmentVariables(sshPrivateKeyFile));
+            var keyFiles = new[] { keyFile };
+            var methods = new AuthenticationMethod[]
+            { new PrivateKeyAuthenticationMethod(sshUsername, keyFiles) };
+            var connectionInfo = new ConnectionInfo(sshServerUrl, sshPort, sshUsername, methods);
+            _sshClient = new SshClient(connectionInfo);
+
+            if (sshLocalTunnel != "")
+            {
+                // split tunnel variable
+                var tunnelParts = sshLocalTunnel.Split(':');
+                _forwardedPort = new ForwardedPortLocal(tunnelParts[0], uint.Parse(tunnelParts[1]), tunnelParts[2], uint.Parse(tunnelParts[3]));
+                _forwardedPort.Start();
+                _sshClient.AddForwardedPort(_forwardedPort);
+            }
+
+            if(sshRemoteTunnel != "")
+            {
+                // split tunnel variable
+                var tunnelParts = sshRemoteTunnel.Split(':');
+                var remotePort = new ForwardedPortRemote(tunnelParts[0], uint.Parse(tunnelParts[1]), tunnelParts[2], uint.Parse(tunnelParts[3]));
+                _sshClient.AddForwardedPort(remotePort);
+                remotePort.Start();
+            }
+
             _sshClient.Connect();
 
-            // split tunnel variable
-            
-            _forwardedPort = new ForwardedPortLocal("127.0.0.1", 3306, "remote.server.com", 3306);
-            _sshClient.AddForwardedPort(_forwardedPort);
-            _forwardedPort.Start();
+            if (!_sshClient.IsConnected)
+            {
+                throw new Exception("SSH connection failed.");
+            }
         }
 
         public void Disconnect()
