@@ -33,7 +33,7 @@ public static class OllamaService
     private static string? system = ConfigurationManager.AppSettings?.Get("System");
     private static string? connectionString = ConfigurationManager.AppSettings?.Get("PostgreSqlConnection");
     private static string? pgOllamaUrl = ConfigurationManager.AppSettings?.Get("PostgresOllamaUrl");
-    private static string? videoDevice = ConfigurationManager.AppSettings?.Get("VideoDevice");
+    private static string? videoDevice = ConfigurationManager.AppSettings?.Get("VisionDevice");
     private static string? visionModel = ConfigurationManager.AppSettings?.Get("VisionModel");
     private static string? visionPrompt = ConfigurationManager.AppSettings?.Get("VisionPrompt");
     private static string? embeddingModel = ConfigurationManager.AppSettings?.Get("EmbeddingModel");
@@ -44,7 +44,7 @@ public static class OllamaService
         system = ConfigurationManager.AppSettings?.Get("System");
         connectionString = ConfigurationManager.AppSettings?.Get("PostgreSqlConnection");
         pgOllamaUrl = ConfigurationManager.AppSettings?.Get("PostgresOllamaUrl");
-        videoDevice = ConfigurationManager.AppSettings?.Get("VideoDevice");
+        videoDevice = ConfigurationManager.AppSettings?.Get("VisionDevice");
         visionModel = ConfigurationManager.AppSettings?.Get("VisionModel");
         visionPrompt = ConfigurationManager.AppSettings?.Get("VisionPrompt");
         embeddingModel = ConfigurationManager.AppSettings?.Get("EmbeddingModel");
@@ -375,6 +375,14 @@ public static class OllamaService
     {
         UpdateConfig();
 
+        // Check if embeddings are enabled
+        var useEmbeddings = ConfigurationManager.AppSettings?.Get("UseEmbeddings");
+        if (useEmbeddings != "True")
+        {
+            System.Diagnostics.Debug.WriteLine("Embeddings are disabled. Skipping storage.");
+            return;
+        }
+
         await using var conn = new NpgsqlConnection(connectionString);
         await conn.OpenAsync();
 
@@ -424,6 +432,14 @@ public static class OllamaService
     {
         UpdateConfig();
 
+        // Check if embeddings are enabled
+        var useEmbeddings = ConfigurationManager.AppSettings?.Get("UseEmbeddings");
+        if (useEmbeddings != "True")
+        {
+            System.Diagnostics.Debug.WriteLine("Embeddings are disabled. Returning empty list.");
+            return new List<Embedding>();
+        }
+
         await using var conn = new NpgsqlConnection(connectionString);
         await conn.OpenAsync();
 
@@ -469,6 +485,14 @@ public static class OllamaService
     public static void InitializeEmbeddings()
     {
         UpdateConfig();
+
+        // Check if embeddings are enabled
+        var useEmbeddings = ConfigurationManager.AppSettings?.Get("UseEmbeddings");
+        if (useEmbeddings != "True")
+        {
+            System.Diagnostics.Debug.WriteLine("Embeddings are disabled. Skipping initialization.");
+            return;
+        }
 
         if (pgOllamaUrl == null)
         {
@@ -517,6 +541,14 @@ public static class OllamaService
     /// <returns>The task.</returns>
     public static async Task ClearEmbeddings()
     {
+        // Check if embeddings are enabled
+        var useEmbeddings = ConfigurationManager.AppSettings?.Get("UseEmbeddings");
+        if (useEmbeddings != "True")
+        {
+            System.Diagnostics.Debug.WriteLine("Embeddings are disabled. Skipping clear operation.");
+            return;
+        }
+
         await using var conn = new NpgsqlConnection(connectionString);
         await conn.OpenAsync();
 
@@ -530,6 +562,13 @@ public static class OllamaService
     /// <returns>The number of embeddings or -1 if there was an error.</returns>
     public static async Task<int> GetEmbeddingsCount()
     {
+        // Check if embeddings are enabled
+        var useEmbeddings = ConfigurationManager.AppSettings?.Get("UseEmbeddings");
+        if (useEmbeddings != "True")
+        {
+            return 0;
+        }
+
         int count = 0;
         try
         {
@@ -554,6 +593,14 @@ public static class OllamaService
     /// <returns>The task.</returns>
     public static async Task DeleteEmbedding(int id)
     {
+        // Check if embeddings are enabled
+        var useEmbeddings = ConfigurationManager.AppSettings?.Get("UseEmbeddings");
+        if (useEmbeddings != "True")
+        {
+            System.Diagnostics.Debug.WriteLine("Embeddings are disabled. Skipping delete operation.");
+            return;
+        }
+
         await using var conn = new NpgsqlConnection(connectionString);
         await conn.OpenAsync();
 

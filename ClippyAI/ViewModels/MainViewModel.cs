@@ -112,7 +112,7 @@ public partial class MainViewModel : ViewModelBase
     private float _responseDistance = 0.0f;
 
     [ObservableProperty]
-    private string _videoDevice = ConfigurationManager.AppSettings["VideoDevice"] ?? "";
+    private string _videoDevice = ConfigurationManager.AppSettings["VisionDevice"] ?? "";
 
     [ObservableProperty]
     private string _visionModel = ConfigurationManager.AppSettings["VisionModel"] ?? "llama3.2-vision";
@@ -843,7 +843,7 @@ public partial class MainViewModel : ViewModelBase
     {
         var dialog = new ConfigurationDialog()
         {
-            DataContext = new ConfigurationDialogViewModel()
+            DataContext = new ConfigurationDialogViewModel(mainWindow)
         };
         
         if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)

@@ -67,6 +67,10 @@ public static class ConfigurationService
 
         // Insert default task configurations if none exist
         InsertDefaultTaskConfigurations(connection);
+        
+        // Migrate legacy tasks
+        connection.Close();
+        MigrateLegacyTasks();
     }
 
     private static void InsertDefaultTaskConfigurations(SqliteConnection connection)
@@ -243,5 +247,113 @@ public static class ConfigurationService
         using var command = new SqliteCommand(deleteCommand, connection);
         command.Parameters.AddWithValue("@taskName", taskName);
         command.ExecuteNonQuery();
+    }
+
+    public static void MigrateLegacyTasks()
+    {
+        try
+        {
+            using var connection = new SqliteConnection(ConnectionString);
+            connection.Open();
+
+            // Check if legacy tasks have already been migrated
+            var checkCommand = new SqliteCommand("SELECT COUNT(*) FROM TaskConfigurations WHERE TaskName LIKE 'Legacy_%'", connection);
+            var existingLegacyCount = Convert.ToInt32(checkCommand.ExecuteScalar());
+
+            if (existingLegacyCount > 0)
+            {
+                // Legacy tasks already migrated
+                return;
+            }
+
+            // Get legacy task resources from Resources
+            var resourceType = typeof(Resources.Resources);
+            var defaultModel = ConfigurationManager.AppSettings["OllamaModel"] ?? "gemma2:latest";
+            
+            var legacyTasks = new List<TaskConfiguration>();
+
+            // Map legacy tasks to their appropriate categories and settings
+            var legacyTaskMappings = new Dictionary<string, (string category, double temperature, int maxLength)>
+            {
+                ["Task_1"] = ("Email Response", 0.8, 2048),
+                ["Task_2"] = ("Email Response", 0.7, 3072),
+                ["Task_3"] = ("Email Response", 0.8, 2048),
+                ["Task_4"] = ("Email Response", 0.8, 2048),
+                ["Task_5"] = ("Email Response", 0.8, 2048),
+                ["Task_6"] = ("Email Response", 0.8, 2048),
+                ["Task_7"] = ("Email Response", 0.8, 2048),
+                ["Task_8"] = ("Email Response", 0.8, 2048),
+                ["Task_9"] = ("Email Response", 0.8, 2048),
+                ["Task_10"] = ("Email Response", 0.8, 2048),
+                ["Task_11"] = ("Email Response", 0.8, 2048),
+                ["Task_12"] = ("Analysis", 0.5, 2048),
+                ["Task_13"] = ("Technical Analysis", 0.3, 2048),
+                ["Task_14"] = ("Analysis", 0.6, 2048),
+                ["Task_15"] = ("Custom", 0.8, 2048),
+                ["Task_16"] = ("Translation", 0.3, 1024),
+                ["Task_17"] = ("Translation", 0.3, 1024),
+                ["Task_18"] = ("Translation", 0.3, 1024),
+                ["Task_19"] = ("Translation", 0.3, 1024),
+                ["Task_20"] = ("Email Response", 0.8, 2048),
+                ["Task_21"] = ("Email Response", 0.8, 2048),
+                ["Task_22"] = ("Summary", 0.5, 1024)
+            };
+
+            foreach (var taskMapping in legacyTaskMappings)
+            {
+                var property = resourceType.GetProperty(taskMapping.Key);
+                if (property != null)
+                {
+                    var taskPrompt = property.GetValue(null)?.ToString();
+                    if (!string.IsNullOrEmpty(taskPrompt))
+                    {
+                        var (category, temperature, maxLength) = taskMapping.Value;
+                        var legacyTask = new TaskConfiguration
+                        {
+                            TaskName = $"Legacy_{category}_{taskMapping.Key}",
+                            SystemPrompt = $"You are an expert assistant specialized in {category.ToLower()}. {GetSystemPromptForCategory(category)}",
+                            Model = defaultModel,
+                            Temperature = temperature,
+                            MaxLength = maxLength,
+                            TopP = 0.9,
+                            TopK = 40,
+                            RepeatPenalty = 1.1,
+                            NumCtx = 2048,
+                            IsActive = true,
+                            CreatedAt = DateTime.UtcNow,
+                            UpdatedAt = DateTime.UtcNow
+                        };
+
+                        legacyTasks.Add(legacyTask);
+                    }
+                }
+            }
+
+            // Save all legacy tasks
+            foreach (var task in legacyTasks)
+            {
+                SaveTaskConfiguration(task, connection);
+            }
+
+            System.Diagnostics.Debug.WriteLine($"Migrated {legacyTasks.Count} legacy tasks to TaskConfiguration system.");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error migrating legacy tasks: {ex.Message}");
+        }
+    }
+
+    private static string GetSystemPromptForCategory(string category)
+    {
+        return category switch
+        {
+            "Email Response" => "Provide professional and courteous email responses that are contextually appropriate.",
+            "Technical Analysis" => "Provide precise, factual, and analytical responses with technical accuracy.",
+            "Analysis" => "Analyze the content thoroughly and provide detailed, objective insights.",
+            "Translation" => "Provide accurate translations while maintaining the original meaning and tone.",
+            "Summary" => "Create concise, well-structured summaries that capture the key points.",
+            "Custom" => "Provide helpful responses tailored to the specific request.",
+            _ => "Provide detailed and helpful responses to the given task."
+        };
     }
 }
