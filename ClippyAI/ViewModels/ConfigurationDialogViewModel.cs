@@ -16,49 +16,49 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     private MainWindow? _mainWindow;
 
     [ObservableProperty]
-    private string _ollamaUrl = ConfigurationManager.AppSettings["OllamaUrl"] ?? "http://localhost:11434/api";
+    private string _ollamaUrl = ConfigurationService.GetConfigurationValue("OllamaUrl", "http://localhost:11434/api");
 
     [ObservableProperty]
-    private string _ollamaModel = ConfigurationManager.AppSettings["OllamaModel"] ?? "gemma2:latest";
+    private string _ollamaModel = ConfigurationService.GetConfigurationValue("OllamaModel", "gemma2:latest");
 
     [ObservableProperty]
-    private string _defaultTask = ConfigurationManager.AppSettings["DefaultTask"] ?? "Write a response to this email.";
+    private string _defaultTask = ConfigurationService.GetConfigurationValue("DefaultTask", "Write a response to this email.");
 
     [ObservableProperty]
-    private string _systemPrompt = ConfigurationManager.AppSettings["System"] ?? "";
+    private string _systemPrompt = ConfigurationService.GetConfigurationValue("System", "");
 
     [ObservableProperty]
-    private bool _useEmbeddings = Convert.ToBoolean(ConfigurationManager.AppSettings["UseEmbeddings"] ?? "True");
+    private bool _useEmbeddings = bool.Parse(ConfigurationService.GetConfigurationValue("UseEmbeddings", "True"));
 
     [ObservableProperty]
-    private bool _storeAllResponses = Convert.ToBoolean(ConfigurationManager.AppSettings["StoreAllResponses"] ?? "False");
+    private bool _storeAllResponses = bool.Parse(ConfigurationService.GetConfigurationValue("StoreAllResponses", "False"));
 
     [ObservableProperty]
-    private bool _autoMode = Convert.ToBoolean(ConfigurationManager.AppSettings["AutoMode"] ?? "False");
+    private bool _autoMode = bool.Parse(ConfigurationService.GetConfigurationValue("AutoMode", "False"));
 
     [ObservableProperty]
-    private string _postgreSqlConnection = ConfigurationManager.AppSettings["PostgreSqlConnection"] ?? "";
+    private string _postgreSqlConnection = ConfigurationService.GetConfigurationValue("PostgreSqlConnection", "");
 
     [ObservableProperty]
-    private string _postgresOllamaUrl = ConfigurationManager.AppSettings["PostgresOllamaUrl"] ?? "";
+    private string _postgresOllamaUrl = ConfigurationService.GetConfigurationValue("PostgresOllamaUrl", "");
 
     [ObservableProperty]
-    private string _visionModel = ConfigurationManager.AppSettings["VisionModel"] ?? "llama3.2-vision:latest";
+    private string _visionModel = ConfigurationService.GetConfigurationValue("VisionModel", "llama3.2-vision:latest");
 
     [ObservableProperty]
-    private string _visionPrompt = ConfigurationManager.AppSettings["VisionPrompt"] ?? "Describe the image.";
+    private string _visionPrompt = ConfigurationService.GetConfigurationValue("VisionPrompt", "Describe the image.");
 
     [ObservableProperty]
-    private string _videoDevice = ConfigurationManager.AppSettings["VisionDevice"] ?? "/dev/video0";
+    private string _videoDevice = ConfigurationService.GetConfigurationValue("VisionDevice", "/dev/video0");
 
     [ObservableProperty]
-    private string _defaultLanguage = ConfigurationManager.AppSettings["DefaultLanguage"] ?? "English";
+    private string _defaultLanguage = ConfigurationService.GetConfigurationValue("DefaultLanguage", "English");
 
     [ObservableProperty]
-    private string _linuxKeyboardDevice = ConfigurationManager.AppSettings["LinuxKeyboardDevice"] ?? "";
+    private string _linuxKeyboardDevice = ConfigurationService.GetConfigurationValue("LinuxKeyboardDevice", "");
 
     [ObservableProperty]
-    private string _embeddingModel = ConfigurationManager.AppSettings["EmbeddingModel"] ?? "nomic-embed-text";
+    private string _embeddingModel = ConfigurationService.GetConfigurationValue("EmbeddingModel", "nomic-embed-text");
 
     // Collections for dropdowns
     [ObservableProperty]
@@ -69,26 +69,26 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
 
     // New advanced configuration options
     [ObservableProperty]
-    private double _temperature = Convert.ToDouble(ConfigurationManager.AppSettings["Temperature"] ?? "1.0");
+    private double _temperature = double.Parse(ConfigurationService.GetConfigurationValue("Temperature", "1.0"));
 
     [ObservableProperty]
-    private int _maxLength = Convert.ToInt32(ConfigurationManager.AppSettings["MaxLength"] ?? "2048");
+    private int _maxLength = int.Parse(ConfigurationService.GetConfigurationValue("MaxLength", "2048"));
 
     [ObservableProperty]
-    private double _topP = Convert.ToDouble(ConfigurationManager.AppSettings["TopP"] ?? "0.9");
+    private double _topP = double.Parse(ConfigurationService.GetConfigurationValue("TopP", "0.9"));
 
     [ObservableProperty]
-    private int _topK = Convert.ToInt32(ConfigurationManager.AppSettings["TopK"] ?? "40");
+    private int _topK = int.Parse(ConfigurationService.GetConfigurationValue("TopK", "40"));
 
     [ObservableProperty]
-    private double _repeatPenalty = Convert.ToDouble(ConfigurationManager.AppSettings["RepeatPenalty"] ?? "1.1");
+    private double _repeatPenalty = double.Parse(ConfigurationService.GetConfigurationValue("RepeatPenalty", "1.1"));
 
     [ObservableProperty]
-    private int _numCtx = Convert.ToInt32(ConfigurationManager.AppSettings["NumCtx"] ?? "2048");
+    private int _numCtx = int.Parse(ConfigurationService.GetConfigurationValue("NumCtx", "2048"));
 
     // Additional configuration options from main window
     [ObservableProperty]
-    private float _threshold = Convert.ToSingle(ConfigurationManager.AppSettings["Threshold"] ?? "0.2");
+    private float _threshold = float.Parse(ConfigurationService.GetConfigurationValue("Threshold", "0.2"));
 
     [ObservableProperty]
     private int _embeddingsCount = 0;

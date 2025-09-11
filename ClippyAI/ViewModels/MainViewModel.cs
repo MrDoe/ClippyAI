@@ -34,7 +34,7 @@ public partial class MainViewModel : ViewModelBase
     private bool initialized = false;
 
     [ObservableProperty]
-    private string _task = ConfigurationManager.AppSettings["DefaultTask"] ?? Resources.Resources.Task_1;
+    private string _task = ConfigurationService.GetConfigurationValue("DefaultTask", Resources.Resources.Task_1);
 
     [ObservableProperty]
     private string? _clipboardContent = "";
@@ -70,10 +70,10 @@ public partial class MainViewModel : ViewModelBase
     private bool _isBusy = false;
 
     [ObservableProperty]
-    private bool _autoMode = Convert.ToBoolean(ConfigurationManager.AppSettings["AutoMode"]);
+    private bool _autoMode = Convert.ToBoolean(ConfigurationService.GetConfigurationValue("AutoMode", "False"));
 
     [ObservableProperty]
-    private string _language = ConfigurationManager.AppSettings["DefaultLanguage"] ?? "English";
+    private string _language = ConfigurationService.GetConfigurationValue("DefaultLanguage", "English") ?? "English";
 
     [ObservableProperty]
     private ObservableCollection<string> _languageItems = ["English", "Deutsch", "Français", "Español"];
@@ -82,22 +82,22 @@ public partial class MainViewModel : ViewModelBase
     private ObservableCollection<string> _modelItems = OllamaService.GetModels();
 
     [ObservableProperty]
-    private string _ollamaUrl = ConfigurationManager.AppSettings["OllamaUrl"] ?? "http://127.0.0.1:11434/api";
+    private string _ollamaUrl = ConfigurationService.GetConfigurationValue("OllamaUrl", "http://127.0.0.1:11434/api") ?? "http://127.0.0.1:11434/api";
 
     [ObservableProperty]
-    private string _model = ConfigurationManager.AppSettings["OllamaModel"] ?? "gemma2:latest";
+    private string _model = ConfigurationService.GetConfigurationValue("OllamaModel", "gemma2:latest") ?? "gemma2:latest";
 
     [ObservableProperty]
-    private string _PostgreSqlConnection = ConfigurationManager.AppSettings["PostgreSqlConnection"] ?? "";
+    private string _PostgreSqlConnection = ConfigurationService.GetConfigurationValue("PostgreSqlConnection") ?? "";
 
     [ObservableProperty]
-    private string _PostgresOllamaUrl = ConfigurationManager.AppSettings["PostgresOllamaUrl"] ?? "";
+    private string _PostgresOllamaUrl = ConfigurationService.GetConfigurationValue("PostgresOllamaUrl") ?? "";
 
     [ObservableProperty]
-    private bool _useEmbeddings = ConfigurationManager.AppSettings["UseEmbeddings"] == "True";
+    private bool _useEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings") == "True";
 
     [ObservableProperty]
-    private bool _storeAllResponses = ConfigurationManager.AppSettings["StoreAllResponses"] == "True";
+    private bool _storeAllResponses = ConfigurationService.GetConfigurationValue("StoreAllResponses") == "True";
 
     [ObservableProperty]
     private string _responseCounter = "0 / 0";
@@ -112,13 +112,13 @@ public partial class MainViewModel : ViewModelBase
     private float _responseDistance = 0.0f;
 
     [ObservableProperty]
-    private string _videoDevice = ConfigurationManager.AppSettings["VisionDevice"] ?? "";
+    private string _videoDevice = ConfigurationService.GetConfigurationValue("VisionDevice") ?? "";
 
     [ObservableProperty]
-    private string _visionModel = ConfigurationManager.AppSettings["VisionModel"] ?? "llama3.2-vision";
+    private string _visionModel = ConfigurationService.GetConfigurationValue("VisionModel", "llama3.2-vision") ?? "llama3.2-vision";
 
     [ObservableProperty]
-    private string _visionPrompt = ConfigurationManager.AppSettings["VisionPrompt"] ?? "Detect what you can find in the image. Use markdown to format the text.";
+    private string _visionPrompt = ConfigurationService.GetConfigurationValue("VisionPrompt", "Detect what you can find in the image. Use markdown to format the text.") ?? "Detect what you can find in the image. Use markdown to format the text.";
 
     [ObservableProperty]
     private ObservableCollection<string> _videoDevices = [];
@@ -173,7 +173,7 @@ public partial class MainViewModel : ViewModelBase
             }
             
             // Set default task configuration if configured
-            var defaultTaskName = ConfigurationManager.AppSettings["DefaultTask"];
+            var defaultTaskName = ConfigurationService.GetConfigurationValue("DefaultTask");
             if (!string.IsNullOrEmpty(defaultTaskName))
             {
                 SelectedTaskConfiguration = TaskConfigurations.FirstOrDefault(t => t.TaskName == defaultTaskName);

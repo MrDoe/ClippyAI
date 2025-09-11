@@ -28,6 +28,16 @@ public static class ConfigurationService
         using var connection = new SqliteConnection(ConnectionString);
         connection.Open();
 
+        // Create Configuration table for general app settings
+        var createConfigTable = @"
+            CREATE TABLE IF NOT EXISTS Configuration (
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                Key TEXT NOT NULL UNIQUE,
+                Value TEXT NOT NULL,
+                CreatedAt TEXT NOT NULL,
+                UpdatedAt TEXT NOT NULL
+            )";
+
         // Create TaskConfigurations table
         var createTaskConfigTable = @"
             CREATE TABLE IF NOT EXISTS TaskConfigurations (
@@ -59,11 +69,17 @@ public static class ConfigurationService
                 FOREIGN KEY (TaskConfigurationId) REFERENCES TaskConfigurations (Id)
             )";
 
+        using var command0 = new SqliteCommand(createConfigTable, connection);
+        command0.ExecuteNonQuery();
+
         using var command1 = new SqliteCommand(createTaskConfigTable, connection);
         command1.ExecuteNonQuery();
 
         using var command2 = new SqliteCommand(createJobConfigTable, connection);
         command2.ExecuteNonQuery();
+
+        // Migrate App.config settings to database if not already done
+        MigrateAppConfigToDatabase(connection);
 
         // Insert default task configurations if none exist
         InsertDefaultTaskConfigurations(connection);
@@ -341,6 +357,142 @@ public static class ConfigurationService
         {
             System.Diagnostics.Debug.WriteLine($"Error migrating legacy tasks: {ex.Message}");
         }
+    }
+
+    private static void MigrateAppConfigToDatabase(SqliteConnection connection)
+    {
+        try
+        {
+            // Check if migration has already been done
+            var checkCommand = new SqliteCommand("SELECT COUNT(*) FROM Configuration", connection);
+            var existingCount = Convert.ToInt32(checkCommand.ExecuteScalar());
+
+            if (existingCount > 0)
+            {
+                // Configuration already migrated
+                return;
+            }
+
+            // Get all App.config settings and migrate them to database
+            var appSettings = ConfigurationManager.AppSettings;
+            var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
+            foreach (string key in appSettings.AllKeys)
+            {
+                var value = appSettings[key] ?? string.Empty;
+                
+                var insertCommand = @"
+                    INSERT INTO Configuration (Key, Value, CreatedAt, UpdatedAt)
+                    VALUES (@key, @value, @createdAt, @updatedAt)";
+
+                using var command = new SqliteCommand(insertCommand, connection);
+                command.Parameters.AddWithValue("@key", key);
+                command.Parameters.AddWithValue("@value", value);
+                command.Parameters.AddWithValue("@createdAt", timestamp);
+                command.Parameters.AddWithValue("@updatedAt", timestamp);
+                command.ExecuteNonQuery();
+            }
+
+            System.Diagnostics.Debug.WriteLine($"Migrated {appSettings.AllKeys.Length} configuration settings to database.");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error migrating App.config to database: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Gets a configuration value from the database. Falls back to App.config if not found.
+    /// </summary>
+    /// <param name="key">Configuration key</param>
+    /// <param name="defaultValue">Default value if key is not found</param>
+    /// <returns>Configuration value or default</returns>
+    public static string GetConfigurationValue(string key, string defaultValue = "")
+    {
+        try
+        {
+            using var connection = new SqliteConnection(ConnectionString);
+            connection.Open();
+
+            var selectCommand = "SELECT Value FROM Configuration WHERE Key = @key";
+            using var command = new SqliteCommand(selectCommand, connection);
+            command.Parameters.AddWithValue("@key", key);
+
+            var result = command.ExecuteScalar()?.ToString();
+            if (!string.IsNullOrEmpty(result))
+            {
+                return result;
+            }
+
+            // Fallback to App.config if not found in database
+            return ConfigurationManager.AppSettings[key] ?? defaultValue;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error getting configuration value for key '{key}': {ex.Message}");
+            // Fallback to App.config
+            return ConfigurationManager.AppSettings[key] ?? defaultValue;
+        }
+    }
+
+    /// <summary>
+    /// Sets a configuration value in the database.
+    /// </summary>
+    /// <param name="key">Configuration key</param>
+    /// <param name="value">Configuration value</param>
+    public static void SetConfigurationValue(string key, string value)
+    {
+        try
+        {
+            using var connection = new SqliteConnection(ConnectionString);
+            connection.Open();
+
+            var upsertCommand = @"
+                INSERT OR REPLACE INTO Configuration (Key, Value, CreatedAt, UpdatedAt)
+                VALUES (@key, @value, 
+                    COALESCE((SELECT CreatedAt FROM Configuration WHERE Key = @key), @timestamp),
+                    @timestamp)";
+
+            using var command = new SqliteCommand(upsertCommand, connection);
+            command.Parameters.AddWithValue("@key", key);
+            command.Parameters.AddWithValue("@value", value);
+            command.Parameters.AddWithValue("@timestamp", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            command.ExecuteNonQuery();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error setting configuration value for key '{key}': {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Gets all configuration values from the database.
+    /// </summary>
+    /// <returns>Dictionary of configuration key-value pairs</returns>
+    public static Dictionary<string, string> GetAllConfigurationValues()
+    {
+        var configurations = new Dictionary<string, string>();
+
+        try
+        {
+            using var connection = new SqliteConnection(ConnectionString);
+            connection.Open();
+
+            var selectCommand = "SELECT Key, Value FROM Configuration ORDER BY Key";
+            using var command = new SqliteCommand(selectCommand, connection);
+            using var reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                configurations[reader.GetString(0)] = reader.GetString(1);
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error getting all configuration values: {ex.Message}");
+        }
+
+        return configurations;
     }
 
     private static string GetSystemPromptForCategory(string category)

@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using System.Configuration;
+using ClippyAI.Services;
 
 namespace ClippyAI.Views
 {
@@ -16,38 +17,20 @@ namespace ClippyAI.Views
     {
         public string SSHServerUrl
         {
-            get => ConfigurationManager.AppSettings["SSHServerUrl"] ?? string.Empty;
-            set
-            {
-                var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-                config.AppSettings.Settings["SSHServerUrl"].Value = value;
-                config.Save(ConfigurationSaveMode.Modified);
-                ConfigurationManager.RefreshSection("appSettings");
-            }
+            get => ConfigurationService.GetConfigurationValue("SSHServerUrl");
+            set => ConfigurationService.SetConfigurationValue("SSHServerUrl", value);
         }
 
         public string SSHPort
         {
-            get => ConfigurationManager.AppSettings["SSHPort"] ?? string.Empty;
-            set
-            {
-                var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-                config.AppSettings.Settings["SSHPort"].Value = value;
-                config.Save(ConfigurationSaveMode.Modified);
-                ConfigurationManager.RefreshSection("appSettings");
-            }
+            get => ConfigurationService.GetConfigurationValue("SSHPort");
+            set => ConfigurationService.SetConfigurationValue("SSHPort", value);
         }
 
         public bool SSHTunnel
         {
-            get => bool.Parse(ConfigurationManager.AppSettings["SSHTunnel"] ?? "false");
-            set
-            {
-                var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-                config.AppSettings.Settings["SSHTunnel"].Value = value.ToString();
-                config.Save(ConfigurationSaveMode.Modified);
-                ConfigurationManager.RefreshSection("appSettings");
-            }
+            get => bool.Parse(ConfigurationService.GetConfigurationValue("SSHTunnel", "false"));
+            set => ConfigurationService.SetConfigurationValue("SSHTunnel", value.ToString());
         }
     }
 }

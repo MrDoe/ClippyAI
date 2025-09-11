@@ -1,49 +1,47 @@
 using System.Configuration;
 using CommunityToolkit.Mvvm.ComponentModel;
+using ClippyAI.Services;
 
 namespace ClippyAI.ViewModels
 {
     public partial class SettingsViewModel : ObservableObject
     {
         [ObservableProperty]
-        private string _sSHServerUrl = ConfigurationManager.AppSettings["SSHServerUrl"] ?? string.Empty;
+        private string _sSHServerUrl = ConfigurationService.GetConfigurationValue("SSHServerUrl");
 
         [ObservableProperty]
-        private string _sSHPort = ConfigurationManager.AppSettings["SSHPort"] ?? string.Empty;
+        private string _sSHPort = ConfigurationService.GetConfigurationValue("SSHPort");
 
         [ObservableProperty]
-        private string _sSHLocalTunnel = ConfigurationManager.AppSettings["SSHLocalTunnel"] ?? string.Empty;
+        private string _sSHLocalTunnel = ConfigurationService.GetConfigurationValue("SSHLocalTunnel");
 
         [ObservableProperty]
-        private string _sSHRemoteTunnel = ConfigurationManager.AppSettings["SSHRemoteTunnel"] ?? string.Empty;
+        private string _sSHRemoteTunnel = ConfigurationService.GetConfigurationValue("SSHRemoteTunnel");
 
         [ObservableProperty]
-        private string _sSHPublicKey = ConfigurationManager.AppSettings["SSHPublicKey"] ?? string.Empty;
+        private string _sSHPublicKey = ConfigurationService.GetConfigurationValue("SSHPublicKey");
 
         [ObservableProperty]
-        private bool _sSHTunnel = bool.Parse(ConfigurationManager.AppSettings["SSHTunnel"] ?? "false");
+        private bool _sSHTunnel = bool.Parse(ConfigurationService.GetConfigurationValue("SSHTunnel", "false"));
 
         public void SaveSettings()
         {
-            var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            config.AppSettings.Settings["SSHServerUrl"].Value = SSHServerUrl;
-            config.AppSettings.Settings["SSHPort"].Value = SSHPort;
-            config.AppSettings.Settings["SSHLocalTunnel"].Value = SSHLocalTunnel;
-            config.AppSettings.Settings["SSHRemoteTunnel"].Value = SSHRemoteTunnel;
-            config.AppSettings.Settings["SSHPublicKey"].Value = SSHPublicKey;
-            config.AppSettings.Settings["SSHTunnel"].Value = SSHTunnel.ToString();
-            config.Save(ConfigurationSaveMode.Modified);
-            ConfigurationManager.RefreshSection("appSettings");
+            ConfigurationService.SetConfigurationValue("SSHServerUrl", SSHServerUrl);
+            ConfigurationService.SetConfigurationValue("SSHPort", SSHPort);
+            ConfigurationService.SetConfigurationValue("SSHLocalTunnel", SSHLocalTunnel);
+            ConfigurationService.SetConfigurationValue("SSHRemoteTunnel", SSHRemoteTunnel);
+            ConfigurationService.SetConfigurationValue("SSHPublicKey", SSHPublicKey);
+            ConfigurationService.SetConfigurationValue("SSHTunnel", SSHTunnel.ToString());
         }
 
         public void LoadSettings()
         {
-            SSHServerUrl = ConfigurationManager.AppSettings["SSHServerUrl"] ?? string.Empty;
-            SSHPort = ConfigurationManager.AppSettings["SSHPort"] ?? string.Empty;
-            SSHLocalTunnel = ConfigurationManager.AppSettings["SSHLocalTunnel"] ?? string.Empty;
-            SSHRemoteTunnel = ConfigurationManager.AppSettings["SSHRemoteTunnel"] ?? string.Empty;
-            SSHPublicKey = ConfigurationManager.AppSettings["SSHPublicKey"] ?? string.Empty;
-            SSHTunnel = bool.Parse(ConfigurationManager.AppSettings["SSHTunnel"] ?? "false");
+            SSHServerUrl = ConfigurationService.GetConfigurationValue("SSHServerUrl");
+            SSHPort = ConfigurationService.GetConfigurationValue("SSHPort");
+            SSHLocalTunnel = ConfigurationService.GetConfigurationValue("SSHLocalTunnel");
+            SSHRemoteTunnel = ConfigurationService.GetConfigurationValue("SSHRemoteTunnel");
+            SSHPublicKey = ConfigurationService.GetConfigurationValue("SSHPublicKey");
+            SSHTunnel = bool.Parse(ConfigurationService.GetConfigurationValue("SSHTunnel", "false"));
         }
     }
 }

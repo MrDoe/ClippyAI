@@ -1,6 +1,7 @@
 using Renci.SshNet;
 using System;
 using System.Configuration;
+using ClippyAI.Services;
 
 namespace ClippyAI.Services
 {
@@ -11,13 +12,13 @@ namespace ClippyAI.Services
 
         public void Connect()
         {
-            string sshSetting = ConfigurationManager.AppSettings["UseSSH"] ?? "false";
-            string sshUsername = ConfigurationManager.AppSettings["SSHUsername"] ?? "";
-            string sshServerUrl = ConfigurationManager.AppSettings["SSHServerUrl"] ?? "";
-            int sshPort = int.Parse(ConfigurationManager.AppSettings["SSHPort"] ?? "0");
-            string sshLocalTunnel = ConfigurationManager.AppSettings["SSHLocalTunnel"] ?? "";
-            string sshRemoteTunnel = ConfigurationManager.AppSettings["SSHRemoteTunnel"] ?? "";
-            string sshPrivateKeyFile = ConfigurationManager.AppSettings["SSHPrivateKeyFile"] ?? "";
+            string sshSetting = ConfigurationService.GetConfigurationValue("UseSSH", "false");
+            string sshUsername = ConfigurationService.GetConfigurationValue("SSHUsername");
+            string sshServerUrl = ConfigurationService.GetConfigurationValue("SSHServerUrl");
+            int sshPort = int.Parse(ConfigurationService.GetConfigurationValue("SSHPort", "0"));
+            string sshLocalTunnel = ConfigurationService.GetConfigurationValue("SSHLocalTunnel");
+            string sshRemoteTunnel = ConfigurationService.GetConfigurationValue("SSHRemoteTunnel");
+            string sshPrivateKeyFile = ConfigurationService.GetConfigurationValue("SSHPrivateKeyFile");
 
             if (!sshSetting.Equals("true", StringComparison.OrdinalIgnoreCase) || string.IsNullOrWhiteSpace(sshUsername) ||
                  string.IsNullOrWhiteSpace(sshServerUrl) || sshPort == 0 || string.IsNullOrWhiteSpace(sshLocalTunnel))
