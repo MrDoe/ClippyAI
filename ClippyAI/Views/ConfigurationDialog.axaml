@@ -22,8 +22,16 @@
                                  ToolTip.Tip="URL for Ollama API"/>
                         
                         <Label Content="Default Model:"/>
-                        <TextBox Text="{Binding OllamaModel}" Margin="0,0,0,10"
-                                 ToolTip.Tip="Default Ollama model to use"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                            <ComboBox ItemsSource="{Binding ModelItems}" SelectedItem="{Binding OllamaModel}" 
+                                      Width="200" ToolTip.Tip="Select a model from the list"/>
+                            <Button Content="Pull" Command="{Binding AddModelCommand}" Margin="4,0,0,0"
+                                    ToolTip.Tip="Pull/add a model"/>
+                            <Button Content="Delete" Command="{Binding DeleteModelCommand}" Margin="4,0,0,0"
+                                    ToolTip.Tip="Delete the selected model"/>
+                            <Button Content="Refresh" Command="{Binding RefreshModelsCommand}" Margin="4,0,0,0"
+                                    ToolTip.Tip="Refresh the model list"/>
+                        </StackPanel>
                         
                         <Label Content="Default Language:"/>
                         <TextBox Text="{Binding DefaultLanguage}" Margin="0,0,0,10"/>
@@ -111,6 +119,26 @@
                         <Label Content="PostgreSQL Ollama URL:"/>
                         <TextBox Text="{Binding PostgresOllamaUrl}" Margin="0,0,0,10"
                                  ToolTip.Tip="Ollama URL accessible from PostgreSQL"/>
+                        
+                        <!-- Threshold -->
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,10,0,0">
+                            <Label Content="Threshold:" VerticalAlignment="Center" Width="100"/>
+                            <Slider Value="{Binding Threshold}" Minimum="-1" Maximum="1" Width="150" 
+                                    TickFrequency="0.1" ToolTip.Tip="Set the threshold value"/>
+                            <TextBox Text="{Binding Threshold}" Width="70" Margin="10,0,0,0"/>
+                        </StackPanel>
+                        
+                        <!-- Clear Database Button -->
+                        <Button Content="Clear Database" Command="{Binding ClearEmbeddingsCommand}"
+                                HorizontalAlignment="Left" Margin="0,10,0,10"
+                                ToolTip.Tip="Clear the embeddings database"/>
+                        
+                        <!-- Embeddings Count -->
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Label Content="# Embeddings:" FontSize="14" VerticalAlignment="Center"/>
+                            <Label Content="{Binding EmbeddingsCount}" FontSize="14" VerticalAlignment="Center"
+                                   ToolTip.Tip="Displays the number of embeddings"/>
+                        </StackPanel>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
@@ -126,8 +154,12 @@
                                  ToolTip.Tip="Model to use for image analysis"/>
                         
                         <Label Content="Video Device:"/>
-                        <TextBox Text="{Binding VideoDevice}" Margin="0,0,0,10"
-                                 ToolTip.Tip="Video device path (e.g., /dev/video0)"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                            <ComboBox ItemsSource="{Binding VideoDevices}" SelectedItem="{Binding VideoDevice}" 
+                                      Width="320" ToolTip.Tip="Select the video device from the list"/>
+                            <Button Content="Refresh" Command="{Binding RefreshVideoDevicesCommand}" 
+                                    Margin="4,0,0,0" ToolTip.Tip="Refresh the list of video devices"/>
+                        </StackPanel>
                         
                         <Label Content="Vision Prompt:"/>
                         <TextBox Text="{Binding VisionPrompt}" Height="100" TextWrapping="Wrap"
@@ -146,6 +178,11 @@
                         <Label Content="Linux Keyboard Device:"/>
                         <TextBox Text="{Binding LinuxKeyboardDevice}" Margin="0,0,0,10"
                                  ToolTip.Tip="Linux keyboard device for hotkey handling"/>
+                        
+                        <!-- Configure Hotkey Device Button -->
+                        <Button Content="Configure Hotkey Device" Command="{Binding ConfigureHotkeyDeviceCommand}"
+                                HorizontalAlignment="Left" Margin="0,0,0,10"
+                                ToolTip.Tip="Configure the hotkey device for Linux systems"/>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
