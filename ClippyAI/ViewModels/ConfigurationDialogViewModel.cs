@@ -7,11 +7,14 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ClippyAI.Models;
 using ClippyAI.Services;
+using ClippyAI.Views;
 
 namespace ClippyAI.Views;
 
 public partial class ConfigurationDialogViewModel : ViewModelBase
 {
+    private MainWindow? _mainWindow;
+
     [ObservableProperty]
     private string _ollamaUrl = ConfigurationManager.AppSettings["OllamaUrl"] ?? "http://localhost:11434/api";
 
@@ -113,8 +116,9 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
         OnPropertyChanged(nameof(IsTaskSelected));
     }
 
-    public ConfigurationDialogViewModel()
+    public ConfigurationDialogViewModel(MainWindow? mainWindow = null)
     {
+        _mainWindow = mainWindow;
         LoadTaskConfigurations();
         PopulateAvailableTasks();
         InitializeCollections();
@@ -301,11 +305,30 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void ConfigureHotkeyDevice()
+    private async Task ConfigureHotkeyDevice()
     {
-        // This would open the hotkey device configuration
-        // Implementation would depend on the existing hotkey service
-        System.Diagnostics.Debug.WriteLine("Configure hotkey device requested");
+        // only for Linux
+        if (!OperatingSystem.IsLinux())
+        {
+            System.Diagnostics.Debug.WriteLine("This feature is only supported on Linux.");
+            return;
+        }
+        
+        if (_mainWindow == null)
+        {
+            System.Diagnostics.Debug.WriteLine("MainWindow reference is required for hotkey configuration.");
+            return;
+        }
+        
+        try
+        {
+            var hotkeyService = new HotkeyService(_mainWindow);
+            await hotkeyService.SetupHotkeyDevice();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error configuring hotkey device: {ex.Message}");
+        }
     }
 
     private List<string> GetVideoDevices()
