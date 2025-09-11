@@ -29,25 +29,25 @@ public static class OllamaService
         Timeout = TimeSpan.FromMinutes(5)
     };
 
-    private static string? url = ConfigurationManager.AppSettings?.Get("OllamaUrl");
-    private static string? system = ConfigurationManager.AppSettings?.Get("System");
-    private static string? connectionString = ConfigurationManager.AppSettings?.Get("PostgreSqlConnection");
-    private static string? pgOllamaUrl = ConfigurationManager.AppSettings?.Get("PostgresOllamaUrl");
-    private static string? videoDevice = ConfigurationManager.AppSettings?.Get("VisionDevice");
-    private static string? visionModel = ConfigurationManager.AppSettings?.Get("VisionModel");
-    private static string? visionPrompt = ConfigurationManager.AppSettings?.Get("VisionPrompt");
-    private static string? embeddingModel = ConfigurationManager.AppSettings?.Get("EmbeddingModel");
+    private static string? url = ConfigurationService.GetConfigurationValue("OllamaUrl", "http://localhost:11434/api");
+    private static string? system = ConfigurationService.GetConfigurationValue("System");
+    private static string? connectionString = ConfigurationService.GetConfigurationValue("PostgreSqlConnection");
+    private static string? pgOllamaUrl = ConfigurationService.GetConfigurationValue("PostgresOllamaUrl");
+    private static string? videoDevice = ConfigurationService.GetConfigurationValue("VisionDevice");
+    private static string? visionModel = ConfigurationService.GetConfigurationValue("VisionModel");
+    private static string? visionPrompt = ConfigurationService.GetConfigurationValue("VisionPrompt");
+    private static string? embeddingModel = ConfigurationService.GetConfigurationValue("EmbeddingModel");
 
     private static void UpdateConfig()
     {
-        url = ConfigurationManager.AppSettings?.Get("OllamaUrl");
-        system = ConfigurationManager.AppSettings?.Get("System");
-        connectionString = ConfigurationManager.AppSettings?.Get("PostgreSqlConnection");
-        pgOllamaUrl = ConfigurationManager.AppSettings?.Get("PostgresOllamaUrl");
-        videoDevice = ConfigurationManager.AppSettings?.Get("VisionDevice");
-        visionModel = ConfigurationManager.AppSettings?.Get("VisionModel");
-        visionPrompt = ConfigurationManager.AppSettings?.Get("VisionPrompt");
-        embeddingModel = ConfigurationManager.AppSettings?.Get("EmbeddingModel");
+        url = ConfigurationService.GetConfigurationValue("OllamaUrl", "http://localhost:11434/api");
+        system = ConfigurationService.GetConfigurationValue("System");
+        connectionString = ConfigurationService.GetConfigurationValue("PostgreSqlConnection");
+        pgOllamaUrl = ConfigurationService.GetConfigurationValue("PostgresOllamaUrl");
+        videoDevice = ConfigurationService.GetConfigurationValue("VisionDevice");
+        visionModel = ConfigurationService.GetConfigurationValue("VisionModel");
+        visionPrompt = ConfigurationService.GetConfigurationValue("VisionPrompt");
+        embeddingModel = ConfigurationService.GetConfigurationValue("EmbeddingModel");
     }
 
     /// <summary>
@@ -111,12 +111,12 @@ public static class OllamaService
         string? fullResponse = null;
         
         // Load advanced configuration options
-        var temperature = taskConfig?.Temperature ?? Convert.ToDouble(ConfigurationManager.AppSettings["Temperature"] ?? "0.8");
-        var maxLength = taskConfig?.MaxLength ?? Convert.ToInt32(ConfigurationManager.AppSettings["MaxLength"] ?? "2048");
-        var topP = taskConfig?.TopP ?? Convert.ToDouble(ConfigurationManager.AppSettings["TopP"] ?? "0.9");
-        var topK = taskConfig?.TopK ?? Convert.ToInt32(ConfigurationManager.AppSettings["TopK"] ?? "40");
-        var repeatPenalty = taskConfig?.RepeatPenalty ?? Convert.ToDouble(ConfigurationManager.AppSettings["RepeatPenalty"] ?? "1.1");
-        var numCtx = taskConfig?.NumCtx ?? Convert.ToInt32(ConfigurationManager.AppSettings["NumCtx"] ?? "2048");
+        var temperature = taskConfig?.Temperature ?? Convert.ToDouble(ConfigurationService.GetConfigurationValue("Temperature", "0.8"));
+        var maxLength = taskConfig?.MaxLength ?? Convert.ToInt32(ConfigurationService.GetConfigurationValue("MaxLength", "2048"));
+        var topP = taskConfig?.TopP ?? Convert.ToDouble(ConfigurationService.GetConfigurationValue("TopP", "0.9"));
+        var topK = taskConfig?.TopK ?? Convert.ToInt32(ConfigurationService.GetConfigurationValue("TopK", "40"));
+        var repeatPenalty = taskConfig?.RepeatPenalty ?? Convert.ToDouble(ConfigurationService.GetConfigurationValue("RepeatPenalty", "1.1"));
+        var numCtx = taskConfig?.NumCtx ?? Convert.ToInt32(ConfigurationService.GetConfigurationValue("NumCtx", "2048"));
         var systemPrompt = taskConfig?.SystemPrompt ?? system;
         var modelToUse = taskConfig?.Model ?? model;
 

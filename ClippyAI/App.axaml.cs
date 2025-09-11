@@ -42,7 +42,10 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        string language = ConfigurationManager.AppSettings["DefaultLanguage"] ?? "English";
+        // Initialize configuration database first
+        ClippyAI.Services.ConfigurationService.InitializeDatabase();
+        
+        string language = ConfigurationService.GetConfigurationValue("DefaultLanguage", "English");
         language = language.Normalize(NormalizationForm.FormC); // Normalize the input string
 
         switch (language)
@@ -66,9 +69,6 @@ public partial class App : Application
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            // Initialize configuration database
-            ClippyAI.Services.ConfigurationService.InitializeDatabase();
-            
             _mainWindow = new MainWindow { DataContext = new MainViewModel() };
             desktop.MainWindow = _mainWindow;
 
@@ -111,7 +111,7 @@ public partial class App : Application
             _trayIcon.IsVisible = true;
 
             // initialize the Ollama Embedding Service
-            if (ConfigurationManager.AppSettings["UseEmbeddings"] == "True")
+            if (ConfigurationService.GetConfigurationValue("UseEmbeddings") == "True")
             {
                 try
                 {

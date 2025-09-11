@@ -29,9 +29,9 @@ public class HotkeyService
         DataContext = Window.DataContext as MainViewModel;
 
         // get keyboard device from configuration file
-        Keyboard = ConfigurationManager.AppSettings?.Get("LinuxKeyboardDevice") switch
+        Keyboard = ConfigurationService.GetConfigurationValue("LinuxKeyboardDevice") switch
         {
-            { } name => EvDevDevice.GetDevices().FirstOrDefault(d => d.Name == name),
+            { } name when !string.IsNullOrEmpty(name) => EvDevDevice.GetDevices().FirstOrDefault(d => d.Name == name),
             _ => null
         };
 

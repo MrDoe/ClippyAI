@@ -8,12 +8,13 @@ using System;
 using System.Configuration;
 using System.Threading.Tasks;
 using DirectShowLib;
+using ClippyAI.Services;
 namespace ClippyAI.Views;
 
 public partial class CameraWindow : Window
 {
     private VideoCapture Capture;
-    private string VideoDevice = ConfigurationManager.AppSettings["VideoDevice"] ?? "";
+    private string VideoDevice = ConfigurationService.GetConfigurationValue("VideoDevice");
     private bool IsCapturing;
 
     public CameraWindow()
