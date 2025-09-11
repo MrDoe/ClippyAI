@@ -72,26 +72,22 @@
     <ProjectReference Include="Libs\DesktopNotificationsNet8\DesktopNotifications\DesktopNotifications.csproj" />
   </ItemGroup>
 	<ItemGroup>
-		<Compile Update="Resources\Resource.Designer.cs">
+		<Compile Update="Resources\Resources.Designer.cs">
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>
-			<DependentUpon>Resource.resx</DependentUpon>
+			<DependentUpon>Resources.resx</DependentUpon>
 		</Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-		<EmbeddedResource Update="Resources\Resource.resx">
+		<EmbeddedResource Update="Resources\Resources.resx">
 			<Generator>ResXFileCodeGenerator</Generator>
 			<PublicClass>true</PublicClass>
-		</EmbeddedResource>
-		<EmbeddedResource Update="Resources\Resource.resx">
-			<Generator>ResXFileCodeGenerator</Generator>
-			<PublicClass>true</PublicClass>
-			<StronglyTypedFileName>Resources\Resource.Designer.cs</StronglyTypedFileName>
+			<StronglyTypedFileName>Resources\Resources.Designer.cs</StronglyTypedFileName>
 			<StronglyTypedLanguage>CSharp</StronglyTypedLanguage>
 			<StronglyTypedNamespace>ClippyAI.Resources</StronglyTypedNamespace>
 			<StronglyTypedClassName>Resources</StronglyTypedClassName>
-			<LastGenOutput>Resource.Designer.cs</LastGenOutput>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
 	</ItemGroup>
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">

@@ -266,4 +266,67 @@
     <data name="AnalyzeImage" xml:space="preserve">
         <value>Analyze Image</value>
     </data>
+    <data name="Show" xml:space="preserve">
+        <value>Show</value>
+    </data>
+    <data name="Exit" xml:space="preserve">
+        <value>Exit</value>
+    </data>
+    <data name="ModelPullCompleted" xml:space="preserve">
+        <value>Model pull completed.</value>
+    </data>
+    <data name="ModelPullFailed" xml:space="preserve">
+        <value>Model pull failed.</value>
+    </data>
+    <data name="ModelPullFailedWithStatus" xml:space="preserve">
+        <value>Model pull failed with status: {0}</value>
+    </data>
+    <data name="ModelDeletedSuccessfully" xml:space="preserve">
+        <value>Model deleted successfully.</value>
+    </data>
+    <data name="ModelDeletionFailed" xml:space="preserve">
+        <value>Model deletion failed.</value>
+    </data>
+    <data name="ModelDeletionFailedWithStatus" xml:space="preserve">
+        <value>Model deletion failed with status: {0}</value>
+    </data>
+    <data name="ResultStoredSuccessfully" xml:space="preserve">
+        <value>Result successfully stored as template in database!</value>
+    </data>
+    <data name="CameraWindow" xml:space="preserve">
+        <value>Camera Window</value>
+    </data>
+    <data name="ClippyAIResult" xml:space="preserve">
+        <value>ClippyAI Result</value>
+    </data>
+    <data name="Result" xml:space="preserve">
+        <value>Result:</value>
+    </data>
+    <data name="ClippyAIError" xml:space="preserve">
+        <value>ClippyAI Error</value>
+    </data>
+    <data name="SSHSettings" xml:space="preserve">
+        <value>SSH Settings</value>
+    </data>
+    <data name="SSHServerUrl" xml:space="preserve">
+        <value>SSH Server URL:</value>
+    </data>
+    <data name="SSHPort" xml:space="preserve">
+        <value>SSH Port:</value>
+    </data>
+    <data name="LocalTunnel" xml:space="preserve">
+        <value>Local Tunnel:</value>
+    </data>
+    <data name="RemoteTunnel" xml:space="preserve">
+        <value>Remote Tunnel:</value>
+    </data>
+    <data name="PublicKey" xml:space="preserve">
+        <value>Public Key:</value>
+    </data>
+    <data name="EnableSSHTunnel" xml:space="preserve">
+        <value>Enable SSH Tunnel</value>
+    </data>
+    <data name="PullingModelStatus" xml:space="preserve">
+        <value>Pulling model {0}</value>
+    </data>
 </root>

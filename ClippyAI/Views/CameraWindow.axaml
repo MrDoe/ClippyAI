@@ -1,7 +1,8 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:resources="clr-namespace:ClippyAI.Resources"
         x:Class="ClippyAI.Views.CameraWindow"
-        Title="Camera Window" Width="640" Height="480"
+        Title="{x:Static resources:Resources.CameraWindow}" Width="640" Height="480"
         WindowStartupLocation="CenterScreen">
     <Image x:Name="imgCamera" Stretch="Uniform" />
 </Window>

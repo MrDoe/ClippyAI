@@ -3,6 +3,7 @@
     x:Class="ClippyAI.Views.ErrorMessageDialog"
     x:DataType="vm:ErrorMessageDialogViewModel"
     xmlns:vm="clr-namespace:ClippyAI.Views"
+    xmlns:resources="clr-namespace:ClippyAI.Resources"
     Width="500"
     Height="150"
     Background="DimGray"
@@ -13,9 +14,9 @@
     WindowStartupLocation="CenterScreen"
     CanResize="false">
     <StackPanel>
-        <TextBlock Text="ClippyAI Error" FontSize="20" FontWeight="Bold" Margin="10,10,10,10" />
+        <TextBlock Text="{x:Static resources:Resources.ClippyAIError}" FontSize="20" FontWeight="Bold" Margin="10,10,10,10" />
         <TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap" Margin="10,0,20,10" />
-        <Button Content="OK" HorizontalContentAlignment="Center" Command="{Binding CloseCommand}"
+        <Button Content="{x:Static resources:Resources.OK}" HorizontalContentAlignment="Center" Command="{Binding CloseCommand}"
             Width="100" HorizontalAlignment="Center" />
     </StackPanel>
 </Window>

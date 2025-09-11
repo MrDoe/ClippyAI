@@ -1,20 +1,21 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:ClippyAI.ViewModels"
+             xmlns:resources="clr-namespace:ClippyAI.Resources"
              x:Class="ClippyAI.Views.SettingsView"
              x:DataType="vm:SettingsViewModel">
     <StackPanel>
-        <TextBlock Text="SSH Settings" FontWeight="Bold" Margin="0,0,0,10"/>
-        <TextBlock Text="SSH Server URL:"/>
+        <TextBlock Text="{x:Static resources:Resources.SSHSettings}" FontWeight="Bold" Margin="0,0,0,10"/>
+        <TextBlock Text="{x:Static resources:Resources.SSHServerUrl}"/>
         <TextBox Text="{Binding SSHServerUrl}" Margin="0,0,0,10"/>
-        <TextBlock Text="SSH Port:"/>
+        <TextBlock Text="{x:Static resources:Resources.SSHPort}"/>
         <TextBox Text="{Binding SSHPort}" Margin="0,0,0,10"/>
-        <TextBlock Text="Local Tunnel:"/>
+        <TextBlock Text="{x:Static resources:Resources.LocalTunnel}"/>
         <TextBox Text="{Binding SSHLocalTunnel}" Margin="0,0,0,10"/>
-        <TextBlock Text="Remote Tunnel:"/>
+        <TextBlock Text="{x:Static resources:Resources.RemoteTunnel}"/>
         <TextBox Text="{Binding SSHRemoteTunnel}" Margin="0,0,0,10"/>
-        <TextBlock Text="Public Key:"/>
+        <TextBlock Text="{x:Static resources:Resources.PublicKey}"/>
         <TextBox Text="{Binding SSHPublicKey}" Margin="0,0,0,10"/>
-        <CheckBox Content="Enable SSH Tunnel" IsChecked="{Binding SSHTunnel}" Margin="0,0,0,10"/>
+        <CheckBox Content="{x:Static resources:Resources.EnableSSHTunnel}" IsChecked="{Binding SSHTunnel}" Margin="0,0,0,10"/>
     </StackPanel>
 </UserControl>

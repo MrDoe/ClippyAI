@@ -84,7 +84,7 @@ public partial class App : Application
 
             _trayIcon.Menu.Items.Add(new NativeMenuItem
             {
-                Header = "Show",
+                Header = ClippyAI.Resources.Resources.Show,
                 Command = new RelayCommand(() =>
                 {
                     if (_mainWindow.WindowState == WindowState.Minimized || !_mainWindow.IsVisible)
@@ -101,7 +101,7 @@ public partial class App : Application
 
             _trayIcon.Menu.Items.Add(new NativeMenuItem
             {
-                Header = "Exit",
+                Header = ClippyAI.Resources.Resources.Exit,
                 Command = new RelayCommand(() =>
                 {
                     _mainWindow.Close();
