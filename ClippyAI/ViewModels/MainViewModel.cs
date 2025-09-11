@@ -364,20 +364,18 @@ public partial class MainViewModel : ViewModelBase
         if (IsBusy)
             return;
 
-        // Get the clipboard content
+        // First check text content (most common case)
         string? newContent;
-        Bitmap? newImage = null;
         try
         {
             newContent = await ClipboardService.GetText();
-            newImage = await ClipboardService.GetImage();
         }
         catch (Exception e)
         {
             if (e is InvalidOperationException)
             {
-                // Ignore the exception if the clipboard does not contain text or image
-                return;
+                // Ignore the exception if the clipboard does not contain text
+                newContent = null;
             }
             else
             {
@@ -385,12 +383,15 @@ public partial class MainViewModel : ViewModelBase
                 return;
             }
         }
-        // Check if the content has changed
-        if (!string.IsNullOrEmpty(newContent) && newContent != ClipboardContent)
+
+        // Check if text content has changed
+        bool textContentChanged = !string.IsNullOrEmpty(newContent) && newContent != ClipboardContent;
+        
+        if (textContentChanged)
         {
             IsBusy = true;
 
-            // Update the property
+            // Update the text property
             ClipboardContent = newContent;
             Input = newContent ?? "";
             ClipboardService.LastInput = newContent ?? "";
@@ -403,6 +404,33 @@ public partial class MainViewModel : ViewModelBase
             {
                 initialized = true;
             }
+
+            // When text changes, prioritize text view
+            IsImageInputVisible = false;
+            IsTextInputVisible = true;
+            
+            IsBusy = false;
+            return; // Early exit - don't check image when text changed
+        }
+
+        // Only check image if text content hasn't changed (to reduce CPU load)
+        Bitmap? newImage = null;
+        try
+        {
+            newImage = await ClipboardService.GetImage();
+        }
+        catch (Exception e)
+        {
+            if (e is InvalidOperationException)
+            {
+                // Ignore the exception if the clipboard does not contain image
+                newImage = null;
+            }
+            else
+            {
+                ErrorMessages?.Add(e.Message);
+                return;
+            }
         }
 
         // Check if the image has changed
@@ -412,13 +440,13 @@ public partial class MainViewModel : ViewModelBase
             IsImageInputVisible = true;
             IsTextInputVisible = false;
         }
-        else
+        else if (newImage == null && ClipboardImage != null)
         {
+            // Image was removed from clipboard
+            ClipboardImage = null;
             IsImageInputVisible = false;
             IsTextInputVisible = true;
         }
-
-        IsBusy = false;
     }
 
     [RelayCommand]

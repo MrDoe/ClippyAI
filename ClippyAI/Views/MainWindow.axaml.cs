@@ -45,8 +45,8 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         InitializeComponent();
         DataContext = new MainViewModel();
 
-        // poll clipboard every second
-        clipboardPollingTimer = new System.Timers.Timer(500);
+        // poll clipboard every second (reduced from 500ms to reduce CPU load)
+        clipboardPollingTimer = new System.Timers.Timer(1000);
         clipboardPollingTimer.Elapsed += ClipboardPollingTimer_Elapsed;
 
         // register notification manager

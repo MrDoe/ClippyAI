@@ -51,14 +51,8 @@ public partial class MainView : UserControl
         if (embeddingsCount >= 0)
             ((MainViewModel)DataContext!).EmbeddingsCount = embeddingsCount;
 
-        // Start monitoring clipboard content
-        var viewModel = (MainViewModel)DataContext!;
-        var cancellationTokenSource = new CancellationTokenSource();
-        while (true)
-        {
-            await viewModel.UpdateClipboardContent(cancellationTokenSource.Token);
-            await Task.Delay(1000); // Poll every second
-        }
+        // Note: Clipboard monitoring is now handled by MainWindow timer to reduce CPU load
+        // Removed duplicate polling loop that was running every 1000ms
     }
 
     private void OnCboLanguageSelectionChanged(object? sender, SelectionChangedEventArgs e)
