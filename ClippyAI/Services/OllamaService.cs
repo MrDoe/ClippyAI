@@ -5,7 +5,6 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Configuration;
 using ClippyAI.Models;
 using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -111,12 +110,12 @@ public static class OllamaService
         string? fullResponse = null;
         
         // Load advanced configuration options
-        var temperature = taskConfig?.Temperature ?? Convert.ToDouble(ConfigurationService.GetConfigurationValue("Temperature", "0.8"));
-        var maxLength = taskConfig?.MaxLength ?? Convert.ToInt32(ConfigurationService.GetConfigurationValue("MaxLength", "2048"));
-        var topP = taskConfig?.TopP ?? Convert.ToDouble(ConfigurationService.GetConfigurationValue("TopP", "0.9"));
-        var topK = taskConfig?.TopK ?? Convert.ToInt32(ConfigurationService.GetConfigurationValue("TopK", "40"));
-        var repeatPenalty = taskConfig?.RepeatPenalty ?? Convert.ToDouble(ConfigurationService.GetConfigurationValue("RepeatPenalty", "1.1"));
-        var numCtx = taskConfig?.NumCtx ?? Convert.ToInt32(ConfigurationService.GetConfigurationValue("NumCtx", "2048"));
+        var temperature = taskConfig?.Temperature ?? 0.8;
+        var maxLength = taskConfig?.MaxLength ?? 2048;
+        var topP = taskConfig?.TopP ?? 0.9;
+        var topK = taskConfig?.TopK ?? 40;
+        var repeatPenalty = taskConfig?.RepeatPenalty ?? 1.1;
+        var numCtx = taskConfig?.NumCtx ?? 2048;
         var systemPrompt = taskConfig?.SystemPrompt ?? system;
         var modelToUse = taskConfig?.Model ?? model;
 
@@ -376,7 +375,7 @@ public static class OllamaService
         UpdateConfig();
 
         // Check if embeddings are enabled
-        var useEmbeddings = ConfigurationManager.AppSettings?.Get("UseEmbeddings");
+        var useEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings");
         if (useEmbeddings != "True")
         {
             System.Diagnostics.Debug.WriteLine("Embeddings are disabled. Skipping storage.");
@@ -433,11 +432,11 @@ public static class OllamaService
         UpdateConfig();
 
         // Check if embeddings are enabled
-        var useEmbeddings = ConfigurationManager.AppSettings?.Get("UseEmbeddings");
+        var useEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings");
         if (useEmbeddings != "True")
         {
             System.Diagnostics.Debug.WriteLine("Embeddings are disabled. Returning empty list.");
-            return new List<Embedding>();
+            return [];
         }
 
         await using var conn = new NpgsqlConnection(connectionString);
@@ -487,7 +486,7 @@ public static class OllamaService
         UpdateConfig();
 
         // Check if embeddings are enabled
-        var useEmbeddings = ConfigurationManager.AppSettings?.Get("UseEmbeddings");
+        var useEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings");
         if (useEmbeddings != "True")
         {
             System.Diagnostics.Debug.WriteLine("Embeddings are disabled. Skipping initialization.");
@@ -542,7 +541,7 @@ public static class OllamaService
     public static async Task ClearEmbeddings()
     {
         // Check if embeddings are enabled
-        var useEmbeddings = ConfigurationManager.AppSettings?.Get("UseEmbeddings");
+        var useEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings");
         if (useEmbeddings != "True")
         {
             System.Diagnostics.Debug.WriteLine("Embeddings are disabled. Skipping clear operation.");
@@ -563,7 +562,7 @@ public static class OllamaService
     public static async Task<int> GetEmbeddingsCount()
     {
         // Check if embeddings are enabled
-        var useEmbeddings = ConfigurationManager.AppSettings?.Get("UseEmbeddings");
+        var useEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings");
         if (useEmbeddings != "True")
         {
             return 0;
@@ -594,7 +593,7 @@ public static class OllamaService
     public static async Task DeleteEmbedding(int id)
     {
         // Check if embeddings are enabled
-        var useEmbeddings = ConfigurationManager.AppSettings?.Get("UseEmbeddings");
+        var useEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings");
         if (useEmbeddings != "True")
         {
             System.Diagnostics.Debug.WriteLine("Embeddings are disabled. Skipping delete operation.");

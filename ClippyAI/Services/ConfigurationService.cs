@@ -508,4 +508,158 @@ public static class ConfigurationService
             _ => "Provide detailed and helpful responses to the given task."
         };
     }
+
+    /// <summary>
+    /// Restores the default task configurations by soft-deleting all existing tasks and inserting defaults.
+    /// </summary>
+    public static void RestoreDefaultTaskConfigurations()
+    {
+        using var connection = new SqliteConnection(ConnectionString);
+        connection.Open();
+
+        // Soft-delete all existing task configurations
+        var softDeleteCommand = "UPDATE TaskConfigurations SET IsActive = 0, UpdatedAt = @updatedAt";
+        using var deleteCommand = new SqliteCommand(softDeleteCommand, connection);
+        deleteCommand.Parameters.AddWithValue("@updatedAt", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+        deleteCommand.ExecuteNonQuery();
+
+        // Insert default task configurations
+        InsertDefaultTaskConfigurationsForced(connection);
+    }
+
+    private static void InsertDefaultTaskConfigurationsForced(SqliteConnection connection)
+    {
+        // Get current system prompt from App.config
+        var systemPrompt = ConfigurationManager.AppSettings["System"] ?? 
+            "You are an expert assistant that provides detailed responses to tasks.";
+
+        var defaultConfigs = new[]
+        {
+            new TaskConfiguration 
+            { 
+                TaskName = "Answering Emails", 
+                SystemPrompt = systemPrompt,
+                Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "gemma2:latest",
+                Temperature = 0.8,
+                MaxLength = 2048,
+                TopP = 0.9,
+                TopK = 40,
+                RepeatPenalty = 1.1,
+                NumCtx = 2048,
+                IsActive = true,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            },
+            new TaskConfiguration 
+            { 
+                TaskName = "Spelling Correction", 
+                SystemPrompt = "You are a spelling and grammar correction assistant. Correct spelling and grammar errors while preserving the original meaning and tone.",
+                Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "gemma2:latest",
+                Temperature = 0.1,
+                MaxLength = 2048,
+                TopP = 0.9,
+                TopK = 40,
+                RepeatPenalty = 1.1,
+                NumCtx = 2048,
+                IsActive = true,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            },
+            new TaskConfiguration 
+            { 
+                TaskName = "Summary", 
+                SystemPrompt = "You are a summarization assistant. Create concise, well-structured summaries that capture the key points and main ideas.",
+                Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "gemma2:latest",
+                Temperature = 0.3,
+                MaxLength = 1024,
+                TopP = 0.9,
+                TopK = 40,
+                RepeatPenalty = 1.1,
+                NumCtx = 2048,
+                IsActive = true,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            },
+            new TaskConfiguration 
+            { 
+                TaskName = "Explanation", 
+                SystemPrompt = "You are an explanation assistant. Provide clear, detailed explanations that are easy to understand.",
+                Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "gemma2:latest",
+                Temperature = 0.5,
+                MaxLength = 2048,
+                TopP = 0.9,
+                TopK = 40,
+                RepeatPenalty = 1.1,
+                NumCtx = 2048,
+                IsActive = true,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            },
+            new TaskConfiguration 
+            { 
+                TaskName = "Translate to German", 
+                SystemPrompt = "You are a professional translator. Translate the given text to German while maintaining the original meaning, tone, and context.",
+                Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "gemma2:latest",
+                Temperature = 0.3,
+                MaxLength = 2048,
+                TopP = 0.9,
+                TopK = 40,
+                RepeatPenalty = 1.1,
+                NumCtx = 2048,
+                IsActive = true,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            },
+            new TaskConfiguration 
+            { 
+                TaskName = "Translate to English", 
+                SystemPrompt = "You are a professional translator. Translate the given text to English while maintaining the original meaning, tone, and context.",
+                Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "gemma2:latest",
+                Temperature = 0.3,
+                MaxLength = 2048,
+                TopP = 0.9,
+                TopK = 40,
+                RepeatPenalty = 1.1,
+                NumCtx = 2048,
+                IsActive = true,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            },
+            new TaskConfiguration 
+            { 
+                TaskName = "Translate to French", 
+                SystemPrompt = "You are a professional translator. Translate the given text to French while maintaining the original meaning, tone, and context.",
+                Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "gemma2:latest",
+                Temperature = 0.3,
+                MaxLength = 2048,
+                TopP = 0.9,
+                TopK = 40,
+                RepeatPenalty = 1.1,
+                NumCtx = 2048,
+                IsActive = true,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            },
+            new TaskConfiguration 
+            { 
+                TaskName = "Translate to Spanish", 
+                SystemPrompt = "You are a professional translator. Translate the given text to Spanish while maintaining the original meaning, tone, and context.",
+                Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "gemma2:latest",
+                Temperature = 0.3,
+                MaxLength = 2048,
+                TopP = 0.9,
+                TopK = 40,
+                RepeatPenalty = 1.1,
+                NumCtx = 2048,
+                IsActive = true,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            }
+        };
+
+        foreach (var config in defaultConfigs)
+        {
+            SaveTaskConfiguration(config, connection);
+        }
+    }
 }

@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ClippyAI.Models;
 using ClippyAI.Services;
 using ClippyAI.Views;
+using Microsoft.Data.Sqlite;
 namespace ClippyAI.Views;
 
 public partial class ConfigurationDialogViewModel : ViewModelBase
@@ -58,31 +60,34 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     [ObservableProperty]
     private string _embeddingModel = ConfigurationService.GetConfigurationValue("EmbeddingModel", "nomic-embed-text");
 
+    // SSH Configuration properties
+    [ObservableProperty]
+    private bool _useSSH = bool.Parse(ConfigurationService.GetConfigurationValue("UseSSH", "False"));
+
+    [ObservableProperty]
+    private string _sshUsername = ConfigurationService.GetConfigurationValue("SSHUsername", "SSHUser");
+
+    [ObservableProperty]
+    private string _sshServerUrl = ConfigurationService.GetConfigurationValue("SSHServerUrl", "myServer");
+
+    [ObservableProperty]
+    private string _sshPort = ConfigurationService.GetConfigurationValue("SSHPort", "22");
+
+    [ObservableProperty]
+    private string _sshLocalTunnel = ConfigurationService.GetConfigurationValue("SSHLocalTunnel", "localhost:11443:localhost");
+
+    [ObservableProperty]
+    private string _sshRemoteTunnel = ConfigurationService.GetConfigurationValue("SSHRemoteTunnel", "");
+
+    [ObservableProperty]
+    private string _sshPrivateKeyFile = ConfigurationService.GetConfigurationValue("SSHPrivateKeyFile", "~/.ssh/private.key");
+
     // Collections for dropdowns
     [ObservableProperty]
     private ObservableCollection<string> _languageItems = new(new[] { "English", "Deutsch", "Français", "Español", "Italiano", "Português", "中文", "日本語", "한국어", "Русский" });
 
     [ObservableProperty]
-    private ObservableCollection<string> _availableTasks = new();
-
-    // New advanced configuration options
-    [ObservableProperty]
-    private double _temperature = double.Parse(ConfigurationService.GetConfigurationValue("Temperature", "1.0"));
-
-    [ObservableProperty]
-    private int _maxLength = int.Parse(ConfigurationService.GetConfigurationValue("MaxLength", "2048"));
-
-    [ObservableProperty]
-    private double _topP = double.Parse(ConfigurationService.GetConfigurationValue("TopP", "0.9"));
-
-    [ObservableProperty]
-    private int _topK = int.Parse(ConfigurationService.GetConfigurationValue("TopK", "40"));
-
-    [ObservableProperty]
-    private double _repeatPenalty = double.Parse(ConfigurationService.GetConfigurationValue("RepeatPenalty", "1.1"));
-
-    [ObservableProperty]
-    private int _numCtx = int.Parse(ConfigurationService.GetConfigurationValue("NumCtx", "2048"));
+    private ObservableCollection<string> _availableTasks = [];
 
     // Additional configuration options from main window
     [ObservableProperty]
@@ -92,14 +97,17 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     private int _embeddingsCount = 0;
 
     [ObservableProperty]
-    private ObservableCollection<string> _modelItems = new();
+    private ObservableCollection<string> _modelItems = [];
 
     [ObservableProperty]
-    private ObservableCollection<string> _videoDevices = new();
+    private ObservableCollection<string> _videoDevices = [];
+
+    // Static reference to ModelItems for XAML binding
+    public static ObservableCollection<string> AvailableModels { get; set; } = [];
 
     // Task-specific configurations
     [ObservableProperty]
-    private ObservableCollection<TaskConfiguration> _taskConfigurations = new();
+    private ObservableCollection<TaskConfiguration> _taskConfigurations = [];
 
     [ObservableProperty]
     private TaskConfiguration? _selectedTaskConfiguration;
@@ -119,7 +127,7 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
         _mainWindow = mainWindow;
         LoadTaskConfigurations();
         PopulateAvailableTasks();
-        InitializeCollections();
+        Task.Run(InitializeCollections).Wait();
     }
 
     private void PopulateAvailableTasks()
@@ -131,7 +139,7 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
         }
     }
 
-    private async void InitializeCollections()
+    private async Task InitializeCollections()
     {
         await RefreshModels();
         await RefreshVideoDevices();
@@ -169,12 +177,12 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
             TaskName = NewTaskName,
             SystemPrompt = SystemPrompt,
             Model = OllamaModel,
-            Temperature = Temperature,
-            MaxLength = MaxLength,
-            TopP = TopP,
-            TopK = TopK,
-            RepeatPenalty = RepeatPenalty,
-            NumCtx = NumCtx
+            Temperature = 0.8,
+            MaxLength = 2048,
+            TopP = 0.9,
+            TopK = 40,
+            RepeatPenalty = 1.1,
+            NumCtx = 2048
         };
 
         try
@@ -227,20 +235,55 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    private void RestoreDefaultTasks()
+    {
+        try
+        {
+            // Restore default tasks using the public method
+            ConfigurationService.RestoreDefaultTaskConfigurations();
+
+            // Refresh the UI
+            LoadTaskConfigurations();
+            SelectedTaskConfiguration = TaskConfigurations.FirstOrDefault();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error restoring default tasks: {ex.Message}");
+        }
+    }
+
+    [RelayCommand]
     private async Task RefreshModels()
     {
         try
         {
             ModelItems.Clear();
+            AvailableModels.Clear();
             var models = await OllamaService.GetModelsAsync();
             foreach (var model in models)
             {
                 ModelItems.Add(model);
+                AvailableModels.Add(model);
             }
+            // Force SelectedItem to update after ItemsSource is populated
+            if (!string.IsNullOrEmpty(OllamaModel) && !ModelItems.Contains(OllamaModel))
+            {
+                // Optional: Add the configured model if missing (e.g., not pulled yet)
+                ModelItems.Add(OllamaModel);
+                AvailableModels.Add(OllamaModel);
+            }
+            // Trigger property change to refresh binding
+            OnPropertyChanged(nameof(OllamaModel));
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error refreshing models: {ex.Message}");
+            // Fallback: Ensure at least the configured model is available
+            if (!ModelItems.Contains(OllamaModel))
+            {
+                ModelItems.Add(OllamaModel);
+                AvailableModels.Add(OllamaModel);
+            }
         }
     }
 
@@ -311,17 +354,18 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
             System.Diagnostics.Debug.WriteLine("This feature is only supported on Linux.");
             return;
         }
-        
+
         if (_mainWindow == null)
         {
             System.Diagnostics.Debug.WriteLine("MainWindow reference is required for hotkey configuration.");
             return;
         }
-        
+
         try
         {
             var hotkeyService = new HotkeyService(_mainWindow);
             await hotkeyService.SetupHotkeyDevice();
+            LinuxKeyboardDevice = ConfigurationService.GetConfigurationValue("LinuxKeyboardDevice", "");
         }
         catch (Exception ex)
         {
@@ -362,7 +406,7 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     }
 
     public void Save()
-    {   
+    {
         // Update all configuration values
         ConfigurationService.SetConfigurationValue("OllamaUrl", OllamaUrl);
         ConfigurationService.SetConfigurationValue("OllamaModel", OllamaModel);
@@ -378,16 +422,17 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
         ConfigurationService.SetConfigurationValue("VisionDevice", VideoDevice);
         ConfigurationService.SetConfigurationValue("DefaultLanguage", DefaultLanguage);
         ConfigurationService.SetConfigurationValue("LinuxKeyboardDevice", LinuxKeyboardDevice);
-        
-        // Add new advanced configuration options
-        ConfigurationService.SetConfigurationValue("Temperature", Temperature.ToString());
-        ConfigurationService.SetConfigurationValue("MaxLength", MaxLength.ToString());
-        ConfigurationService.SetConfigurationValue("TopP", TopP.ToString());
-        ConfigurationService.SetConfigurationValue("TopK", TopK.ToString());
-        ConfigurationService.SetConfigurationValue("RepeatPenalty", RepeatPenalty.ToString());
-        ConfigurationService.SetConfigurationValue("NumCtx", NumCtx.ToString());
         ConfigurationService.SetConfigurationValue("Threshold", Threshold.ToString());
         ConfigurationService.SetConfigurationValue("EmbeddingModel", EmbeddingModel);
+
+        // SSH Configuration
+        ConfigurationService.SetConfigurationValue("UseSSH", UseSSH.ToString());
+        ConfigurationService.SetConfigurationValue("SSHUsername", SshUsername);
+        ConfigurationService.SetConfigurationValue("SSHServerUrl", SshServerUrl);
+        ConfigurationService.SetConfigurationValue("SSHPort", SshPort);
+        ConfigurationService.SetConfigurationValue("SSHLocalTunnel", SshLocalTunnel);
+        ConfigurationService.SetConfigurationValue("SSHRemoteTunnel", SshRemoteTunnel);
+        ConfigurationService.SetConfigurationValue("SSHPrivateKeyFile", SshPrivateKeyFile);
     }
 
     public void Cancel()

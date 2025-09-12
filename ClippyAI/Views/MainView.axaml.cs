@@ -1,4 +1,3 @@
-using System.Configuration;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,6 +5,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
+using Avalonia.Markup.Xaml;
 using ClippyAI.Services;
 using ClippyAI.Views;
 namespace ClippyAI.Views;
@@ -18,11 +18,6 @@ public partial class MainView : UserControl
     {
         Init = false;
         InitializeComponent();
-
-        // add event handler for task selection changed
-        var cboTask = this.FindControl<ComboBox>("cboTask");
-        if (cboTask != null)
-            cboTask.SelectionChanged += OnCboTaskSelectionChanged;
 
         // add event handler for language selection changed
         var cboLanguage = this.FindControl<ComboBox>("cboLanguage");
@@ -37,6 +32,11 @@ public partial class MainView : UserControl
         var btnShowCamera = this.FindControl<Button>("btnShowCamera");
         if (btnShowCamera != null)
             btnShowCamera.Click += OnBtnShowCameraClick;
+    }
+
+    private void InitializeComponent()
+    {
+        AvaloniaXamlLoader.Load(this);
     }
 
     private async void MainView_Loaded(object? sender, RoutedEventArgs e)
@@ -64,12 +64,8 @@ public partial class MainView : UserControl
         var selectedItem = (string)comboBox.SelectedItem!;
         ((MainViewModel)DataContext!).Language = selectedItem;
 
-        // update language in configuration file
-        var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-        config.AppSettings.Settings.Remove("DefaultLanguage");
-        config.AppSettings.Settings.Add("DefaultLanguage", selectedItem);
-        config.Save(ConfigurationSaveMode.Modified);
-        ConfigurationManager.RefreshSection("appSettings");
+        // update language in configuration database
+        ConfigurationService.SetConfigurationValue("DefaultLanguage", selectedItem);
 
         RestartApplication();
     }
@@ -123,35 +119,6 @@ public partial class MainView : UserControl
 
             desktop.Shutdown();
         }
-    }
-
-    // Event handler for task selection changed
-    private void OnCboTaskSelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        // set custom task text box enabled/disabled based on selected task
-        var comboBox = (ComboBox)sender!;
-        var selectedItem = (string)comboBox.SelectedItem!;
-        var txtCustomTask = this.FindControl<TextBox>("txtCustomTask");
-        if (txtCustomTask != null)
-        {
-            if (selectedItem == ClippyAI.Resources.Resources.Task_15)
-            {
-                ((MainViewModel)DataContext!).ShowCustomTask = true;
-                txtCustomTask.IsEnabled = true;
-            }
-            else
-            {
-                ((MainViewModel)DataContext!).ShowCustomTask = false;
-                txtCustomTask.IsEnabled = false;
-            }
-        }
-        // save default task in configuration file
-        ((MainViewModel)DataContext!).Task = selectedItem;
-        var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-        config.AppSettings.Settings.Remove("DefaultTask");
-        config.AppSettings.Settings.Add("DefaultTask", selectedItem);
-        config.Save(ConfigurationSaveMode.Modified);
-        ConfigurationManager.RefreshSection("appSettings");
     }
 
     private void OnBtnShowCameraClick(object? sender, RoutedEventArgs e)

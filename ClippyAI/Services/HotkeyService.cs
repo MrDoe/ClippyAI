@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Configuration;
 using System.Linq;
 using System.Runtime.Versioning;
 using System.Threading;
@@ -98,12 +97,11 @@ public class HotkeyService
 
         if (Keyboard != null)
         {
-            // save to configuration file
-            var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            config.AppSettings.Settings.Remove("LinuxKeyboardDevice");
-            config.AppSettings.Settings.Add("LinuxKeyboardDevice", Keyboard.Name);
-            config.Save(ConfigurationSaveMode.Modified);
-            ConfigurationManager.RefreshSection("appSettings");
+            // save to configuration database
+            if (Keyboard.Name != null)
+            {
+                ConfigurationService.SetConfigurationValue("LinuxKeyboardDevice", Keyboard.Name);
+            }
             StartMonitoring();
         }
     }

@@ -71,8 +71,8 @@ The following warnings are normal and do not indicate build failures:
 ## Platform-Specific Information
 
 ### Target Frameworks
-- **Linux**: `net8.0`
-- **Windows**: `net8.0-windows10.0.17763.0`
+- **Linux**: `net9.0`
+- **Windows**: `net9.0-windows10.0.17763.0`
 
 ### Platform-Specific Features  
 - **Windows**: Uses NHotkey.Wpf for global hotkeys

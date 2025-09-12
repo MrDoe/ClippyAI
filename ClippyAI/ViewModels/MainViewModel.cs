@@ -23,7 +23,6 @@ public partial class MainViewModel : ViewModelBase
 {
     public MainViewModel()
     {
-        PopulateTasks();
         LoadTaskConfigurations();
         LoadVideoDevices();
     }
@@ -32,9 +31,6 @@ public partial class MainViewModel : ViewModelBase
     private CancellationTokenSource _askClippyCts = new();
     private HotkeyService? hotkeyService;
     private bool initialized = false;
-
-    [ObservableProperty]
-    private string _task = ConfigurationService.GetConfigurationValue("DefaultTask", Resources.Resources.Task_1);
 
     [ObservableProperty]
     private string? _clipboardContent = "";
@@ -52,19 +48,10 @@ public partial class MainViewModel : ViewModelBase
     private string? _clippyResponse;
 
     [ObservableProperty]
-    private ObservableCollection<string> taskItems = [];
-
-    [ObservableProperty]
     private ObservableCollection<TaskConfiguration> _taskConfigurations = [];
 
     [ObservableProperty]
     private TaskConfiguration? _selectedTaskConfiguration;
-
-    [ObservableProperty]
-    private string _customTask = "";
-
-    [ObservableProperty]
-    private bool _showCustomTask = false;
 
     [ObservableProperty]
     private bool _isBusy = false;
@@ -144,22 +131,6 @@ public partial class MainViewModel : ViewModelBase
     /// </summary>
     private int _responseIndex = 0;
 
-    private void PopulateTasks()
-    {
-        // iterate over Resources and add Tasks to ComboBox
-        foreach (var property in typeof(Resources.Resources).GetProperties())
-        {
-            if (property.Name.StartsWith("Task_"))
-            {
-                var value = property.GetValue(null)?.ToString();
-                if (value != null)
-                {
-                    TaskItems.Add(value);
-                }
-            }
-        }
-    }
-
     private void LoadTaskConfigurations()
     {
         try
@@ -186,31 +157,17 @@ public partial class MainViewModel : ViewModelBase
     }
     private string GetFullTask()
     {
-        string task;
-
-        // Use selected task configuration if available
+        // Use selected task configuration
         if (SelectedTaskConfiguration != null)
         {
-            task = SelectedTaskConfiguration.TaskName;
-        }
-        // Fall back to legacy task system
-        else if (Task == Resources.Resources.Task_15)
-        {
-            task = CustomTask;
+            return SelectedTaskConfiguration.TaskName;
         }
         else
-        {
-            task = Task;
-        }
-
-        if (string.IsNullOrEmpty(task))
         {
             ErrorMessages?.Add(Resources.Resources.SelectTask);
             IsBusy = false;
             return "";
         }
-
-        return task;
     }
 
     [RelayCommand]
@@ -577,12 +534,15 @@ public partial class MainViewModel : ViewModelBase
             return;
         }
 
-        if (_responseList.Count > 0 && _responseIndex >= 0 && !string.IsNullOrEmpty(Task) && !string.IsNullOrEmpty(Input))
+        if (_responseList.Count > 0 && _responseIndex >= 0 && !string.IsNullOrEmpty(Input))
         {
             try
             {
-                GetFullTask();
-                await OllamaService.StoreSqlEmbedding(Task, Input, Output);
+                string task = GetFullTask();
+                if (!string.IsNullOrEmpty(task))
+                {
+                    await OllamaService.StoreSqlEmbedding(task, Input, Output);
+                }
             }
             catch (Exception e)
             {

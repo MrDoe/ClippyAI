@@ -3,7 +3,7 @@ namespace ClippyAI.Models;
 
 public class OllamaModelRequest
 {
-    public List<OllamaModels> models { get; set; } = new();
+    public List<OllamaModels> models { get; set; } = [];
 }
 
 public class OllamaModelDetails

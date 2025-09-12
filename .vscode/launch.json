@@ -6,14 +6,14 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/ClippyAI/bin/Debug/net8.0-windows10.0.17763.0/ClippyAI.dll",
+            "program": "${workspaceFolder}/ClippyAI/bin/Debug/net9.0-windows10.0.17763.0/ClippyAI.dll",
             "args": [],
             "cwd": "${workspaceFolder}/ClippyAI",
             "console": "internalConsole",
             "stopAtEntry": false,
             "env": {
                 "DOTNET_ROOT": "C:\\Program Files\\dotnet",
-                "DOTNET_TARGET_FRAMEWORK_VERSION": "net8.0-windows10.0.17763"
+                "DOTNET_TARGET_FRAMEWORK_VERSION": "net9.0-windows10.0.17763"
             }
         },
         {
@@ -21,13 +21,13 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/ClippyAI/bin/Debug/net8.0/ClippyAI.dll",
+            "program": "${workspaceFolder}/ClippyAI/bin/Debug/net9.0/ClippyAI.dll",
             "args": [],
             "cwd": "${workspaceFolder}/ClippyAI",
             "console": "internalConsole",
             "stopAtEntry": false,
             "env": {
-                "DOTNET_TARGET_FRAMEWORK_VERSION": "net8.0"
+                "DOTNET_TARGET_FRAMEWORK_VERSION": "net9.0"
             }
         }
     ]
