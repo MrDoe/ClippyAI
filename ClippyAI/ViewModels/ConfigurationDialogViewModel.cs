@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Configuration;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ClippyAI.Models;
 using ClippyAI.Services;
 using ClippyAI.Views;
-
 namespace ClippyAI.Views;
 
 public partial class ConfigurationDialogViewModel : ViewModelBase
@@ -364,47 +362,36 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     }
 
     public void Save()
-    {
-        var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-        
+    {   
         // Update all configuration values
-        UpdateConfigValue(config, "OllamaUrl", OllamaUrl);
-        UpdateConfigValue(config, "OllamaModel", OllamaModel);
-        UpdateConfigValue(config, "DefaultTask", DefaultTask);
-        UpdateConfigValue(config, "System", SystemPrompt);
-        UpdateConfigValue(config, "UseEmbeddings", UseEmbeddings.ToString());
-        UpdateConfigValue(config, "StoreAllResponses", StoreAllResponses.ToString());
-        UpdateConfigValue(config, "AutoMode", AutoMode.ToString());
-        UpdateConfigValue(config, "PostgreSqlConnection", PostgreSqlConnection);
-        UpdateConfigValue(config, "PostgresOllamaUrl", PostgresOllamaUrl);
-        UpdateConfigValue(config, "VisionModel", VisionModel);
-        UpdateConfigValue(config, "VisionPrompt", VisionPrompt);
-        UpdateConfigValue(config, "VisionDevice", VideoDevice);
-        UpdateConfigValue(config, "DefaultLanguage", DefaultLanguage);
-        UpdateConfigValue(config, "LinuxKeyboardDevice", LinuxKeyboardDevice);
+        ConfigurationService.SetConfigurationValue("OllamaUrl", OllamaUrl);
+        ConfigurationService.SetConfigurationValue("OllamaModel", OllamaModel);
+        ConfigurationService.SetConfigurationValue("DefaultTask", DefaultTask);
+        ConfigurationService.SetConfigurationValue("System", SystemPrompt);
+        ConfigurationService.SetConfigurationValue("UseEmbeddings", UseEmbeddings.ToString());
+        ConfigurationService.SetConfigurationValue("StoreAllResponses", StoreAllResponses.ToString());
+        ConfigurationService.SetConfigurationValue("AutoMode", AutoMode.ToString());
+        ConfigurationService.SetConfigurationValue("PostgreSqlConnection", PostgreSqlConnection);
+        ConfigurationService.SetConfigurationValue("PostgresOllamaUrl", PostgresOllamaUrl);
+        ConfigurationService.SetConfigurationValue("VisionModel", VisionModel);
+        ConfigurationService.SetConfigurationValue("VisionPrompt", VisionPrompt);
+        ConfigurationService.SetConfigurationValue("VisionDevice", VideoDevice);
+        ConfigurationService.SetConfigurationValue("DefaultLanguage", DefaultLanguage);
+        ConfigurationService.SetConfigurationValue("LinuxKeyboardDevice", LinuxKeyboardDevice);
         
         // Add new advanced configuration options
-        UpdateConfigValue(config, "Temperature", Temperature.ToString());
-        UpdateConfigValue(config, "MaxLength", MaxLength.ToString());
-        UpdateConfigValue(config, "TopP", TopP.ToString());
-        UpdateConfigValue(config, "TopK", TopK.ToString());
-        UpdateConfigValue(config, "RepeatPenalty", RepeatPenalty.ToString());
-        UpdateConfigValue(config, "NumCtx", NumCtx.ToString());
-        UpdateConfigValue(config, "Threshold", Threshold.ToString());
-        UpdateConfigValue(config, "EmbeddingModel", EmbeddingModel);
-
-        config.Save(ConfigurationSaveMode.Modified);
-        ConfigurationManager.RefreshSection("appSettings");
+        ConfigurationService.SetConfigurationValue("Temperature", Temperature.ToString());
+        ConfigurationService.SetConfigurationValue("MaxLength", MaxLength.ToString());
+        ConfigurationService.SetConfigurationValue("TopP", TopP.ToString());
+        ConfigurationService.SetConfigurationValue("TopK", TopK.ToString());
+        ConfigurationService.SetConfigurationValue("RepeatPenalty", RepeatPenalty.ToString());
+        ConfigurationService.SetConfigurationValue("NumCtx", NumCtx.ToString());
+        ConfigurationService.SetConfigurationValue("Threshold", Threshold.ToString());
+        ConfigurationService.SetConfigurationValue("EmbeddingModel", EmbeddingModel);
     }
 
     public void Cancel()
     {
         // Close dialog without saving
-    }
-
-    private void UpdateConfigValue(Configuration config, string key, string value)
-    {
-        config.AppSettings.Settings.Remove(key);
-        config.AppSettings.Settings.Add(key, value);
     }
 }
