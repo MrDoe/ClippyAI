@@ -17,20 +17,46 @@
             <TabItem Header="General">
                 <ScrollViewer>
                     <StackPanel Margin="10">
-                        <Label Content="Ollama Settings" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                        <Label Content="AI Provider Settings" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                        
+                        <Label Content="AI Provider:"/>
+                        <ComboBox ItemsSource="{Binding AIProviderItems}" SelectedItem="{Binding AIProvider}" 
+                                  Margin="0,0,0,15" ToolTip.Tip="Select the AI provider (Ollama or OpenAI)"/>
+                        
+                        <!-- Ollama Settings -->
+                        <Label Content="Ollama Settings" FontSize="14" FontWeight="Bold" Margin="0,0,0,5"/>
                         
                         <Label Content="Ollama URL:"/>
                         <TextBox Text="{Binding OllamaUrl}" Margin="0,0,0,10" 
                                  ToolTip.Tip="URL for Ollama API"/>
                         
-                        <Label Content="Default Model:"/>
+                        <!-- OpenAI Settings -->
+                        <Label Content="OpenAI Settings" FontSize="14" FontWeight="Bold" Margin="0,10,0,5"/>
+                        
+                        <Label Content="OpenAI API Key:"/>
+                        <TextBox Text="{Binding OpenAIApiKey}" Margin="0,0,0,10" 
+                                 ToolTip.Tip="Your OpenAI API key"/>
+                        
+                        <Label Content="OpenAI Base URL:"/>
+                        <TextBox Text="{Binding OpenAIBaseUrl}" Margin="0,0,0,10" 
+                                 ToolTip.Tip="OpenAI API base URL (default: https://api.openai.com/v1)"/>
+                        
+                        <Label Content="OpenAI Model:"/>
+                        <TextBox Text="{Binding OpenAIModel}" Margin="0,0,0,10" 
+                                 ToolTip.Tip="OpenAI model to use (e.g., gpt-3.5-turbo, gpt-4)"/>
+                        
+                        <Label Content="OpenAI Vision Model:"/>
+                        <TextBox Text="{Binding OpenAIVisionModel}" Margin="0,0,0,15" 
+                                 ToolTip.Tip="OpenAI vision model (e.g., gpt-4-vision-preview)"/>
+
+                        <Label Content="Model Management" FontSize="14" FontWeight="Bold" Margin="0,0,0,5"/>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                             <ComboBox ItemsSource="{Binding ModelItems}" SelectedItem="{Binding OllamaModel}" 
                                       Width="300" ToolTip.Tip="Select a model from the list"/>
                             <Button Content="Pull" Command="{Binding AddModelCommand}" Margin="4,0,0,0"
-                                    ToolTip.Tip="Pull/add a model"/>
+                                    ToolTip.Tip="Pull/add a model (Ollama only)"/>
                             <Button Content="Delete" Command="{Binding DeleteModelCommand}" Margin="4,0,0,0"
-                                    ToolTip.Tip="Delete the selected model"/>
+                                    ToolTip.Tip="Delete the selected model (Ollama only)"/>
                             <Button Content="Refresh" Command="{Binding RefreshModelsCommand}" Margin="4,0,0,0"
                                     ToolTip.Tip="Refresh the model list"/>
                         </StackPanel>

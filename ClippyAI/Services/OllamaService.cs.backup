@@ -233,7 +233,7 @@ public class OllamaProvider : IAIProvider
                 stream = true
             };
 
-            OllamaService.ShowNotification($"Pulling model {modelName}...", true, false);
+            OllamaService.ShowNotification(string.Format(ClippyAI.Resources.Resources.PullingModelStatus, modelName), true, false);
 
             response = await client.PostAsync(
                                              $"{url}/pull",
@@ -280,7 +280,7 @@ public class OllamaProvider : IAIProvider
                     }
                 }
 
-                OllamaService.ShowNotification($"Model {modelName} pulled successfully", false, false);
+                OllamaService.ShowNotification(string.Format(ClippyAI.Resources.Resources.ModelPulledStatus, modelName), false, false);
             }
             else
             {
@@ -317,7 +317,7 @@ public class OllamaProvider : IAIProvider
 
             if (response.IsSuccessStatusCode)
             {
-                OllamaService.ShowNotification($"Model {modelName} deleted successfully", false, false);
+                OllamaService.ShowNotification(string.Format(ClippyAI.Resources.Resources.ModelDeletedStatus, modelName), false, false);
             }
             else
             {
@@ -335,33 +335,34 @@ public class OllamaProvider : IAIProvider
 
 public static class OllamaService
 {
+    private static readonly HttpClientHandler handler = new()
+    {
+        UseProxy = false
+    };
+    private static readonly HttpClient client = new(handler)
+    {
+        Timeout = TimeSpan.FromMinutes(5)
+    };
+
+    private static string? url = ConfigurationService.GetConfigurationValue("OllamaUrl", "http://localhost:11434/api");
+    private static string? system = ConfigurationService.GetConfigurationValue("System");
     private static string? connectionString = ConfigurationService.GetConfigurationValue("PostgreSqlConnection");
     private static string? pgOllamaUrl = ConfigurationService.GetConfigurationValue("PostgresOllamaUrl");
+    private static string? videoDevice = ConfigurationService.GetConfigurationValue("VisionDevice");
+    private static string? visionModel = ConfigurationService.GetConfigurationValue("VisionModel");
+    private static string? visionPrompt = ConfigurationService.GetConfigurationValue("VisionPrompt");
     private static string? embeddingModel = ConfigurationService.GetConfigurationValue("EmbeddingModel");
-    
-    // Provider instances
-    private static readonly OllamaProvider ollamaProvider = new();
-    private static readonly OpenAIService openAIProvider = new();
 
     private static void UpdateConfig()
     {
+        url = ConfigurationService.GetConfigurationValue("OllamaUrl", "http://localhost:11434/api");
+        system = ConfigurationService.GetConfigurationValue("System");
         connectionString = ConfigurationService.GetConfigurationValue("PostgreSqlConnection");
         pgOllamaUrl = ConfigurationService.GetConfigurationValue("PostgresOllamaUrl");
+        videoDevice = ConfigurationService.GetConfigurationValue("VisionDevice");
+        visionModel = ConfigurationService.GetConfigurationValue("VisionModel");
+        visionPrompt = ConfigurationService.GetConfigurationValue("VisionPrompt");
         embeddingModel = ConfigurationService.GetConfigurationValue("EmbeddingModel");
-    }
-
-    /// <summary>
-    /// Gets the current AI provider based on configuration.
-    /// </summary>
-    /// <returns>The configured AI provider.</returns>
-    public static IAIProvider GetCurrentProvider()
-    {
-        var provider = ConfigurationService.GetConfigurationValue("AIProvider", "Ollama");
-        return provider switch
-        {
-            "OpenAI" => openAIProvider,
-            _ => ollamaProvider
-        };
     }
 
     /// <summary>
@@ -383,7 +384,7 @@ public static class OllamaService
     }
 
     /// <summary>
-    /// Sends a request to the AI API using task-specific configuration if available.
+    /// Sends a request to the Ollama API using task-specific configuration if available.
     /// </summary>
     /// <param name="input">The clipboard data to send.</param>
     /// <param name="task">The task to perform.</param>
@@ -398,7 +399,7 @@ public static class OllamaService
     }
 
     /// <summary>
-    /// Sends a request to the AI API.
+    /// Sends a request to the Ollama API.
     /// </summary>
     /// <param name="input">The clipboard data to send.</param>
     /// <param name="task">The task to perform.</param>
@@ -411,7 +412,7 @@ public static class OllamaService
     }
 
     /// <summary>
-    /// Sends a request to the AI API with enhanced configuration options.
+    /// Sends a request to the Ollama API with enhanced configuration options.
     /// </summary>
     /// <param name="input">The clipboard data to send.</param>
     /// <param name="task">The task to perform.</param>
@@ -422,12 +423,80 @@ public static class OllamaService
                                                            string model, TaskConfiguration? taskConfig = null, 
                                                            CancellationToken token = default)
     {
-        var provider = GetCurrentProvider();
-        return await provider.SendRequestWithConfig(input, task, model, taskConfig, token);
+        string? fullResponse = null;
+        
+        // Load advanced configuration options
+        var temperature = taskConfig?.Temperature ?? 0.8;
+        var maxLength = taskConfig?.MaxLength ?? 2048;
+        var topP = taskConfig?.TopP ?? 0.9;
+        var topK = taskConfig?.TopK ?? 40;
+        var repeatPenalty = taskConfig?.RepeatPenalty ?? 1.1;
+        var numCtx = taskConfig?.NumCtx ?? 2048;
+        var systemPrompt = taskConfig?.SystemPrompt ?? system;
+        var modelToUse = taskConfig?.Model ?? model;
+
+        OllamaRequest body = new()
+        {
+            prompt = $"# TEXT\n\n'''{input.Trim()}'''\n# TASK\n\n'{task.Trim()}'",
+            model = modelToUse,
+            system = systemPrompt,
+            stream = true,
+            keep_alive = "60m",
+            options = new OllamaModelOptions()
+            {
+                temperature = temperature,
+                num_predict = maxLength,
+                top_p = topP,
+                top_k = topK,
+                repeat_penalty = repeatPenalty,
+                num_ctx = numCtx
+            }
+        };
+        Console.WriteLine("Sending request...");
+
+        // send the request
+        using var response = await client.PostAsync(
+                             url + "/generate",
+                             new StringContent(JsonSerializer.Serialize(body),
+                             Encoding.UTF8,
+                             "application/json"),
+                             token).ConfigureAwait(false);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Console.WriteLine("Request successful.");
+
+            using var responseStream = await response.Content.ReadAsStreamAsync(token);
+            using var reader = new StreamReader(responseStream);
+
+            string? line;
+            while ((line = await reader.ReadLineAsync(token)) != null &&
+                    !token.IsCancellationRequested)
+            {
+                if (!string.IsNullOrWhiteSpace(line))
+                {
+                    var responseObj = JsonSerializer.Deserialize<OllamaResponse>(line);
+                    string? responseText = responseObj?.response;
+                    fullResponse += responseText;
+                }
+            }
+        }
+        else
+        {
+            throw new Exception($"Request failed with status: {response.StatusCode}.");
+        }
+
+        // remove double quotes from the beginning and end of the response
+        if (fullResponse != null)
+        {
+            fullResponse = fullResponse.Trim('"').Trim('\'');
+        }
+
+        return fullResponse;
     }
 
     /// <summary>
-    /// Get models from the AI API.
+    /// Get models from the Ollama API.
     /// </summary>
     /// <param name="token">The cancellation token.</param>
     /// <returns>The models.</returns>
@@ -435,52 +504,169 @@ public static class OllamaService
     {
         return GetModelsAsync(token).GetAwaiter().GetResult();
     }
-
     /// <summary>
-    /// Get models from the AI API.
+    /// Get models from the Ollama API.
     /// </summary>
     /// <param name="token">The cancellation token.</param>
     /// <returns>The models.</returns>
     public static async Task<ObservableCollection<string>> GetModelsAsync(CancellationToken token = default)
     {
-        var provider = GetCurrentProvider();
-        return await provider.GetModelsAsync(token);
+        List<string> models = [];
+        HttpResponseMessage? response = null;
+        try
+        {
+            response = await client.GetAsync(
+                                 $"{url}/tags",
+                                 token).ConfigureAwait(false);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+        if (response != null && response.IsSuccessStatusCode)
+        {
+            using var stream = await response.Content.ReadAsStreamAsync(token);
+            using var reader = new StreamReader(stream);
+            string? output = await reader.ReadToEndAsync();
+
+            if (output != null)
+            {
+                // only collect model names
+                var deserializedModels = JsonSerializer.Deserialize<OllamaModelRequest>(output)?.models;
+
+                if (deserializedModels != null)
+                {
+                    foreach (var model in deserializedModels)
+                    {
+                        models.Add(model!.name!);
+                    }
+                }
+            }
+        }
+        else
+        {
+            Console.WriteLine($"Request failed with status: {response?.StatusCode}.");
+        }
+
+        // convert list to observable collection
+        var oc = new ObservableCollection<string>();
+        foreach (var item in models)
+            oc.Add(item);
+
+        return oc;
     }
 
     /// <summary>
-    /// Pulls a new model from the Ollama API (only supported by Ollama).
+    /// Pulls a new model from the Ollama API.
     /// </summary>
     /// <param name="modelName">The name of the model to pull.</param>
     /// <param name="token">The cancellation token.</param>
     /// <returns>The models.</returns>
     public static async Task PullModelAsync(string modelName, CancellationToken token = default)
     {
-        var provider = GetCurrentProvider();
-        if (provider is OllamaProvider ollamaProvider)
+        HttpResponseMessage? response;
+        try
         {
-            await ollamaProvider.PullModelAsync(modelName, token);
+            var requestBody = new
+            {
+                name = modelName,
+                insecure = false,
+                stream = true
+            };
+
+            ShowNotification(string.Format(ClippyAI.Resources.Resources.PullingModelStatus, modelName), true, false);
+
+            response = await client.PostAsync(
+                                             $"{url}/pull",
+                                             new StringContent(JsonSerializer.Serialize(requestBody),
+                                             Encoding.UTF8,
+                                             "application/json"),
+                                             token).ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                using var streamContent = await response.Content.ReadAsStreamAsync(token);
+                using var reader = new StreamReader(streamContent);
+
+                string? line;
+                DateTime lastNotificationTime = DateTime.MinValue;
+                while ((line = await reader.ReadLineAsync(token)) != null && !token.IsCancellationRequested)
+                {
+                    if (!string.IsNullOrWhiteSpace(line))
+                    {
+                        var statusUpdate = JsonSerializer.Deserialize<Dictionary<string, object>?>(line);
+                        if (statusUpdate == null)
+                            continue;
+
+                        string statusMessage = statusUpdate["status"]?.ToString() ?? "Model pull in progress";
+
+                        if (statusUpdate.TryGetValue("completed", out object? completed) &&
+                           statusUpdate.TryGetValue("total", out object? total))
+                        {
+                            statusMessage += $" ({completed}/{total})";
+                        }
+
+                        // Check if 5 seconds have passed since the last notification
+                        if ((DateTime.Now - lastNotificationTime).TotalSeconds >= 5)
+                        {
+                            ShowNotification(statusMessage, true, false);
+                            lastNotificationTime = DateTime.Now;
+                        }
+
+                        if (statusUpdate?.ContainsKey("completed") == true)
+                        {
+                            if (statusUpdate["completed"]?.ToString() == statusUpdate["total"]?.ToString())
+                            {
+                                ShowNotification(ClippyAI.Resources.Resources.ModelPullCompleted, false, false);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                ShowNotification(string.Format(ClippyAI.Resources.Resources.ModelPullFailedWithStatus, response.StatusCode), false, true);
+            }
         }
-        else
+        catch (Exception)
         {
-            throw new NotSupportedException("Model pulling is only supported by Ollama provider.");
+            ShowNotification(ClippyAI.Resources.Resources.ModelPullFailed, false, true);
         }
     }
 
     /// <summary>
-    /// Deletes a model from Ollama (only supported by Ollama).
+    /// Deletes a model from Ollama.
     /// </summary>
     /// <param name="modelName">The name of the model to delete.</param>
     /// <param name="token">The cancellation token.</param>
     public static async Task DeleteModelAsync(string modelName, CancellationToken token = default)
     {
-        var provider = GetCurrentProvider();
-        if (provider is OllamaProvider ollamaProvider)
+        HttpResponseMessage? response;
+        try
         {
-            await ollamaProvider.DeleteModelAsync(modelName, token);
+            var requestBody = new
+            {
+                name = modelName
+            };
+            var request = new HttpRequestMessage(HttpMethod.Delete, $"{url}/delete")
+            {
+                Content = new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json")
+            };
+            response = await client.SendAsync(request, token).ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                ShowNotification(ClippyAI.Resources.Resources.ModelDeletedSuccessfully, false, false);
+            }
+            else
+            {
+                ShowNotification(string.Format(ClippyAI.Resources.Resources.ModelDeletionFailedWithStatus, response.StatusCode), false, true);
+            }
         }
-        else
+        catch (Exception)
         {
-            throw new NotSupportedException("Model deletion is only supported by Ollama provider.");
+            ShowNotification(ClippyAI.Resources.Resources.ModelDeletionFailed, false, true);
         }
     }
 
@@ -635,6 +821,10 @@ public static class OllamaService
         var cmd = new NpgsqlCommand("CREATE EXTENSION IF NOT EXISTS ai CASCADE", conn);
         cmd.ExecuteNonQuery();
 
+        // drop table if it exists (for debugging)
+        // cmd = new NpgsqlCommand("DROP TABLE IF EXISTS clippy", conn);
+        // cmd.ExecuteNonQuery();
+
         // Create the table if it doesn't exist
         cmd = new NpgsqlCommand(@"
             CREATE TABLE IF NOT EXISTS clippy (
@@ -735,13 +925,51 @@ public static class OllamaService
     }
 
     /// <summary>
-    /// Analyze an image using the AI API.
+    /// Analyze an image using the Ollama API.
     /// </summary>
     /// <param name="image">The image to analyze.</param>
     /// <returns>The analysis result.</returns>
     public static async Task<string> AnalyzeImage(byte[] image)
     {
-        var provider = GetCurrentProvider();
-        return await provider.AnalyzeImage(image);
+        UpdateConfig();
+
+        OllamaRequest body = new()
+        {
+            images = [Convert.ToBase64String(image)],
+            model = visionModel ?? "llama3.2-vision",
+            prompt = visionPrompt ?? "Detect what you can find in the image. Use markdown to format the text.",
+            stream = false,
+            keep_alive = "5m",
+        };
+
+        // send the request
+        using var response = await client.PostAsync(
+                             url + "/generate",
+                             new StringContent(JsonSerializer.Serialize(body),
+                             Encoding.UTF8,
+                             "application/json")).ConfigureAwait(false);
+
+        if (response.IsSuccessStatusCode)
+        {
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+            using var reader = new StreamReader(responseStream);
+
+            string? line;
+            string fullResponse = "";
+            while ((line = await reader.ReadLineAsync()) != null)
+            {
+                if (!string.IsNullOrWhiteSpace(line))
+                {
+                    var responseObj = JsonSerializer.Deserialize<OllamaResponse>(line);
+                    string? responseText = responseObj?.response;
+                    fullResponse += responseText;
+                }
+            }
+            return fullResponse;
+        }
+        else
+        {
+            throw new Exception($"Request failed with status: {response.StatusCode}.");
+        }
     }
 }

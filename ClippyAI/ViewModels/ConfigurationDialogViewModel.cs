@@ -16,10 +16,25 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     private MainWindow? _mainWindow;
 
     [ObservableProperty]
+    private string _aiProvider = ConfigurationService.GetConfigurationValue("AIProvider", "Ollama");
+
+    [ObservableProperty]
     private string _ollamaUrl = ConfigurationService.GetConfigurationValue("OllamaUrl", "http://localhost:11434/api");
 
     [ObservableProperty]
     private string _ollamaModel = ConfigurationService.GetConfigurationValue("OllamaModel", "gemma2:latest");
+
+    [ObservableProperty]
+    private string _openAIApiKey = ConfigurationService.GetConfigurationValue("OpenAIApiKey", "");
+
+    [ObservableProperty]
+    private string _openAIBaseUrl = ConfigurationService.GetConfigurationValue("OpenAIBaseUrl", "https://api.openai.com/v1");
+
+    [ObservableProperty]
+    private string _openAIModel = ConfigurationService.GetConfigurationValue("OpenAIModel", "gpt-3.5-turbo");
+
+    [ObservableProperty]
+    private string _openAIVisionModel = ConfigurationService.GetConfigurationValue("OpenAIVisionModel", "gpt-4-vision-preview");
 
     [ObservableProperty]
     private string _defaultTask = ConfigurationService.GetConfigurationValue("DefaultTask", "Write a response to this email.");
@@ -85,6 +100,9 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     // Collections for dropdowns
     [ObservableProperty]
     private ObservableCollection<string> _languageItems = new(new[] { "English", "Deutsch", "Français", "Español", "Italiano", "Português", "中文", "日本語", "한국어", "Русский" });
+
+    [ObservableProperty]
+    private ObservableCollection<string> _aiProviderItems = new(new[] { "Ollama", "OpenAI" });
 
     [ObservableProperty]
     private ObservableCollection<string> _availableTasks = [];
@@ -408,8 +426,13 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     public void Save()
     {
         // Update all configuration values
+        ConfigurationService.SetConfigurationValue("AIProvider", AIProvider);
         ConfigurationService.SetConfigurationValue("OllamaUrl", OllamaUrl);
         ConfigurationService.SetConfigurationValue("OllamaModel", OllamaModel);
+        ConfigurationService.SetConfigurationValue("OpenAIApiKey", OpenAIApiKey);
+        ConfigurationService.SetConfigurationValue("OpenAIBaseUrl", OpenAIBaseUrl);
+        ConfigurationService.SetConfigurationValue("OpenAIModel", OpenAIModel);
+        ConfigurationService.SetConfigurationValue("OpenAIVisionModel", OpenAIVisionModel);
         ConfigurationService.SetConfigurationValue("DefaultTask", DefaultTask);
         ConfigurationService.SetConfigurationValue("System", SystemPrompt);
         ConfigurationService.SetConfigurationValue("UseEmbeddings", UseEmbeddings.ToString());
