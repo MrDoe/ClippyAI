@@ -1,0 +1,110 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup Condition=" '$(OS)' != 'Windows_NT' ">
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
+    <TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <CoreCompileDependsOn>PrepareResources;$(CompileDependsOn)</CoreCompileDependsOn>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <Version>1.2.1</Version>
+    <ApplicationIcon>bulb.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <PublishAot>False</PublishAot>
+    <PublishTrimmed>False</PublishTrimmed>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
+    <DefineConstants>WINDOWS</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
+    <DefineConstants>LINUX</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+    <Content Include="bulb.png" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Always">
+      <LinuxPath>/usr/share/ClippyAI/Assets/bulb.png</LinuxPath>
+    </Content>
+    <Content Include="clippyai.desktop" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Always">
+      <LinuxPath>/usr/share/applications/clippyai.desktop</LinuxPath>
+    </Content>
+    <Content Include="clippyai.png" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Always">
+      <LinuxPath>/usr/share/icons/hicolor/32x32/apps/clippyai.png</LinuxPath>
+    </Content>
+  </ItemGroup>
+<ItemGroup>
+    <AvaloniaXaml Remove="Libs\**" />
+    <Compile Remove="Libs\**" />
+    <EmbeddedResource Remove="Libs\**" />
+    <None Remove="Libs\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.2.0" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.2.0" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.0" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.0" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="11.2.0" />
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+    <PackageReference Include="DirectShowLib.Net" Version="3.0.0" />
+    <PackageReference Include="Emgu.CV" Version="4.10.0.5680" />
+    <PackageReference Include="Emgu.CV.runtime.mini.ubuntu-x64" Version="4.10.0.5680" />
+    <PackageReference Include="Emgu.CV.runtime.mini.windows" Version="4.10.0.5680" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.10" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+    <PackageReference Include="NHotkey.Wpf" Condition="'$(OS)' == 'Windows_NT'" Version="3.0.0" />
+    <PackageReference Include="Npgsql" Version="8.0.5" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.1" />
+    <PackageReference Include="SSH.NET" Version="2020.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Libs\evdev-sharp\EvDevSharp\EvDevSharp.csproj" />
+    <ProjectReference Include="Libs\DesktopNotificationsNet8\DesktopNotifications.Avalonia\DesktopNotifications.Avalonia.csproj" />
+    <ProjectReference Include="Libs\DesktopNotificationsNet8\DesktopNotifications.FreeDesktop\DesktopNotifications.FreeDesktop.csproj" />
+    <ProjectReference Include="Libs\DesktopNotificationsNet8\DesktopNotifications.Windows\DesktopNotifications.Windows.csproj" />
+    <ProjectReference Include="Libs\DesktopNotificationsNet8\DesktopNotifications\DesktopNotifications.csproj" />
+  </ItemGroup>
+	<ItemGroup>
+		<Compile Update="Resources\Resources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Resources\Resources.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<PublicClass>true</PublicClass>
+			<StronglyTypedFileName>Resources\Resources.Designer.cs</StronglyTypedFileName>
+			<StronglyTypedLanguage>CSharp</StronglyTypedLanguage>
+			<StronglyTypedNamespace>ClippyAI.Resources</StronglyTypedNamespace>
+			<StronglyTypedClassName>Resources</StronglyTypedClassName>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="powershell -Command &quot;(Get-Content -path $(ProjectDir)\Resources\Resources.Designer.cs) -replace 'internal', 'public' | Set-Content -Path $(ProjectDir)\Resources\Resources.Designer.cs&quot;" Condition="'$(OS)' == 'Windows_NT'" />
+    <Exec Command="sed -i 's/internal/public/g' Resources/Resources.Designer.cs" Condition="'$(OS)' == 'Unix'" />
+  </Target>
+  <Target Name="ClickOnceAvaloniaXaml" AfterTargets="InjectAvaloniaXamlOutput" Condition="'@(AvaloniaResource)@(AvaloniaXaml)' != '' AND $(EnableAvaloniaXamlCompilation) != false">
+  <ItemGroup>
+    <!-- ClickOnce support -->
+    <_DeploymentManifestEntryPoint Remove="@(_DeploymentManifestEntryPoint)" />
+    <_DeploymentManifestEntryPoint Include="@(_AvaloniaXamlCompiledAssembly)">
+      <TargetPath>$(TargetFileName)</TargetPath>
+    </_DeploymentManifestEntryPoint>
+  </ItemGroup>
+</Target>
+  <PropertyGroup>
+    <PostInstallScript>chmod 777 /usr/share/ClippyAI
+chmod 666 /usr/share/ClippyAI/ClippyAI.dll.config</PostInstallScript>  
+  </PropertyGroup>
+</Project>

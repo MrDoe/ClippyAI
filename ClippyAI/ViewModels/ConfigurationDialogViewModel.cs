@@ -18,6 +18,12 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     [ObservableProperty]
     private string _aiProvider = ConfigurationService.GetConfigurationValue("AIProvider", "Ollama");
 
+    partial void OnAIProviderChanged(string value)
+    {
+        // Refresh models when provider changes
+        _ = RefreshModels();
+    }
+
     [ObservableProperty]
     private string _ollamaUrl = ConfigurationService.GetConfigurationValue("OllamaUrl", "http://localhost:11434/api");
 
