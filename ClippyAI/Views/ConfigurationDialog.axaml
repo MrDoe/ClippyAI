@@ -20,7 +20,7 @@
                         <Label Content="AI Provider Settings" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
                         
                         <Label Content="AI Provider:"/>
-                        <ComboBox ItemsSource="{Binding AIProviderItems}" SelectedItem="{Binding AIProvider}" 
+                        <ComboBox ItemsSource="{Binding AiProviderItems}" SelectedItem="{Binding AiProvider}" 
                                   Margin="0,0,0,15" ToolTip.Tip="Select the AI provider (Ollama or OpenAI)"/>
                         
                         <!-- Ollama Settings -->

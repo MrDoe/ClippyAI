@@ -1,7 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
-using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -190,7 +189,7 @@ public class OpenAIService : IAIProvider
 
     public ObservableCollection<string> GetModels(CancellationToken token = default)
     {
-        return GetModelsAsync(token).GetAwaiter().GetResult();
+        return Task.Run(() => GetModelsAsync(token)).GetAwaiter().GetResult();
     }
 
     public async Task<string> AnalyzeImage(byte[] image)

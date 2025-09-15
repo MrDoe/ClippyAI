@@ -121,6 +121,8 @@ public partial class MainViewModel : ViewModelBase
 
     private bool _lastOutputGenerated = false;
 
+    private string _systemPrompt = ConfigurationService.GetConfigurationValue("System", "You are a helpful assistant.") ?? "You are a helpful assistant.";
+
     /// <summary>
     /// List of responseList retrieved from vector database
     /// </summary>
@@ -182,9 +184,14 @@ public partial class MainViewModel : ViewModelBase
                 ClipboardService.LastInput = clipboardText;
             }
         }
+
         if (string.IsNullOrEmpty(Input))
         {
             return;
+        }
+        else
+        {
+            Input = _systemPrompt + "\n\n" + Input;
         }
 
         IsBusy = true;
@@ -231,6 +238,7 @@ public partial class MainViewModel : ViewModelBase
             // Use task configuration if available, otherwise use the current model
             if (SelectedTaskConfiguration != null)
             {
+                Input = SelectedTaskConfiguration.SystemPrompt + "\n\n" + Input;
                 response = await OllamaService.SendRequestWithConfig(Input!,
                                                            SelectedTaskConfiguration.SystemPrompt,
                                                            SelectedTaskConfiguration.Model,

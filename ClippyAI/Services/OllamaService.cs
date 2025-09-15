@@ -110,7 +110,8 @@ public class OllamaProvider : IAIProvider
         }
         else
         {
-            throw new Exception($"Request failed with status: {response.StatusCode}.");
+            Console.WriteLine($"Request failed with status: {response.StatusCode}.");
+            //throw new Exception($"Request failed with status: {response.StatusCode}.");
         }
 
         // remove double quotes from the beginning and end of the response
@@ -135,7 +136,7 @@ public class OllamaProvider : IAIProvider
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
+            Console.WriteLine("Error retrieving models list: " + e.Message);
         }
         if (response != null && response.IsSuccessStatusCode)
         {
@@ -157,17 +158,17 @@ public class OllamaProvider : IAIProvider
                 }
             }
         }
-        else
-        {
-            Console.WriteLine($"Request failed with status: {response?.StatusCode}.");
-        }
+        // else
+        // {
+        //     Console.WriteLine($"Request failed with status: {response?.StatusCode}.");
+        // }
 
         return new ObservableCollection<string>(models);
     }
 
     public ObservableCollection<string> GetModels(CancellationToken token = default)
     {
-        return GetModelsAsync(token).GetAwaiter().GetResult();
+        return Task.Run(() => GetModelsAsync(token)).GetAwaiter().GetResult();
     }
 
     public async Task<string> AnalyzeImage(byte[] image)
@@ -433,7 +434,7 @@ public static class OllamaService
     /// <returns>The models.</returns>
     public static ObservableCollection<string> GetModels(CancellationToken token = default)
     {
-        return GetModelsAsync(token).GetAwaiter().GetResult();
+        return Task.Run(() => GetModelsAsync(token)).GetAwaiter().GetResult();
     }
 
     /// <summary>

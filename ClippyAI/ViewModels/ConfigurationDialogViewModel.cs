@@ -18,7 +18,7 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     [ObservableProperty]
     private string _aiProvider = ConfigurationService.GetConfigurationValue("AIProvider", "Ollama");
 
-    partial void OnAIProviderChanged(string value)
+    void OnAIProviderChanged(string value)
     {
         // Refresh models when provider changes
         _ = RefreshModels();
@@ -432,7 +432,7 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     public void Save()
     {
         // Update all configuration values
-        ConfigurationService.SetConfigurationValue("AIProvider", AIProvider);
+        ConfigurationService.SetConfigurationValue("AIProvider", AiProvider);
         ConfigurationService.SetConfigurationValue("OllamaUrl", OllamaUrl);
         ConfigurationService.SetConfigurationValue("OllamaModel", OllamaModel);
         ConfigurationService.SetConfigurationValue("OpenAIApiKey", OpenAIApiKey);
