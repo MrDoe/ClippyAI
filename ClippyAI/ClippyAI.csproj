@@ -28,6 +28,9 @@
   <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
     <DefineConstants>LINUX</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
+    <OutputType>WinExe</OutputType>
+  </PropertyGroup>
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
     <Content Include="bulb.png" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Always">
