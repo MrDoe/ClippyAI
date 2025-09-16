@@ -445,6 +445,7 @@ public static class ConfigurationService
     {
         try
         {
+            value ??= string.Empty;
             using var connection = new SqliteConnection(ConnectionString);
             connection.Open();
 
