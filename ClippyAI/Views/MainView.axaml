@@ -36,7 +36,7 @@
         <TextBox x:Name="txtInput" Text="{Binding Input}"
             IsReadOnly="True"
             Width="490"
-            Height="200"
+            Height="400"
             FontSize="12"
             ScrollViewer.VerticalScrollBarVisibility="Auto"
             TextWrapping="Wrap"
@@ -107,7 +107,7 @@
             AcceptsReturn="True"
             AcceptsTab="True"
             Width="490"
-            Height="200"
+            Height="400"
             FontSize="12"
             ScrollViewer.VerticalScrollBarVisibility="Auto"
             TextWrapping="Wrap"
@@ -144,7 +144,7 @@
 
         <!-- Response counter -->
         <Label Content="{Binding ResponseCounter}" HorizontalAlignment="Left"
-            FontSize="14" Margin="355 -30 0 0"
+            FontSize="14" Margin="400 -30 0 0"
             ToolTip.Tip="Number of matches" />
 
         <!-- Response distance -->
