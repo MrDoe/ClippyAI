@@ -393,7 +393,7 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
 
         try
         {
-            var hotkeyService = new HotkeyService(_mainWindow);
+            var hotkeyService = new LinuxHotkeyService(_mainWindow);
             await hotkeyService.SetupHotkeyDevice();
             LinuxKeyboardDevice = ConfigurationService.GetConfigurationValue("LinuxKeyboardDevice", "");
         }

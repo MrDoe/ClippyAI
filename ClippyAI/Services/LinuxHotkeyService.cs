@@ -5,13 +5,12 @@ using System.Linq;
 using System.Runtime.Versioning;
 using System.Threading;
 using System.Threading.Tasks;
-using Avalonia.Input;
 using Avalonia.Threading;
 using ClippyAI.Views;
 using EvDevSharp;
 namespace ClippyAI.Services;
 [SupportedOSPlatform("linux")]
-public class HotkeyService
+public class LinuxHotkeyService
 {
     private EvDevDevice? Keyboard;
     private IList<string> LastKeys = [];
@@ -22,7 +21,7 @@ public class HotkeyService
     private DateTime lastC = DateTime.Now;
     private DateTime lastA = DateTime.Now;
 
-    public HotkeyService(MainWindow window)
+    public LinuxHotkeyService(MainWindow window)
     {
         Window = window;
         DataContext = Window.DataContext as MainViewModel;
