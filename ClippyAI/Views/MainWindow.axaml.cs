@@ -33,7 +33,7 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
 #endif
 
 #if LINUX
-    private HotkeyService? HotkeyService;
+    private LinuxHotkeyService? HotkeyService;
 #endif
 
     public new string Title
@@ -107,7 +107,7 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
     [SupportedOSPlatform("linux")]
     private void RegisterHotkeyLinux()
     {
-        HotkeyService = new HotkeyService(this);
+        HotkeyService = new LinuxHotkeyService(this);
     }
 
     private async void OnAnalyzeVideoHotkeyHandler(object? sender, EventArgs e)
