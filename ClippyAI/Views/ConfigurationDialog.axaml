@@ -205,6 +205,29 @@
                         <Label Content="Private Key File:"/>
                         <TextBox Text="{Binding SshPrivateKeyFile}" Margin="0,0,0,10"
                                  ToolTip.Tip="Path to SSH private key file"/>
+                        
+                        <!-- SSH Test Section -->
+                        <StackPanel Orientation="Horizontal" Margin="0,10,0,10">
+                            <Button Content="Test SSH Connection" 
+                                    Command="{Binding TestSSHConnectionCommand}"
+                                    IsEnabled="{Binding !SshTestInProgress}"
+                                    HorizontalAlignment="Left" 
+                                    Margin="0,0,10,0"/>
+                            <TextBlock Text="Testing..." 
+                                       IsVisible="{Binding SshTestInProgress}"
+                                       VerticalAlignment="Center"
+                                       Foreground="Orange"/>
+                        </StackPanel>
+                        
+                        <Border Background="LightGray" 
+                                CornerRadius="3" 
+                                Padding="8"
+                                Margin="0,0,0,10"
+                                IsVisible="{Binding SshTestResult, Converter={x:Static ObjectConverters.IsNotNull}}">
+                            <TextBlock Text="{Binding SshTestResult}" 
+                                       TextWrapping="Wrap"
+                                       Foreground="Black"/>
+                        </Border>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>

@@ -103,6 +103,12 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     [ObservableProperty]
     private string _sshPrivateKeyFile = ConfigurationService.GetConfigurationValue("SSHPrivateKeyFile", "~/.ssh/private.key");
 
+    [ObservableProperty]
+    private string _sshTestResult = "";
+
+    [ObservableProperty]
+    private bool _sshTestInProgress = false;
+
     // Collections for dropdowns
     [ObservableProperty]
     private ObservableCollection<string> _languageItems = new(new[] { "English", "Deutsch", "Français", "Español", "Italiano", "Português", "中文", "日本語", "한국어", "Русский" });
@@ -394,6 +400,51 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error configuring hotkey device: {ex.Message}");
+        }
+    }
+
+    [RelayCommand]
+    private async Task TestSSHConnection()
+    {
+        SshTestInProgress = true;
+        SshTestResult = "Testing SSH connection...";
+        
+        try
+        {
+            // Save current SSH settings temporarily to test with current form values
+            var tempUseSSH = ConfigurationService.GetConfigurationValue("UseSSH");
+            var tempUsername = ConfigurationService.GetConfigurationValue("SSHUsername");
+            var tempServerUrl = ConfigurationService.GetConfigurationValue("SSHServerUrl");
+            var tempPort = ConfigurationService.GetConfigurationValue("SSHPort");
+            var tempPrivateKeyFile = ConfigurationService.GetConfigurationValue("SSHPrivateKeyFile");
+
+            // Set current form values for testing
+            ConfigurationService.SetConfigurationValue("UseSSH", UseSSH.ToString());
+            ConfigurationService.SetConfigurationValue("SSHUsername", SshUsername);
+            ConfigurationService.SetConfigurationValue("SSHServerUrl", SshServerUrl);
+            ConfigurationService.SetConfigurationValue("SSHPort", SshPort);
+            ConfigurationService.SetConfigurationValue("SSHPrivateKeyFile", SshPrivateKeyFile);
+
+            await Task.Run(() =>
+            {
+                var sshService = new SSHService();
+                SshTestResult = sshService.TestConnection();
+            });
+
+            // Restore original settings
+            ConfigurationService.SetConfigurationValue("UseSSH", tempUseSSH);
+            ConfigurationService.SetConfigurationValue("SSHUsername", tempUsername);
+            ConfigurationService.SetConfigurationValue("SSHServerUrl", tempServerUrl);
+            ConfigurationService.SetConfigurationValue("SSHPort", tempPort);
+            ConfigurationService.SetConfigurationValue("SSHPrivateKeyFile", tempPrivateKeyFile);
+        }
+        catch (Exception ex)
+        {
+            SshTestResult = $"SSH test error: {ex.Message}";
+        }
+        finally
+        {
+            SshTestInProgress = false;
         }
     }
 

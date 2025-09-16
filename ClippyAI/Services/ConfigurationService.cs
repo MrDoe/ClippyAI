@@ -377,8 +377,9 @@ public static class ConfigurationService
             var appSettings = ConfigurationManager.AppSettings;
             var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
-            foreach (string key in appSettings.AllKeys)
+            foreach (string? key in appSettings.AllKeys)
             {
+                if (key is null) continue;
                 var value = appSettings[key] ?? string.Empty;
                 
                 var insertCommand = @"

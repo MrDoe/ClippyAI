@@ -12,9 +12,7 @@ using Avalonia.Markup.Xaml;
 using ClippyAI.Services;
 
 #if WINDOWS
-using System.Windows.Input;
-using NHotkey;
-using NHotkey.Wpf;
+using System.Runtime.Versioning;
 #endif
 
 #if LINUX
@@ -29,6 +27,15 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
     public readonly System.Timers.Timer clipboardPollingTimer;
     private readonly INotificationManager _notificationManager;
     private Notification? _lastNotification { get; set; }
+    
+#if WINDOWS
+    private WindowsHotkeyService? _windowsHotkeyService;
+#endif
+
+#if LINUX
+    private HotkeyService? HotkeyService;
+#endif
+
     public new string Title
     {
         get => base.Title!;
@@ -52,14 +59,20 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         // register notification manager
         _notificationManager = Program.NotificationManager ??
                                 throw new InvalidOperationException("Missing notification manager");
-        _notificationManager.NotificationActivated += OnNotificationActivated;
-        _notificationManager.NotificationDismissed += OnNotificationDismissed;
+        
+        // Only register notification events on Windows
+        if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 17763))
+        {
+            _notificationManager.NotificationActivated += OnNotificationActivated;
+            _notificationManager.NotificationDismissed += OnNotificationDismissed;
+        }
 
         // Subscribe to the WindowStateChanged event
         PropertyChanged += MainWindow_PropertyChanged;
 
 #if WINDOWS        
-        RegisterHotkeyWindows();
+        if (OperatingSystem.IsWindows())
+            RegisterHotkeyWindows();
 #elif LINUX
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             RegisterHotkeyLinux();
@@ -67,45 +80,30 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
     }
 
 #if WINDOWS
+    [SupportedOSPlatform("windows7.0")]
     private void RegisterHotkeyWindows()
     {
+        if (!OperatingSystem.IsWindows())
+            return;
+
         try
         {
-            HotkeyManager.Current.AddOrReplace("Ctrl+Alt+C", 
-                System.Windows.Input.Key.C, ModifierKeys.Control | ModifierKeys.Alt, 
-                OnHotkeyHandler);
-            HotkeyManager.Current.AddOrReplace("Ctrl+Alt+A", 
-                System.Windows.Input.Key.A, ModifierKeys.Control | ModifierKeys.Alt,
-                OnAnalyzeVideoHotkeyHandler);
+            _windowsHotkeyService = new WindowsHotkeyService(this);
+            bool success = _windowsHotkeyService.RegisterHotkeys();
+            
+            if (!success)
+            {
+                Console.WriteLine("Failed to register Windows hotkeys using native API");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to register hotkey: {ex.Message}");
+            Console.WriteLine($"Failed to register Windows hotkeys: {ex.Message}");
         }
-    }
-
-    private async void OnHotkeyHandler(object? sender, HotkeyEventArgs e)
-    {
-        Console.WriteLine("Hotkey pressed");
-
-        // execute relay command AskClippy
-        await ((MainViewModel)DataContext!).AskClippy(new CancellationToken());
-        e.Handled = true;
-    }
-
-    private async void OnAnalyzeVideoHotkeyHandler(object? sender, HotkeyEventArgs e)
-    {
-        Console.WriteLine("Analyze video hotkey pressed");
-
-        // execute relay command AnalyzeVideo
-        await ((MainViewModel)DataContext!).CaptureAndAnalyze();
-        e.Handled = true;
     }
 #endif
 
 #if LINUX
-    private HotkeyService? HotkeyService;
-
     [SupportedOSPlatform("linux")]
     private void RegisterHotkeyLinux()
     {
@@ -190,6 +188,9 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
 
     private void OnNotificationDismissed(object? sender, NotificationDismissedEventArgs e)
     {
+        if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 17763))
+            return;
+            
         string reason = e.Reason.ToString();
         if (reason == "User")
         {
@@ -203,6 +204,9 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
 
     private void OnNotificationActivated(object? sender, NotificationActivatedEventArgs e)
     {
+        if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 17763))
+            return;
+            
         string actionId = e.ActionId;
         if (actionId == ClippyAI.Resources.Resources.TaskView)
         {
@@ -233,6 +237,10 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         try
         {
             Debug.Assert(_notificationManager != null);
+            
+            if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 17763))
+                return;
+                
             Notification nf;
             if (showAbortButton)
             {
@@ -273,7 +281,7 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
     {
         try
         {
-            if (_lastNotification != null)
+            if (_lastNotification != null && OperatingSystem.IsWindowsVersionAtLeast(10, 0, 17763))
             {
                 await _notificationManager.HideNotification(_lastNotification);
             }
@@ -290,6 +298,11 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
 
     private async void CloseButton_Click(object? sender, RoutedEventArgs e)
     {
+        // cleanup hotkeys before closing
+#if WINDOWS
+        _windowsHotkeyService?.UnregisterHotkeys();
+#endif
+
         // confirm closing the application
         string? result = await InputDialog.Confirm(this, ClippyAI.Resources.Resources.CloseApplication, ClippyAI.Resources.Resources.ConfirmClose);
         if (result == ClippyAI.Resources.Resources.Yes)
