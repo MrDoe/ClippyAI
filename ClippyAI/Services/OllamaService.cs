@@ -59,14 +59,13 @@ public class OllamaProvider : IAIProvider
         var topK = taskConfig?.TopK ?? 40;
         var repeatPenalty = taskConfig?.RepeatPenalty ?? 1.1;
         var numCtx = taskConfig?.NumCtx ?? 2048;
-        var systemPrompt = taskConfig?.SystemPrompt ?? system;
         var modelToUse = taskConfig?.Model ?? model;
 
         OllamaRequest body = new()
         {
             prompt = $"# TEXT\n\n'''{input.Trim()}'''\n# TASK\n\n'{task.Trim()}'",
             model = modelToUse,
-            system = systemPrompt,
+            system = system,
             stream = true,
             keep_alive = "60m",
             options = new OllamaModelOptions()

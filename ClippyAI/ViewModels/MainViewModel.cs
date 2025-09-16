@@ -189,10 +189,6 @@ public partial class MainViewModel : ViewModelBase
         {
             return;
         }
-        else
-        {
-            Input = _systemPrompt + "\n\n" + Input;
-        }
 
         IsBusy = true;
         ErrorMessages?.Clear();
