@@ -128,7 +128,7 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         PositionChanged += MainWindow_PositionChanged;
 
         // hide the window
-        // Hide();
+        Hide();
     }
 
     private void SetWindowPos()
