@@ -122,8 +122,6 @@ public partial class MainViewModel : ViewModelBase
 
     private bool _lastOutputGenerated = false;
 
-    private string _systemPrompt = ConfigurationService.GetConfigurationValue("System", "You are a helpful assistant.") ?? "You are a helpful assistant.";
-
     /// <summary>
     /// List of responseList retrieved from vector database
     /// </summary>

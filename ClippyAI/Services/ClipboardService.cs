@@ -96,7 +96,7 @@ public static class ClipboardService
 
         // Check formats with caching to reduce API calls
         var formats = await GetFormatsWithCache() ?? [];
-        if (!formats.Contains("image") && !formats.Contains("PNG"))
+        if (!formats.Contains("image") && (!formats.Contains("PNG") || !formats.Contains("image/png")))
             return null;
 
         // Get the image data from the clipboard

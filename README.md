@@ -18,9 +18,6 @@ after it is copied or cut. The clipboard's content can then be sent along with a
 * **Cross-Platform Support**: Developed with .NET and Avalonia, ClippyAI runs on Windows and Linux (X11), ensuring that users can enjoy its benefits regardless of their platform. Hotkeys allow the user to use ClippyAI easily, without interacting with the user interface.
 * **OpenAI Integration**: Choose between local Ollama or cloud-based OpenAI API for AI processing, providing flexibility based on your privacy and performance needs.
 * **SSH Tunneling Support**: Securely connect to remote Ollama instances or databases through SSH tunnels, enabling access to AI services and data storage over encrypted connections.
-* *New in v1.2:* Supports image analysis with a vision model (e.g. llava, llama3.2-vision).
-* *New in v1.3:* OpenAI API support as an alternative to Ollama for cloud-based AI processing.
-* *New in v1.3:* SSH tunneling support for accessing Ollama servers over secure remote connections.
 
 **Example Use Cases**
 

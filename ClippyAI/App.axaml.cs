@@ -69,6 +69,10 @@ public partial class App : Application
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+            // Initialize SSHService
+            _sshService = new SSHService();
+            _sshService.Connect();
+
             _mainWindow = new MainWindow { DataContext = new MainViewModel() };
             desktop.MainWindow = _mainWindow;
 
@@ -122,10 +126,6 @@ public partial class App : Application
                     _mainWindow.ShowNotification("ClippyAI", ex.Message, false, true);
                 }
             }
-
-            // Initialize SSHService
-            _sshService = new SSHService();
-            _sshService.Connect();
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewLifetime)
         {

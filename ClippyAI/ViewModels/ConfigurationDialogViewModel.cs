@@ -99,7 +99,7 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     private string _sshPort = ConfigurationService.GetConfigurationValue("SSHPort", "22");
 
     [ObservableProperty]
-    private string _sshLocalTunnel = ConfigurationService.GetConfigurationValue("SSHLocalTunnel", "localhost:11443:localhost");
+    private string _sshLocalTunnel = ConfigurationService.GetConfigurationValue("SSHLocalTunnel", "localhost:11443:localhost:11434");
 
     [ObservableProperty]
     private string _sshRemoteTunnel = ConfigurationService.GetConfigurationValue("SSHRemoteTunnel", "");
