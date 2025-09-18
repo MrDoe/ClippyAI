@@ -348,7 +348,7 @@ public static class OllamaService
     private static string? system = ConfigurationService.GetConfigurationValue("System");
     private static string? connectionString = ConfigurationService.GetConfigurationValue("PostgreSqlConnection");
     private static string? pgOllamaUrl = ConfigurationService.GetConfigurationValue("PostgresOllamaUrl");
-    private static string? videoDevice = ConfigurationService.GetConfigurationValue("VisionDevice");
+    private static string? videoDevice = ConfigurationService.GetConfigurationValue("VideoDevice");
     private static string? visionModel = ConfigurationService.GetConfigurationValue("VisionModel");
     private static string? visionPrompt = ConfigurationService.GetConfigurationValue("VisionPrompt");
     private static string? embeddingModel = ConfigurationService.GetConfigurationValue("EmbeddingModel");
@@ -359,7 +359,7 @@ public static class OllamaService
         system = ConfigurationService.GetConfigurationValue("System");
         connectionString = ConfigurationService.GetConfigurationValue("PostgreSqlConnection");
         pgOllamaUrl = ConfigurationService.GetConfigurationValue("PostgresOllamaUrl");
-        videoDevice = ConfigurationService.GetConfigurationValue("VisionDevice");
+        videoDevice = ConfigurationService.GetConfigurationValue("VideoDevice");
         visionModel = ConfigurationService.GetConfigurationValue("VisionModel");
         visionPrompt = ConfigurationService.GetConfigurationValue("VisionPrompt");
         embeddingModel = ConfigurationService.GetConfigurationValue("EmbeddingModel");

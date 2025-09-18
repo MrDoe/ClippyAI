@@ -9,7 +9,11 @@ using ClippyAI.Models;
 using ClippyAI.Services;
 using ClippyAI.Views;
 using Microsoft.Data.Sqlite;
-namespace ClippyAI.Views;
+using System.IO;
+#if WINDOWS
+using DirectShowLib;
+#endif
+namespace ClippyAI.ViewModels;
 
 public partial class ConfigurationDialogViewModel : ViewModelBase
 {
@@ -70,7 +74,7 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     private string _visionPrompt = ConfigurationService.GetConfigurationValue("VisionPrompt", "Describe the image.");
 
     [ObservableProperty]
-    private string _videoDevice = ConfigurationService.GetConfigurationValue("VisionDevice", "/dev/video0");
+    private string _videoDevice = ConfigurationService.GetConfigurationValue("VideoDevice", "/dev/video0");
 
     [ObservableProperty]
     private string _defaultLanguage = ConfigurationService.GetConfigurationValue("DefaultLanguage", "English");
@@ -118,6 +122,12 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
 
     [ObservableProperty]
     private ObservableCollection<string> _availableTasks = [];
+
+    [ObservableProperty]
+    private ObservableCollection<string> _openAIModelItems = new(new[] { "gpt-3.5-turbo", "gpt-4", "gpt-4-turbo", "gpt-4o", "gpt-4o-mini" });
+
+    [ObservableProperty]
+    private ObservableCollection<string> _openAIVisionModelItems = new(new[] { "gpt-4-vision-preview", "gpt-4o", "gpt-4-turbo" });
 
     // Additional configuration options from main window
     [ObservableProperty]
@@ -450,19 +460,24 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
 
     private List<string> GetVideoDevices()
     {
-        // This is a simplified version - the actual implementation should match MainViewModel
         var devices = new List<string>();
-        try
+        if (OperatingSystem.IsWindows())
         {
-            // Add basic video devices for Linux/Windows
-            for (int i = 0; i < 10; i++)
-            {
-                devices.Add($"/dev/video{i}");
-            }
+            // Windows-specific code to get video devices
+            var systemDeviceEnum = DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice);
+            devices.AddRange(systemDeviceEnum.Select(device => device.Name));
         }
-        catch
+        else if (OperatingSystem.IsLinux() || OperatingSystem.IsMacOS())
         {
-            // Ignore errors and return empty list
+            // Unix-based systems code to get video devices
+            for (int i = 0; i < 10; ++i)
+            {
+                var devicePath = $"/dev/video{i}";
+                if (File.Exists(devicePath))
+                {
+                    devices.Add(devicePath);
+                }
+            }
         }
         return devices;
     }
@@ -499,7 +514,7 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
         ConfigurationService.SetConfigurationValue("PostgresOllamaUrl", PostgresOllamaUrl);
         ConfigurationService.SetConfigurationValue("VisionModel", VisionModel);
         ConfigurationService.SetConfigurationValue("VisionPrompt", VisionPrompt);
-        ConfigurationService.SetConfigurationValue("VisionDevice", VideoDevice);
+        ConfigurationService.SetConfigurationValue("VideoDevice", VideoDevice);
         ConfigurationService.SetConfigurationValue("DefaultLanguage", DefaultLanguage);
         ConfigurationService.SetConfigurationValue("LinuxKeyboardDevice", LinuxKeyboardDevice);
         ConfigurationService.SetConfigurationValue("Threshold", Threshold.ToString());

@@ -1,6 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:vm="clr-namespace:ClippyAI.Views"
+    xmlns:vm="clr-namespace:ClippyAI.ViewModels"
     xmlns:models="clr-namespace:ClippyAI.Models"
         x:Class="ClippyAI.Views.ConfigurationDialog"
         x:DataType="vm:ConfigurationDialogViewModel"
@@ -42,12 +42,12 @@
                                  ToolTip.Tip="OpenAI API base URL (default: https://api.openai.com/v1)"/>
                         
                         <Label Content="OpenAI Model:"/>
-                        <TextBox Text="{Binding OpenAIModel}" Margin="0,0,0,10" 
-                                 ToolTip.Tip="OpenAI model to use (e.g., gpt-3.5-turbo, gpt-4)"/>
+                        <ComboBox ItemsSource="{Binding OpenAIModelItems}" SelectedItem="{Binding OpenAIModel}" Margin="0,0,0,10" 
+                                 ToolTip.Tip="Select OpenAI model"/>
                         
                         <Label Content="OpenAI Vision Model:"/>
-                        <TextBox Text="{Binding OpenAIVisionModel}" Margin="0,0,0,15" 
-                                 ToolTip.Tip="OpenAI vision model (e.g., gpt-4-vision-preview)"/>
+                        <ComboBox ItemsSource="{Binding OpenAIVisionModelItems}" SelectedItem="{Binding OpenAIVisionModel}" Margin="0,0,0,15" 
+                                 ToolTip.Tip="Select OpenAI vision model"/>
 
                         <Label Content="Model Management" FontSize="14" FontWeight="Bold" Margin="0,0,0,5"/>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">

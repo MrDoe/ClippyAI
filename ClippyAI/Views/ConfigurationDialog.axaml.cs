@@ -1,6 +1,7 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using ClippyAI.ViewModels;
 
 namespace ClippyAI.Views;
 

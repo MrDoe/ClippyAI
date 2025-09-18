@@ -17,6 +17,7 @@ using System.Linq;
 using DirectShowLib;
 using Avalonia.Media.Imaging;
 using System.IO;
+using ClippyAI.ViewModels;
 namespace ClippyAI.Views;
 
 public partial class MainViewModel : ViewModelBase
@@ -99,7 +100,7 @@ public partial class MainViewModel : ViewModelBase
     private float _responseDistance = 0.0f;
 
     [ObservableProperty]
-    private string _videoDevice = ConfigurationService.GetConfigurationValue("VisionDevice") ?? "";
+    private string _videoDevice = ConfigurationService.GetConfigurationValue("VideoDevice") ?? "";
 
     [ObservableProperty]
     private string _visionModel = ConfigurationService.GetConfigurationValue("VisionModel", "llama3.2-vision") ?? "llama3.2-vision";
@@ -721,7 +722,7 @@ public partial class MainViewModel : ViewModelBase
             if (!int.TryParse(VideoDevice, out deviceNumber))
             {
                 // If the device name is not a number, try to find it by name
-                var devices = new System.Collections.Generic.List<string>();
+                var devices = new List<string>();
                 var systemDeviceEnum = DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice);
                 foreach (var device in systemDeviceEnum)
                 {

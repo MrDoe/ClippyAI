@@ -144,7 +144,7 @@
 
         <!-- Response counter -->
         <Label Content="{Binding ResponseCounter}" HorizontalAlignment="Left"
-            FontSize="14" Margin="355 -30 0 0"
+            FontSize="14" Margin="440 -30 0 0"
             ToolTip.Tip="Number of matches" />
 
         <!-- Response distance -->
