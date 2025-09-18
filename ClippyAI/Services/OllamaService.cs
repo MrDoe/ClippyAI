@@ -7,8 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using ClippyAI.Models;
 using System.Collections.Generic;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -39,7 +37,39 @@ public class OllamaProvider : IAIProvider
 
     public void UpdateConfig()
     {
-        url = ConfigurationService.GetConfigurationValue("OllamaUrl", "http://localhost:11434/api");
+        string baseUrl = ConfigurationService.GetConfigurationValue("OllamaUrl", "http://localhost:11434/api");
+        
+        // Check if SSH is enabled and adjust URL to use tunnel port
+        var useSSH = ConfigurationService.GetConfigurationValue("UseSSH", "False");
+        if (useSSH.Equals("True", StringComparison.OrdinalIgnoreCase))
+        {
+            var sshLocalTunnel = ConfigurationService.GetConfigurationValue("SSHLocalTunnel", "");
+            if (!string.IsNullOrWhiteSpace(sshLocalTunnel))
+            {
+                // Parse tunnel format: "localhost:localPort:remoteHost:remotePort"
+                var tunnelParts = sshLocalTunnel.Split(':');
+                if (tunnelParts.Length >= 2 && int.TryParse(tunnelParts[1], out int tunnelPort))
+                {
+                    // Replace the port in the base URL with the tunnel port
+                    var uri = new Uri(baseUrl);
+                    var tunnelUri = new UriBuilder(uri) { Port = tunnelPort };
+                    url = tunnelUri.ToString();
+                }
+                else
+                {
+                    url = baseUrl; // Fallback to base URL if tunnel parsing fails
+                }
+            }
+            else
+            {
+                url = baseUrl; // Fallback to base URL if no tunnel configured
+            }
+        }
+        else
+        {
+            url = baseUrl; // Use direct connection when SSH is disabled
+        }
+        
         system = ConfigurationService.GetConfigurationValue("System");
         visionModel = ConfigurationService.GetConfigurationValue("VisionModel");
         visionPrompt = ConfigurationService.GetConfigurationValue("VisionPrompt");

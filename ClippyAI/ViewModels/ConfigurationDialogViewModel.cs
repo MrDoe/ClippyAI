@@ -10,6 +10,7 @@ using ClippyAI.Services;
 using ClippyAI.Views;
 using Microsoft.Data.Sqlite;
 using System.IO;
+using DirectShowLib;
 #if WINDOWS
 using DirectShowLib;
 #endif
