@@ -13,7 +13,6 @@ using Avalonia.Controls.ApplicationLifetimes;
 using ClippyAI.Views;
 using Npgsql;
 using ClippyAI.Interfaces;
-
 namespace ClippyAI.Services;
 
 /// <summary>
@@ -136,6 +135,7 @@ public class OllamaProvider : IAIProvider
                     fullResponse += responseText;
                 }
             }
+            Console.WriteLine("Response fully received.");
         }
         else
         {

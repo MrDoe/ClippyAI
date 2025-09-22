@@ -16,7 +16,7 @@
     <!-- Margins: left, top, right, bottom -->
     <StackPanel Width="490" Margin="0">
         <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
-            <Image Source="/Assets/clippy_64_trans.png" Width="40" Height="40"
+            <Image Source="/Assets/bulb_high_128.png" Width="40" Height="40"
                 VerticalAlignment="Center" HorizontalAlignment="Left" />
             <Label Content="ClippyAI" HorizontalAlignment="Center" VerticalAlignment="Center"
                 FontSize="16" />
@@ -31,7 +31,7 @@
         <TextBox x:Name="txtInput" Text="{Binding Input}"
             IsReadOnly="True"
             Width="490"
-            Height="400"
+            Height="350"
             FontSize="14"
             ScrollViewer.VerticalScrollBarVisibility="Auto"
             TextWrapping="Wrap"
@@ -108,7 +108,7 @@
             AcceptsReturn="True"
             AcceptsTab="True"
             Width="490"
-            Height="400"
+            Height="350"
             FontSize="14"
             ScrollViewer.VerticalScrollBarVisibility="Auto"
             TextWrapping="Wrap"

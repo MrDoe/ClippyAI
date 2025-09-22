@@ -13,13 +13,10 @@ namespace ClippyAI.Services;
 public class LinuxHotkeyService
 {
     private EvDevDevice? Keyboard;
-    private IList<string> LastKeys = [];
+    private HashSet<string> pressedKeys = new HashSet<string>();
+    private Dictionary<string, DateTime> keyTimes = new Dictionary<string, DateTime>();
     private MainViewModel? DataContext;
     private MainWindow? Window;
-    private DateTime lastCtrl = DateTime.Now;
-    private DateTime lastAlt = DateTime.Now;
-    private DateTime lastC = DateTime.Now;
-    private DateTime lastA = DateTime.Now;
 
     public LinuxHotkeyService(MainWindow window)
     {
@@ -107,63 +104,42 @@ public class LinuxHotkeyService
 
     private void OnKeyEvent(object sender, OnKeyEventArgs e)
     {
-        if (e.Key == EvDevKeyCode.KEY_LEFTCTRL && e.Value == EvDevKeyValue.KeyDown)
+        string? keyStr = e.Key switch
         {
-            LastKeys.Add("Ctrl");
-            lastCtrl = DateTime.Now;
-        }
-        else if (e.Key == EvDevKeyCode.KEY_LEFTALT && e.Value == EvDevKeyValue.KeyDown)
-        {
-            LastKeys.Add("Alt");
-            lastAlt = DateTime.Now;
-        }
-        else if (e.Key == EvDevKeyCode.KEY_C && e.Value == EvDevKeyValue.KeyDown)
-        {
-            LastKeys.Add("C");
-            lastC = DateTime.Now;
-        }
-        else if (e.Key == EvDevKeyCode.KEY_A && e.Value == EvDevKeyValue.KeyDown)
-        {
-            LastKeys.Add("A");
-            lastA = DateTime.Now;
-        }
+            EvDevKeyCode.KEY_LEFTCTRL => "Ctrl",
+            EvDevKeyCode.KEY_LEFTALT => "Alt",
+            EvDevKeyCode.KEY_C => "C",
+            EvDevKeyCode.KEY_A => "A",
+            _ => null
+        };
 
-        if (LastKeys.Count < 3)
-            return;
-
-        bool foundCtrl = false;
-        bool foundAlt = false;
-        bool foundC = false;
-        bool foundA = false;
-
-        // check if [Ctrl]+[Alt]+[C] hotkey is pressed in a row (only in this order)
-        for (int i = 0; i < LastKeys.Count; i++)
+        if (keyStr != null)
         {
-            if (LastKeys[i] == "Ctrl")
+            if (e.Value == EvDevKeyValue.KeyDown)
             {
-                foundCtrl = true;
+                pressedKeys.Add(keyStr);
+                keyTimes[keyStr] = DateTime.Now;
             }
-            else if (LastKeys[i] == "Alt" && foundCtrl)
+            else if (e.Value == EvDevKeyValue.KeyUp)
             {
-                foundAlt = true;
-            }
-            else if (LastKeys[i] == "C" && foundAlt)
-            {
-                foundC = true;
-            }
-            else if (LastKeys[i] == "A" && foundAlt)
-            {
-                foundA = true; // updated from foundA to foundA
+                pressedKeys.Remove(keyStr);
+                keyTimes.Remove(keyStr);
             }
         }
 
-        if (foundCtrl && foundAlt && foundC &&
-            DateTime.Now.Subtract(lastCtrl).TotalSeconds < 3 &&
-            DateTime.Now.Subtract(lastAlt).TotalSeconds < 3 &&
-            DateTime.Now.Subtract(lastC).TotalSeconds < 3)
+        // Check for Ctrl + Alt + C
+        if (pressedKeys.Contains("Ctrl") && pressedKeys.Contains("Alt") && pressedKeys.Contains("C") &&
+            DateTime.Now.Subtract(keyTimes["Ctrl"]).TotalSeconds < 3 &&
+            DateTime.Now.Subtract(keyTimes["Alt"]).TotalSeconds < 3 &&
+            DateTime.Now.Subtract(keyTimes["C"]).TotalSeconds < 3)
         {
-            Console.WriteLine("Hotkey pressed");
-            LastKeys.Clear();
+            Console.WriteLine("Hotkey Ctrl + Alt + C pressed");
+            pressedKeys.Remove("Ctrl");
+            pressedKeys.Remove("Alt");
+            pressedKeys.Remove("C");
+            keyTimes.Remove("Ctrl");
+            keyTimes.Remove("Alt");
+            keyTimes.Remove("C");
 
             // execute relay command AskClippy
             try
@@ -178,13 +154,19 @@ public class LinuxHotkeyService
                 Console.WriteLine($"Failed to execute AskClippy: {ex.Message}");
             }
         }
-        else if (foundA &&
-                DateTime.Now.Subtract(lastCtrl).TotalSeconds < 3 &&
-                DateTime.Now.Subtract(lastAlt).TotalSeconds < 3 &&
-                DateTime.Now.Subtract(lastA).TotalSeconds < 3)
+        // Check for Ctrl + Alt + A
+        else if (pressedKeys.Contains("Ctrl") && pressedKeys.Contains("Alt") && pressedKeys.Contains("A") &&
+                 DateTime.Now.Subtract(keyTimes["Ctrl"]).TotalSeconds < 3 &&
+                 DateTime.Now.Subtract(keyTimes["Alt"]).TotalSeconds < 3 &&
+                 DateTime.Now.Subtract(keyTimes["A"]).TotalSeconds < 3)
         {
-            Console.WriteLine("Ctrl + Alt + A hotkey pressed");
-            LastKeys.Clear();
+            Console.WriteLine("Hotkey Ctrl + Alt + A pressed");
+            pressedKeys.Remove("Ctrl");
+            pressedKeys.Remove("Alt");
+            pressedKeys.Remove("A");
+            keyTimes.Remove("Ctrl");
+            keyTimes.Remove("Alt");
+            keyTimes.Remove("A");
 
             // execute relay command CaptureAndAnalyze
             try
@@ -198,10 +180,6 @@ public class LinuxHotkeyService
             {
                 Console.WriteLine($"Failed to execute CaptureAndAnalyze: {ex.Message}");
             }
-        }
-        else
-        {
-            LastKeys.Clear();
         }
     }
 

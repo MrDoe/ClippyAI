@@ -555,7 +555,7 @@ public partial class MainViewModel : ViewModelBase
             }
 
             ++EmbeddingsCount;
-            mainWindow!.ShowNotification("ClippyAI", ClippyAI.Resources.Resources.ResultStoredSuccessfully, false, false);
+            mainWindow!.ShowNotification("ClippyAI", Resources.Resources.ResultStoredSuccessfully, false, false);
         }
     }
 

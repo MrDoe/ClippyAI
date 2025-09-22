@@ -60,12 +60,8 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         _notificationManager = Program.NotificationManager ??
                                 throw new InvalidOperationException("Missing notification manager");
         
-        // Only register notification events on Windows
-        if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 17763))
-        {
-            _notificationManager.NotificationActivated += OnNotificationActivated;
-            _notificationManager.NotificationDismissed += OnNotificationDismissed;
-        }
+        _notificationManager.NotificationActivated += OnNotificationActivated;
+        _notificationManager.NotificationDismissed += OnNotificationDismissed;
 
         // Subscribe to the WindowStateChanged event
         PropertyChanged += MainWindow_PropertyChanged;
@@ -188,9 +184,6 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
 
     private void OnNotificationDismissed(object? sender, NotificationDismissedEventArgs e)
     {
-        if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 17763))
-            return;
-            
         string reason = e.Reason.ToString();
         if (reason == "User")
         {
@@ -204,9 +197,6 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
 
     private void OnNotificationActivated(object? sender, NotificationActivatedEventArgs e)
     {
-        if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 17763))
-            return;
-            
         string actionId = e.ActionId;
         if (actionId == ClippyAI.Resources.Resources.TaskView)
         {
@@ -237,9 +227,6 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         try
         {
             Debug.Assert(_notificationManager != null);
-            
-            if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 17763))
-                return;
                 
             Notification nf;
             if (showAbortButton)
@@ -281,13 +268,14 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
     {
         try
         {
-            if (_lastNotification != null && OperatingSystem.IsWindowsVersionAtLeast(10, 0, 17763))
+            if (_lastNotification != null)
             {
                 await _notificationManager.HideNotification(_lastNotification);
             }
         }
         catch (Exception)
         {
+            Console.WriteLine("Failed to hide notification");
         }
     }
 
