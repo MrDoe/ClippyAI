@@ -8,6 +8,7 @@
     Height="500"
     Background="Transparent"
     CanResize="True"
+    WindowStartupLocation="CenterScreen"
     Title="{x:Static resources:Resources.ClippyAIResult}">
     <Border CornerRadius="6" BorderBrush="DimGray" Background="#e9333333" BorderThickness="1">
     <StackPanel>

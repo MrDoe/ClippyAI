@@ -75,7 +75,7 @@ The following warnings are normal and do not indicate build failures:
 - **Windows**: `net9.0-windows10.0.17763.0`
 
 ### Platform-Specific Features  
-- **Windows**: Uses NHotkey.Wpf for global hotkeys
+- **Windows**: Uses custom implementation for global hotkeys
 - **Linux**: Uses evdev-sharp for keyboard input handling
 - **Cross-platform**: Uses DesktopNotifications for system notifications
 

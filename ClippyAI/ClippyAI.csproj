@@ -14,7 +14,7 @@
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <!-- <EnableDefaultCompileItems>false</EnableDefaultCompileItems> -->
-    <Version>1.3.0</Version>
+    <Version>1.3.1</Version>
     <ApplicationIcon>bulb.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
@@ -59,8 +59,6 @@
     <PackageReference Include="Emgu.CV.runtime.mini.windows" Version="4.12.0.5764" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.9" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.9" />
-    <PackageReference Include="NHotkey" Version="3.0.0" Condition="'$(OS)' == 'Windows_NT'" />
-    <PackageReference Include="NHotkey.Wpf" Version="3.0.0" />
     <PackageReference Include="Npgsql" Version="9.0.3" />
     <PackageReference Include="SSH.NET" Version="2025.0.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.9" />
