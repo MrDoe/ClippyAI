@@ -2,14 +2,22 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:vm="clr-namespace:ClippyAI.ViewModels"
     xmlns:models="clr-namespace:ClippyAI.Models"
-        x:Class="ClippyAI.Views.ConfigurationDialog"
-        x:DataType="vm:ConfigurationDialogViewModel"
-        x:Name="ConfigurationWindow"
-        Title="Configuration"
-        Width="900" Height="800"
-        WindowStartupLocation="CenterOwner">
+    x:Class="ClippyAI.Views.ConfigurationDialog"
+    x:DataType="vm:ConfigurationDialogViewModel"
+    x:Name="ConfigurationWindow"
+    Title="Configuration"
+    Width="900" Height="1000"
+    WindowStartupLocation="CenterScreen"
+    TransparencyLevelHint="AcrylicBlur"
+    Background="Transparent"
+    ExtendClientAreaToDecorationsHint="True"
+    ExtendClientAreaChromeHints="NoChrome"
+    ExtendClientAreaTitleBarHeightHint="-1"
+    CanResize="True"
+    Topmost="True"
+    ShowInTaskbar="False">
 
-    <Grid RowDefinitions="*,Auto">
+    <Grid RowDefinitions="*,Auto" Background="#e9333333">
         <!-- Main content -->
         <TabControl Grid.Row="0" Margin="10">
             
@@ -40,16 +48,8 @@
                         <Label Content="OpenAI Base URL:"/>
                         <TextBox Text="{Binding OpenAIBaseUrl}" Margin="0,0,0,10" 
                                  ToolTip.Tip="OpenAI API base URL (default: https://api.openai.com/v1)"/>
-                        
-                        <Label Content="OpenAI Model:"/>
-                        <ComboBox ItemsSource="{Binding OpenAIModelItems}" SelectedItem="{Binding OpenAIModel}" Margin="0,0,0,10" 
-                                 ToolTip.Tip="Select OpenAI model"/>
-                        
-                        <Label Content="OpenAI Vision Model:"/>
-                        <ComboBox ItemsSource="{Binding OpenAIVisionModelItems}" SelectedItem="{Binding OpenAIVisionModel}" Margin="0,0,0,15" 
-                                 ToolTip.Tip="Select OpenAI vision model"/>
 
-                        <Label Content="Model Management" FontSize="14" FontWeight="Bold" Margin="0,0,0,5"/>
+                        <Label Content="Default Model:" FontSize="14" FontWeight="Bold" Margin="0,0,0,5"/>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                             <ComboBox ItemsSource="{Binding ModelItems}" SelectedItem="{Binding OllamaModel}" 
                                       Width="300" ToolTip.Tip="Select a model from the list"/>
@@ -73,7 +73,7 @@
                                   Margin="0,0,0,10" ToolTip.Tip="Select the default task"/>
                         
                         <Label Content="System Prompt:"/>
-                        <TextBox Text="{Binding SystemPrompt}" Height="120" TextWrapping="Wrap"
+                        <TextBox Text="{Binding SystemPrompt}" Height="210" TextWrapping="Wrap"
                                  AcceptsReturn="True" Margin="0,0,0,10"
                                  ToolTip.Tip="System prompt for the AI model"/>
                     </StackPanel>
@@ -93,7 +93,7 @@
                                   ToolTip.Tip="Store all AI responses as embeddings"/>
                         
                         <Label Content="PostgreSQL Connection String:"/>
-                        <TextBox Text="{Binding PostgreSqlConnection}" Height="60" TextWrapping="Wrap"
+                        <TextBox Text="{Binding PostgreSqlConnection}" Height="30" TextWrapping="Wrap"
                                  AcceptsReturn="True" Margin="0,0,0,10"
                                  ToolTip.Tip="PostgreSQL connection string"/>
                         
@@ -136,19 +136,23 @@
                         <Label Content="Vision Settings" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
                         
                         <Label Content="Vision Model:"/>
-                        <TextBox Text="{Binding VisionModel}" Margin="0,0,0,10"
-                                 ToolTip.Tip="Model to use for image analysis"/>
+                        <ComboBox ItemsSource="{Binding AvailableModels}" 
+                                    SelectedItem="{Binding VisionModel}" 
+                                    Margin="0,0,0,10" Width="300"
+                                    ToolTip.Tip="Select the AI model for this task"/>
                         
                         <Label Content="Video Device:"/>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                             <ComboBox ItemsSource="{Binding VideoDevices}" SelectedItem="{Binding VideoDevice}" 
-                                      Width="320" ToolTip.Tip="Select the video device from the list"/>
+                                      Width="300" ToolTip.Tip="Select the video device from the list"/>
                             <Button Content="Refresh" Command="{Binding RefreshVideoDevicesCommand}" 
                                     Margin="4,0,0,0" ToolTip.Tip="Refresh the list of video devices"/>
+                            <Button Content="View" Command="{Binding ShowCamera}"
+                                    Margin="4,0,0,0" ToolTip.Tip="Preview Video Output"/>
                         </StackPanel>
                         
                         <Label Content="Vision Prompt:"/>
-                        <TextBox Text="{Binding VisionPrompt}" Height="100" TextWrapping="Wrap"
+                        <TextBox Text="{Binding VisionPrompt}" Height="300" TextWrapping="Wrap"
                                  AcceptsReturn="True" Margin="0,0,0,10"
                                  ToolTip.Tip="Default prompt for image analysis"/>
                     </StackPanel>
@@ -245,7 +249,7 @@
                             <Label Content="Tasks:" FontWeight="Bold" Margin="0,0,0,5"/>
                             <ListBox ItemsSource="{Binding TaskConfigurations}" 
                                      SelectedItem="{Binding SelectedTaskConfiguration}"
-                                     Height="250" Margin="0,0,0,10">
+                                     Height="500" Margin="0,0,0,10">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate x:DataType="models:TaskConfiguration">
                                         <TextBlock Text="{Binding TaskName}" />
@@ -258,14 +262,11 @@
                             <TextBox Text="{Binding NewTaskName}" Margin="0,0,0,5"/>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                                 <Button Content="Add" Command="{Binding AddNewTaskCommand}" Margin="0,0,5,0" Width="60"/>
-                                <Button Content="Delete" Command="{Binding DeleteTaskCommand}" Width="60"/>
+                                <Button Content="Delete" Command="{Binding DeleteTaskCommand}" Width="60" Margin="0,0,5,0"/>
+                                <Button Content="Restore Default"
+                                        Command="{Binding RestoreDefaultTasksCommand}" HorizontalAlignment="Left" Margin="0,0,5,0"
+                                        Width="120" ToolTip.Tip="Restore the default task configurations"/>
                             </StackPanel>
-
-                            <!-- Restore Default Tasks Button -->
-                            <Button Content="Restore Default Tasks"
-                                    Command="{Binding RestoreDefaultTasksCommand}"
-                                    HorizontalAlignment="Left" Margin="0,0,0,0" Width="170"
-                                    ToolTip.Tip="Restore the default task configurations"/>
                         </StackPanel>
                         
                         <!-- Right panel - Task details and actions -->
@@ -281,7 +282,7 @@
                                                 <Label Content="Task Name:"/>
                                                 <TextBox Text="{Binding TaskName}" Margin="0,0,0,10" IsReadOnly="True"/>
                                                 
-                                                <Label Content="System Prompt:"/>
+                                                <Label Content="Prompt:"/>
                                                 <TextBox Text="{Binding SystemPrompt}" Height="120" 
                                                          TextWrapping="Wrap" AcceptsReturn="True" Margin="0,0,0,10"/>
                                                 
@@ -330,13 +331,6 @@
                                     </DataTemplate>
                                 </ContentControl.ContentTemplate>
                             </ContentControl>
-
-                            <!-- Save task button bound to dialog view model -->
-                            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,20,0,0">
-                                <Button Content="Save Task"
-                                        Command="{Binding SaveTaskConfigurationCommand}"
-                                        HorizontalAlignment="Left" Margin="0,0,10,0" Width="100"/>
-                            </StackPanel>
                         </Grid>
                     </Grid>
                 </Grid>

@@ -39,9 +39,6 @@
     <Content Include="clippyai.desktop" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Always">
       <LinuxPath>/usr/share/applications/clippyai.desktop</LinuxPath>
     </Content>
-    <Content Include="clippyai.png" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Always">
-      <LinuxPath>/usr/share/icons/hicolor/32x32/apps/clippyai.png</LinuxPath>
-    </Content>
   </ItemGroup>
 <ItemGroup>
     <Compile Remove="Libs\**" />

@@ -22,11 +22,6 @@
                 FontSize="16" />
             <Label Content=" - Your AI Companion" HorizontalAlignment="Right" VerticalAlignment="Center"
                 FontSize="14" />
-            <Button Content="⚙️ Config" 
-                Command="{Binding OpenConfigurationCommand}"
-                HorizontalAlignment="Right" VerticalAlignment="Center" 
-                Margin="80 0 0 0"
-                ToolTip.Tip="Open Configuration Dialog" />
         </StackPanel>
         
         <!-- Input -->
@@ -37,7 +32,7 @@
             IsReadOnly="True"
             Width="490"
             Height="400"
-            FontSize="12"
+            FontSize="14"
             ScrollViewer.VerticalScrollBarVisibility="Auto"
             TextWrapping="Wrap"
             ToolTip.Tip="Displays the input text"
@@ -97,6 +92,12 @@
                 Command="{Binding CaptureScreenshotCommand}"
                 HorizontalAlignment="Left" Margin="10 10 0 0"
                 ToolTip.Tip="Capture a screenshot" IsVisible="false" />
+
+            <Button Content="⚙️ Config" 
+                Command="{Binding OpenConfigurationCommand}"
+                HorizontalAlignment="Right" VerticalAlignment="Center" 
+                Margin="10 10 0 0"
+                ToolTip.Tip="Open Configuration Dialog" />
         </StackPanel>
 
         <!-- Output -->
@@ -108,7 +109,7 @@
             AcceptsTab="True"
             Width="490"
             Height="400"
-            FontSize="12"
+            FontSize="14"
             ScrollViewer.VerticalScrollBarVisibility="Auto"
             TextWrapping="Wrap"
             ToolTip.Tip="Displays the output text" />

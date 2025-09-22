@@ -8,7 +8,6 @@ using CommunityToolkit.Mvvm.Input;
 using ClippyAI.Models;
 using ClippyAI.Services;
 using ClippyAI.Views;
-using Microsoft.Data.Sqlite;
 using System.IO;
 using DirectShowLib;
 #if WINDOWS
@@ -42,12 +41,6 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     private string _openAIBaseUrl = ConfigurationService.GetConfigurationValue("OpenAIBaseUrl", "https://api.openai.com/v1");
 
     [ObservableProperty]
-    private string _openAIModel = ConfigurationService.GetConfigurationValue("OpenAIModel", "gpt-3.5-turbo");
-
-    [ObservableProperty]
-    private string _openAIVisionModel = ConfigurationService.GetConfigurationValue("OpenAIVisionModel", "gpt-4-vision-preview");
-
-    [ObservableProperty]
     private string _defaultTask = ConfigurationService.GetConfigurationValue("DefaultTask", "Write a response to this email.");
 
     [ObservableProperty]
@@ -69,13 +62,13 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     private string _postgresOllamaUrl = ConfigurationService.GetConfigurationValue("PostgresOllamaUrl", "");
 
     [ObservableProperty]
-    private string _visionModel = ConfigurationService.GetConfigurationValue("VisionModel", "llama3.2-vision:latest");
+    private string _visionModel = ConfigurationService.GetConfigurationValue("VisionModel", "");
 
     [ObservableProperty]
     private string _visionPrompt = ConfigurationService.GetConfigurationValue("VisionPrompt", "Describe the image.");
 
     [ObservableProperty]
-    private string _videoDevice = ConfigurationService.GetConfigurationValue("VideoDevice", "/dev/video0");
+    private string _videoDevice = ConfigurationService.GetConfigurationValue("VideoDevice", "");
 
     [ObservableProperty]
     private string _defaultLanguage = ConfigurationService.GetConfigurationValue("DefaultLanguage", "English");
@@ -114,23 +107,15 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     [ObservableProperty]
     private bool _sshTestInProgress = false;
 
-    // Collections for dropdowns
     [ObservableProperty]
-    private ObservableCollection<string> _languageItems = new(new[] { "English", "Deutsch", "Français", "Español", "Italiano", "Português", "中文", "日本語", "한국어", "Русский" });
+    private ObservableCollection<string> _languageItems = new([ "English", "Deutsch", "Français", "Español", "Italiano", "Português", "中文", "日本語", "한국어", "Русский" ]);
 
     [ObservableProperty]
-    private ObservableCollection<string> _aiProviderItems = new(new[] { "Ollama", "OpenAI" });
+    private ObservableCollection<string> _aiProviderItems = new([ "Ollama", "OpenAI" ]);
 
     [ObservableProperty]
     private ObservableCollection<string> _availableTasks = [];
 
-    [ObservableProperty]
-    private ObservableCollection<string> _openAIModelItems = new(new[] { "gpt-3.5-turbo", "gpt-4", "gpt-4-turbo", "gpt-4o", "gpt-4o-mini" });
-
-    [ObservableProperty]
-    private ObservableCollection<string> _openAIVisionModelItems = new(new[] { "gpt-4-vision-preview", "gpt-4o", "gpt-4-turbo" });
-
-    // Additional configuration options from main window
     [ObservableProperty]
     private float _threshold = float.Parse(ConfigurationService.GetConfigurationValue("Threshold", "0.2"));
 
@@ -160,6 +145,7 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
 
     partial void OnSelectedTaskConfigurationChanged(TaskConfiguration? value)
     {
+        Save();
         OnPropertyChanged(nameof(IsTaskSelected));
     }
 
@@ -216,9 +202,9 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
         var newTask = new TaskConfiguration
         {
             TaskName = NewTaskName,
-            SystemPrompt = SystemPrompt,
+            SystemPrompt = "",
             Model = OllamaModel,
-            Temperature = 0.8,
+            Temperature = 1.0,
             MaxLength = 2048,
             TopP = 0.9,
             TopK = 40,
@@ -459,6 +445,14 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
         }
     }
 
+    [RelayCommand]
+    public void ShowCamera()
+    {
+        Save();
+        var cameraWindow = new CameraWindow();
+        cameraWindow.Show();
+    }
+
     private List<string> GetVideoDevices()
     {
         var devices = new List<string>();
@@ -498,14 +492,14 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
 
     public void Save()
     {
+        SaveTaskConfiguration();
+
         // Update all configuration values
         ConfigurationService.SetConfigurationValue("AIProvider", AiProvider);
         ConfigurationService.SetConfigurationValue("OllamaUrl", OllamaUrl);
         ConfigurationService.SetConfigurationValue("OllamaModel", OllamaModel);
         ConfigurationService.SetConfigurationValue("OpenAIApiKey", OpenAIApiKey);
         ConfigurationService.SetConfigurationValue("OpenAIBaseUrl", OpenAIBaseUrl);
-        ConfigurationService.SetConfigurationValue("OpenAIModel", OpenAIModel);
-        ConfigurationService.SetConfigurationValue("OpenAIVisionModel", OpenAIVisionModel);
         ConfigurationService.SetConfigurationValue("DefaultTask", DefaultTask);
         ConfigurationService.SetConfigurationValue("System", SystemPrompt);
         ConfigurationService.SetConfigurationValue("UseEmbeddings", UseEmbeddings.ToString());

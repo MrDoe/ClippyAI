@@ -38,7 +38,7 @@ public class OllamaProvider : IAIProvider
     public void UpdateConfig()
     {
         string baseUrl = ConfigurationService.GetConfigurationValue("OllamaUrl", "http://localhost:11434/api");
-        
+
         // Check if SSH is enabled and adjust URL to use tunnel port
         var useSSH = ConfigurationService.GetConfigurationValue("UseSSH", "False");
         if (useSSH.Equals("True", StringComparison.OrdinalIgnoreCase))
@@ -69,7 +69,7 @@ public class OllamaProvider : IAIProvider
         {
             url = baseUrl; // Use direct connection when SSH is disabled
         }
-        
+
         system = ConfigurationService.GetConfigurationValue("System");
         visionModel = ConfigurationService.GetConfigurationValue("VisionModel");
         visionPrompt = ConfigurationService.GetConfigurationValue("VisionPrompt");

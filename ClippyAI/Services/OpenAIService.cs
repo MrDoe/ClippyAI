@@ -39,7 +39,7 @@ public class OpenAIService : IAIProvider
         apiKey = ConfigurationService.GetConfigurationValue("OpenAIApiKey");
         baseUrl = ConfigurationService.GetConfigurationValue("OpenAIBaseUrl", "https://api.openai.com/v1");
         system = ConfigurationService.GetConfigurationValue("System");
-        
+
         // Set up authorization header
         if (!string.IsNullOrEmpty(apiKey))
         {
@@ -48,8 +48,8 @@ public class OpenAIService : IAIProvider
         }
     }
 
-    public async Task<string?> SendRequestWithConfig(string input, string task, string model, 
-                                                    TaskConfiguration? taskConfig = null, 
+    public async Task<string?> SendRequestWithConfig(string input, string task, string model,
+                                                    TaskConfiguration? taskConfig = null,
                                                     CancellationToken token = default)
     {
         if (string.IsNullOrEmpty(apiKey))
@@ -70,13 +70,13 @@ public class OpenAIService : IAIProvider
 
         // Prepare messages
         var messages = new List<OpenAIMessage>();
-        
+
         if (!string.IsNullOrEmpty(systemPrompt))
         {
-            messages.Add(new OpenAIMessage 
-            { 
-                Role = "system", 
-                Content = systemPrompt 
+            messages.Add(new OpenAIMessage
+            {
+                Role = "system",
+                Content = systemPrompt
             });
         }
 
@@ -89,7 +89,7 @@ public class OpenAIService : IAIProvider
         var request = new OpenAIRequest
         {
             Model = modelToUse,
-            Messages = messages.ToArray(),
+            Messages = [.. messages],
             Temperature = temperature,
             MaxTokens = maxTokens,
             TopP = topP,
@@ -108,10 +108,10 @@ public class OpenAIService : IAIProvider
         if (response.IsSuccessStatusCode)
         {
             Console.WriteLine("OpenAI request successful.");
-            
+
             var responseJson = await response.Content.ReadAsStringAsync(token);
             var openAIResponse = JsonSerializer.Deserialize<OpenAIResponse>(responseJson);
-            
+
             return openAIResponse?.Choices?[0]?.Message?.Content?.Trim('"').Trim('\'');
         }
         else
@@ -124,30 +124,36 @@ public class OpenAIService : IAIProvider
     public async Task<ObservableCollection<string>> GetModelsAsync(CancellationToken token = default)
     {
         var models = new List<string>();
-        
+
         if (string.IsNullOrEmpty(apiKey))
         {
             // Return common OpenAI models if API key is not configured
-            return new ObservableCollection<string>
-            {
-                "gpt-4",
-                "gpt-4-turbo",
-                "gpt-3.5-turbo",
-                "gpt-3.5-turbo-16k"
-            };
+            return
+            [
+                "gpt-5",
+                "gpt-5-mini",
+                "gpt-5-nano",
+                "gpt-4.1",
+                "gpt-4.1-nano",
+                "gpt-oss-120b",
+                "gpt-oss-20b",
+                "gpt-4o",
+                "gpt-4o-mini",
+                "gpt-4-turbo"
+            ];
         }
 
         try
         {
             UpdateConfig();
-            
+
             using var response = await client.GetAsync($"{baseUrl}/models", token);
-            
+
             if (response.IsSuccessStatusCode)
             {
                 var responseJson = await response.Content.ReadAsStringAsync(token);
                 var modelsResponse = JsonSerializer.Deserialize<OpenAIModelsResponse>(responseJson);
-                
+
                 if (modelsResponse?.Data != null)
                 {
                     foreach (var model in modelsResponse.Data)
@@ -162,26 +168,38 @@ public class OpenAIService : IAIProvider
             else
             {
                 // Fallback to common models if API call fails
-                models.AddRange(new[]
-                {
-                    "gpt-4",
-                    "gpt-4-turbo", 
-                    "gpt-3.5-turbo",
-                    "gpt-3.5-turbo-16k"
-                });
+                return
+                [
+                    "gpt-5",
+                    "gpt-5-mini",
+                    "gpt-5-nano",
+                    "gpt-4.1",
+                    "gpt-4.1-nano",
+                    "gpt-oss-120b",
+                    "gpt-oss-20b",
+                    "gpt-4o",
+                    "gpt-4o-mini",
+                    "gpt-4-turbo"
+                ];
             }
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error fetching OpenAI models: {ex.Message}");
             // Fallback to common models
-            models.AddRange(new[]
-            {
-                "gpt-4",
-                "gpt-4-turbo",
-                "gpt-3.5-turbo", 
-                "gpt-3.5-turbo-16k"
-            });
+            models.AddRange(
+            [
+                "gpt-5",
+                "gpt-5-mini",
+                "gpt-5-nano",
+                "gpt-4.1",
+                "gpt-4.1-nano",
+                "gpt-oss-120b",
+                "gpt-oss-20b",
+                "gpt-4o",
+                "gpt-4o-mini",
+                "gpt-4-turbo"
+            ]);
         }
 
         return new ObservableCollection<string>(models);
@@ -232,7 +250,7 @@ public class OpenAIService : IAIProvider
         {
             var responseJson = await response.Content.ReadAsStringAsync();
             var openAIResponse = JsonSerializer.Deserialize<OpenAIResponse>(responseJson);
-            
+
             return openAIResponse?.Choices?[0]?.Message?.Content ?? "Unable to analyze image.";
         }
         else
