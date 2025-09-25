@@ -73,7 +73,7 @@ public partial class MainViewModel : ViewModelBase
     private string _ollamaUrl = ConfigurationService.GetConfigurationValue("OllamaUrl", "http://127.0.0.1:11434/api") ?? "http://127.0.0.1:11434/api";
 
     [ObservableProperty]
-    private string _model = ConfigurationService.GetConfigurationValue("OllamaModel", "gemma2:latest") ?? "gemma2:latest";
+    private string _model = ConfigurationService.GetConfigurationValue("OllamaModel", "") ?? "";
 
     [ObservableProperty]
     private string _PostgreSqlConnection = ConfigurationService.GetConfigurationValue("PostgreSqlConnection") ?? "";
@@ -752,6 +752,8 @@ public partial class MainViewModel : ViewModelBase
         {
             throw new Exception("Failed to capture image");
         }
+
+        capture.Dispose();
 
         return frame.ToImage<Bgr, byte>().ToJpegData();
     }

@@ -59,8 +59,6 @@ The following warnings are normal and do not indicate build failures:
 ### Required for Full Functionality
 - **Ollama**: Local AI service at `http://localhost:11434`
   - Install from: https://ollama.com/download
-  - Default model: `gemma2:latest` (configured in App.config)
-  - Vision model: `llama3.2-vision:latest` for image analysis
 
 ### Optional Dependencies
 - **PostgreSQL with pgai**: For embeddings-based template caching

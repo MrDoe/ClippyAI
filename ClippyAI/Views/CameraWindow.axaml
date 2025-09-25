@@ -3,6 +3,16 @@
         xmlns:resources="clr-namespace:ClippyAI.Resources"
         x:Class="ClippyAI.Views.CameraWindow"
         Title="{x:Static resources:Resources.CameraWindow}" Width="640" Height="480"
-        WindowStartupLocation="CenterScreen">
-    <Image x:Name="imgCamera" Stretch="Uniform" />
+        WindowStartupLocation="CenterScreen"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="-1"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+        BorderBrush="DimGray" BorderThickness="1" CornerRadius="6"
+        CanResize="True"
+        Topmost="True">
+    <Border CornerRadius="6" BorderBrush="DimGray" BorderThickness="1" Background="#e0333333">
+        <Image x:Name="imgCamera" Stretch="Uniform" />
+    </Border>
 </Window>

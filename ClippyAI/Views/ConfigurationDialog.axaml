@@ -13,8 +13,8 @@
     ExtendClientAreaToDecorationsHint="True"
     ExtendClientAreaChromeHints="NoChrome"
     ExtendClientAreaTitleBarHeightHint="-1"
-    CanResize="True"
     Topmost="True"
+    CanResize="True"
     ShowInTaskbar="False">
 
     <Grid RowDefinitions="*,Auto" Background="#e9333333">

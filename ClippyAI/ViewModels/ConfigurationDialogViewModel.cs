@@ -32,7 +32,7 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     private string _ollamaUrl = ConfigurationService.GetConfigurationValue("OllamaUrl", "http://localhost:11434/api");
 
     [ObservableProperty]
-    private string _ollamaModel = ConfigurationService.GetConfigurationValue("OllamaModel", "gemma2:latest");
+    private string _ollamaModel = ConfigurationService.GetConfigurationValue("OllamaModel", "");
 
     [ObservableProperty]
     private string _openAIApiKey = ConfigurationService.GetConfigurationValue("OpenAIApiKey", "");

@@ -106,7 +106,7 @@ public static class ConfigurationService
                 { 
                     TaskName = "Default Email Response", 
                     SystemPrompt = systemPrompt,
-                    Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "gemma2:latest",
+                    Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "",
                     Temperature = 0.8,
                     MaxLength = 2048
                 },
@@ -114,7 +114,7 @@ public static class ConfigurationService
                 { 
                     TaskName = "Creative Writing", 
                     SystemPrompt = "You are a creative writing assistant. Help with creative and imaginative content.",
-                    Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "gemma2:latest",
+                    Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "",
                     Temperature = 1.2,
                     MaxLength = 4096
                 },
@@ -122,7 +122,7 @@ public static class ConfigurationService
                 { 
                     TaskName = "Technical Analysis", 
                     SystemPrompt = "You are a technical expert. Provide precise, factual, and analytical responses.",
-                    Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "gemma2:latest",
+                    Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "",
                     Temperature = 0.3,
                     MaxLength = 2048
                 }
@@ -284,7 +284,7 @@ public static class ConfigurationService
 
             // Get legacy task resources from Resources
             var resourceType = typeof(Resources.Resources);
-            var defaultModel = ConfigurationManager.AppSettings["OllamaModel"] ?? "gemma2:latest";
+            var defaultModel = ConfigurationManager.AppSettings["OllamaModel"] ?? "";
             
             var legacyTasks = new List<TaskConfiguration>();
 
@@ -540,7 +540,7 @@ public static class ConfigurationService
             { 
                 TaskName = "Answering Emails", 
                 SystemPrompt = systemPrompt,
-                Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "gemma2:latest",
+                Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "",
                 Temperature = 0.8,
                 MaxLength = 2048,
                 TopP = 0.9,
@@ -555,7 +555,7 @@ public static class ConfigurationService
             { 
                 TaskName = "Spelling Correction", 
                 SystemPrompt = "You are a spelling and grammar correction assistant. Correct spelling and grammar errors while preserving the original meaning and tone.",
-                Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "gemma2:latest",
+                Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "",
                 Temperature = 0.1,
                 MaxLength = 2048,
                 TopP = 0.9,
@@ -570,7 +570,7 @@ public static class ConfigurationService
             { 
                 TaskName = "Summary", 
                 SystemPrompt = "You are a summarization assistant. Create concise, well-structured summaries that capture the key points and main ideas.",
-                Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "gemma2:latest",
+                Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "",
                 Temperature = 0.3,
                 MaxLength = 1024,
                 TopP = 0.9,
@@ -585,7 +585,7 @@ public static class ConfigurationService
             { 
                 TaskName = "Explanation", 
                 SystemPrompt = "You are an explanation assistant. Provide clear, detailed explanations that are easy to understand.",
-                Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "gemma2:latest",
+                Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "",
                 Temperature = 0.5,
                 MaxLength = 2048,
                 TopP = 0.9,
@@ -600,7 +600,7 @@ public static class ConfigurationService
             { 
                 TaskName = "Translate to German", 
                 SystemPrompt = "You are a professional translator. Translate the given text to German while maintaining the original meaning, tone, and context.",
-                Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "gemma2:latest",
+                Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "",
                 Temperature = 0.3,
                 MaxLength = 2048,
                 TopP = 0.9,
@@ -615,7 +615,7 @@ public static class ConfigurationService
             { 
                 TaskName = "Translate to English", 
                 SystemPrompt = "You are a professional translator. Translate the given text to English while maintaining the original meaning, tone, and context.",
-                Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "gemma2:latest",
+                Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "",
                 Temperature = 0.3,
                 MaxLength = 2048,
                 TopP = 0.9,
@@ -630,7 +630,7 @@ public static class ConfigurationService
             { 
                 TaskName = "Translate to French", 
                 SystemPrompt = "You are a professional translator. Translate the given text to French while maintaining the original meaning, tone, and context.",
-                Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "gemma2:latest",
+                Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "",
                 Temperature = 0.3,
                 MaxLength = 2048,
                 TopP = 0.9,
@@ -645,7 +645,7 @@ public static class ConfigurationService
             { 
                 TaskName = "Translate to Spanish", 
                 SystemPrompt = "You are a professional translator. Translate the given text to Spanish while maintaining the original meaning, tone, and context.",
-                Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "gemma2:latest",
+                Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "",
                 Temperature = 0.3,
                 MaxLength = 2048,
                 TopP = 0.9,

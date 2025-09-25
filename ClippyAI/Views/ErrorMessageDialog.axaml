@@ -13,11 +13,14 @@
     ExtendClientAreaTitleBarHeightHint="-1"
     SystemDecorations="BorderOnly"
     WindowStartupLocation="CenterScreen"
-    CanResize="false">
-    <StackPanel>
-        <TextBlock Text="{x:Static resources:Resources.ClippyAIError}" FontSize="20" FontWeight="Bold" Margin="10,10,10,10" />
-        <TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap" Margin="10,0,20,10" />
-        <Button Content="{x:Static resources:Resources.OK}" HorizontalContentAlignment="Center" Command="{Binding CloseCommand}"
+    CanResize="false"
+    Topmost="True">
+    <Border CornerRadius="6" BorderBrush="DimGray" Background="#e9333333" BorderThickness="1">
+        <StackPanel>
+            <TextBlock Text="{x:Static resources:Resources.ClippyAIError}" FontSize="20" FontWeight="Bold" Margin="10,10,10,10" />
+            <TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap" Margin="10,0,20,10" />
+            <Button Content="{x:Static resources:Resources.OK}" HorizontalContentAlignment="Center" Command="{Binding CloseCommand}"
             Width="100" HorizontalAlignment="Center" />
-    </StackPanel>
+        </StackPanel>
+    </Border>
 </Window>
