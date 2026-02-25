@@ -240,9 +240,8 @@ public partial class MainViewModel : ViewModelBase
             // Use task configuration if available, otherwise use the current model
             if (SelectedTaskConfiguration != null)
             {
-                Input = SelectedTaskConfiguration.SystemPrompt + "\n\n" + Input;
                 response = await OllamaService.SendRequestWithConfig(Input!,
-                                                           SelectedTaskConfiguration.SystemPrompt,
+                                                           task,
                                                            SelectedTaskConfiguration.Model,
                                                            SelectedTaskConfiguration,
                                                            _askClippyCts.Token);
@@ -280,6 +279,10 @@ public partial class MainViewModel : ViewModelBase
             _responseList.Add(new Embedding { Id = 0, Answer = response });
             await SetResponse(response);
         }
+
+        // Clear Input so the next invocation reads fresh clipboard content
+        // instead of reusing the input from this run.
+        Input = null;
     }
 
     private async Task SetResponse(string response, bool showNotification = true)

@@ -92,7 +92,9 @@
                 Command="{Binding CaptureScreenshotCommand}"
                 HorizontalAlignment="Left" Margin="10 10 0 0"
                 ToolTip.Tip="Capture a screenshot" IsVisible="false" />
-
+        </StackPanel>
+        
+        <StackPanel Orientation="Horizontal">
             <Button Content="⚙️ Config" 
                 Command="{Binding OpenConfigurationCommand}"
                 HorizontalAlignment="Right" VerticalAlignment="Center" 

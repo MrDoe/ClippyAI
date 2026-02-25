@@ -62,6 +62,10 @@ public static class ClipboardService
         if (text != LastInput)
             LastInput = text ?? string.Empty;
 
+        // Invalidate the formats cache so the next poll reads fresh data.
+        _lastFormats = null;
+        _lastFormatsCheck = DateTime.MinValue;
+
         await provider.SetTextAsync(text);
     }
 
@@ -75,12 +79,9 @@ public static class ClipboardService
             desktop.MainWindow?.Clipboard is not { } provider)
             throw new NullReferenceException("Missing Clipboard instance.");
 
-        // Check formats with caching to reduce API calls
-        string[] formats = await GetFormatsWithCache() ?? [];
-        if (!formats.Contains("Text"))
-        {
-            return null;
-        }
+        // Directly call GetTextAsync() — it returns null when no text is present.
+        // Avoid GetFormatsAsync() here because it can fail silently when the window
+        // is hidden (e.g. minimised to taskbar), which would suppress all updates.
         return await provider.GetTextAsync();
     }
 
