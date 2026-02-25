@@ -1,6 +1,6 @@
 ﻿using System;
 using Avalonia;
-using Avalonia.ReactiveUI;
+using ReactiveUI.Avalonia;
 using DesktopNotifications;
 using DesktopNotifications.Avalonia;
 namespace ClippyAI;
@@ -23,6 +23,6 @@ public class Program
                 .SetupDesktopNotifications(out NotificationManager!)
                 .WithInterFont()
                 .LogToTrace()
-                .UseReactiveUI();
+                .UseReactiveUI(_ => { });
     }
 }

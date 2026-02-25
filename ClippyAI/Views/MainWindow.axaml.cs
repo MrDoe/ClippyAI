@@ -4,7 +4,7 @@ using System.Timers;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.ReactiveUI;
+using ReactiveUI.Avalonia;
 using Avalonia.Threading;
 using DesktopNotifications;
 using System.Diagnostics;
