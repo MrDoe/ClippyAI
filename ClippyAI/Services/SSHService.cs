@@ -99,7 +99,14 @@ namespace ClippyAI.Services
 
             _forwardedPort = new ForwardedPortLocal(localHost, localPort, remoteHost, remotePort);
             _sshClient!.AddForwardedPort(_forwardedPort);
-            _forwardedPort.Start();
+            try
+            {
+                _forwardedPort.Start();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("SSH port forwarding error:" + ex.Message);
+            }
         }
 
         private void SetupRemotePortForwarding(string tunnelConfig)
@@ -118,7 +125,14 @@ namespace ClippyAI.Services
 
             _remoteForwardedPort = new ForwardedPortRemote(remoteHost, remotePort, localHost, localPort);
             _sshClient!.AddForwardedPort(_remoteForwardedPort);
-            _remoteForwardedPort.Start();
+            try
+            {
+                _remoteForwardedPort.Start();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("SSH port forwarding error:" + ex.Message);
+            }
         }
 
         public void Disconnect()

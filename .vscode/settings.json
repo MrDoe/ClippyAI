@@ -1,3 +1,12 @@
 {
-    "explorer.excludeGitIgnore": false
+    "explorer.excludeGitIgnore": false,
+    "STARLIMS.servers": [
+        {
+            "name": "Default Server",
+            "url": "https://bmbh02.ads.krz.uni-heidelberg.de/starlims",
+            "user": "DC",
+            "urlSuffix": "lims"
+        }
+    ],
+    "STARLIMS.selectedServer": "Default Server"
 }
