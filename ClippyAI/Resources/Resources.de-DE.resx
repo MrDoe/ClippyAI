@@ -289,4 +289,7 @@
     <data name="PullingModelStatus" xml:space="preserve">
         <value>Lade Modell {0} herunter</value>
     </data>
+    <data name="NoModelsAvailable" xml:space="preserve">
+        <value>Keine Modelle verfügbar</value>
+    </data>
 </root>

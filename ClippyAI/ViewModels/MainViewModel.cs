@@ -184,6 +184,13 @@ public partial class MainViewModel : ViewModelBase
             }
         }
 
+        if(ModelItems.Count == 0)
+        {
+            ErrorMessages?.Add(Resources.Resources.NoModelsAvailable);
+            IsBusy = false;
+            return;
+        }
+
         if (string.IsNullOrEmpty(Input))
         {
             return;
@@ -427,7 +434,7 @@ public partial class MainViewModel : ViewModelBase
         }
 
         // Only check image if text content hasn't changed (to reduce CPU load)
-        Bitmap? newImage = null;
+        Bitmap? newImage;
         try
         {
             newImage = await ClipboardService.GetImage();

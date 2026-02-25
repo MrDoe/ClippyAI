@@ -8,7 +8,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using ClippyAI.Interfaces;
 using ClippyAI.Models;
-
 namespace ClippyAI.Services;
 
 /// <summary>
@@ -127,20 +126,7 @@ public class OpenAIService : IAIProvider
 
         if (string.IsNullOrEmpty(apiKey))
         {
-            // Return common OpenAI models if API key is not configured
-            return
-            [
-                "gpt-5",
-                "gpt-5-mini",
-                "gpt-5-nano",
-                "gpt-4.1",
-                "gpt-4.1-nano",
-                "gpt-oss-120b",
-                "gpt-oss-20b",
-                "gpt-4o",
-                "gpt-4o-mini",
-                "gpt-4-turbo"
-            ];
+            return [];
         }
 
         try
@@ -169,37 +155,14 @@ public class OpenAIService : IAIProvider
             {
                 // Fallback to common models if API call fails
                 return
-                [
-                    "gpt-5",
-                    "gpt-5-mini",
-                    "gpt-5-nano",
-                    "gpt-4.1",
-                    "gpt-4.1-nano",
-                    "gpt-oss-120b",
-                    "gpt-oss-20b",
-                    "gpt-4o",
-                    "gpt-4o-mini",
-                    "gpt-4-turbo"
-                ];
+                [];
             }
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error fetching OpenAI models: {ex.Message}");
             // Fallback to common models
-            models.AddRange(
-            [
-                "gpt-5",
-                "gpt-5-mini",
-                "gpt-5-nano",
-                "gpt-4.1",
-                "gpt-4.1-nano",
-                "gpt-oss-120b",
-                "gpt-oss-20b",
-                "gpt-4o",
-                "gpt-4o-mini",
-                "gpt-4-turbo"
-            ]);
+            models.AddRange([]);
         }
 
         return new ObservableCollection<string>(models);

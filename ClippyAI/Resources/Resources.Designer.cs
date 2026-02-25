@@ -26,7 +26,7 @@ namespace ClippyAI.Resources {
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resources() {
+        public Resources() {
         }
         
         /// <summary>
@@ -369,6 +369,15 @@ namespace ClippyAI.Resources {
         public static string No {
             get {
                 return ResourceManager.GetString("No", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No models available.
+        /// </summary>
+        public static string NoModelsAvailable {
+            get {
+                return ResourceManager.GetString("NoModelsAvailable", resourceCulture);
             }
         }
         
