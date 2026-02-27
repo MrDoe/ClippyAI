@@ -20,12 +20,12 @@
                 VerticalAlignment="Center" HorizontalAlignment="Left" />
             <Label Content="ClippyAI" HorizontalAlignment="Center" VerticalAlignment="Center"
                 FontSize="16" />
-            <Label Content=" - Your AI Companion" HorizontalAlignment="Right" VerticalAlignment="Center"
+            <Label Content="{x:Static resources:Resources.AICompanion}" HorizontalAlignment="Right" VerticalAlignment="Center"
                 FontSize="14" />
         </StackPanel>
         
         <!-- Input -->
-        <Label Content="Clipboard Contents (Input):" Margin="0 0 0 3"
+        <Label Content="{x:Static resources:Resources.ClipboardContent}" Margin="0 0 0 3"
             HorizontalAlignment="Left"
             FontSize="14" />
         <TextBox x:Name="txtInput" Text="{Binding Input}"
@@ -52,7 +52,6 @@
         
         <!-- Task Configuration Dropdown -->
         <StackPanel Orientation="Vertical" Margin="0,0,0,10">
-            <Label Content="Available Tasks:" HorizontalAlignment="Left" FontSize="12" Margin="0,0,0,3"/>
             <ComboBox x:Name="cboTaskConfig" SelectedItem="{Binding SelectedTaskConfiguration}"
                 ItemsSource="{Binding TaskConfigurations}"
                 HorizontalAlignment="Left" Width="490"
@@ -78,27 +77,27 @@
                 HorizontalAlignment="Left" Margin="10 10 0 0"
                 ToolTip.Tip="Stop the current task" />
 
-            <Button Content="Analyze Image" 
+            <Button Content="{x:Static resources:Resources.AnalyzeImage}"
                 Command="{Binding CaptureAndAnalyzeCommand}"
                 HorizontalAlignment="Left" Margin="10 10 0 0"
                 ToolTip.Tip="Analyze image in the clipboard or from webcam feed" />
 
-            <Button Content="View Webcam" 
+            <Button Content="{x:Static resources:Resources.ViewCamera}"
                 Command="{Binding ShowCameraCommand}"
                 HorizontalAlignment="Left" Margin="10 10 0 0"
                 ToolTip.Tip="Show the webcam video feed" />
 
-            <Button Content="Capture Screenshot" 
+            <Button Content="{x:Static resources:Resources.CaptureScreenshot}" 
                 Command="{Binding CaptureScreenshotCommand}"
                 HorizontalAlignment="Left" Margin="10 10 0 0"
                 ToolTip.Tip="Capture a screenshot" IsVisible="false" />
         </StackPanel>
         
         <StackPanel Orientation="Horizontal">
-            <Button Content="⚙️ Config" 
+            <Button Content="{x:Static resources:Resources.Configuration}"
                 Command="{Binding OpenConfigurationCommand}"
                 HorizontalAlignment="Right" VerticalAlignment="Center" 
-                Margin="10 10 0 0"
+                Margin="0 10 0 0"
                 ToolTip.Tip="Open Configuration Dialog" />
         </StackPanel>
 
@@ -110,7 +109,7 @@
             AcceptsReturn="True"
             AcceptsTab="True"
             Width="490"
-            Height="350"
+            Height="550"
             FontSize="14"
             ScrollViewer.VerticalScrollBarVisibility="Auto"
             TextWrapping="Wrap"

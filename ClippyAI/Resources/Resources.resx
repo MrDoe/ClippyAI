@@ -59,277 +59,375 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, SSHPublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="ClipboardContent" xml:space="preserve">
-        <value>Clipboard Content:</value>
+        <value>📋 Clipboard Content:</value>
     </data>
     <data name="ClippyAI" xml:space="preserve">
-        <value>ClippyAI</value>
+        <value>💡 ClippyAI</value>
     </data>
     <data name="Task" xml:space="preserve">
-        <value>Task</value>
+        <value>📝 Task</value>
     </data>
     <data name="TaskLabel" xml:space="preserve">
-        <value>What I should do for you:</value>
+        <value>❓ What I should do for you:</value>
     </data>
     <data name="TaskStart" xml:space="preserve">
-        <value>Execute</value>
+        <value>▶️ Execute</value>
     </data>
     <data name="TaskStop" xml:space="preserve">
-        <value>Cancel</value>
+        <value>⏹️ Cancel</value>
     </data>
     <data name="AutoMode" xml:space="preserve">
-        <value>Auto Mode:</value>
+        <value>🤖 Auto Mode:</value>
     </data>
     <data name="Enabled" xml:space="preserve">
-        <value>Enabled</value>
+        <value>✅ Enabled</value>
     </data>
     <data name="Disabled" xml:space="preserve">
-        <value>Disabled</value>
+        <value>❌ Disabled</value>
     </data>
     <data name="Configuration" xml:space="preserve">
-        <value>Configuration</value>
+        <value>⚙️ Configuration</value>
     </data>
     <data name="Response" xml:space="preserve">
-        <value>Response:</value>
-    </data>
-    <data name="Keyboard" xml:space="preserve">
-        <value>Keyboard (experimental)</value>
+        <value>📄 Response:</value>
     </data>
     <data name="Clipboard" xml:space="preserve">
-        <value>Clipboard</value>
-    </data>
-    <data name="Task_1" xml:space="preserve">
-        <value>Write a response to the email.</value>
-    </data>
-    <data name="Task_2" xml:space="preserve">
-        <value>Write a detailed response to the email.</value>
-    </data>
-    <data name="Task_3" xml:space="preserve">
-        <value>Write a response to the email and graciously agree.</value>
-    </data>
-    <data name="Task_4" xml:space="preserve">
-        <value>Write a response to the email and politely decline.</value>
-    </data>
-    <data name="Task_5" xml:space="preserve">
-        <value>Write a response to the email and request more information.</value>
-    </data>
-    <data name="Task_6" xml:space="preserve">
-        <value>Write a response to the email and request a meeting appointment.</value>
-    </data>
-    <data name="Task_7" xml:space="preserve">
-        <value>Write a response to the email and say that you will take care of the problem.</value>
-    </data>
-    <data name="Task_8" xml:space="preserve">
-        <value>Write a response to the email and say that you cannot solve the problem and refer to Person X.</value>
-    </data>
-    <data name="Task_9" xml:space="preserve">
-        <value>Write a response to the email and request a feedback.</value>
-    </data>
-    <data name="Task_10" xml:space="preserve">
-        <value>Write a response to the email and request a confirmation.</value>
-    </data>
-    <data name="Task_11" xml:space="preserve">
-        <value>Write a response to the email and request a rescheduling.</value>
-    </data>
-    <data name="Task_12" xml:space="preserve">
-        <value>Explain what this is as precisely as possible.</value>
-    </data>
-    <data name="Task_13" xml:space="preserve">
-        <value>Explain where the error lies and how to fix it.</value>
-    </data>
-    <data name="Task_14" xml:space="preserve">
-        <value>Explain how it can be improved.</value>
-    </data>
-    <data name="Task_15" xml:space="preserve">
-        <value>Custom Task</value>
-    </data>
-    <data name="Task_16" xml:space="preserve">
-        <value>Translate this text to English.</value>
-    </data>
-    <data name="Task_17" xml:space="preserve">
-        <value>Translate this text to German.</value>
-    </data>
-    <data name="Task_18" xml:space="preserve">
-        <value>Translate this text to French.</value>
-    </data>
-    <data name="Task_19" xml:space="preserve">
-        <value>Translate this text to Spanish.</value>
-    </data>
-    <data name="Task_20" xml:space="preserve">
-        <value>Write a response to the email and tell that you already solved the problem.</value>
-    </data>
-    <data name="Task_21" xml:space="preserve">
-        <value>Write a response to the email and tell that you are working on the problem.</value>
-    </data>
-    <data name="Task_22" xml:space="preserve">
-        <value>Summarize this text.</value>
+        <value>📋 Clipboard</value>
     </data>
     <data name="Data" xml:space="preserve">
-        <value>Data</value>
+        <value>💾 Data</value>
     </data>
     <data name="Output" xml:space="preserve">
-        <value>Output:</value>
+        <value>📤 Output:</value>
     </data>
     <data name="PleaseWait" xml:space="preserve">
-        <value>Please wait...</value>
+        <value>⏳ Please wait...</value>
     </data>
     <data name="Language" xml:space="preserve">
-        <value>Language:</value>
+        <value>🌐 Language:</value>
     </data>
     <data name="OllamaUrl" xml:space="preserve">
-        <value>Ollama URL:</value>
+        <value>🔗 Ollama URL:</value>
     </data>
     <data name="Model" xml:space="preserve">
-        <value>Model:</value>
+        <value>🧠 Model:</value>
     </data>
     <data name="SelectTask" xml:space="preserve">
-        <value>Please select a task!</value>
+        <value>⚠️ Please select a task!</value>
     </data>
     <data name="SelectModel" xml:space="preserve">
-        <value>Please select a model!</value>
+        <value>⚠️ Please select a model!</value>
     </data>
     <data name="TaskCompleted" xml:space="preserve">
-        <value>Result:
-</value>
+        <value>✅ Result:</value>
     </data>
     <data name="TaskView" xml:space="preserve">
-        <value>View</value>
+        <value>👁️ View</value>
     </data>
     <data name="Delete" xml:space="preserve">
-        <value>Delete</value>
+        <value>🗑️ Delete</value>
     </data>
     <data name="DeleteModel" xml:space="preserve">
-        <value>Delete Model</value>
+        <value>🗑️ Delete Model</value>
     </data>
     <data name="ConfirmDeleteModel" xml:space="preserve">
-        <value>Do you really want to delete the selected model?</value>
+        <value>⚠️ Do you really want to delete the selected model?</value>
     </data>
     <data name="Pull" xml:space="preserve">
-        <value>Pull</value>
+        <value>⬇️ Pull</value>
     </data>
     <data name="Yes" xml:space="preserve">
-        <value>Yes</value>
+        <value>✅ Yes</value>
     </data>
     <data name="No" xml:space="preserve">
-        <value>No</value>
+        <value>❌ No</value>
     </data>
     <data name="Error" xml:space="preserve">
-        <value>Error</value>
+        <value>❌ Error</value>
     </data>
     <data name="ErrorMessage" xml:space="preserve">
-        <value>An error occurred. Please try again.</value>
+        <value>⚠️ An error occurred. Please try again.</value>
     </data>
     <data name="OK" xml:space="preserve">
-        <value>OK</value>
+        <value>✅ OK</value>
     </data>
     <data name="Cancel" xml:space="preserve">
-        <value>Cancel</value>
+        <value>❌ Cancel</value>
     </data>
     <data name="ConfirmClose" xml:space="preserve">
-        <value>Do you really want to close ClippyAI?</value>
+        <value>❓ Do you really want to close ClippyAI?</value>
     </data>
     <data name="ConfirmDelete" xml:space="preserve">
-        <value>Do you really want to delete the selected model?</value>
+        <value>⚠️ Do you really want to delete the selected model?</value>
     </data>
     <data name="CloseApplication" xml:space="preserve">
-        <value>Close ClippyAI</value>
+        <value>🚪 Close ClippyAI</value>
     </data>
     <data name="PullModel" xml:space="preserve">
-        <value>Pull Model</value>
+        <value>⬇️ Pull Model</value>
     </data>
     <data name="EnterModelName" xml:space="preserve">
-        <value>Enter Model Name:</value>
+        <value>🏷️ Enter Model Name:</value>
     </data>
     <data name="PullingModel" xml:space="preserve">
-        <value>Pulling Model...</value>
+        <value>⏳ Pulling Model...</value>
     </data>
     <data name="PullingModelFailed" xml:space="preserve">
-        <value>Pulling Model failed.</value>
+        <value>❌ Pulling Model failed.</value>
     </data>
     <data name="PullingModelSucceeded" xml:space="preserve">
-        <value>Pulling Model succeeded.</value>
+        <value>✅ Pulling Model succeeded.</value>
     </data>
     <data name="PullModelSubText" xml:space="preserve">
-        <value>Visit https://ollama.ai/models to see available models.</value>
+        <value>🔗 Visit https://ollama.ai/models to see available models.</value>
     </data>
     <data name="Threshold" xml:space="preserve">
-        <value>Threshold:</value>
+        <value>📊 Threshold:</value>
     </data>
     <data name="UseEmbeddings" xml:space="preserve">
-        <value>Use Embeddings</value>
+        <value>🧬 Use Embeddings</value>
     </data>
     <data name="PostgreSqlConnection" xml:space="preserve">
-        <value>PostgreSql Connection:</value>
+        <value>🗄️ PostgreSQL Connection:</value>
     </data>
     <data name="PostgresOllamaUrl" xml:space="preserve">
-        <value>Ollama URL for Postgres:</value>
+        <value>🔗 Ollama URL for PostgreSQL:</value>
     </data>
     <data name="AnalyzeImage" xml:space="preserve">
-        <value>Analyze Image</value>
+        <value>🖼️ Analyze Image</value>
     </data>
     <data name="Show" xml:space="preserve">
-        <value>Show</value>
+        <value>👁️ Show</value>
     </data>
     <data name="Exit" xml:space="preserve">
-        <value>Exit</value>
+        <value>🚪 Exit</value>
     </data>
     <data name="ModelPullCompleted" xml:space="preserve">
-        <value>Model pull completed.</value>
+        <value>✅ Model pull completed.</value>
     </data>
     <data name="ModelPullFailed" xml:space="preserve">
-        <value>Model pull failed.</value>
+        <value>❌ Model pull failed.</value>
     </data>
     <data name="ModelPullFailedWithStatus" xml:space="preserve">
-        <value>Model pull failed with status: {0}</value>
+        <value>❌ Model pull failed with status: {0}</value>
     </data>
     <data name="ModelDeletedSuccessfully" xml:space="preserve">
-        <value>Model deleted successfully.</value>
+        <value>✅ Model deleted successfully.</value>
     </data>
     <data name="ModelDeletionFailed" xml:space="preserve">
-        <value>Model deletion failed.</value>
+        <value>❌ Model deletion failed.</value>
     </data>
     <data name="ModelDeletionFailedWithStatus" xml:space="preserve">
-        <value>Model deletion failed with status: {0}</value>
+        <value>❌ Model deletion failed with status: {0}</value>
     </data>
     <data name="ResultStoredSuccessfully" xml:space="preserve">
-        <value>Result successfully stored as template in database!</value>
+        <value>✅ Result successfully stored as template in database!</value>
     </data>
     <data name="CameraWindow" xml:space="preserve">
-        <value>Camera Window</value>
+        <value>📷 Camera Window</value>
     </data>
     <data name="ClippyAIResult" xml:space="preserve">
-        <value>ClippyAI Result</value>
+        <value>📄 ClippyAI Result</value>
     </data>
     <data name="Result" xml:space="preserve">
-        <value>Result:</value>
+        <value>📄 Result:</value>
     </data>
     <data name="ClippyAIError" xml:space="preserve">
-        <value>ClippyAI Error</value>
+        <value>❌ ClippyAI Error</value>
     </data>
     <data name="SSHSettings" xml:space="preserve">
-        <value>SSH Settings</value>
+        <value>🔐 SSH Settings</value>
     </data>
     <data name="SSHServerUrl" xml:space="preserve">
-        <value>SSH Server URL:</value>
+        <value>🔗 SSH Server URL:</value>
     </data>
     <data name="SSHPort" xml:space="preserve">
-        <value>SSH Port:</value>
+        <value>🚪 SSH Port:</value>
     </data>
     <data name="LocalTunnel" xml:space="preserve">
-        <value>Local Tunnel:</value>
+        <value>🔄 Local Tunnel:</value>
     </data>
     <data name="RemoteTunnel" xml:space="preserve">
-        <value>Remote Tunnel:</value>
+        <value>🔄 Remote Tunnel:</value>
     </data>
     <data name="PublicKey" xml:space="preserve">
-        <value>Public Key:</value>
+        <value>🔑 Public Key:</value>
     </data>
     <data name="EnableSSHTunnel" xml:space="preserve">
-        <value>Enable SSH Tunnel</value>
+        <value>🔒 Enable SSH Tunnel</value>
     </data>
     <data name="PullingModelStatus" xml:space="preserve">
-        <value>Pulling model {0}</value>
+        <value>⏳ Pulling model {0}</value>
     </data>
     <data name="NoModelsAvailable" xml:space="preserve">
-        <value>No models available</value>
+        <value>⚠️ No models available</value>
+    </data>
+    <data name="ViewCamera" xml:space="preserve">
+        <value>📷 View Camera</value>
+    </data>
+    <data name="TestConnection" xml:space="preserve">
+        <value>🔗 Test Connection</value>
+    </data>
+    <data name="AIProvider" xml:space="preserve">
+        <value>🤖 AI Provider:</value>
+    </data>
+    <data name="AIProviderSettings" xml:space="preserve">
+        <value>⚙️ AI Provider Settings</value>
+    </data>
+    <data name="OllamaSettings" xml:space="preserve">
+        <value>🔗 Ollama Settings</value>
+    </data>
+    <data name="OpenAISettings" xml:space="preserve">
+        <value>🤖 OpenAI Settings</value>
+    </data>
+    <data name="OpenAIApiKey" xml:space="preserve">
+        <value>🔑 OpenAI API Key:</value>
+    </data>
+    <data name="OpenAIBaseUrl" xml:space="preserve">
+        <value>🔗 OpenAI Base URL:</value>
+    </data>
+    <data name="DefaultModel" xml:space="preserve">
+        <value>🧠 Default Model:</value>
+    </data>
+    <data name="DefaultTask" xml:space="preserve">
+        <value>📝 Default Task:</value>
+    </data>
+    <data name="SystemPrompt" xml:space="preserve">
+        <value>💬 System Prompt:</value>
+    </data>
+    <data name="LinuxKeyboardDevice" xml:space="preserve">
+        <value>⌨️ Linux Keyboard Device:</value>
+    </data>
+    <data name="ConfigureHotkeyDevice" xml:space="preserve">
+        <value>⚙️ Configure Hotkey Device</value>
+    </data>
+    <data name="EnableSSHTunneling" xml:space="preserve">
+        <value>🔒 Enable SSH Tunneling</value>
+    </data>
+    <data name="SSHUsername" xml:space="preserve">
+        <value>👤 SSH Username:</value>
+    </data>
+    <data name="SSHServer" xml:space="preserve">
+        <value>🖥️ SSH Server:</value>
+    </data>
+    <data name="PrivateKeyFile" xml:space="preserve">
+        <value>🔑 Private Key File:</value>
+    </data>
+    <data name="TestSSHConnection" xml:space="preserve">
+        <value>🔗 Test SSH Connection</value>
+    </data>
+    <data name="VectorDatabaseSettings" xml:space="preserve">
+        <value>📊 Vector Database Settings</value>
+    </data>
+    <data name="StoreAllResponses" xml:space="preserve">
+        <value>💾 Store All Responses</value>
+    </data>
+    <data name="PostgreSQLConnectionString" xml:space="preserve">
+        <value>🗄️ PostgreSQL Connection String:</value>
+    </data>
+    <data name="EmbeddingModel" xml:space="preserve">
+        <value>🧬 Embedding Model:</value>
+    </data>
+    <data name="ClearDatabase" xml:space="preserve">
+        <value>🗑️ Clear Database</value>
+    </data>
+    <data name="EmbeddingsCount" xml:space="preserve">
+        <value>📊 # Embeddings:</value>
+    </data>
+    <data name="VisionSettings" xml:space="preserve">
+        <value>👁️ Vision Settings</value>
+    </data>
+    <data name="VisionModel" xml:space="preserve">
+        <value>👁️ Vision Model:</value>
+    </data>
+    <data name="VideoDevice" xml:space="preserve">
+        <value>📹 Video Device:</value>
+    </data>
+    <data name="VisionPrompt" xml:space="preserve">
+        <value>💬 Vision Prompt:</value>
+    </data>
+    <data name="SystemSettings" xml:space="preserve">
+        <value>⚙️ System Settings</value>
+    </data>
+    <data name="SSHTunnelSettings" xml:space="preserve">
+        <value>🔐 SSH Tunnel Settings</value>
+    </data>
+    <data name="TaskSpecificConfigurations" xml:space="preserve">
+        <value>📝 Task-Specific Configurations</value>
+    </data>
+    <data name="Tasks" xml:space="preserve">
+        <value>📝 Tasks:</value>
+    </data>
+    <data name="NewTaskName" xml:space="preserve">
+        <value>✏️ New Task Name:</value>
+    </data>
+    <data name="Add" xml:space="preserve">
+        <value>➕ Add</value>
+    </data>
+    <data name="RestoreDefault" xml:space="preserve">
+        <value>🔄 Restore Default</value>
+    </data>
+    <data name="TaskConfiguration" xml:space="preserve">
+        <value>⚙️ Task Configuration</value>
+    </data>
+    <data name="TaskName" xml:space="preserve">
+        <value>📝 Task Name:</value>
+    </data>
+    <data name="Prompt" xml:space="preserve">
+        <value>💬 Prompt:</value>
+    </data>
+    <data name="Temperature" xml:space="preserve">
+        <value>🌡️ Temperature:</value>
+    </data>
+    <data name="MaxLength" xml:space="preserve">
+        <value>📏 Max Length:</value>
+    </data>
+    <data name="TopP" xml:space="preserve">
+        <value>📊 Top P:</value>
+    </data>
+    <data name="TopK" xml:space="preserve">
+        <value>📊 Top K:</value>
+    </data>
+    <data name="RepeatPenalty" xml:space="preserve">
+        <value>⚠️ Repeat Penalty:</value>
+    </data>
+    <data name="ContextLength" xml:space="preserve">
+        <value>📝 Context Length:</value>
+    </data>
+    <data name="Save" xml:space="preserve">
+        <value>💾 Save</value>
+    </data>
+    <data name="Close" xml:space="preserve">
+        <value>❌ Close</value>
+    </data>
+    <data name="Refresh" xml:space="preserve">
+        <value>🔄 Refresh</value>
+    </data>
+    <data name="AICompanion" xml:space="preserve">
+        <value> - Your AI Companion</value>
+    </data>
+    <data name="General" xml:space="preserve">
+        <value>⚙️ General</value>
+    </data>
+    <data name="Embeddings" xml:space="preserve">
+        <value>📊 Embeddings</value>
+    </data>
+    <data name="VisionTab" xml:space="preserve">
+        <value>👁️ Vision</value>
+    </data>
+    <data name="SystemTab" xml:space="preserve">
+        <value>⚙️ System</value>
+    </data>
+    <data name="SSH" xml:space="preserve">
+        <value>🔐 SSH</value>
+    </data>
+    <data name="TasksTab" xml:space="preserve">
+        <value>📝 Tasks</value>
+    </data>
+    <data name="Testing" xml:space="preserve">
+        <value>⏳ Testing...</value>
+    </data>
+    <data name="CaptureScreenshot" xml:space="preserve">
+        <value>📸 Capture Screenshot</value>
     </data>
 </root>

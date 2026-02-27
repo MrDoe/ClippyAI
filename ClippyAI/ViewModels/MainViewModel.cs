@@ -813,6 +813,45 @@ public partial class MainViewModel : ViewModelBase
         throw new NotImplementedException("This feature is not implemented yet.");
     }
 
+    /// <summary>
+    /// Refresh all configuration values from the database after configuration changes.
+    /// Call this method after saving configuration to apply changes immediately.
+    /// </summary>
+    public void RefreshConfigurations()
+    {
+        try
+        {
+            // Refresh task configurations
+            LoadTaskConfigurations();
+            
+            // Refresh video devices
+            LoadVideoDevices();
+            
+            // Refresh model items
+            ModelItems = OllamaService.GetModels();
+            
+            // Refresh configuration values
+            AutoMode = Convert.ToBoolean(ConfigurationService.GetConfigurationValue("AutoMode", "False"));
+            Language = ConfigurationService.GetConfigurationValue("DefaultLanguage", "English") ?? "English";
+            OllamaUrl = ConfigurationService.GetConfigurationValue("OllamaUrl", "http://127.0.0.1:11434/api") ?? "http://127.0.0.1:11434/api";
+            Model = ConfigurationService.GetConfigurationValue("OllamaModel", "") ?? "";
+            PostgreSqlConnection = ConfigurationService.GetConfigurationValue("PostgreSqlConnection") ?? "";
+            PostgresOllamaUrl = ConfigurationService.GetConfigurationValue("PostgresOllamaUrl") ?? "";
+            UseEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings") == "True";
+            StoreAllResponses = ConfigurationService.GetConfigurationValue("StoreAllResponses") == "True";
+            VideoDevice = ConfigurationService.GetConfigurationValue("VideoDevice") ?? "";
+            VisionModel = ConfigurationService.GetConfigurationValue("VisionModel", "llama3.2-vision") ?? "llama3.2-vision";
+            VisionPrompt = ConfigurationService.GetConfigurationValue("VisionPrompt", "Detect what you can find in the image. Use markdown to format the text.") ?? "Detect what you can find in the image. Use markdown to format the text.";
+            Threshold = float.Parse(ConfigurationService.GetConfigurationValue("Threshold", "0.2"));
+
+            System.Diagnostics.Debug.WriteLine("Configurations refreshed successfully");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error refreshing configurations: {ex.Message}");
+        }
+    }
+
     [RelayCommand]
     public async Task OpenConfiguration()
     {

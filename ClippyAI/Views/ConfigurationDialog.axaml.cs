@@ -1,7 +1,8 @@
 using System;
 using Avalonia.Controls;
-using Avalonia.Interactivity;
 using ClippyAI.ViewModels;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia;
 
 namespace ClippyAI.Views;
 
@@ -24,7 +25,7 @@ public partial class ConfigurationDialog : Window
         {
             // Subscribe to command execution to close dialog
             var saveButton = this.FindControl<Button>("SaveButton");
-            var cancelButton = this.FindControl<Button>("CancelButton");
+            var closeButton = this.FindControl<Button>("CloseButton");
             
             // Override the commands to handle dialog closing
             if (saveButton != null)
@@ -32,13 +33,27 @@ public partial class ConfigurationDialog : Window
                 saveButton.Click += (s, args) =>
                 {
                     viewModel.Save();
-                    Close(true);
+                    
+                    // Refresh configurations in MainViewModel
+                    if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+                    {
+                        if (desktop.MainWindow is MainWindow mainWindow)
+                        {
+                            if (mainWindow.DataContext is MainViewModel mainViewModel)
+                            {
+                                mainViewModel.RefreshConfigurations();
+                            }
+                        }
+                    }
+                    
+                    // Reinitialize services (SSH, Embeddings)
+                    App.Current?.ReinitializeServices();
                 };
             }
             
-            if (cancelButton != null)
+            if (closeButton != null)
             {
-                cancelButton.Click += (s, args) =>
+                closeButton.Click += (s, args) =>
                 {
                     Close(false);
                 };

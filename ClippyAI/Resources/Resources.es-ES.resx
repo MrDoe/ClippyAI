@@ -21,16 +21,16 @@
             Culture=neutral, SSHPublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="ClipboardContent" xml:space="preserve">
-        <value>Contenido del portapapeles:</value>
+        <value>📋 Contenido del portapapeles:</value>
     </data>
     <data name="ClippyAI" xml:space="preserve">
-        <value>ClippyAI</value>
+        <value>💡 ClippyAI</value>
     </data>
     <data name="Task" xml:space="preserve">
         <value>Tarea</value>
     </data>
     <data name="TaskLabel" xml:space="preserve">
-        <value>Lo que debo hacer por usted:</value>
+        <value>❓ Lo que debo hacer por usted:</value>
     </data>
     <data name="TaskStart" xml:space="preserve">
         <value>Ejecutar</value>
@@ -39,22 +39,19 @@
         <value>Cancelar</value>
     </data>
     <data name="AutoMode" xml:space="preserve">
-        <value>Modo automático:</value>
+        <value>🤖 Modo automático:</value>
     </data>
     <data name="Enabled" xml:space="preserve">
-        <value>Activado</value>
+        <value>✅ Activado</value>
     </data>
     <data name="Disabled" xml:space="preserve">
-        <value>Desactivado</value>
+        <value>❌ Desactivado</value>
     </data>
     <data name="Configuration" xml:space="preserve">
-        <value>Configuración</value>
+        <value>⚙️ Configuración</value>
     </data>
     <data name="Response" xml:space="preserve">
         <value>Respuesta:</value>
-    </data>
-    <data name="Keyboard" xml:space="preserve">
-        <value>Teclado (experimental)</value>
     </data>
     <data name="Clipboard" xml:space="preserve">
         <value>Portapapeles</value>
@@ -132,22 +129,22 @@
         <value>Salida:</value>
     </data>
     <data name="PleaseWait" xml:space="preserve">
-        <value>Por favor, espere...</value>
+        <value>⏳ Por favor, espere...</value>
     </data>
     <data name="Language" xml:space="preserve">
-        <value>Lengua:</value>
+        <value>🌐 Lengua:</value>
     </data>
     <data name="OllamaUrl" xml:space="preserve">
-        <value>URL de Ollama:</value>
+        <value>🔗 URL de Ollama:</value>
     </data>
     <data name="Model" xml:space="preserve">
-        <value>Modelo:</value>
+        <value>🧠 Modelo:</value>
     </data>
     <data name="SelectTask" xml:space="preserve">
-        <value>¡Elija una tarea!</value>
+        <value>⚠️ ¡Elija una tarea!</value>
     </data>
     <data name="SelectModel" xml:space="preserve">
-        <value>¡Elija un modelo!</value>
+        <value>⚠️ ¡Elija un modelo!</value>
     </data>
     <data name="TaskCompleted" xml:space="preserve">
         <value>Resultado:
@@ -169,16 +166,16 @@
         <value>Pull</value>
     </data>
     <data name="Yes" xml:space="preserve">
-        <value>Sí</value>
+        <value>✅ Sí</value>
     </data>
     <data name="No" xml:space="preserve">
-        <value>No</value>
+        <value>❌ No</value>
     </data>
     <data name="Error" xml:space="preserve">
-        <value>Error</value>
+        <value>❌ Error</value>
     </data>
     <data name="ErrorMessage" xml:space="preserve">
-        <value>Se ha producido un error. Por favor, inténtelo de nuevo.</value>
+        <value>⚠️ Se ha producido un error. Por favor, inténtelo de nuevo.</value>
     </data>
     <data name="OK" xml:space="preserve">
         <value>Aceptar</value>
@@ -187,43 +184,43 @@
         <value>Cancelar</value>
     </data>
     <data name="ConfirmClose" xml:space="preserve">
-        <value>¿Realmente desea cerrar ClippyAI?</value>
+        <value>❓ ¿Realmente desea cerrar ClippyAI?</value>
     </data>
     <data name="ConfirmDelete" xml:space="preserve">
-        <value>¿Realmente desea eliminar el modelo?</value>
+        <value>⚠️ ¿Realmente desea eliminar el modelo?</value>
     </data>
     <data name="CloseApplication" xml:space="preserve">
-        <value>Cerrar ClippyAI</value>
+        <value>🚪 Cerrar ClippyAI</value>
     </data>
     <data name="PullModel" xml:space="preserve">
-        <value>Extraer modelo</value>
+        <value>⬇️ Extraer modelo</value>
     </data>
     <data name="EnterModelName" xml:space="preserve">
-        <value>Introduzca el nombre del modelo:</value>
+        <value>🏷️ Introduzca el nombre del modelo:</value>
     </data>
     <data name="PullingModel" xml:space="preserve">
-        <value>Extrayendo modelo...</value>
+        <value>⏳ Extrayendo modelo...</value>
     </data>
     <data name="PullingModelFailed" xml:space="preserve">
-        <value>¡Error al extraer el modelo!</value>
+        <value>❌ ¡Error al extraer el modelo!</value>
     </data>
     <data name="PullingModelSucceeded" xml:space="preserve">
-        <value>¡Modelo extraído con éxito!</value>
+        <value>✅ ¡Modelo extraído con éxito!</value>
     </data>
     <data name="PullModelSubText" xml:space="preserve">
-        <value>Visite https://ollama.ai/models para ver los modelos disponibles.</value>
+        <value>🔗 Visite https://ollama.ai/models para ver los modelos disponibles.</value>
     </data>
     <data name="Threshold" xml:space="preserve">
-        <value>Umbral:</value>
+        <value>📊 Umbral:</value>
     </data>
     <data name="UseEmbeddings" xml:space="preserve">
-        <value>Usar incrustaciones</value>
+        <value>🧬 Usar incrustaciones</value>
     </data>
     <data name="PostgreSqlConnection" xml:space="preserve">
-        <value>Conexión PostgreSql:</value>
+        <value>🗄️ Conexión PostgreSQL:</value>
     </data>
     <data name="PostgresOllamaUrl" xml:space="preserve">
-        <value>URL de Ollama Postgres:</value>
+        <value>🔗 URL de Ollama PostgreSQL:</value>
     </data>
     <data name="AnalyzeImage" xml:space="preserve">
         <value>Analizar imagen</value>
@@ -235,52 +232,52 @@
         <value>Salir</value>
     </data>
     <data name="ModelPullCompleted" xml:space="preserve">
-        <value>Descarga del modelo completada.</value>
+        <value>✅ Descarga del modelo completada.</value>
     </data>
     <data name="ModelPullFailed" xml:space="preserve">
-        <value>Falló la descarga del modelo.</value>
+        <value>❌ Falló la descarga del modelo.</value>
     </data>
     <data name="ModelPullFailedWithStatus" xml:space="preserve">
         <value>Falló la descarga del modelo con estado: {0}</value>
     </data>
     <data name="ModelDeletedSuccessfully" xml:space="preserve">
-        <value>Modelo eliminado exitosamente.</value>
+        <value>✅ Modelo eliminado exitosamente.</value>
     </data>
     <data name="ModelDeletionFailed" xml:space="preserve">
-        <value>Falló la eliminación del modelo.</value>
+        <value>❌ Falló la eliminación del modelo.</value>
     </data>
     <data name="ModelDeletionFailedWithStatus" xml:space="preserve">
         <value>Falló la eliminación del modelo con estado: {0}</value>
     </data>
     <data name="ResultStoredSuccessfully" xml:space="preserve">
-        <value>¡Resultado almacenado exitosamente como plantilla en la base de datos!</value>
+        <value>✅ ¡Resultado almacenado exitosamente como plantilla en la base de datos!</value>
     </data>
     <data name="CameraWindow" xml:space="preserve">
         <value>Ventana de Cámara</value>
     </data>
     <data name="ClippyAIResult" xml:space="preserve">
-        <value>Resultado de ClippyAI</value>
+        <value>📄 Resultado de ClippyAI</value>
     </data>
     <data name="Result" xml:space="preserve">
-        <value>Resultado:</value>
+        <value>📄 Resultado:</value>
     </data>
     <data name="ClippyAIError" xml:space="preserve">
-        <value>Error de ClippyAI</value>
+        <value>❌ Error de ClippyAI</value>
     </data>
     <data name="SSHSettings" xml:space="preserve">
-        <value>Configuración SSH</value>
+        <value>🔒 Configuración SSH</value>
     </data>
     <data name="SSHServerUrl" xml:space="preserve">
-        <value>URL del Servidor SSH:</value>
+        <value>🔗 URL del Servidor SSH:</value>
     </data>
     <data name="SSHPort" xml:space="preserve">
-        <value>Puerto SSH:</value>
+        <value>🚪 Puerto SSH:</value>
     </data>
     <data name="LocalTunnel" xml:space="preserve">
-        <value>Túnel Local:</value>
+        <value>🔄 Túnel Local:</value>
     </data>
     <data name="RemoteTunnel" xml:space="preserve">
-        <value>Túnel Remoto:</value>
+        <value>🔄 Túnel Remoto:</value>
     </data>
     <data name="PublicKey" xml:space="preserve">
         <value>Clave Pública:</value>
@@ -289,10 +286,177 @@
         <value>Habilitar Túnel SSH</value>
     </data>
     <data name="PullingModelStatus" xml:space="preserve">
-        <value>Descargando modelo {0}</value>
+        <value>⏳ Descargando modelo {0}</value>
     </data>
     <data name="NoModelsAvailable" xml:space="preserve">
-        <value>No hay modelos disponibles</value>
+        <value>⚠️ No hay modelos disponibles</value>
     </data>
-
+    <data name="ViewCamera" xml:space="preserve">
+        <value>📷 Ver cámara</value>
+    </data>
+    <data name="TestConnection" xml:space="preserve">
+        <value>🔗 Probar Conexión</value>
+    </data>
+    <data name="AIProvider" xml:space="preserve">
+        <value>🤖 Proveedor de IA:</value>
+    </data>
+    <data name="AIProviderSettings" xml:space="preserve">
+        <value>⚙️ Configuración del Proveedor de IA</value>
+    </data>
+    <data name="OllamaSettings" xml:space="preserve">
+        <value>🔗 Configuración de Ollama</value>
+    </data>
+    <data name="OpenAISettings" xml:space="preserve">
+        <value>🤖 Configuración de OpenAI</value>
+    </data>
+    <data name="OpenAIApiKey" xml:space="preserve">
+        <value>🔑 Clave API de OpenAI:</value>
+    </data>
+    <data name="OpenAIBaseUrl" xml:space="preserve">
+        <value>🔗 URL Base de OpenAI:</value>
+    </data>
+    <data name="DefaultModel" xml:space="preserve">
+        <value>🧠 Modelo Predeterminado:</value>
+    </data>
+    <data name="DefaultTask" xml:space="preserve">
+        <value>📝 Tarea Predeterminada:</value>
+    </data>
+    <data name="SystemPrompt" xml:space="preserve">
+        <value>💬 Indicación del Sistema:</value>
+    </data>
+    <data name="LinuxKeyboardDevice" xml:space="preserve">
+        <value>⌨️ Dispositivo de Teclado Linux:</value>
+    </data>
+    <data name="ConfigureHotkeyDevice" xml:space="preserve">
+        <value>⚙️ Configurar Dispositivo de Acceso Rápido</value>
+    </data>
+    <data name="EnableSSHTunneling" xml:space="preserve">
+        <value>🔒 Habilitar Túnel SSH</value>
+    </data>
+    <data name="SSHUsername" xml:space="preserve">
+        <value>👤 Nombre de Usuario SSH:</value>
+    </data>
+    <data name="SSHServer" xml:space="preserve">
+        <value>🖥️ Servidor SSH:</value>
+    </data>
+    <data name="PrivateKeyFile" xml:space="preserve">
+        <value>🔑 Archivo de Clave Privada:</value>
+    </data>
+    <data name="TestSSHConnection" xml:space="preserve">
+        <value>🔗 Probar Conexión SSH</value>
+    </data>
+    <data name="VectorDatabaseSettings" xml:space="preserve">
+        <value>📊 Configuración de Base de Datos Vectorial</value>
+    </data>
+    <data name="StoreAllResponses" xml:space="preserve">
+        <value>💾 Almacenar Todas las Respuestas</value>
+    </data>
+    <data name="PostgreSQLConnectionString" xml:space="preserve">
+        <value>🗄️ Cadena de Conexión PostgreSQL:</value>
+    </data>
+    <data name="EmbeddingModel" xml:space="preserve">
+        <value>🧬 Modelo de Incrustación:</value>
+    </data>
+    <data name="ClearDatabase" xml:space="preserve">
+        <value>🗑️ Limpiar Base de Datos</value>
+    </data>
+    <data name="EmbeddingsCount" xml:space="preserve">
+        <value>📊 # Incrustaciones:</value>
+    </data>
+    <data name="VisionSettings" xml:space="preserve">
+        <value>👁️ Configuración de Visión</value>
+    </data>
+    <data name="VisionModel" xml:space="preserve">
+        <value>👁️ Modelo de Visión:</value>
+    </data>
+    <data name="VideoDevice" xml:space="preserve">
+        <value>📹 Dispositivo de Video:</value>
+    </data>
+    <data name="VisionPrompt" xml:space="preserve">
+        <value>💬 Indicación de Visión:</value>
+    </data>
+    <data name="SystemSettings" xml:space="preserve">
+        <value>⚙️ Configuración del Sistema</value>
+    </data>
+    <data name="SSHTunnelSettings" xml:space="preserve">
+        <value>🔐 Configuración del Túnel SSH</value>
+    </data>
+    <data name="TaskSpecificConfigurations" xml:space="preserve">
+        <value>📝 Configuraciones Específicas de Tarea</value>
+    </data>
+    <data name="Tasks" xml:space="preserve">
+        <value>📝 Tareas:</value>
+    </data>
+    <data name="NewTaskName" xml:space="preserve">
+        <value>✏️ Nuevo Nombre de Tarea:</value>
+    </data>
+    <data name="Add" xml:space="preserve">
+        <value>➕ Añadir</value>
+    </data>
+    <data name="RestoreDefault" xml:space="preserve">
+        <value>🔄 Restaurar Predeterminado</value>
+    </data>
+    <data name="TaskConfiguration" xml:space="preserve">
+        <value>⚙️ Configuración de Tarea</value>
+    </data>
+    <data name="TaskName" xml:space="preserve">
+        <value>📝 Nombre de Tarea:</value>
+    </data>
+    <data name="Prompt" xml:space="preserve">
+        <value>💬 Indicación:</value>
+    </data>
+    <data name="Temperature" xml:space="preserve">
+        <value>🌡️ Temperatura:</value>
+    </data>
+    <data name="MaxLength" xml:space="preserve">
+        <value>📏 Longitud Máxima:</value>
+    </data>
+    <data name="TopP" xml:space="preserve">
+        <value>📊 Top P:</value>
+    </data>
+    <data name="TopK" xml:space="preserve">
+        <value>📊 Top K:</value>
+    </data>
+    <data name="RepeatPenalty" xml:space="preserve">
+        <value>⚠️ Penalización de Repetición:</value>
+    </data>
+    <data name="ContextLength" xml:space="preserve">
+        <value>📝 Longitud del Contexto:</value>
+    </data>
+    <data name="Save" xml:space="preserve">
+        <value>💾 Guardar</value>
+    </data>
+    <data name="Close" xml:space="preserve">
+        <value>❌ Cerrar</value>
+    </data>
+    <data name="Refresh" xml:space="preserve">
+        <value>🔄 Actualizar</value>
+    </data>
+    <data name="AICompanion" xml:space="preserve">
+        <value> - Su Asistente de IA</value>
+    </data>
+    <data name="General" xml:space="preserve">
+        <value>⚙️ General</value>
+    </data>
+    <data name="Embeddings" xml:space="preserve">
+        <value>📊 Incrustaciones</value>
+    </data>
+    <data name="VisionTab" xml:space="preserve">
+        <value>👁️ Visión</value>
+    </data>
+    <data name="SystemTab" xml:space="preserve">
+        <value>⚙️ Sistema</value>
+    </data>
+    <data name="SSH" xml:space="preserve">
+        <value>🔐 SSH</value>
+    </data>
+    <data name="TasksTab" xml:space="preserve">
+        <value>📝 Tareas</value>
+    </data>
+    <data name="Testing" xml:space="preserve">
+        <value>⏳ Probando...</value>
+    </data>
+    <data name="CaptureScreenshot" xml:space="preserve">
+        <value>📸 Capturar Pantalla</value>
+    </data>
 </root>

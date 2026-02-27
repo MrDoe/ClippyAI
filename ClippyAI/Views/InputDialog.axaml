@@ -2,6 +2,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:resources="clr-namespace:ClippyAI.Resources"
     mc:Ignorable="d"
     d:DesignWidth="475" Width="475"
     d:DesignHeight="170" Height="170"
@@ -23,8 +24,8 @@
             <Label Grid.Row="3" Name="lblSubText" Content="Value" />
             <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right"
                 Margin="0 35 0 0">
-                <Button Name="btnOK" Content="OK" Click="ButtonOK_Click" Margin="0 0 10 0" />
-                <Button Name="btnCancel" Content="Cancel" Click="ButtonCancel_Click" />
+                <Button Name="btnOK" Content="{x:Static resources:Resources.OK}" Click="ButtonOK_Click" Margin="0 0 10 0" />
+                <Button Name="btnCancel" Content="{x:Static resources:Resources.Cancel}" Click="ButtonCancel_Click" />
             </StackPanel>
         </Grid>
     </Border>

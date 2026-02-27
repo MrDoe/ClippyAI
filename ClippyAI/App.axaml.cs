@@ -3,7 +3,6 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using System.Globalization;
 using ClippyAI.Views;
-using System.Configuration;
 using System.Text;
 using System;
 using CommunityToolkit.Mvvm.Input;
@@ -15,8 +14,11 @@ namespace ClippyAI;
 
 public partial class App : Application
 {
+    public new static App? Current { get; private set; }
+
     public App()
     {
+        Current = this;
         DataContext = new ApplicationViewModel();
     }
     public override void Initialize()
@@ -26,6 +28,47 @@ public partial class App : Application
     private MainWindow? _mainWindow;
     private TrayIcon? _trayIcon;
     private SSHService? _sshService;
+
+    /// <summary>
+    /// Reinitialize services after configuration changes (SSH, Embeddings, etc.)
+    /// </summary>
+    public void ReinitializeServices()
+    {
+        try
+        {
+            // Reinitialize SSH connection
+            _sshService?.Disconnect();
+            _sshService = new SSHService();
+            _sshService.Connect();
+            Console.WriteLine("SSH service reinitialized");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error reinitializing SSH: {ex.Message}");
+            if (_mainWindow != null)
+            {
+                _mainWindow.ShowNotification("ClippyAI", $"SSH reinitialization failed: {ex.Message}", false, false);
+            }
+        }
+
+        try
+        {
+            // Reinitialize embeddings if enabled
+            if (ConfigurationService.GetConfigurationValue("UseEmbeddings") == "True")
+            {
+                OllamaService.InitializeEmbeddings();
+                Console.WriteLine("Embeddings service reinitialized");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error reinitializing embeddings: {ex.Message}");
+            if (_mainWindow != null)
+            {
+                _mainWindow.ShowNotification("ClippyAI", $"Embeddings reinitialization failed: {ex.Message}", false, false);
+            }
+        }
+    }
 
     private void TrayIcon_Clicked(object? sender, EventArgs e)
     {

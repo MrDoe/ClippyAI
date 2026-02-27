@@ -9,7 +9,6 @@ using ClippyAI.Models;
 using ClippyAI.Services;
 using ClippyAI.Views;
 using System.IO;
-using DirectShowLib;
 #if WINDOWS
 using DirectShowLib;
 #endif
@@ -106,6 +105,13 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
 
     [ObservableProperty]
     private bool _sshTestInProgress = false;
+
+    // General AI Provider connection test properties
+    [ObservableProperty]
+    private bool _generalTestInProgress = false;
+
+    [ObservableProperty]
+    private string _generalTestResult = "";
 
     [ObservableProperty]
     private ObservableCollection<string> _languageItems = new([ "English", "Deutsch", "Français", "Español", "Italiano", "Português", "中文", "日本語", "한국어", "Русский" ]);
@@ -317,9 +323,38 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     [RelayCommand]
     private async Task AddModel()
     {
-        // This would typically open a dialog to enter a model name to pull
-        // For now, we'll just refresh the model list
-        await RefreshModels();
+        if (_mainWindow == null)
+        {
+            System.Diagnostics.Debug.WriteLine("MainWindow reference is required for pulling models.");
+            return;
+        }
+
+        try
+        {
+            // Prompt user for model name
+            var modelName = await InputDialog.Prompt(
+                _mainWindow,
+                "Pull Model",
+                "Enter the model name to pull:",
+                "e.g., llama2, mistral, neural-chat",
+                isRequired: true
+            );
+
+            if (string.IsNullOrWhiteSpace(modelName))
+            {
+                return;
+            }
+
+            // Pull the model
+            await OllamaService.PullModelAsync(modelName);
+
+            // Refresh the model list
+            await RefreshModels();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error pulling model: {ex.Message}");
+        }
     }
 
     [RelayCommand]
@@ -442,6 +477,86 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
         finally
         {
             SshTestInProgress = false;
+        }
+    }
+
+    [RelayCommand]
+    private async Task TestConnection()
+    {
+        GeneralTestInProgress = true;
+        GeneralTestResult = "Testing AI Provider connection...";
+        
+        try
+        {
+            // Save current settings temporarily to test with current form values
+            var tempAiProvider = ConfigurationService.GetConfigurationValue("AIProvider");
+            var tempOllamaUrl = ConfigurationService.GetConfigurationValue("OllamaUrl");
+            var tempOpenAIApiKey = ConfigurationService.GetConfigurationValue("OpenAIApiKey");
+            var tempOpenAIBaseUrl = ConfigurationService.GetConfigurationValue("OpenAIBaseUrl");
+
+            // Set current form values for testing
+            ConfigurationService.SetConfigurationValue("AIProvider", AiProvider);
+            ConfigurationService.SetConfigurationValue("OllamaUrl", OllamaUrl);
+            ConfigurationService.SetConfigurationValue("OpenAIApiKey", OpenAIApiKey);
+            ConfigurationService.SetConfigurationValue("OpenAIBaseUrl", OpenAIBaseUrl);
+
+            await Task.Run(async () =>
+            {
+                try
+                {
+                    if (AiProvider == "Ollama")
+                    {
+                        // Test Ollama connection
+                        var models = await OllamaService.GetModelsAsync();
+                        if (models.Count > 0)
+                        {
+                            GeneralTestResult = $"✓ Ollama connection successful!\nFound {models.Count} model(s)";
+                        }
+                        else
+                        {
+                            GeneralTestResult = "⚠ Ollama connection successful but no models found.\nYou may need to pull a model first.";
+                        }
+                    }
+                    else if (AiProvider == "OpenAI")
+                    {
+                        // Test OpenAI connection
+                        if (string.IsNullOrWhiteSpace(OpenAIApiKey))
+                        {
+                            GeneralTestResult = "✗ OpenAI connection failed: API key is empty.";
+                        }
+                        else
+                        {
+                            var models = await OllamaService.GetModelsAsync();
+                            if (models.Count > 0)
+                            {
+                                GeneralTestResult = $"✓ OpenAI connection successful!\nFound {models.Count} model(s)";
+                            }
+                            else
+                            {
+                                GeneralTestResult = "⚠ OpenAI connection successful but no models found.\nCheck your API key permissions.";
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    GeneralTestResult = $"✗ Connection test failed: {ex.Message}";
+                }
+            });
+
+            // Restore original settings
+            ConfigurationService.SetConfigurationValue("AIProvider", tempAiProvider);
+            ConfigurationService.SetConfigurationValue("OllamaUrl", tempOllamaUrl);
+            ConfigurationService.SetConfigurationValue("OpenAIApiKey", tempOpenAIApiKey);
+            ConfigurationService.SetConfigurationValue("OpenAIBaseUrl", tempOpenAIBaseUrl);
+        }
+        catch (Exception ex)
+        {
+            GeneralTestResult = $"Connection test error: {ex.Message}";
+        }
+        finally
+        {
+            GeneralTestInProgress = false;
         }
     }
 

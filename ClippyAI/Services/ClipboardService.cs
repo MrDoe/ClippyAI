@@ -38,7 +38,9 @@ public static class ClipboardService
 
         try
         {
+#pragma warning disable CS0618
             _lastFormats = await provider.GetFormatsAsync();
+#pragma warning restore CS0618
             _lastFormatsCheck = now;
             return _lastFormats;
         }
@@ -82,7 +84,9 @@ public static class ClipboardService
         // Directly call GetTextAsync() — it returns null when no text is present.
         // Avoid GetFormatsAsync() here because it can fail silently when the window
         // is hidden (e.g. minimised to taskbar), which would suppress all updates.
+#pragma warning disable CS0618
         return await provider.GetTextAsync();
+#pragma warning restore CS0618
     }
 
     /// <summary>
@@ -101,6 +105,7 @@ public static class ClipboardService
             return null;
 
         // Get the image data from the clipboard
+#pragma warning disable CS0618
         var data = await clipboard.GetDataAsync("image/png");
         data ??= await clipboard.GetDataAsync("PNG");
         data ??= await clipboard.GetDataAsync("image/bmp");
@@ -112,6 +117,7 @@ public static class ClipboardService
         data ??= await clipboard.GetDataAsync("image/webp");
         data ??= await clipboard.GetDataAsync("image/ico");
         data ??= await clipboard.GetDataAsync("image/icon");
+#pragma warning restore CS0618
         if (data == null)
             return null;
         else if (data is byte[] imageData)

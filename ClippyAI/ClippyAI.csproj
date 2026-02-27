@@ -21,6 +21,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <PublishAot>False</PublishAot>
     <PublishTrimmed>False</PublishTrimmed>
+    <NoWarn>$(NoWarn);NETSDK1206</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
     <DefineConstants>WINDOWS</DefineConstants>
@@ -53,17 +54,16 @@
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.12" />
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.12" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-    <PackageReference Include="DirectShowLib.Net" Version="3.0.0" />
+    <PackageReference Condition="'$(OS)' == 'Windows_NT'" Include="DirectShowLib.Net" Version="3.0.0" />
     <PackageReference Include="Emgu.CV" Version="4.12.0.5764" />
-    <PackageReference Include="Emgu.CV.runtime.mini.ubuntu-x64" Version="4.12.0.5764" />
-    <PackageReference Include="Emgu.CV.runtime.mini.windows" Version="4.12.0.5764" />
+    <PackageReference Condition="'$(OS)' == 'Windows_NT'" Include="Emgu.CV.runtime.mini.windows" Version="4.12.0.5764" />
+    <PackageReference Condition="'$(OS)' != 'Windows_NT'" Include="Emgu.CV.runtime.mini.ubuntu-x64" Version="4.12.0.5764" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.3" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.3" />
     <PackageReference Include="Npgsql" Version="10.0.1" />
     <PackageReference Include="ReactiveUI" Version="23.1.1" />
     <PackageReference Include="ReactiveUI.Avalonia" Version="11.4.3" />
     <PackageReference Include="SSH.NET" Version="2025.1.0" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.3" />
   </ItemGroup>
   <ItemGroup Condition=" '$(OS)' == 'Windows_NT' ">
     <FrameworkReference Include="Microsoft.WindowsDesktop.App.Wpf" />
