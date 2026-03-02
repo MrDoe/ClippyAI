@@ -3,7 +3,9 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using ClippyAI.Services;
+#if WINDOWS
 using DirectShowLib;
+#endif
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
@@ -41,6 +43,7 @@ public partial class CameraWindow : Window
             {
                 // If the device name is not a number, try to find it by name
                 List<string> devices = [];
+#if WINDOWS
                 DsDevice[] systemDeviceEnum = DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice);
                 foreach (DsDevice? device in systemDeviceEnum)
                 {
@@ -48,6 +51,7 @@ public partial class CameraWindow : Window
                 }
 
                 deviceNumber = Array.IndexOf(devices.ToArray(), VideoDevice);
+#endif
             }
             Capture = new VideoCapture(deviceNumber, VideoCapture.API.DShow);
         }

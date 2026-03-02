@@ -6,7 +6,9 @@ using ClippyAI.Services;
 using ClippyAI.ViewModels;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+#if WINDOWS
 using DirectShowLib;
+#endif
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
@@ -764,6 +766,7 @@ public partial class MainViewModel : ViewModelBase
             {
                 // If the device name is not a number, try to find it by name
                 List<string> devices = new();
+#if WINDOWS
                 DsDevice[] systemDeviceEnum = DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice);
                 foreach (DsDevice? device in systemDeviceEnum)
                 {
@@ -771,6 +774,7 @@ public partial class MainViewModel : ViewModelBase
                 }
 
                 deviceNumber = Array.IndexOf(devices.ToArray(), VideoDevice);
+#endif
             }
             capture = new VideoCapture(deviceNumber, VideoCapture.API.DShow);
         }
@@ -808,9 +812,11 @@ public partial class MainViewModel : ViewModelBase
         if (OperatingSystem.IsWindows())
         {
             // Windows-specific code to get video devices
+#if WINDOWS
             DsDevice[] systemDeviceEnum = Array.Empty<DsDevice>();
             systemDeviceEnum = DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice);
             devices.AddRange(systemDeviceEnum.Select(device => device.Name));
+#endif
         }
         else if (OperatingSystem.IsLinux() || OperatingSystem.IsMacOS())
         {
