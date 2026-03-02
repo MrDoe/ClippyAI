@@ -1,3 +1,6 @@
+using Avalonia.Threading;
+using ClippyAI.Views;
+using EvDevSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -5,18 +8,16 @@ using System.Linq;
 using System.Runtime.Versioning;
 using System.Threading;
 using System.Threading.Tasks;
-using Avalonia.Threading;
-using ClippyAI.Views;
-using EvDevSharp;
 namespace ClippyAI.Services;
+
 [SupportedOSPlatform("linux")]
 public class LinuxHotkeyService
 {
     private EvDevDevice? Keyboard;
-    private HashSet<string> pressedKeys = new HashSet<string>();
-    private Dictionary<string, DateTime> keyTimes = new Dictionary<string, DateTime>();
-    private MainViewModel? DataContext;
-    private MainWindow? Window;
+    private readonly HashSet<string> pressedKeys = [];
+    private readonly Dictionary<string, DateTime> keyTimes = [];
+    private readonly MainViewModel? DataContext;
+    private readonly MainWindow? Window;
 
     public LinuxHotkeyService(MainWindow window)
     {
@@ -46,14 +47,14 @@ public class LinuxHotkeyService
             throw new Exception("This feature is only supported on Linux.");
         }
 
-        var devices = EvDevDevice.GetDevices().OrderBy(d => d.DevicePath).ToList();
+        List<EvDevDevice> devices = EvDevDevice.GetDevices().OrderBy(d => d.DevicePath).ToList();
         if (!devices.Any())
         {
             throw new Exception("Devices are not queryable!");
         }
 
         // get all keyboard devices
-        var keyboards = devices.Where(d => d.GuessedDeviceType == EvDevGuessedDeviceType.Keyboard &&
+        List<EvDevDevice> keyboards = devices.Where(d => d.GuessedDeviceType == EvDevGuessedDeviceType.Keyboard &&
                                       d.Name!.ToLower().Contains("keyboard")).ToList();
 
         if (!keyboards.Any()) // no keyboard device was found
@@ -68,12 +69,12 @@ public class LinuxHotkeyService
         }
         else // multiple keyboard devices were found
         {
-            var keyboardNames = keyboards.Select(k => k.Name).ToList() ?? throw new Exception("No keyboard device was found.");
+            List<string?> keyboardNames = keyboards.Select(k => k.Name).ToList() ?? throw new Exception("No keyboard device was found.");
 
             // convert to ObservableCollection
-            var keyboardNamesCollection = new ObservableCollection<string>(keyboardNames!);
+            ObservableCollection<string> keyboardNamesCollection = new(keyboardNames!);
 
-            var selectedDeviceName = await InputDialog.Prompt(
+            string? selectedDeviceName = await InputDialog.Prompt(
                 parentWindow: Window!,
                 title: "Select Keyboard Device",
                 caption: "Select a keyboard device:",
@@ -119,13 +120,13 @@ public class LinuxHotkeyService
         {
             if (e.Value == EvDevKeyValue.KeyDown)
             {
-                pressedKeys.Add(keyStr);
+                _ = pressedKeys.Add(keyStr);
                 keyTimes[keyStr] = DateTime.Now;
             }
             else if (e.Value == EvDevKeyValue.KeyUp)
             {
-                pressedKeys.Remove(keyStr);
-                keyTimes.Remove(keyStr);
+                _ = pressedKeys.Remove(keyStr);
+                _ = keyTimes.Remove(keyStr);
             }
         }
 
@@ -136,19 +137,19 @@ public class LinuxHotkeyService
             DateTime.Now.Subtract(keyTimes["C"]).TotalSeconds < 3)
         {
             Console.WriteLine("Hotkey Ctrl + Alt + C pressed");
-            pressedKeys.Remove("Ctrl");
-            pressedKeys.Remove("Alt");
-            pressedKeys.Remove("C");
-            keyTimes.Remove("Ctrl");
-            keyTimes.Remove("Alt");
-            keyTimes.Remove("C");
+            _ = pressedKeys.Remove("Ctrl");
+            _ = pressedKeys.Remove("Alt");
+            _ = pressedKeys.Remove("C");
+            _ = keyTimes.Remove("Ctrl");
+            _ = keyTimes.Remove("Alt");
+            _ = keyTimes.Remove("C");
 
             // execute relay command AskClippy
             try
             {
                 Dispatcher.UIThread.Post(() =>
                 {
-                    DataContext?.AskClippy(new CancellationToken());
+                    _ = (DataContext?.AskClippy(new CancellationToken()));
                 });
             }
             catch (Exception ex)
@@ -163,19 +164,19 @@ public class LinuxHotkeyService
                  DateTime.Now.Subtract(keyTimes["A"]).TotalSeconds < 3)
         {
             Console.WriteLine("Hotkey Ctrl + Alt + A pressed");
-            pressedKeys.Remove("Ctrl");
-            pressedKeys.Remove("Alt");
-            pressedKeys.Remove("A");
-            keyTimes.Remove("Ctrl");
-            keyTimes.Remove("Alt");
-            keyTimes.Remove("A");
+            _ = pressedKeys.Remove("Ctrl");
+            _ = pressedKeys.Remove("Alt");
+            _ = pressedKeys.Remove("A");
+            _ = keyTimes.Remove("Ctrl");
+            _ = keyTimes.Remove("Alt");
+            _ = keyTimes.Remove("A");
 
             // execute relay command CaptureAndAnalyze
             try
             {
                 Dispatcher.UIThread.Post(() =>
                 {
-                    DataContext?.CaptureAndAnalyze();
+                    _ = (DataContext?.CaptureAndAnalyze());
                 });
             }
             catch (Exception ex)
@@ -190,12 +191,12 @@ public class LinuxHotkeyService
                  DateTime.Now.Subtract(keyTimes["Up"]).TotalSeconds < 3)
         {
             Console.WriteLine("Hotkey Ctrl + Alt + Up pressed");
-            pressedKeys.Remove("Ctrl");
-            pressedKeys.Remove("Alt");
-            pressedKeys.Remove("Up");
-            keyTimes.Remove("Ctrl");
-            keyTimes.Remove("Alt");
-            keyTimes.Remove("Up");
+            _ = pressedKeys.Remove("Ctrl");
+            _ = pressedKeys.Remove("Alt");
+            _ = pressedKeys.Remove("Up");
+            _ = keyTimes.Remove("Ctrl");
+            _ = keyTimes.Remove("Alt");
+            _ = keyTimes.Remove("Up");
 
             // execute relay command SelectPreviousTask
             try
@@ -217,12 +218,12 @@ public class LinuxHotkeyService
                  DateTime.Now.Subtract(keyTimes["Down"]).TotalSeconds < 3)
         {
             Console.WriteLine("Hotkey Ctrl + Alt + Down pressed");
-            pressedKeys.Remove("Ctrl");
-            pressedKeys.Remove("Alt");
-            pressedKeys.Remove("Down");
-            keyTimes.Remove("Ctrl");
-            keyTimes.Remove("Alt");
-            keyTimes.Remove("Down");
+            _ = pressedKeys.Remove("Ctrl");
+            _ = pressedKeys.Remove("Alt");
+            _ = pressedKeys.Remove("Down");
+            _ = keyTimes.Remove("Ctrl");
+            _ = keyTimes.Remove("Alt");
+            _ = keyTimes.Remove("Down");
 
             // execute relay command SelectNextTask
             try

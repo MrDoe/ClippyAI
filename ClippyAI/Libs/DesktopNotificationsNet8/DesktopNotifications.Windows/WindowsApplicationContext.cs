@@ -22,28 +22,28 @@ namespace DesktopNotifications.Windows
             string? customName = null,
             string? appUserModelId = null)
         {
-            var mainModule = Process.GetCurrentProcess().MainModule;
+            ProcessModule? mainModule = Process.GetCurrentProcess().MainModule;
 
             if (mainModule?.FileName == null)
             {
                 throw new InvalidOperationException("No valid process module found.");
             }
 
-            var appName = customName ?? Path.GetFileNameWithoutExtension(mainModule.FileName);
-            var aumid = appUserModelId ?? appName; //TODO: Add seeded bits to avoid collisions?
+            string appName = customName ?? Path.GetFileNameWithoutExtension(mainModule.FileName);
+            string aumid = appUserModelId ?? appName; //TODO: Add seeded bits to avoid collisions?
 
             SetCurrentProcessExplicitAppUserModelID(aumid);
 
-            using var shortcut = new ShellLink
+            using ShellLink shortcut = new()
             {
                 TargetPath = mainModule.FileName,
                 Arguments = string.Empty,
                 AppUserModelID = aumid
             };
 
-            var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            var startMenuPath = Path.Combine(appData, @"Microsoft\Windows\Start Menu\Programs");
-            var shortcutFile = Path.Combine(startMenuPath, $"{appName}.lnk");
+            string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string startMenuPath = Path.Combine(appData, @"Microsoft\Windows\Start Menu\Programs");
+            string shortcutFile = Path.Combine(startMenuPath, $"{appName}.lnk");
 
             shortcut.Save(shortcutFile);
 

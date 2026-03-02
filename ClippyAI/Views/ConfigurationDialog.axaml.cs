@@ -1,8 +1,8 @@
-using System;
-using Avalonia.Controls;
-using ClippyAI.ViewModels;
-using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
+using ClippyAI.ViewModels;
+using System;
 
 namespace ClippyAI.Views;
 
@@ -24,16 +24,14 @@ public partial class ConfigurationDialog : Window
         if (DataContext is ConfigurationDialogViewModel viewModel)
         {
             // Subscribe to command execution to close dialog
-            var saveButton = this.FindControl<Button>("SaveButton");
-            var closeButton = this.FindControl<Button>("CloseButton");
-            
+            Button? saveButton = this.FindControl<Button>("SaveButton");
+            Button? closeButton = this.FindControl<Button>("CloseButton");
+
             // Override the commands to handle dialog closing
-            if (saveButton != null)
-            {
-                saveButton.Click += (s, args) =>
+            saveButton?.Click += (s, args) =>
                 {
                     viewModel.Save();
-                    
+
                     // Refresh configurations in MainViewModel
                     if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
                     {
@@ -45,22 +43,18 @@ public partial class ConfigurationDialog : Window
                             }
                         }
                     }
-                    
+
                     // Reinitialize services (SSH, Embeddings)
                     App.Current?.ReinitializeServices();
 
                     // Close the dialog to prevent PlatformImpl null errors
-                    Close(true);
+                    //Close(true);
                 };
-            }
-            
-            if (closeButton != null)
+
+            closeButton?.Click += (s, args) =>
             {
-                closeButton.Click += (s, args) =>
-                {
-                    Close(false);
-                };
-            }
+                Close(false);
+            };
         }
     }
 }

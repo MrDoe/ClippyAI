@@ -1,13 +1,10 @@
-using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using ClippyAI.Services;
-using ClippyAI.Views;
+using System.Diagnostics;
 namespace ClippyAI.Views;
 
 public partial class MainView : UserControl
@@ -20,18 +17,15 @@ public partial class MainView : UserControl
         InitializeComponent();
 
         // add event handler for language selection changed
-        var cboLanguage = this.FindControl<ComboBox>("cboLanguage");
-        if (cboLanguage != null)
-            cboLanguage.SelectionChanged += OnCboLanguageSelectionChanged;
+        ComboBox? cboLanguage = this.FindControl<ComboBox>("cboLanguage");
+        cboLanguage?.SelectionChanged += OnCboLanguageSelectionChanged;
 
         // add event handler for clipboard content changed
-        var txtOutput = this.FindControl<TextBox>("txtOutput");
-        if (txtOutput != null)
-            txtOutput.TextChanged += OnTxtClipboardContentChanged;
+        TextBox? txtOutput = this.FindControl<TextBox>("txtOutput");
+        txtOutput?.TextChanged += OnTxtClipboardContentChanged;
 
-        var btnShowCamera = this.FindControl<Button>("btnShowCamera");
-        if (btnShowCamera != null)
-            btnShowCamera.Click += OnBtnShowCameraClick;
+        Button? btnShowCamera = this.FindControl<Button>("btnShowCamera");
+        btnShowCamera?.Click += OnBtnShowCameraClick;
     }
 
     private void InitializeComponent()
@@ -44,12 +38,16 @@ public partial class MainView : UserControl
         Init = true;
 
         if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
             ((MainViewModel)DataContext!).mainWindow = (MainWindow)desktop.MainWindow!;
+        }
 
         // set embeddings count
         int embeddingsCount = await OllamaService.GetEmbeddingsCount();
         if (embeddingsCount >= 0)
+        {
             ((MainViewModel)DataContext!).EmbeddingsCount = embeddingsCount;
+        }
 
         // Note: Clipboard monitoring is now handled by MainWindow timer to reduce CPU load
         // Removed duplicate polling loop that was running every 1000ms
@@ -58,10 +56,12 @@ public partial class MainView : UserControl
     private void OnCboLanguageSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (!Init || e.RemovedItems.Count == 0)
+        {
             return;
+        }
 
-        var comboBox = (ComboBox)sender!;
-        var selectedItem = (string)comboBox.SelectedItem!;
+        ComboBox comboBox = (ComboBox)sender!;
+        string selectedItem = (string)comboBox.SelectedItem!;
         ((MainViewModel)DataContext!).Language = selectedItem;
 
         // update language in configuration database
@@ -73,7 +73,9 @@ public partial class MainView : UserControl
     private void OnTxtClipboardContentChanged(object? sender, RoutedEventArgs e)
     {
         if (!Init)
+        {
             return;
+        }
     }
 
     private static void RestartApplication()
@@ -102,7 +104,7 @@ public partial class MainView : UserControl
         }
 
         // Start a new process with the combined command
-        Process.Start(new ProcessStartInfo
+        _ = Process.Start(new ProcessStartInfo
         {
             FileName = fileName,
             Arguments = command,
@@ -114,7 +116,7 @@ public partial class MainView : UserControl
         if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             // stop clipboard polling timer
-            var mainWindow = (MainWindow)desktop.MainWindow!;
+            MainWindow mainWindow = (MainWindow)desktop.MainWindow!;
             mainWindow.clipboardPollingTimer.Stop();
 
             desktop.Shutdown();

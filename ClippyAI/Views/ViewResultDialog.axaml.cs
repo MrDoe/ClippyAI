@@ -1,7 +1,9 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Platform;
 namespace ClippyAI.Views;
+
 public partial class ViewResultDialog : Window
 {
     public ViewResultDialog()
@@ -9,7 +11,7 @@ public partial class ViewResultDialog : Window
         // position the window above the MainWindow
         if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            var mainWindow = desktop.MainWindow;
+            Window? mainWindow = desktop.MainWindow;
             if (mainWindow != null)
             {
                 Position = new PixelPoint(
@@ -23,10 +25,10 @@ public partial class ViewResultDialog : Window
 
     private void OnResized(object? sender, WindowResizedEventArgs e)
     {
-        var screen = Screens.ScreenFromWindow(this);
-        var center = screen!.WorkingArea.Center;
-        var newX = center.X - (Bounds.Width / 2);
-        var newY = center.Y - (Bounds.Height / 2);
+        Screen? screen = Screens.ScreenFromWindow(this);
+        PixelPoint center = screen!.WorkingArea.Center;
+        double newX = center.X - (Bounds.Width / 2);
+        double newY = center.Y - (Bounds.Height / 2);
         Position = new PixelPoint((int)newX, (int)newY);
     }
 }

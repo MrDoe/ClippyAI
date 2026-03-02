@@ -13,7 +13,7 @@ namespace DesktopNotifications.FreeDesktop
 
         private static readonly ObjectPath NotificationsPath = new ObjectPath("/org/freedesktop/Notifications");
 
-        private static Dictionary<string, NotificationManagerCapabilities> CapabilitiesMapping =
+        private static readonly Dictionary<string, NotificationManagerCapabilities> CapabilitiesMapping =
             new Dictionary<string, NotificationManagerCapabilities>
             {
                 { "body", NotificationManagerCapabilities.BodyText },
@@ -59,7 +59,7 @@ namespace DesktopNotifications.FreeDesktop
         {
             _connection = Connection.Session;
 
-            await _connection.ConnectAsync();
+            _ = await _connection.ConnectAsync();
 
             _proxy = _connection.CreateProxy<IFreeDesktopNotificationsProxy>(
                 NotificationsService,
@@ -76,9 +76,9 @@ namespace DesktopNotifications.FreeDesktop
                 OnNotificationClosedError
             );
 
-            foreach (var cap in await _proxy.GetCapabilitiesAsync())
+            foreach (string? cap in await _proxy.GetCapabilitiesAsync())
             {
-                if (CapabilitiesMapping.TryGetValue(cap, out var capE))
+                if (CapabilitiesMapping.TryGetValue(cap, out NotificationManagerCapabilities capE))
                 {
                     Capabilities |= capE;
                 }
@@ -94,10 +94,10 @@ namespace DesktopNotifications.FreeDesktop
                 throw new ArgumentException(nameof(expirationTime));
             }
 
-            var duration = expirationTime - DateTimeOffset.Now;
-            var actions = GenerateActions(notification);
+            TimeSpan? duration = expirationTime - DateTimeOffset.Now;
+            IEnumerable<string> actions = GenerateActions(notification);
 
-            var id = await _proxy!.NotifyAsync(
+            uint id = await _proxy!.NotifyAsync(
                 _appContext.Name,
                 0,
                 _appContext.AppIcon ?? string.Empty,
@@ -105,7 +105,7 @@ namespace DesktopNotifications.FreeDesktop
                 GenerateNotificationBody(notification),
                 actions.ToArray(),
                 new Dictionary<string, object> { { "urgency", 1 } },
-                (int?) duration?.TotalMilliseconds ?? 0
+                (int?)duration?.TotalMilliseconds ?? 0
             ).ConfigureAwait(false);
 
             _activeNotifications[id] = notification;
@@ -115,7 +115,7 @@ namespace DesktopNotifications.FreeDesktop
         {
             CheckConnection();
 
-            if (_activeNotifications.TryGetKey(notification, out var id))
+            if (_activeNotifications.TryGetKey(notification, out uint id))
             {
                 await _proxy!.CloseNotificationAsync(id);
             }
@@ -147,14 +147,14 @@ namespace DesktopNotifications.FreeDesktop
                 throw new ArgumentException();
             }
 
-            var sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
 
-            sb.Append(notification.Body);
+            _ = sb.Append(notification.Body);
 
             if (Capabilities.HasFlag(NotificationManagerCapabilities.BodyImages) &&
                 notification.BodyImagePath is { } img)
             {
-                sb.Append($@"\n<img src=""{img}"" alt=""{notification.BodyImageAltText}""/>");
+                _ = sb.Append($@"\n<img src=""{img}"" alt=""{notification.BodyImageAltText}""/>");
             }
 
             return sb.ToString();
@@ -170,7 +170,7 @@ namespace DesktopNotifications.FreeDesktop
 
         private static IEnumerable<string> GenerateActions(Notification notification)
         {
-            foreach (var (title, actionId) in notification.Buttons)
+            foreach ((string? title, string? actionId) in notification.Buttons)
             {
                 yield return actionId;
                 yield return title;
@@ -195,9 +195,12 @@ namespace DesktopNotifications.FreeDesktop
 
         private void OnNotificationClosed((uint id, uint reason) @event)
         {
-            if (!_activeNotifications.TryGetValue(@event.id, out var notification)) return;
+            if (!_activeNotifications.TryGetValue(@event.id, out Notification? notification))
+            {
+                return;
+            }
 
-            _activeNotifications.Remove(@event.id);
+            _ = _activeNotifications.Remove(@event.id);
 
             //TODO: Not sure why but it calls this event twice sometimes
             //In this case the notification has already been removed from the dict.
@@ -206,7 +209,7 @@ namespace DesktopNotifications.FreeDesktop
                 return;
             }
 
-            var dismissReason = GetReason(@event.reason);
+            NotificationDismissReason dismissReason = GetReason(@event.reason);
 
             NotificationDismissed?.Invoke(this,
                 new NotificationDismissedEventArgs(notification, dismissReason));
@@ -219,7 +222,10 @@ namespace DesktopNotifications.FreeDesktop
 
         private void OnNotificationActionInvoked((uint id, string actionKey) @event)
         {
-            if (!_activeNotifications.TryGetValue(@event.id, out var notification)) return;
+            if (!_activeNotifications.TryGetValue(@event.id, out Notification? notification))
+            {
+                return;
+            }
 
             NotificationActivated?.Invoke(this,
                 new NotificationActivatedEventArgs(notification, @event.actionKey));

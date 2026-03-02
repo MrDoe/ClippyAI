@@ -19,14 +19,11 @@ namespace DesktopNotifications.FreeDesktop
 
         public static FreeDesktopApplicationContext FromCurrentProcess(string? appIcon = null)
         {
-            var mainModule = Process.GetCurrentProcess().MainModule;
+            ProcessModule? mainModule = Process.GetCurrentProcess().MainModule;
 
-            if (mainModule?.FileName == null)
-            {
-                throw new InvalidOperationException("No valid process module found.");
-            }
-
-            return new FreeDesktopApplicationContext(
+            return mainModule?.FileName == null
+                ? throw new InvalidOperationException("No valid process module found.")
+                : new FreeDesktopApplicationContext(
                 Path.GetFileNameWithoutExtension(mainModule.FileName),
                 appIcon
             );

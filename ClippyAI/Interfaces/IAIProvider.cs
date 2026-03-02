@@ -1,7 +1,7 @@
+using ClippyAI.Models;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
-using ClippyAI.Models;
 
 namespace ClippyAI.Interfaces;
 
@@ -19,8 +19,8 @@ public interface IAIProvider
     /// <param name="taskConfig">Optional task-specific configuration.</param>
     /// <param name="token">The cancellation token.</param>
     /// <returns>The AI response text.</returns>
-    Task<string?> SendRequestWithConfig(string input, string task, string model, 
-                                       TaskConfiguration? taskConfig = null, 
+    Task<string?> SendRequestWithConfig(string input, string task, string model,
+                                       TaskConfiguration? taskConfig = null,
                                        CancellationToken token = default);
 
     /// <summary>

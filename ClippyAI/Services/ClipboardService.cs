@@ -1,11 +1,11 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Media.Imaging;
+using System;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ClippyAI.Services;
 
@@ -13,7 +13,7 @@ public static class ClipboardService
 {
     public static string LastResponse { get; set; } = string.Empty;
     public static string LastInput { get; set; } = string.Empty;
-    
+
     // Cache to avoid unnecessary clipboard API calls
     private static string[]? _lastFormats = null;
     private static DateTime _lastFormatsCheck = DateTime.MinValue;
@@ -27,10 +27,12 @@ public static class ClipboardService
     {
         if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop ||
             desktop.MainWindow?.Clipboard is not { } provider)
+        {
             return null;
+        }
 
         // Use cached formats if they're recent enough
-        var now = DateTime.UtcNow;
+        DateTime now = DateTime.UtcNow;
         if (_lastFormats != null && (now - _lastFormatsCheck).TotalMilliseconds < FORMATS_CACHE_MS)
         {
             return _lastFormats;
@@ -59,10 +61,14 @@ public static class ClipboardService
     {
         if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop ||
             desktop.MainWindow?.Clipboard is not { } provider)
+        {
             throw new NullReferenceException("Missing Clipboard instance.");
+        }
 
         if (text != LastInput)
+        {
             LastInput = text ?? string.Empty;
+        }
 
         // Invalidate the formats cache so the next poll reads fresh data.
         _lastFormats = null;
@@ -79,7 +85,9 @@ public static class ClipboardService
     {
         if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop ||
             desktop.MainWindow?.Clipboard is not { } provider)
+        {
             throw new NullReferenceException("Missing Clipboard instance.");
+        }
 
         // Directly call GetTextAsync() — it returns null when no text is present.
         // Avoid GetFormatsAsync() here because it can fail silently when the window
@@ -97,16 +105,20 @@ public static class ClipboardService
     {
         if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop ||
             desktop.MainWindow?.Clipboard is not { } clipboard)
+        {
             return null;
+        }
 
         // Check formats with caching to reduce API calls
-        var formats = await GetFormatsWithCache() ?? [];
+        string[] formats = await GetFormatsWithCache() ?? [];
         if (!formats.Contains("image") && (!formats.Contains("PNG") || !formats.Contains("image/png")))
+        {
             return null;
+        }
 
         // Get the image data from the clipboard
 #pragma warning disable CS0618
-        var data = await clipboard.GetDataAsync("image/png");
+        object? data = await clipboard.GetDataAsync("image/png");
         data ??= await clipboard.GetDataAsync("PNG");
         data ??= await clipboard.GetDataAsync("image/bmp");
         data ??= await clipboard.GetDataAsync("image/x-bmp");
@@ -119,10 +131,12 @@ public static class ClipboardService
         data ??= await clipboard.GetDataAsync("image/icon");
 #pragma warning restore CS0618
         if (data == null)
+        {
             return null;
+        }
         else if (data is byte[] imageData)
         {
-            using var stream = new MemoryStream(imageData);
+            using MemoryStream stream = new(imageData);
             return new Bitmap(stream);
         }
 

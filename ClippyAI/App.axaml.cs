@@ -1,20 +1,20 @@
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using System.Globalization;
-using ClippyAI.Views;
-using System.Text;
-using System;
-using CommunityToolkit.Mvvm.Input;
-using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using ClippyAI.Services;
+using ClippyAI.Views;
+using CommunityToolkit.Mvvm.Input;
+using System;
+using System.Globalization;
+using System.Text;
 namespace ClippyAI;
 
 public partial class App : Application
 {
-    public new static App? Current { get; private set; }
+    public static new App? Current { get; private set; }
 
     public App()
     {
@@ -45,10 +45,7 @@ public partial class App : Application
         catch (Exception ex)
         {
             Console.WriteLine($"Error reinitializing SSH: {ex.Message}");
-            if (_mainWindow != null)
-            {
-                _mainWindow.ShowNotification("ClippyAI", $"SSH reinitialization failed: {ex.Message}", false, false);
-            }
+            _mainWindow?.ShowNotification("ClippyAI", $"SSH reinitialization failed: {ex.Message}", false, false);
         }
 
         try
@@ -63,10 +60,7 @@ public partial class App : Application
         catch (Exception ex)
         {
             Console.WriteLine($"Error reinitializing embeddings: {ex.Message}");
-            if (_mainWindow != null)
-            {
-                _mainWindow.ShowNotification("ClippyAI", $"Embeddings reinitialization failed: {ex.Message}", false, false);
-            }
+            _mainWindow?.ShowNotification("ClippyAI", $"Embeddings reinitialization failed: {ex.Message}", false, false);
         }
     }
 
@@ -87,7 +81,7 @@ public partial class App : Application
     {
         // Initialize configuration database first
         ClippyAI.Services.ConfigurationService.InitializeDatabase();
-        
+
         string language = ConfigurationService.GetConfigurationValue("DefaultLanguage", "English");
         language = language.Normalize(NormalizationForm.FormC); // Normalize the input string
 
@@ -119,8 +113,8 @@ public partial class App : Application
             _mainWindow = new MainWindow();
             desktop.MainWindow = _mainWindow;
 
-            var iconUri = new Uri("avares://ClippyAI/Assets/bulb.ico");
-            var bitmap = new Bitmap(AssetLoader.Open(iconUri));
+            Uri iconUri = new("avares://ClippyAI/Assets/bulb.ico");
+            Bitmap bitmap = new(AssetLoader.Open(iconUri));
 
             _trayIcon = new TrayIcon
             {

@@ -1,12 +1,10 @@
-using System;
-using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Input;
 using Avalonia.Controls.ApplicationLifetimes;
-using System.Collections;
+using Avalonia.Input;
+using System;
 using System.Collections.ObjectModel;
-using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 namespace ClippyAI.Views;
 
 public partial class InputDialog : Window
@@ -31,7 +29,7 @@ public partial class InputDialog : Window
         // position the window above the MainWindow
         if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            var mainWindow = desktop.MainWindow;
+            Window? mainWindow = desktop.MainWindow;
             if (mainWindow != null)
             {
                 Position = new PixelPoint(
@@ -64,7 +62,7 @@ public partial class InputDialog : Window
         {
             throw new ArgumentNullException(nameof(parentWindow));
         }
-        var inputDialog = new InputDialog()
+        InputDialog inputDialog = new()
         {
             parentWindow = parentWindow,
             _isInputRequired = isRequired,
@@ -80,17 +78,19 @@ public partial class InputDialog : Window
             inputDialog.cboInput.SelectedValue = initialValue;
         }
         else
+        {
             inputDialog.txtBox.Text = initialValue;
+        }
 
         inputDialog.lbl.Content = caption;
         inputDialog.lblSubText.Content = subtext;
-        var result = await inputDialog.ShowDialog<string?>(parentWindow);
+        string? result = await inputDialog.ShowDialog<string?>(parentWindow);
         return result;
     }
 
     public static async Task<string> Confirm(Window parentWindow, string title, string caption)
     {
-        var inputDialog = new InputDialog()
+        InputDialog inputDialog = new()
         {
             parentWindow = parentWindow,
             _isInputRequired = false,
@@ -103,13 +103,13 @@ public partial class InputDialog : Window
         inputDialog.btnOK.Content = ClippyAI.Resources.Resources.Yes;
         inputDialog.btnCancel.Content = ClippyAI.Resources.Resources.No;
 
-        var result = await inputDialog.ShowDialog<string>(parentWindow);
+        string result = await inputDialog.ShowDialog<string>(parentWindow);
         return result;
     }
 
     private void OnOpened(object? sender, EventArgs e)
     {
-        txtBox.Focus();
+        _ = txtBox.Focus();
     }
 
     private void ButtonOK_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
@@ -126,14 +126,18 @@ public partial class InputDialog : Window
             value = string.IsNullOrEmpty(value) ? null : value;
         }
         else
+        {
             value = ClippyAI.Resources.Resources.Yes;
+        }
 
         if (_isInputRequired && string.IsNullOrEmpty(value))
         {
             return;
         }
         else
+        {
             Close(value);
+        }
     }
 
     private void Window_KeyDown(object? sender, KeyEventArgs e)
@@ -147,8 +151,12 @@ public partial class InputDialog : Window
     private void ButtonCancel_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
         if (TextBoxVisible == false)
+        {
             Close(ClippyAI.Resources.Resources.No);
+        }
         else
+        {
             Close(null);
+        }
     }
 }

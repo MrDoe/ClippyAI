@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -29,7 +28,7 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
     public readonly System.Timers.Timer clipboardPollingTimer;
     private readonly INotificationManager _notificationManager;
     private Notification? _lastNotification { get; set; }
-    
+
 #if WINDOWS
     private WindowsHotkeyService? _windowsHotkeyService;
 #endif
@@ -61,7 +60,7 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         // register notification manager
         _notificationManager = Program.NotificationManager ??
                                 throw new InvalidOperationException("Missing notification manager");
-        
+
         _notificationManager.NotificationActivated += OnNotificationActivated;
         _notificationManager.NotificationDismissed += OnNotificationDismissed;
 
@@ -70,7 +69,9 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
 
 #if WINDOWS        
         if (OperatingSystem.IsWindows())
+        {
             RegisterHotkeyWindows();
+        }
 #elif LINUX
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             RegisterHotkeyLinux();
@@ -82,13 +83,15 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
     private void RegisterHotkeyWindows()
     {
         if (!OperatingSystem.IsWindows())
+        {
             return;
+        }
 
         try
         {
             _windowsHotkeyService = new WindowsHotkeyService(this);
             bool success = _windowsHotkeyService.RegisterHotkeys();
-            
+
             if (!success)
             {
                 Console.WriteLine("Failed to register Windows hotkeys using native API");
@@ -142,9 +145,14 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         if (DataContext is MainViewModel viewModel)
         {
             if (!string.IsNullOrEmpty(ClipboardService.LastInput))
+            {
                 viewModel.Input = ClipboardService.LastInput;
+            }
+
             if (!string.IsNullOrEmpty(ClipboardService.LastResponse))
+            {
                 viewModel.Output = ClipboardService.LastResponse;
+            }
         }
 
         if (e.Property == WindowStateProperty)
@@ -189,7 +197,7 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         string reason = e.Reason.ToString();
         if (reason == "User")
         {
-            Dispatcher.UIThread.InvokeAsync(() =>
+            _ = Dispatcher.UIThread.InvokeAsync(() =>
             {
                 // abort the ongoing task
                 ((MainViewModel)DataContext!).StopClippyTask();
@@ -213,7 +221,7 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
             }
 
             // open view result dialog with the result
-            Dispatcher.UIThread.InvokeAsync(() =>
+            _ = Dispatcher.UIThread.InvokeAsync(() =>
             {
                 ViewResultDialog viewResultDialog = new()
                 {
@@ -229,7 +237,7 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         try
         {
             Debug.Assert(_notificationManager != null);
-                
+
             Notification nf;
             if (showAbortButton)
             {
@@ -240,22 +248,20 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
                     Buttons = { (ClippyAI.Resources.Resources.TaskStop, ClippyAI.Resources.Resources.TaskStop) }
                 };
             }
-            else if (showViewButton)
-            {
-                nf = new Notification
-                {
-                    Title = title,
-                    Body = body,
-                    Buttons = { (ClippyAI.Resources.Resources.TaskView, ClippyAI.Resources.Resources.TaskView) }
-                };
-            }
             else
             {
-                nf = new Notification
-                {
-                    Title = title,
-                    Body = body
-                };
+                nf = showViewButton
+                    ? new Notification
+                    {
+                        Title = title,
+                        Body = body,
+                        Buttons = { (ClippyAI.Resources.Resources.TaskView, ClippyAI.Resources.Resources.TaskView) }
+                    }
+                    : new Notification
+                    {
+                        Title = title,
+                        Body = body
+                    };
             }
 
             DateTimeOffset? expirationTime = null;

@@ -1,5 +1,4 @@
 using Avalonia.Controls.ApplicationLifetimes;
-using ClippyAI.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using ReactiveUI;
 using System.Linq;

@@ -20,23 +20,23 @@ namespace DesktopNotifications.Windows
         [Guid("000214F9-0000-0000-C000-000000000046")]
         private interface IShellLinkW
         {
-            uint GetPath([Out] [MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszFile,
+            uint GetPath([Out][MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszFile,
                 int cchMaxPath, ref WIN32_FIND_DATAW pfd, uint fFlags);
 
             uint GetIDList(out IntPtr ppidl);
             uint SetIDList(IntPtr pidl);
 
-            uint GetDescription([Out] [MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszName,
+            uint GetDescription([Out][MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszName,
                 int cchMaxName);
 
             uint SetDescription([MarshalAs(UnmanagedType.LPWStr)] string pszName);
 
-            uint GetWorkingDirectory([Out] [MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszDir,
+            uint GetWorkingDirectory([Out][MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszDir,
                 int cchMaxPath);
 
             uint SetWorkingDirectory([MarshalAs(UnmanagedType.LPWStr)] string pszDir);
 
-            uint GetArguments([Out] [MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszArgs,
+            uint GetArguments([Out][MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszArgs,
                 int cchMaxPath);
 
             uint SetArguments([MarshalAs(UnmanagedType.LPWStr)] string pszArgs);
@@ -45,7 +45,7 @@ namespace DesktopNotifications.Windows
             uint GetShowCmd(out int piShowCmd);
             uint SetShowCmd(int iShowCmd);
 
-            uint GetIconLocation([Out] [MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszIconPath,
+            uint GetIconLocation([Out][MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszIconPath,
                 int cchIconPath, out int piIcon);
 
             uint SetIconLocation([MarshalAs(UnmanagedType.LPWStr)] string pszIconPath, int iIcon);
@@ -67,7 +67,7 @@ namespace DesktopNotifications.Windows
 
         // WIN32_FIND_DATAW Structure
         [StructLayout(LayoutKind.Sequential, Pack = 4, CharSet = CharSet.Unicode)]
-        private struct WIN32_FIND_DATAW
+        private readonly struct WIN32_FIND_DATAW
         {
             public readonly uint dwFileAttributes;
             public readonly FILETIME ftCreationTime;
@@ -101,7 +101,7 @@ namespace DesktopNotifications.Windows
         // PropertyKey Structure
         // Narrowed down from PropertyKey.cs of Windows API Code Pack 1.1
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        private struct PropertyKey
+        private readonly struct PropertyKey
         {
             #region Fields
 
@@ -165,8 +165,8 @@ namespace DesktopNotifications.Windows
 
             // Whether value is empty or null
             public bool IsNullOrEmpty =>
-                valueType == (ushort)VarEnum.VT_EMPTY ||
-                valueType == (ushort)VarEnum.VT_NULL;
+                valueType is ((ushort)VarEnum.VT_EMPTY) or
+                ((ushort)VarEnum.VT_NULL);
 
             // Value (only for string value)
             public string? Value => Marshal.PtrToStringUni(ptr);
@@ -210,7 +210,7 @@ namespace DesktopNotifications.Windows
         }
 
         [DllImport("Ole32.dll", PreserveSig = false)]
-        private static extern void PropVariantClear([In] [Out] PropVariant pvar);
+        private static extern void PropVariantClear([In][Out] PropVariant pvar);
 
         #endregion
 
@@ -224,7 +224,7 @@ namespace DesktopNotifications.Windows
         // PropID = 5
         // Type = String (VT_LPWSTR)
         private readonly PropertyKey AppUserModelIDKey =
-            new PropertyKey("{9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3}", 5);
+            new("{9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3}", 5);
 
         private const int MAX_PATH = 260;
         private const int INFOTIPSIZE = 1024;
@@ -236,31 +236,9 @@ namespace DesktopNotifications.Windows
 
         #region Private Properties (Interfaces)
 
-        private IPersistFile PersistFile
-        {
-            get
-            {
-                if (!(shellLinkW is IPersistFile persistFile))
-                {
-                    throw new COMException("Failed to create IPersistFile.");
-                }
+        private IPersistFile PersistFile => shellLinkW is not IPersistFile persistFile ? throw new COMException("Failed to create IPersistFile.") : persistFile;
 
-                return persistFile;
-            }
-        }
-
-        private IPropertyStore PropertyStore
-        {
-            get
-            {
-                if (!(shellLinkW is IPropertyStore PropertyStore))
-                {
-                    throw new COMException("Failed to create IPropertyStore.");
-                }
-
-                return PropertyStore;
-            }
-        }
+        private IPropertyStore PropertyStore => shellLinkW is not IPropertyStore PropertyStore ? throw new COMException("Failed to create IPropertyStore.") : PropertyStore;
 
         #endregion
 
@@ -271,9 +249,8 @@ namespace DesktopNotifications.Windows
         {
             get
             {
-                string shortcutFile;
 
-                PersistFile.GetCurFile(out shortcutFile);
+                PersistFile.GetCurFile(out string shortcutFile);
 
                 return shortcutFile;
             }
@@ -285,9 +262,9 @@ namespace DesktopNotifications.Windows
             get
             {
                 // No limitation to length of buffer string in the case of Unicode though.
-                var targetPath = new StringBuilder(MAX_PATH);
+                StringBuilder targetPath = new(MAX_PATH);
 
-                var data = new WIN32_FIND_DATAW();
+                WIN32_FIND_DATAW data = new();
 
                 VerifySucceeded(shellLinkW!.GetPath(targetPath, targetPath.Capacity, ref data,
                     SLGP_UNCPRIORITY));
@@ -302,7 +279,7 @@ namespace DesktopNotifications.Windows
             get
             {
                 // No limitation to length of buffer string in the case of Unicode though.
-                var arguments = new StringBuilder(INFOTIPSIZE);
+                StringBuilder arguments = new(INFOTIPSIZE);
 
                 VerifySucceeded(shellLinkW!.GetArguments(arguments, arguments.Capacity));
 
@@ -316,25 +293,16 @@ namespace DesktopNotifications.Windows
         {
             get
             {
-                using (var pv = new PropVariant())
-                {
-                    VerifySucceeded(PropertyStore.GetValue(AppUserModelIDKey, pv));
+                using PropVariant pv = new();
+                VerifySucceeded(PropertyStore.GetValue(AppUserModelIDKey, pv));
 
-                    if (pv.Value == null)
-                    {
-                        return "Null";
-                    }
-
-                    return pv.Value;
-                }
+                return pv.Value ?? "Null";
             }
             set
             {
-                using (var pv = new PropVariant(value))
-                {
-                    VerifySucceeded(PropertyStore.SetValue(AppUserModelIDKey, pv));
-                    VerifySucceeded(PropertyStore.Commit());
-                }
+                using PropVariant pv = new(value);
+                VerifySucceeded(PropertyStore.SetValue(AppUserModelIDKey, pv));
+                VerifySucceeded(PropertyStore.Commit());
             }
         }
 
@@ -385,7 +353,7 @@ namespace DesktopNotifications.Windows
             if (shellLinkW != null)
             {
                 // Release all references.
-                Marshal.FinalReleaseComObject(shellLinkW);
+                _ = Marshal.FinalReleaseComObject(shellLinkW);
                 shellLinkW = null;
             }
         }
@@ -397,7 +365,7 @@ namespace DesktopNotifications.Windows
         // Save shortcut file.
         public void Save()
         {
-            var file = ShortcutFile;
+            string file = ShortcutFile;
 
             if (file == null)
             {
@@ -417,7 +385,7 @@ namespace DesktopNotifications.Windows
             {
                 PersistFile.Save(file, true);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
@@ -434,7 +402,7 @@ namespace DesktopNotifications.Windows
             {
                 PersistFile.Load(file, STGM_READ);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }

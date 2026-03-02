@@ -1,18 +1,18 @@
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
+using ClippyAI.Interfaces;
+using ClippyAI.Models;
+using ClippyAI.Views;
+using Npgsql;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using ClippyAI.Models;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using Avalonia;
-using Avalonia.Controls.ApplicationLifetimes;
-using ClippyAI.Views;
-using Npgsql;
-using ClippyAI.Interfaces;
 namespace ClippyAI.Services;
 
 /// <summary>
@@ -39,19 +39,19 @@ public class OllamaProvider : IAIProvider
         string baseUrl = ConfigurationService.GetConfigurationValue("OllamaUrl", "http://localhost:11434/api");
 
         // Check if SSH is enabled and adjust URL to use tunnel port
-        var useSSH = ConfigurationService.GetConfigurationValue("UseSSH", "False");
+        string useSSH = ConfigurationService.GetConfigurationValue("UseSSH", "False");
         if (useSSH.Equals("True", StringComparison.OrdinalIgnoreCase))
         {
-            var sshLocalTunnel = ConfigurationService.GetConfigurationValue("SSHLocalTunnel", "");
+            string sshLocalTunnel = ConfigurationService.GetConfigurationValue("SSHLocalTunnel", "");
             if (!string.IsNullOrWhiteSpace(sshLocalTunnel))
             {
                 // Parse tunnel format: "localhost:localPort:remoteHost:remotePort"
-                var tunnelParts = sshLocalTunnel.Split(':');
+                string[] tunnelParts = sshLocalTunnel.Split(':');
                 if (tunnelParts.Length >= 2 && int.TryParse(tunnelParts[1], out int tunnelPort))
                 {
                     // Replace the port in the base URL with the tunnel port
-                    var uri = new Uri(baseUrl);
-                    var tunnelUri = new UriBuilder(uri) { Port = tunnelPort };
+                    Uri uri = new(baseUrl);
+                    UriBuilder tunnelUri = new(uri) { Port = tunnelPort };
                     url = tunnelUri.ToString();
                 }
                 else
@@ -82,14 +82,14 @@ public class OllamaProvider : IAIProvider
         UpdateConfig();
 
         // Load advanced configuration options
-        var temperature = taskConfig?.Temperature ?? 0.8;
-        var maxLength = taskConfig?.MaxLength ?? 2048;
-        var topP = taskConfig?.TopP ?? 0.9;
-        var topK = taskConfig?.TopK ?? 40;
-        var repeatPenalty = taskConfig?.RepeatPenalty ?? 1.1;
-        var numCtx = taskConfig?.NumCtx ?? 2048;
-        var modelToUse = taskConfig?.Model ?? model;
-        var systemPrompt = taskConfig?.SystemPrompt ?? system;
+        double temperature = taskConfig?.Temperature ?? 0.8;
+        int maxLength = taskConfig?.MaxLength ?? 2048;
+        double topP = taskConfig?.TopP ?? 0.9;
+        int topK = taskConfig?.TopK ?? 40;
+        double repeatPenalty = taskConfig?.RepeatPenalty ?? 1.1;
+        int numCtx = taskConfig?.NumCtx ?? 2048;
+        string modelToUse = taskConfig?.Model ?? model;
+        string? systemPrompt = taskConfig?.SystemPrompt ?? system;
 
         OllamaRequest body = new()
         {
@@ -111,7 +111,7 @@ public class OllamaProvider : IAIProvider
         Console.WriteLine("Sending request...");
 
         // send the request
-        using var response = await client.PostAsync(
+        using HttpResponseMessage response = await client.PostAsync(
                              url + "/generate",
                              new StringContent(JsonSerializer.Serialize(body),
                              Encoding.UTF8,
@@ -122,8 +122,8 @@ public class OllamaProvider : IAIProvider
         {
             Console.WriteLine("Request successful.");
 
-            using var responseStream = await response.Content.ReadAsStreamAsync(token);
-            using var reader = new StreamReader(responseStream);
+            using Stream responseStream = await response.Content.ReadAsStreamAsync(token);
+            using StreamReader reader = new(responseStream);
 
             string? line;
             while ((line = await reader.ReadLineAsync(token)) != null &&
@@ -131,7 +131,7 @@ public class OllamaProvider : IAIProvider
             {
                 if (!string.IsNullOrWhiteSpace(line))
                 {
-                    var responseObj = JsonSerializer.Deserialize<OllamaResponse>(line);
+                    OllamaResponse? responseObj = JsonSerializer.Deserialize<OllamaResponse>(line);
                     string? responseText = responseObj?.response;
                     fullResponse += responseText;
                 }
@@ -170,18 +170,18 @@ public class OllamaProvider : IAIProvider
         }
         if (response != null && response.IsSuccessStatusCode)
         {
-            using var stream = await response.Content.ReadAsStreamAsync(token);
-            using var reader = new StreamReader(stream);
+            using Stream stream = await response.Content.ReadAsStreamAsync(token);
+            using StreamReader reader = new(stream);
             string? output = await reader.ReadToEndAsync();
 
             if (output != null)
             {
                 // only collect model names
-                var deserializedModels = JsonSerializer.Deserialize<OllamaModelRequest>(output)?.models;
+                List<OllamaModels>? deserializedModels = JsonSerializer.Deserialize<OllamaModelRequest>(output)?.models;
 
                 if (deserializedModels != null)
                 {
-                    foreach (var model in deserializedModels)
+                    foreach (OllamaModels model in deserializedModels)
                     {
                         models.Add(model!.name!);
                     }
@@ -205,7 +205,7 @@ public class OllamaProvider : IAIProvider
     {
         UpdateConfig();
 
-        var base64Image = Convert.ToBase64String(image);
+        string base64Image = Convert.ToBase64String(image);
 
         OllamaRequest body = new()
         {
@@ -215,7 +215,7 @@ public class OllamaProvider : IAIProvider
             stream = false
         };
 
-        using var response = await client.PostAsync(
+        using HttpResponseMessage response = await client.PostAsync(
                              url + "/generate",
                              new StringContent(JsonSerializer.Serialize(body),
                              Encoding.UTF8,
@@ -223,8 +223,8 @@ public class OllamaProvider : IAIProvider
 
         if (response.IsSuccessStatusCode)
         {
-            var responseContent = await response.Content.ReadAsStringAsync();
-            var responseObj = JsonSerializer.Deserialize<OllamaResponse>(responseContent);
+            string responseContent = await response.Content.ReadAsStringAsync();
+            OllamaResponse? responseObj = JsonSerializer.Deserialize<OllamaResponse>(responseContent);
             return responseObj?.response ?? "Unable to analyze image.";
         }
         else
@@ -275,8 +275,8 @@ public class OllamaProvider : IAIProvider
 
             if (response.IsSuccessStatusCode)
             {
-                using var streamContent = await response.Content.ReadAsStreamAsync(token);
-                using var reader = new StreamReader(streamContent);
+                using Stream streamContent = await response.Content.ReadAsStreamAsync(token);
+                using StreamReader reader = new(streamContent);
 
                 string? line;
                 DateTime lastNotificationTime = DateTime.MinValue;
@@ -284,9 +284,11 @@ public class OllamaProvider : IAIProvider
                 {
                     if (!string.IsNullOrWhiteSpace(line))
                     {
-                        var statusUpdate = JsonSerializer.Deserialize<Dictionary<string, object>?>(line);
+                        Dictionary<string, object>? statusUpdate = JsonSerializer.Deserialize<Dictionary<string, object>?>(line);
                         if (statusUpdate == null)
+                        {
                             continue;
+                        }
 
                         string statusMessage = statusUpdate["status"]?.ToString() ?? "Model pull in progress";
 
@@ -315,7 +317,7 @@ public class OllamaProvider : IAIProvider
             }
             else
             {
-                var errorContent = await response.Content.ReadAsStringAsync(token);
+                string errorContent = await response.Content.ReadAsStringAsync(token);
                 throw new Exception($"Model pull failed with status: {response.StatusCode}. Response: {errorContent}");
             }
         }
@@ -340,11 +342,11 @@ public class OllamaProvider : IAIProvider
                 name = modelName
             };
 
-            var request = new HttpRequestMessage(HttpMethod.Delete, $"{url}/delete")
+            HttpRequestMessage request = new(HttpMethod.Delete, $"{url}/delete")
             {
                 Content = new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json")
             };
-            using var response = await client.SendAsync(request, token).ConfigureAwait(false);
+            using HttpResponseMessage response = await client.SendAsync(request, token).ConfigureAwait(false);
 
             if (response.IsSuccessStatusCode)
             {
@@ -352,7 +354,7 @@ public class OllamaProvider : IAIProvider
             }
             else
             {
-                var errorContent = await response.Content.ReadAsStringAsync(token);
+                string errorContent = await response.Content.ReadAsStringAsync(token);
                 throw new Exception($"Model deletion failed with status: {response.StatusCode}. Response: {errorContent}");
             }
         }
@@ -369,7 +371,7 @@ public static class OllamaService
     private static string? connectionString = ConfigurationService.GetConfigurationValue("PostgreSqlConnection");
     private static string? pgOllamaUrl = ConfigurationService.GetConfigurationValue("PostgresOllamaUrl");
     private static string? embeddingModel = ConfigurationService.GetConfigurationValue("EmbeddingModel");
-    
+
     // Provider instances
     private static readonly OllamaProvider ollamaProvider = new();
     private static readonly OpenAIService openAIProvider = new();
@@ -387,7 +389,7 @@ public static class OllamaService
     /// <returns>The configured AI provider.</returns>
     public static IAIProvider GetCurrentProvider()
     {
-        var provider = ConfigurationService.GetConfigurationValue("AIProvider", "Ollama");
+        string provider = ConfigurationService.GetConfigurationValue("AIProvider", "Ollama");
         return provider switch
         {
             "OpenAI" => openAIProvider,
@@ -424,7 +426,7 @@ public static class OllamaService
                                                          string model, CancellationToken token = default)
     {
         // Try to find a task configuration that matches
-        var taskConfig = GetTaskConfiguration(task);
+        TaskConfiguration? taskConfig = GetTaskConfiguration(task);
         return await SendRequestWithConfig(input, task, model, taskConfig, token);
     }
 
@@ -450,10 +452,10 @@ public static class OllamaService
     /// <param name="taskConfig">Optional task-specific configuration. If null, uses default config.</param>
     /// <param name="token">The cancellation token.</param>
     public static async Task<string?> SendRequestWithConfig(string input, string task,
-                                                           string model, TaskConfiguration? taskConfig = null, 
+                                                           string model, TaskConfiguration? taskConfig = null,
                                                            CancellationToken token = default)
     {
-        var provider = GetCurrentProvider();
+        IAIProvider provider = GetCurrentProvider();
         return await provider.SendRequestWithConfig(input, task, model, taskConfig, token);
     }
 
@@ -474,7 +476,7 @@ public static class OllamaService
     /// <returns>The models.</returns>
     public static async Task<ObservableCollection<string>> GetModelsAsync(CancellationToken token = default)
     {
-        var provider = GetCurrentProvider();
+        IAIProvider provider = GetCurrentProvider();
         return await provider.GetModelsAsync(token);
     }
 
@@ -486,7 +488,7 @@ public static class OllamaService
     /// <returns>The models.</returns>
     public static async Task PullModelAsync(string modelName, CancellationToken token = default)
     {
-        var provider = GetCurrentProvider();
+        IAIProvider provider = GetCurrentProvider();
         if (provider is OllamaProvider ollamaProvider)
         {
             await ollamaProvider.PullModelAsync(modelName, token);
@@ -504,7 +506,7 @@ public static class OllamaService
     /// <param name="token">The cancellation token.</param>
     public static async Task DeleteModelAsync(string modelName, CancellationToken token = default)
     {
-        var provider = GetCurrentProvider();
+        IAIProvider provider = GetCurrentProvider();
         if (provider is OllamaProvider ollamaProvider)
         {
             await ollamaProvider.DeleteModelAsync(modelName, token);
@@ -519,7 +521,7 @@ public static class OllamaService
     {
         if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            var mainWindow = (MainWindow)desktop.MainWindow!;
+            MainWindow mainWindow = (MainWindow)desktop.MainWindow!;
             mainWindow.HideLastNotification();
             mainWindow.ShowNotification("ClippyAI", message, isBusy, isError);
         }
@@ -536,31 +538,31 @@ public static class OllamaService
         UpdateConfig();
 
         // Check if embeddings are enabled
-        var useEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings");
+        string useEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings");
         if (useEmbeddings != "True")
         {
             System.Diagnostics.Debug.WriteLine("Embeddings are disabled. Skipping storage.");
             return;
         }
 
-        await using var conn = new NpgsqlConnection(connectionString);
+        await using NpgsqlConnection conn = new(connectionString);
         await conn.OpenAsync();
 
         clipboard_data = clipboard_data.Trim('\n').Trim();
 
         // check if no similar embeddings exist
-        var cmd = new NpgsqlCommand(@"
+        NpgsqlCommand cmd = new(@"
             SELECT COUNT(*)
             FROM clippy
             WHERE task = @task
             AND embedding_clipboard_data <-> ai.ollama_embed(@embedding_model, @clipboard_data) <= 1",
         conn);
 
-        cmd.Parameters.AddWithValue("task", task);
-        cmd.Parameters.AddWithValue("clipboard_data", clipboard_data);
-        cmd.Parameters.AddWithValue("embedding_model", embeddingModel ?? "nomic-embed-text");
+        _ = cmd.Parameters.AddWithValue("task", task);
+        _ = cmd.Parameters.AddWithValue("clipboard_data", clipboard_data);
+        _ = cmd.Parameters.AddWithValue("embedding_model", embeddingModel ?? "nomic-embed-text");
 
-        var count = Convert.ToInt32(await cmd.ExecuteScalarAsync());
+        int count = Convert.ToInt32(await cmd.ExecuteScalarAsync());
         if (count > 0)
         {
             Console.WriteLine("Similar embedding already exists.");
@@ -575,11 +577,11 @@ public static class OllamaService
                    @answer,
                    ai.ollama_embed(@embedding_model, @clipboard_data))", conn);
 
-        cmd.Parameters.AddWithValue("task", task);
-        cmd.Parameters.AddWithValue("clipboard_data", "search_document: " + clipboard_data);
-        cmd.Parameters.AddWithValue("answer", answer);
-        cmd.Parameters.AddWithValue("embedding_model", embeddingModel ?? "nomic-embed-text");
-        await cmd.ExecuteNonQueryAsync();
+        _ = cmd.Parameters.AddWithValue("task", task);
+        _ = cmd.Parameters.AddWithValue("clipboard_data", "search_document: " + clipboard_data);
+        _ = cmd.Parameters.AddWithValue("answer", answer);
+        _ = cmd.Parameters.AddWithValue("embedding_model", embeddingModel ?? "nomic-embed-text");
+        _ = await cmd.ExecuteNonQueryAsync();
     }
 
     /// <summary>
@@ -593,17 +595,17 @@ public static class OllamaService
         UpdateConfig();
 
         // Check if embeddings are enabled
-        var useEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings");
+        string useEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings");
         if (useEmbeddings != "True")
         {
             System.Diagnostics.Debug.WriteLine("Embeddings are disabled. Returning empty list.");
             return [];
         }
 
-        await using var conn = new NpgsqlConnection(connectionString);
+        await using NpgsqlConnection conn = new(connectionString);
         await conn.OpenAsync();
 
-        var cmd = new NpgsqlCommand(@"
+        NpgsqlCommand cmd = new(@"
         SELECT 
             id, 
             answer, 
@@ -617,12 +619,12 @@ public static class OllamaService
         ORDER BY 3
         LIMIT 10", conn);
 
-        cmd.Parameters.AddWithValue("task", task);
-        cmd.Parameters.AddWithValue("clipboard_data", "search_query: " + clipboard_data);
-        cmd.Parameters.AddWithValue("threshold", threshold);
-        cmd.Parameters.AddWithValue("embedding_model", embeddingModel ?? "nomic-embed-text");
+        _ = cmd.Parameters.AddWithValue("task", task);
+        _ = cmd.Parameters.AddWithValue("clipboard_data", "search_query: " + clipboard_data);
+        _ = cmd.Parameters.AddWithValue("threshold", threshold);
+        _ = cmd.Parameters.AddWithValue("embedding_model", embeddingModel ?? "nomic-embed-text");
 
-        var result = await cmd.ExecuteReaderAsync();
+        NpgsqlDataReader result = await cmd.ExecuteReaderAsync();
 
         // generate a list of answers
         List<Embedding> answers = [];
@@ -647,7 +649,7 @@ public static class OllamaService
         UpdateConfig();
 
         // Check if embeddings are enabled
-        var useEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings");
+        string useEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings");
         if (useEmbeddings != "True")
         {
             System.Diagnostics.Debug.WriteLine("Embeddings are disabled. Skipping initialization.");
@@ -659,12 +661,12 @@ public static class OllamaService
             throw new Exception("PostgresOllamaUrl is not set.");
         }
 
-        using var conn = new NpgsqlConnection(connectionString);
+        using NpgsqlConnection conn = new(connectionString);
         conn.Open();
 
         // Install the pgai extension if it doesn't exist
-        var cmd = new NpgsqlCommand("CREATE EXTENSION IF NOT EXISTS ai CASCADE", conn);
-        cmd.ExecuteNonQuery();
+        NpgsqlCommand cmd = new("CREATE EXTENSION IF NOT EXISTS ai CASCADE", conn);
+        _ = cmd.ExecuteNonQuery();
 
         // Create the table if it doesn't exist
         cmd = new NpgsqlCommand(@"
@@ -675,7 +677,7 @@ public static class OllamaService
                 answer TEXT NOT NULL,
                 embedding_clipboard_data vector(768)
             )", conn);
-        cmd.ExecuteNonQuery();
+        _ = cmd.ExecuteNonQuery();
 
         // Create the index if it doesn't exist
         cmd = new NpgsqlCommand(@"
@@ -683,12 +685,12 @@ public static class OllamaService
             ON clippy
             USING ivfflat(embedding_clipboard_data vector_cosine_ops)
             WITH (lists = 20)", conn);
-        cmd.ExecuteNonQuery();
+        _ = cmd.ExecuteNonQuery();
 
         // set docker host for the ai extension
         cmd = new NpgsqlCommand("SELECT set_config('ai.ollama_host', @host, false)", conn);
-        cmd.Parameters.AddWithValue("host", pgOllamaUrl);
-        cmd.ExecuteNonQuery();
+        _ = cmd.Parameters.AddWithValue("host", pgOllamaUrl);
+        _ = cmd.ExecuteNonQuery();
     }
 
     /// <summary>
@@ -698,18 +700,18 @@ public static class OllamaService
     public static async Task ClearEmbeddings()
     {
         // Check if embeddings are enabled
-        var useEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings");
+        string useEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings");
         if (useEmbeddings != "True")
         {
             System.Diagnostics.Debug.WriteLine("Embeddings are disabled. Skipping clear operation.");
             return;
         }
 
-        await using var conn = new NpgsqlConnection(connectionString);
+        await using NpgsqlConnection conn = new(connectionString);
         await conn.OpenAsync();
 
-        var cmd = new NpgsqlCommand("DELETE FROM clippy", conn);
-        await cmd.ExecuteNonQueryAsync();
+        NpgsqlCommand cmd = new("DELETE FROM clippy", conn);
+        _ = await cmd.ExecuteNonQueryAsync();
     }
 
     /// <summary>
@@ -719,7 +721,7 @@ public static class OllamaService
     public static async Task<int> GetEmbeddingsCount()
     {
         // Check if embeddings are enabled
-        var useEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings");
+        string useEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings");
         if (useEmbeddings != "True")
         {
             return 0;
@@ -728,10 +730,10 @@ public static class OllamaService
         int count = 0;
         try
         {
-            await using var conn = new NpgsqlConnection(connectionString);
+            await using NpgsqlConnection conn = new(connectionString);
             await conn.OpenAsync();
 
-            var cmd = new NpgsqlCommand("SELECT COUNT(*) FROM clippy", conn);
+            NpgsqlCommand cmd = new("SELECT COUNT(*) FROM clippy", conn);
             count = Convert.ToInt32(await cmd.ExecuteScalarAsync());
         }
         catch (Exception)
@@ -750,19 +752,19 @@ public static class OllamaService
     public static async Task DeleteEmbedding(int id)
     {
         // Check if embeddings are enabled
-        var useEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings");
+        string useEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings");
         if (useEmbeddings != "True")
         {
             System.Diagnostics.Debug.WriteLine("Embeddings are disabled. Skipping delete operation.");
             return;
         }
 
-        await using var conn = new NpgsqlConnection(connectionString);
+        await using NpgsqlConnection conn = new(connectionString);
         await conn.OpenAsync();
 
-        var cmd = new NpgsqlCommand("DELETE FROM clippy WHERE id = @id", conn);
-        cmd.Parameters.AddWithValue("id", id);
-        await cmd.ExecuteNonQueryAsync();
+        NpgsqlCommand cmd = new("DELETE FROM clippy WHERE id = @id", conn);
+        _ = cmd.Parameters.AddWithValue("id", id);
+        _ = await cmd.ExecuteNonQueryAsync();
     }
 
     /// <summary>
@@ -772,7 +774,7 @@ public static class OllamaService
     /// <returns>The analysis result.</returns>
     public static async Task<string> AnalyzeImage(byte[] image)
     {
-        var provider = GetCurrentProvider();
+        IAIProvider provider = GetCurrentProvider();
         return await provider.AnalyzeImage(image);
     }
 }

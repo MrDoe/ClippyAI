@@ -10,7 +10,7 @@ public partial class ErrorMessageDialog : Window
         // position the window above the MainWindow
         if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            var mainWindow = desktop.MainWindow;
+            Window? mainWindow = desktop.MainWindow;
             if (mainWindow != null)
             {
                 Position = new PixelPoint(

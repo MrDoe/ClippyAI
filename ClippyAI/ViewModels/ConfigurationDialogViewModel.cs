@@ -16,12 +16,12 @@ namespace ClippyAI.ViewModels;
 
 public partial class ConfigurationDialogViewModel : ViewModelBase
 {
-    private MainWindow? _mainWindow;
+    private readonly MainWindow? _mainWindow;
 
     [ObservableProperty]
     private string _aiProvider = ConfigurationService.GetConfigurationValue("AIProvider", "Ollama");
 
-    void OnAIProviderChanged(string value)
+    private void OnAIProviderChanged(string value)
     {
         // Refresh models when provider changes
         _ = RefreshModels();
@@ -114,10 +114,10 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     private string _generalTestResult = "";
 
     [ObservableProperty]
-    private ObservableCollection<string> _languageItems = new([ "English", "Deutsch", "Français", "Español", "Italiano", "Português", "中文", "日本語", "한국어", "Русский" ]);
+    private ObservableCollection<string> _languageItems = new(["English", "Deutsch", "Français", "Español", "Italiano", "Português", "中文", "日本語", "한국어", "Русский"]);
 
     [ObservableProperty]
-    private ObservableCollection<string> _aiProviderItems = new([ "Ollama", "OpenAI" ]);
+    private ObservableCollection<string> _aiProviderItems = new(["Ollama", "OpenAI"]);
 
     [ObservableProperty]
     private ObservableCollection<string> _availableTasks = [];
@@ -166,7 +166,7 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     private void PopulateAvailableTasks()
     {
         AvailableTasks.Clear();
-        foreach (var task in TaskConfigurations)
+        foreach (TaskConfiguration task in TaskConfigurations)
         {
             AvailableTasks.Add(task.TaskName);
         }
@@ -184,9 +184,9 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
         try
         {
             ConfigurationService.InitializeDatabase();
-            var tasks = ConfigurationService.GetAllTaskConfigurations();
+            List<TaskConfiguration> tasks = ConfigurationService.GetAllTaskConfigurations();
             TaskConfigurations.Clear();
-            foreach (var task in tasks)
+            foreach (TaskConfiguration task in tasks)
             {
                 TaskConfigurations.Add(task);
             }
@@ -203,9 +203,11 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     private void AddNewTask()
     {
         if (string.IsNullOrWhiteSpace(NewTaskName))
+        {
             return;
+        }
 
-        var newTask = new TaskConfiguration
+        TaskConfiguration newTask = new()
         {
             TaskName = NewTaskName,
             SystemPrompt = "",
@@ -236,12 +238,14 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     private void DeleteTask()
     {
         if (SelectedTaskConfiguration == null)
+        {
             return;
+        }
 
         try
         {
             ConfigurationService.DeleteTaskConfiguration(SelectedTaskConfiguration.TaskName);
-            TaskConfigurations.Remove(SelectedTaskConfiguration);
+            _ = TaskConfigurations.Remove(SelectedTaskConfiguration);
             PopulateAvailableTasks();
             SelectedTaskConfiguration = null;
         }
@@ -255,7 +259,9 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     private void SaveTaskConfiguration()
     {
         if (SelectedTaskConfiguration == null)
+        {
             return;
+        }
 
         try
         {
@@ -292,8 +298,8 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
         {
             ModelItems.Clear();
             AvailableModels.Clear();
-            var models = await OllamaService.GetModelsAsync();
-            foreach (var model in models)
+            ObservableCollection<string> models = await OllamaService.GetModelsAsync();
+            foreach (string model in models)
             {
                 ModelItems.Add(model);
                 AvailableModels.Add(model);
@@ -332,7 +338,7 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
         try
         {
             // Prompt user for model name
-            var modelName = await InputDialog.Prompt(
+            string? modelName = await InputDialog.Prompt(
                 _mainWindow,
                 "Pull Model",
                 "Enter the model name to pull:",
@@ -381,8 +387,8 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
         {
             VideoDevices.Clear();
             // Load video devices (this would need to be implemented similar to MainViewModel)
-            var devices = await Task.Run(() => GetVideoDevices());
-            foreach (var device in devices)
+            List<string> devices = await Task.Run(() => GetVideoDevices());
+            foreach (string device in devices)
             {
                 VideoDevices.Add(device);
             }
@@ -425,7 +431,7 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
 
         try
         {
-            var hotkeyService = new LinuxHotkeyService(_mainWindow);
+            LinuxHotkeyService hotkeyService = new(_mainWindow);
             await hotkeyService.SetupHotkeyDevice();
             LinuxKeyboardDevice = ConfigurationService.GetConfigurationValue("LinuxKeyboardDevice", "");
         }
@@ -440,15 +446,15 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     {
         SshTestInProgress = true;
         SshTestResult = "Testing SSH connection...";
-        
+
         try
         {
             // Save current SSH settings temporarily to test with current form values
-            var tempUseSSH = ConfigurationService.GetConfigurationValue("UseSSH");
-            var tempUsername = ConfigurationService.GetConfigurationValue("SSHUsername");
-            var tempServerUrl = ConfigurationService.GetConfigurationValue("SSHServerUrl");
-            var tempPort = ConfigurationService.GetConfigurationValue("SSHPort");
-            var tempPrivateKeyFile = ConfigurationService.GetConfigurationValue("SSHPrivateKeyFile");
+            string tempUseSSH = ConfigurationService.GetConfigurationValue("UseSSH");
+            string tempUsername = ConfigurationService.GetConfigurationValue("SSHUsername");
+            string tempServerUrl = ConfigurationService.GetConfigurationValue("SSHServerUrl");
+            string tempPort = ConfigurationService.GetConfigurationValue("SSHPort");
+            string tempPrivateKeyFile = ConfigurationService.GetConfigurationValue("SSHPrivateKeyFile");
 
             // Set current form values for testing
             ConfigurationService.SetConfigurationValue("UseSSH", UseSSH.ToString());
@@ -459,7 +465,7 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
 
             await Task.Run(() =>
             {
-                var sshService = new SSHService();
+                SSHService sshService = new();
                 SshTestResult = sshService.TestConnection();
             });
 
@@ -485,14 +491,14 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     {
         GeneralTestInProgress = true;
         GeneralTestResult = "Testing AI Provider connection...";
-        
+
         try
         {
             // Save current settings temporarily to test with current form values
-            var tempAiProvider = ConfigurationService.GetConfigurationValue("AIProvider");
-            var tempOllamaUrl = ConfigurationService.GetConfigurationValue("OllamaUrl");
-            var tempOpenAIApiKey = ConfigurationService.GetConfigurationValue("OpenAIApiKey");
-            var tempOpenAIBaseUrl = ConfigurationService.GetConfigurationValue("OpenAIBaseUrl");
+            string tempAiProvider = ConfigurationService.GetConfigurationValue("AIProvider");
+            string tempOllamaUrl = ConfigurationService.GetConfigurationValue("OllamaUrl");
+            string tempOpenAIApiKey = ConfigurationService.GetConfigurationValue("OpenAIApiKey");
+            string tempOpenAIBaseUrl = ConfigurationService.GetConfigurationValue("OpenAIBaseUrl");
 
             // Set current form values for testing
             ConfigurationService.SetConfigurationValue("AIProvider", AiProvider);
@@ -507,15 +513,10 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
                     if (AiProvider == "Ollama")
                     {
                         // Test Ollama connection
-                        var models = await OllamaService.GetModelsAsync();
-                        if (models.Count > 0)
-                        {
-                            GeneralTestResult = $"✓ Ollama connection successful!\nFound {models.Count} model(s)";
-                        }
-                        else
-                        {
-                            GeneralTestResult = "⚠ Ollama connection successful but no models found.\nYou may need to pull a model first.";
-                        }
+                        ObservableCollection<string> models = await OllamaService.GetModelsAsync();
+                        GeneralTestResult = models.Count > 0
+                            ? $"✓ Ollama connection successful!\nFound {models.Count} model(s)"
+                            : "⚠ Ollama connection successful but no models found.\nYou may need to pull a model first.";
                     }
                     else if (AiProvider == "OpenAI")
                     {
@@ -526,15 +527,10 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
                         }
                         else
                         {
-                            var models = await OllamaService.GetModelsAsync();
-                            if (models.Count > 0)
-                            {
-                                GeneralTestResult = $"✓ OpenAI connection successful!\nFound {models.Count} model(s)";
-                            }
-                            else
-                            {
-                                GeneralTestResult = "⚠ OpenAI connection successful but no models found.\nCheck your API key permissions.";
-                            }
+                            ObservableCollection<string> models = await OllamaService.GetModelsAsync();
+                            GeneralTestResult = models.Count > 0
+                                ? $"✓ OpenAI connection successful!\nFound {models.Count} model(s)"
+                                : "⚠ OpenAI connection successful but no models found.\nCheck your API key permissions.";
                         }
                     }
                 }
@@ -564,17 +560,17 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     public void ShowCamera()
     {
         Save();
-        var cameraWindow = new CameraWindow();
+        CameraWindow cameraWindow = new();
         cameraWindow.Show();
     }
 
     private List<string> GetVideoDevices()
     {
-        var devices = new List<string>();
+        List<string> devices = [];
         if (OperatingSystem.IsWindows())
         {
             // Windows-specific code to get video devices
-            var systemDeviceEnum = DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice);
+            DsDevice[] systemDeviceEnum = DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice);
             devices.AddRange(systemDeviceEnum.Select(device => device.Name));
         }
         else if (OperatingSystem.IsLinux() || OperatingSystem.IsMacOS())
@@ -582,7 +578,7 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
             // Unix-based systems code to get video devices
             for (int i = 0; i < 10; ++i)
             {
-                var devicePath = $"/dev/video{i}";
+                string devicePath = $"/dev/video{i}";
                 if (File.Exists(devicePath))
                 {
                     devices.Add(devicePath);

@@ -1,8 +1,6 @@
 using Renci.SshNet;
 using System;
-using System.Configuration;
 using System.IO;
-using ClippyAI.Services;
 
 namespace ClippyAI.Services
 {
@@ -43,16 +41,16 @@ namespace ClippyAI.Services
                 }
 
                 // Create SSH connection
-                var keyFile = new PrivateKeyFile(expandedKeyPath);
-                var keyFiles = new[] { keyFile };
+                PrivateKeyFile keyFile = new(expandedKeyPath);
+                PrivateKeyFile[] keyFiles = new[] { keyFile };
                 // allow ssh-rsa keys
-                
 
-                var methods = new AuthenticationMethod[]
+
+                AuthenticationMethod[] methods = new AuthenticationMethod[]
                 {
                     new PrivateKeyAuthenticationMethod(sshUsername, keyFiles)
                 };
-                var connectionInfo = new ConnectionInfo(sshServerUrl, sshPort, sshUsername, methods);
+                ConnectionInfo connectionInfo = new(sshServerUrl, sshPort, sshUsername, methods);
                 _sshClient = new SshClient(connectionInfo);
 
                 // Connect first
@@ -85,7 +83,7 @@ namespace ClippyAI.Services
 
         private void SetupLocalPortForwarding(string tunnelConfig)
         {
-            var tunnelParts = tunnelConfig.Split(':');
+            string[] tunnelParts = tunnelConfig.Split(':');
             if (tunnelParts.Length != 4)
             {
                 Console.WriteLine($"Invalid local tunnel format. Expected 'localHost:localPort:remoteHost:remotePort', got: {tunnelConfig}");
@@ -103,7 +101,7 @@ namespace ClippyAI.Services
             {
                 _forwardedPort.Start();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine("SSH port forwarding error:" + ex.Message);
             }
@@ -111,7 +109,7 @@ namespace ClippyAI.Services
 
         private void SetupRemotePortForwarding(string tunnelConfig)
         {
-            var tunnelParts = tunnelConfig.Split(':');
+            string[] tunnelParts = tunnelConfig.Split(':');
             if (tunnelParts.Length != 4)
             {
                 Console.WriteLine($"Invalid remote tunnel format. Expected 'remoteHost:remotePort:localHost:localPort', got: {tunnelConfig}");
@@ -203,15 +201,15 @@ namespace ClippyAI.Services
                 }
 
                 // Create test SSH connection
-                var keyFile = new PrivateKeyFile(expandedKeyPath);
-                var keyFiles = new[] { keyFile };
-                var methods = new AuthenticationMethod[]
+                PrivateKeyFile keyFile = new(expandedKeyPath);
+                PrivateKeyFile[] keyFiles = new[] { keyFile };
+                AuthenticationMethod[] methods = new AuthenticationMethod[]
                 {
                     new PrivateKeyAuthenticationMethod(sshUsername, keyFiles)
                 };
-                var connectionInfo = new ConnectionInfo(sshServerUrl, sshPort, sshUsername, methods);
-                
-                using var testClient = new SshClient(connectionInfo);
+                ConnectionInfo connectionInfo = new(sshServerUrl, sshPort, sshUsername, methods);
+
+                using SshClient testClient = new(connectionInfo);
                 testClient.Connect();
 
                 if (testClient.IsConnected)

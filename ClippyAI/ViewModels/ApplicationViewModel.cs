@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.Input;
 namespace ClippyAI.Views;
+
 public partial class ApplicationViewModel : ViewModelBase
 {
     [RelayCommand]

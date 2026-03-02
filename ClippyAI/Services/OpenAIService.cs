@@ -1,13 +1,13 @@
+using ClippyAI.Interfaces;
+using ClippyAI.Models;
 using System;
-using System.Collections.ObjectModel;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using ClippyAI.Interfaces;
-using ClippyAI.Models;
 namespace ClippyAI.Services;
 
 /// <summary>
@@ -59,16 +59,16 @@ public class OpenAIService : IAIProvider
         UpdateConfig();
 
         // Load configuration options
-        var temperature = taskConfig?.Temperature ?? 0.8;
-        var maxTokens = taskConfig?.MaxLength ?? 2048;
-        var topP = taskConfig?.TopP ?? 0.9;
-        var frequencyPenalty = taskConfig?.RepeatPenalty ?? 0.0;
-        var presencePenalty = 0.0; // OpenAI doesn't have direct equivalent to repeat_penalty
-        var systemPrompt = taskConfig?.SystemPrompt ?? system;
-        var modelToUse = taskConfig?.Model ?? model;
+        double temperature = taskConfig?.Temperature ?? 0.8;
+        int maxTokens = taskConfig?.MaxLength ?? 2048;
+        double topP = taskConfig?.TopP ?? 0.9;
+        double frequencyPenalty = taskConfig?.RepeatPenalty ?? 0.0;
+        double presencePenalty = 0.0; // OpenAI doesn't have direct equivalent to repeat_penalty
+        string? systemPrompt = taskConfig?.SystemPrompt ?? system;
+        string modelToUse = taskConfig?.Model ?? model;
 
         // Prepare messages
-        var messages = new List<OpenAIMessage>();
+        List<OpenAIMessage> messages = [];
 
         if (!string.IsNullOrEmpty(systemPrompt))
         {
@@ -85,7 +85,7 @@ public class OpenAIService : IAIProvider
             Content = $"# TEXT\n\n'''{input.Trim()}'''\n# TASK\n\n'{task.Trim()}'"
         });
 
-        var request = new OpenAIRequest
+        OpenAIRequest request = new()
         {
             Model = modelToUse,
             Messages = [.. messages],
@@ -99,30 +99,30 @@ public class OpenAIService : IAIProvider
 
         Console.WriteLine("Sending OpenAI request...");
 
-        var json = JsonSerializer.Serialize(request);
-        using var content = new StringContent(json, Encoding.UTF8, "application/json");
+        string json = JsonSerializer.Serialize(request);
+        using StringContent content = new(json, Encoding.UTF8, "application/json");
 
-        using var response = await client.PostAsync($"{baseUrl}/chat/completions", content, token);
+        using HttpResponseMessage response = await client.PostAsync($"{baseUrl}/chat/completions", content, token);
 
         if (response.IsSuccessStatusCode)
         {
             Console.WriteLine("OpenAI request successful.");
 
-            var responseJson = await response.Content.ReadAsStringAsync(token);
-            var openAIResponse = JsonSerializer.Deserialize<OpenAIResponse>(responseJson);
+            string responseJson = await response.Content.ReadAsStringAsync(token);
+            OpenAIResponse? openAIResponse = JsonSerializer.Deserialize<OpenAIResponse>(responseJson);
 
             return openAIResponse?.Choices?[0]?.Message?.Content?.Trim('"').Trim('\'');
         }
         else
         {
-            var errorContent = await response.Content.ReadAsStringAsync(token);
+            string errorContent = await response.Content.ReadAsStringAsync(token);
             throw new Exception($"OpenAI request failed with status: {response.StatusCode}. Response: {errorContent}");
         }
     }
 
     public async Task<ObservableCollection<string>> GetModelsAsync(CancellationToken token = default)
     {
-        var models = new List<string>();
+        List<string> models = [];
 
         if (string.IsNullOrEmpty(apiKey))
         {
@@ -133,16 +133,16 @@ public class OpenAIService : IAIProvider
         {
             UpdateConfig();
 
-            using var response = await client.GetAsync($"{baseUrl}/models", token);
+            using HttpResponseMessage response = await client.GetAsync($"{baseUrl}/models", token);
 
             if (response.IsSuccessStatusCode)
             {
-                var responseJson = await response.Content.ReadAsStringAsync(token);
-                var modelsResponse = JsonSerializer.Deserialize<OpenAIModelsResponse>(responseJson);
+                string responseJson = await response.Content.ReadAsStringAsync(token);
+                OpenAIModelsResponse? modelsResponse = JsonSerializer.Deserialize<OpenAIModelsResponse>(responseJson);
 
                 if (modelsResponse?.Data != null)
                 {
-                    foreach (var model in modelsResponse.Data)
+                    foreach (OpenAIModel model in modelsResponse.Data)
                     {
                         if (!string.IsNullOrEmpty(model.Id))
                         {
@@ -181,14 +181,14 @@ public class OpenAIService : IAIProvider
         }
 
         // OpenAI vision requires GPT-4 Vision model
-        var visionModel = ConfigurationService.GetConfigurationValue("OpenAIVisionModel", "gpt-4-vision-preview");
-        var visionPrompt = ConfigurationService.GetConfigurationValue("VisionPrompt", "Describe the image.");
+        string visionModel = ConfigurationService.GetConfigurationValue("OpenAIVisionModel", "gpt-4-vision-preview");
+        string visionPrompt = ConfigurationService.GetConfigurationValue("VisionPrompt", "Describe the image.");
 
         // Convert image to base64
-        var base64Image = Convert.ToBase64String(image);
-        var imageUrl = $"data:image/jpeg;base64,{base64Image}";
+        string base64Image = Convert.ToBase64String(image);
+        _ = $"data:image/jpeg;base64,{base64Image}";
 
-        var messages = new[]
+        OpenAIMessage[] messages = new[]
         {
             new OpenAIMessage
             {
@@ -197,28 +197,28 @@ public class OpenAIService : IAIProvider
             }
         };
 
-        var request = new OpenAIRequest
+        OpenAIRequest request = new()
         {
             Model = visionModel,
             Messages = messages,
             MaxTokens = 1000
         };
 
-        var json = JsonSerializer.Serialize(request);
-        using var content = new StringContent(json, Encoding.UTF8, "application/json");
+        string json = JsonSerializer.Serialize(request);
+        using StringContent content = new(json, Encoding.UTF8, "application/json");
 
-        using var response = await client.PostAsync($"{baseUrl}/chat/completions", content);
+        using HttpResponseMessage response = await client.PostAsync($"{baseUrl}/chat/completions", content);
 
         if (response.IsSuccessStatusCode)
         {
-            var responseJson = await response.Content.ReadAsStringAsync();
-            var openAIResponse = JsonSerializer.Deserialize<OpenAIResponse>(responseJson);
+            string responseJson = await response.Content.ReadAsStringAsync();
+            OpenAIResponse? openAIResponse = JsonSerializer.Deserialize<OpenAIResponse>(responseJson);
 
             return openAIResponse?.Choices?[0]?.Message?.Content ?? "Unable to analyze image.";
         }
         else
         {
-            var errorContent = await response.Content.ReadAsStringAsync();
+            string errorContent = await response.Content.ReadAsStringAsync();
             throw new Exception($"OpenAI vision request failed: {response.StatusCode}. Response: {errorContent}");
         }
     }

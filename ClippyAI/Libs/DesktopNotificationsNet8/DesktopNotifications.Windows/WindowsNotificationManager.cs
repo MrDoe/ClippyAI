@@ -54,8 +54,8 @@ namespace DesktopNotifications.Windows
             _toastNotifier = ToastNotificationManagerCompat.CreateToastNotifier();
 #endif
 
-            _notifications = new Dictionary<ToastNotification, Notification>();
-            _scheduledNotification = new Dictionary<ScheduledToastNotification, Notification>();
+            _notifications = [];
+            _scheduledNotification = [];
         }
 
         public NotificationManagerCapabilities Capabilities => NotificationManagerCapabilities.BodyText |
@@ -81,8 +81,8 @@ namespace DesktopNotifications.Windows
                 throw new ArgumentException(nameof(expirationTime));
             }
 
-            var xmlContent = GenerateXml(notification);
-            var toastNotification = new ToastNotification(xmlContent)
+            XmlDocument xmlContent = GenerateXml(notification);
+            ToastNotification toastNotification = new(xmlContent)
             {
                 ExpirationTime = expirationTime
             };
@@ -99,12 +99,12 @@ namespace DesktopNotifications.Windows
 
         public Task HideNotification(Notification notification)
         {
-            if (_notifications.TryGetKey(notification, out var toastNotification))
+            if (_notifications.TryGetKey(notification, out ToastNotification? toastNotification))
             {
                 _toastNotifier.Hide(toastNotification);
             }
 
-            if (_scheduledNotification.TryGetKey(notification, out var scheduledToastNotification))
+            if (_scheduledNotification.TryGetKey(notification, out ScheduledToastNotification? scheduledToastNotification))
             {
                 _toastNotifier.RemoveFromSchedule(scheduledToastNotification);
             }
@@ -122,8 +122,8 @@ namespace DesktopNotifications.Windows
                 throw new ArgumentException(nameof(deliveryTime));
             }
 
-            var xmlContent = GenerateXml(notification);
-            var toastNotification = new ScheduledToastNotification(xmlContent, deliveryTime)
+            XmlDocument xmlContent = GenerateXml(notification);
+            ScheduledToastNotification toastNotification = new(xmlContent, deliveryTime)
             {
                 ExpirationTime = expirationTime
             };
@@ -201,7 +201,7 @@ namespace DesktopNotifications.Windows
             return xmlDoc;
 
 #else
-            var builder = new ToastContentBuilder();
+            ToastContentBuilder builder = new();
 
             builder.AddText(notification.Title);
             builder.AddText(notification.Body);
@@ -211,7 +211,7 @@ namespace DesktopNotifications.Windows
                 builder.AddInlineImage(new Uri($"file:///{img}"), notification.BodyImageAltText);
             }
 
-            foreach (var (title, actionId) in notification.Buttons)
+            foreach ((string? title, string? actionId) in notification.Buttons)
             {
                 builder.AddButton(title, ToastActivationType.Foreground, actionId);
             }
@@ -226,7 +226,7 @@ namespace DesktopNotifications.Windows
         {
             Debug.Assert(_launchActionPromise != null);
 
-            var actionId = GetActionId(e.Argument);
+            string actionId = GetActionId(e.Argument);
             _launchActionPromise.SetResult(actionId);
         }
 #endif
@@ -238,14 +238,14 @@ namespace DesktopNotifications.Windows
 
         private void ToastNotificationOnDismissed(ToastNotification sender, ToastDismissedEventArgs args)
         {
-            if (!_notifications.TryGetValue(sender, out var notification))
+            if (!_notifications.TryGetValue(sender, out Notification? notification))
             {
                 return;
             }
 
-            _notifications.Remove(sender);
+            _ = _notifications.Remove(sender);
 
-            var reason = args.Reason switch
+            NotificationDismissReason reason = args.Reason switch
             {
                 ToastDismissalReason.UserCanceled => NotificationDismissReason.User,
                 ToastDismissalReason.TimedOut => NotificationDismissReason.Expired,
@@ -263,13 +263,13 @@ namespace DesktopNotifications.Windows
 
         private void ToastNotificationOnActivated(ToastNotification sender, object args)
         {
-            if (!_notifications.TryGetValue(sender, out var notification))
+            if (!_notifications.TryGetValue(sender, out Notification? notification))
             {
                 return;
             }
 
-            var activationArgs = (ToastActivatedEventArgs)args;
-            var actionId = GetActionId(activationArgs.Arguments);
+            ToastActivatedEventArgs activationArgs = (ToastActivatedEventArgs)args;
+            string actionId = GetActionId(activationArgs.Arguments);
 
             NotificationActivated?.Invoke(
                 this,

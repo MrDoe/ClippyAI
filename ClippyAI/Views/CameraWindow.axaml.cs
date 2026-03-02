@@ -1,20 +1,22 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media.Imaging;
 using Avalonia.Threading;
+using ClippyAI.Services;
+using DirectShowLib;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using System;
-using System.Configuration;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
-using DirectShowLib;
-using ClippyAI.Services;
 namespace ClippyAI.Views;
 
 public partial class CameraWindow : Window
 {
-    private VideoCapture Capture;
-    private string VideoDevice = ConfigurationService.GetConfigurationValue("VideoDevice");
+    private readonly VideoCapture Capture;
+    private readonly string VideoDevice = ConfigurationService.GetConfigurationValue("VideoDevice");
     private bool IsCapturing;
 
     public CameraWindow()
@@ -35,13 +37,12 @@ public partial class CameraWindow : Window
             }
 
             // Try to find the device number by name
-            int deviceNumber;
-            if (!int.TryParse(VideoDevice, out deviceNumber))
+            if (!int.TryParse(VideoDevice, out int deviceNumber))
             {
                 // If the device name is not a number, try to find it by name
-                var devices = new System.Collections.Generic.List<string>();
-                var systemDeviceEnum = DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice);
-                foreach (var device in systemDeviceEnum)
+                List<string> devices = [];
+                DsDevice[] systemDeviceEnum = DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice);
+                foreach (DsDevice? device in systemDeviceEnum)
                 {
                     devices.Add(device.Name);
                 }
@@ -56,10 +57,10 @@ public partial class CameraWindow : Window
             Capture = new VideoCapture(VideoDevice);
         }
 
-        Capture.Set(CapProp.FrameWidth, 640);
-        Capture.Set(CapProp.FrameHeight, 480);
+        _ = Capture.Set(CapProp.FrameWidth, 640);
+        _ = Capture.Set(CapProp.FrameHeight, 480);
         IsCapturing = true;
-        Task.Run(CaptureLoop);
+        _ = Task.Run(CaptureLoop);
     }
 
     private void InitializeComponent()
@@ -73,8 +74,8 @@ public partial class CameraWindow : Window
         {
             try
             {
-                using var frame = new Mat();
-                Capture.Read(frame);
+                using Mat frame = new();
+                _ = Capture.Read(frame);
                 if (!frame.IsEmpty)
                 {
                     // Process image data in background thread
@@ -86,14 +87,11 @@ public partial class CameraWindow : Window
                     {
                         try
                         {
-                            using var ms = new System.IO.MemoryStream(jpgImage);
-                            var bitmap = new Avalonia.Media.Imaging.Bitmap(ms);
+                            using MemoryStream ms = new(jpgImage);
+                            Bitmap bitmap = new(ms);
 
-                            var imgCamera = this.FindControl<Image>("imgCamera");
-                            if (imgCamera != null)
-                            {
-                                imgCamera.Source = bitmap;
-                            }
+                            Image? imgCamera = this.FindControl<Image>("imgCamera");
+                            _ = imgCamera?.Source = bitmap;
                         }
                         catch (Exception ex)
                         {

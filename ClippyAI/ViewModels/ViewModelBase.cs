@@ -1,6 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Avalonia.Controls.ApplicationLifetimes;
+using System.Collections.ObjectModel;
 namespace ClippyAI.Views;
 
 public partial class ViewModelBase : ObservableObject
@@ -15,7 +15,7 @@ public partial class ViewModelBase : ObservableObject
 
     protected static async void ShowErrorMessage(string message)
     {
-        var dialog = new ErrorMessageDialog
+        ErrorMessageDialog dialog = new()
         {
             DataContext = new ErrorMessageDialogViewModel(message)
         };

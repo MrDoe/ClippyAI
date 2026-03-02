@@ -1,6 +1,5 @@
-using System.Configuration;
-using CommunityToolkit.Mvvm.ComponentModel;
 using ClippyAI.Services;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ClippyAI.ViewModels
 {

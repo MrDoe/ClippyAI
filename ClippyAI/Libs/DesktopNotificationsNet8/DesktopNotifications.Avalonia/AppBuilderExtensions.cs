@@ -1,7 +1,5 @@
 ﻿using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Platform;
 using DesktopNotifications.FreeDesktop;
 using DesktopNotifications.Windows;
 using System;
@@ -23,12 +21,12 @@ namespace DesktopNotifications.Avalonia
         {
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
-                var context = WindowsApplicationContext.FromCurrentProcess();
+                WindowsApplicationContext context = WindowsApplicationContext.FromCurrentProcess();
                 manager = new WindowsNotificationManager(context);
             }
             else if (Environment.OSVersion.Platform == PlatformID.Unix)
             {
-                var context = FreeDesktopApplicationContext.FromCurrentProcess();
+                FreeDesktopApplicationContext context = FreeDesktopApplicationContext.FromCurrentProcess();
                 manager = new FreeDesktopNotificationManager(context);
             }
             else
@@ -41,8 +39,8 @@ namespace DesktopNotifications.Avalonia
             //TODO Any better way of doing this?
             manager.Initialize().GetAwaiter().GetResult();
 
-            var manager_ = manager;
-            builder.AfterSetup(b =>
+            INotificationManager manager_ = manager;
+            _ = builder.AfterSetup(b =>
             {
                 if (b.Instance?.ApplicationLifetime is IControlledApplicationLifetime lifetime)
                 {

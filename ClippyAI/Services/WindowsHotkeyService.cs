@@ -1,19 +1,20 @@
+using Avalonia.Controls;
+using Avalonia.Platform;
+using Avalonia.Threading;
+using ClippyAI.Views;
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Threading;
 using System.Threading.Tasks;
-using Avalonia.Controls;
-using Avalonia.Threading;
-using ClippyAI.Views;
 
 namespace ClippyAI.Services
 {
     [SupportedOSPlatform("windows")]
     public class WindowsHotkeyService
     {
-        private const int MOD_ALT      = 0x0001;
-        private const int MOD_CONTROL  = 0x0002;
+        private const int MOD_ALT = 0x0001;
+        private const int MOD_CONTROL = 0x0002;
         private const int MOD_NOREPEAT = 0x4000;
         private const int VK_C = 0x43;
         private const int VK_A = 0x41;
@@ -44,12 +45,14 @@ namespace ClippyAI.Services
         public bool RegisterHotkeys()
         {
             if (!OperatingSystem.IsWindows())
+            {
                 return false;
+            }
 
             try
             {
                 // Wait for window to be fully initialized
-                Task.Run(async () =>
+                _ = Task.Run(async () =>
                 {
                     await Task.Delay(1000); // Give the window time to initialize
                     await Dispatcher.UIThread.InvokeAsync(() =>
@@ -72,7 +75,7 @@ namespace ClippyAI.Services
             try
             {
                 // Get window handle using Avalonia's platform handle
-                var platformHandle = _window.TryGetPlatformHandle();
+                IPlatformHandle? platformHandle = _window.TryGetPlatformHandle();
                 if (platformHandle?.HandleDescriptor != "HWND")
                 {
                     Console.WriteLine("Could not get HWND for hotkey registration");
@@ -122,7 +125,7 @@ namespace ClippyAI.Services
         /// </summary>
         private IntPtr WndProcHook(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            if (msg == (uint)WM_HOTKEY)
+            if (msg == WM_HOTKEY)
             {
                 int hotkeyId = wParam.ToInt32();
                 handled = true;
@@ -134,16 +137,18 @@ namespace ClippyAI.Services
         public void UnregisterHotkeys()
         {
             if (!OperatingSystem.IsWindows())
+            {
                 return;
+            }
 
             try
             {
                 if (_isRegistered && _windowHandle != IntPtr.Zero)
                 {
-                    UnregisterHotKey(_windowHandle, 1);
-                    UnregisterHotKey(_windowHandle, 2);
-                    UnregisterHotKey(_windowHandle, 3);
-                    UnregisterHotKey(_windowHandle, 4);
+                    _ = UnregisterHotKey(_windowHandle, 1);
+                    _ = UnregisterHotKey(_windowHandle, 2);
+                    _ = UnregisterHotKey(_windowHandle, 3);
+                    _ = UnregisterHotKey(_windowHandle, 4);
                     _isRegistered = false;
                 }
 
@@ -171,20 +176,17 @@ namespace ClippyAI.Services
 
                     case 2: // Ctrl+Alt+A
                         Console.WriteLine("Ctrl+Alt+A hotkey detected");
-                        await Dispatcher.UIThread.InvokeAsync(async () =>
-                        {
-                            await _viewModel.CaptureAndAnalyze();
-                        });
+                        await Dispatcher.UIThread.InvokeAsync(_viewModel.CaptureAndAnalyze);
                         break;
 
                     case 3: // Ctrl+Alt+Up
                         Console.WriteLine("Ctrl+Alt+Up hotkey detected");
-                        await Dispatcher.UIThread.InvokeAsync(() => _viewModel.SelectPreviousTask());
+                        await Dispatcher.UIThread.InvokeAsync(_viewModel.SelectPreviousTask);
                         break;
 
                     case 4: // Ctrl+Alt+Down
                         Console.WriteLine("Ctrl+Alt+Down hotkey detected");
-                        await Dispatcher.UIThread.InvokeAsync(() => _viewModel.SelectNextTask());
+                        await Dispatcher.UIThread.InvokeAsync(_viewModel.SelectNextTask);
                         break;
                 }
             }

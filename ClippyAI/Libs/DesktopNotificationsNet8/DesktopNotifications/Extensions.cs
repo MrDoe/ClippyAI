@@ -6,7 +6,7 @@ namespace DesktopNotifications
     {
         public static bool TryGetKey<K, V>(this IDictionary<K, V> dict, V value, out K key)
         {
-            foreach (var entry in dict)
+            foreach (KeyValuePair<K, V> entry in dict)
             {
                 if (entry.Value?.Equals(value) == true)
                 {

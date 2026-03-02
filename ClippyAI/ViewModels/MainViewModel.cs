@@ -1,23 +1,22 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Media.Imaging;
+using ClippyAI.Models;
+using ClippyAI.Services;
+using ClippyAI.ViewModels;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using ClippyAI.Services;
-using System.Collections.ObjectModel;
-using System.Configuration;
-using System.Collections.Generic;
-using ClippyAI.Models;
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia;
+using DirectShowLib;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
-using System.Linq;
-using DirectShowLib;
-using Avalonia.Media.Imaging;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
-using ClippyAI.ViewModels;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 namespace ClippyAI.Views;
 
 public partial class MainViewModel : ViewModelBase
@@ -137,15 +136,15 @@ public partial class MainViewModel : ViewModelBase
         try
         {
             ConfigurationService.InitializeDatabase();
-            var tasks = ConfigurationService.GetAllTaskConfigurations();
+            List<TaskConfiguration> tasks = ConfigurationService.GetAllTaskConfigurations();
             TaskConfigurations.Clear();
-            foreach (var task in tasks)
+            foreach (TaskConfiguration task in tasks)
             {
                 TaskConfigurations.Add(task);
             }
-            
+
             // Set default task configuration if configured
-            var defaultTaskName = ConfigurationService.GetConfigurationValue("DefaultTask");
+            string defaultTaskName = ConfigurationService.GetConfigurationValue("DefaultTask");
             if (!string.IsNullOrEmpty(defaultTaskName))
             {
                 SelectedTaskConfiguration = TaskConfigurations.FirstOrDefault(t => t.TaskName == defaultTaskName);
@@ -184,7 +183,7 @@ public partial class MainViewModel : ViewModelBase
             }
         }
 
-        if(ModelItems.Count == 0)
+        if (ModelItems.Count == 0)
         {
             ErrorMessages?.Add(Resources.Resources.NoModelsAvailable);
             IsBusy = false;
@@ -217,7 +216,7 @@ public partial class MainViewModel : ViewModelBase
 
             if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                var mainWindow = (MainWindow)desktop.MainWindow!;
+                MainWindow mainWindow = (MainWindow)desktop.MainWindow!;
                 mainWindow!.ShowNotification("ClippyAI", Resources.Resources.PleaseWait, true, false);
             }
             else
@@ -238,21 +237,16 @@ public partial class MainViewModel : ViewModelBase
             }
 
             // Use task configuration if available, otherwise use the current model
-            if (SelectedTaskConfiguration != null)
-            {
-                response = await OllamaService.SendRequestWithConfig(Input!,
+            response = SelectedTaskConfiguration != null
+                ? await OllamaService.SendRequestWithConfig(Input!,
                                                            task,
                                                            SelectedTaskConfiguration.Model,
                                                            SelectedTaskConfiguration,
-                                                           _askClippyCts.Token);
-            }
-            else
-            {
-                response = await OllamaService.SendRequestForTask(Input!,
+                                                           _askClippyCts.Token)
+                : await OllamaService.SendRequestForTask(Input!,
                                                            task,
                                                            model,
                                                            _askClippyCts.Token);
-            }
 
             if (!string.IsNullOrEmpty(response) && !string.IsNullOrEmpty(task) &&
                 !string.IsNullOrEmpty(Input) && StoreAllResponses && UseEmbeddings)
@@ -299,7 +293,7 @@ public partial class MainViewModel : ViewModelBase
         {
             if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                var mainWindow = (MainWindow)desktop.MainWindow!;
+                MainWindow mainWindow = (MainWindow)desktop.MainWindow!;
                 mainWindow!.HideLastNotification();
                 mainWindow.ShowNotification("ClippyAI", Resources.Resources.TaskCompleted + response, false, true);
             }
@@ -311,7 +305,9 @@ public partial class MainViewModel : ViewModelBase
 
         // update response counter
         if (_lastOutputGenerated)
+        {
             ResponseCounter = "      *";
+        }
         else
         {
             ResponseDistance = (float)Math.Round(_responseList[_responseIndex].Distance, 2);
@@ -373,7 +369,9 @@ public partial class MainViewModel : ViewModelBase
         try
         {
             if (await ClipboardService.GetText() is { } pastedText)
+            {
                 ClipboardContent = ClipboardContent?.Insert(CaretIndex, pastedText);
+            }
         }
         catch (Exception e)
         {
@@ -385,7 +383,9 @@ public partial class MainViewModel : ViewModelBase
     public async Task UpdateClipboardContent(CancellationToken cancellationToken)
     {
         if (IsBusy)
+        {
             return;
+        }
 
         // First check text content (most common case)
         string? newContent;
@@ -409,7 +409,7 @@ public partial class MainViewModel : ViewModelBase
 
         // Check if text content has changed
         bool textContentChanged = !string.IsNullOrEmpty(newContent) && newContent != ClipboardContent;
-        
+
         if (textContentChanged)
         {
             IsBusy = true;
@@ -431,7 +431,7 @@ public partial class MainViewModel : ViewModelBase
             // When text changes, prioritize text view
             IsImageInputVisible = false;
             IsTextInputVisible = true;
-            
+
             IsBusy = false;
             return; // Early exit - don't check image when text changed
         }
@@ -659,14 +659,11 @@ public partial class MainViewModel : ViewModelBase
 
         int currentIndex = TaskConfigurations.IndexOf(SelectedTaskConfiguration);
         int newIndex = currentIndex <= 0 ? TaskConfigurations.Count - 1 : currentIndex - 1;
-        
+
         SelectedTaskConfiguration = TaskConfigurations[newIndex];
-        
+
         // Show notification with selected task
-        if (mainWindow != null)
-        {
-            mainWindow.ShowNotification("ClippyAI", $"Task: {SelectedTaskConfiguration?.TaskName}", false, false, 800);
-        }
+        mainWindow?.ShowNotification("ClippyAI", $"Task: {SelectedTaskConfiguration?.TaskName}", false, false, 800);
     }
 
     [RelayCommand]
@@ -679,14 +676,11 @@ public partial class MainViewModel : ViewModelBase
 
         int currentIndex = TaskConfigurations.IndexOf(SelectedTaskConfiguration);
         int newIndex = currentIndex >= TaskConfigurations.Count - 1 ? 0 : currentIndex + 1;
-        
+
         SelectedTaskConfiguration = TaskConfigurations[newIndex];
-        
+
         // Show notification with selected task
-        if (mainWindow != null)
-        {
-            mainWindow.ShowNotification("ClippyAI", $"Task: {SelectedTaskConfiguration?.TaskName}", false, false, 800);
-        }
+        mainWindow?.ShowNotification("ClippyAI", $"Task: {SelectedTaskConfiguration?.TaskName}", false, false, 800);
     }
 
     [RelayCommand]
@@ -708,7 +702,7 @@ public partial class MainViewModel : ViewModelBase
         // show notification to the user
         if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            var mainWindow = (MainWindow)desktop.MainWindow!;
+            MainWindow mainWindow = (MainWindow)desktop.MainWindow!;
             mainWindow!.ShowNotification("ClippyAI", Resources.Resources.AnalyzeImage, true, false);
         }
         else
@@ -723,7 +717,7 @@ public partial class MainViewModel : ViewModelBase
             // Check if there is an image in the clipboard
             if (ClipboardImage != null)
             {
-                using var ms = new MemoryStream();
+                using MemoryStream ms = new();
                 ClipboardImage.Save(ms);
                 frame = ms.ToArray();
             }
@@ -734,7 +728,7 @@ public partial class MainViewModel : ViewModelBase
             }
 
             // Send the frame to Ollama for analysis
-            var analysisResult = await OllamaService.AnalyzeImage(frame);
+            string analysisResult = await OllamaService.AnalyzeImage(frame);
 
             // Store the analysis result in the clipboard
             await ClipboardService.SetText(analysisResult);
@@ -766,13 +760,12 @@ public partial class MainViewModel : ViewModelBase
             }
 
             // Try to find the device number by name
-            int deviceNumber;
-            if (!int.TryParse(VideoDevice, out deviceNumber))
+            if (!int.TryParse(VideoDevice, out int deviceNumber))
             {
                 // If the device name is not a number, try to find it by name
-                var devices = new List<string>();
-                var systemDeviceEnum = DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice);
-                foreach (var device in systemDeviceEnum)
+                List<string> devices = new();
+                DsDevice[] systemDeviceEnum = DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice);
+                foreach (DsDevice? device in systemDeviceEnum)
                 {
                     devices.Add(device.Name);
                 }
@@ -788,16 +781,16 @@ public partial class MainViewModel : ViewModelBase
         }
 
 
-        capture.Set(CapProp.FrameWidth, 640);
-        capture.Set(CapProp.FrameHeight, 480);
+        _ = capture.Set(CapProp.FrameWidth, 640);
+        _ = capture.Set(CapProp.FrameHeight, 480);
 
         if (!capture.IsOpened)
         {
             throw new Exception("Could not open video device");
         }
 
-        using var frame = new Mat();
-        capture.Read(frame);
+        using Mat frame = new();
+        _ = capture.Read(frame);
         if (frame.IsEmpty)
         {
             throw new Exception("Failed to capture image");
@@ -810,12 +803,12 @@ public partial class MainViewModel : ViewModelBase
 
     private void LoadVideoDevices()
     {
-        var devices = new List<string>();
+        List<string> devices = new();
         // Platform-independent way to get video devices
         if (OperatingSystem.IsWindows())
         {
             // Windows-specific code to get video devices
-            var systemDeviceEnum = Array.Empty<DsDevice>();
+            DsDevice[] systemDeviceEnum = Array.Empty<DsDevice>();
             systemDeviceEnum = DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice);
             devices.AddRange(systemDeviceEnum.Select(device => device.Name));
         }
@@ -824,7 +817,7 @@ public partial class MainViewModel : ViewModelBase
             // Unix-based systems code to get video devices
             for (int i = 0; i < 10; ++i)
             {
-                var devicePath = $"/dev/video{i}";
+                string devicePath = $"/dev/video{i}";
                 if (File.Exists(devicePath))
                 {
                     devices.Add(devicePath);
@@ -843,7 +836,7 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     public void ShowCamera()
     {
-        var cameraWindow = new CameraWindow();
+        CameraWindow cameraWindow = new();
         cameraWindow.Show();
     }
 
@@ -863,13 +856,13 @@ public partial class MainViewModel : ViewModelBase
         {
             // Refresh task configurations
             LoadTaskConfigurations();
-            
+
             // Refresh video devices
             LoadVideoDevices();
-            
+
             // Refresh model items
             ModelItems = OllamaService.GetModels();
-            
+
             // Refresh configuration values
             AutoMode = Convert.ToBoolean(ConfigurationService.GetConfigurationValue("AutoMode", "False"));
             Language = ConfigurationService.GetConfigurationValue("DefaultLanguage", "English") ?? "English";
@@ -895,11 +888,11 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     public async Task OpenConfiguration()
     {
-        var dialog = new ConfigurationDialog()
+        ConfigurationDialog dialog = new()
         {
             DataContext = new ConfigurationDialogViewModel(mainWindow)
         };
-        
+
         if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             await dialog.ShowDialog(desktop.MainWindow!);

@@ -1,4 +1,5 @@
 namespace ClippyAI.Models;
+
 public class Embedding
 {
     public int Id { get; set; }
