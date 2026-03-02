@@ -110,6 +110,8 @@ public class LinuxHotkeyService
             EvDevKeyCode.KEY_LEFTALT => "Alt",
             EvDevKeyCode.KEY_C => "C",
             EvDevKeyCode.KEY_A => "A",
+            EvDevKeyCode.KEY_UP => "Up",
+            EvDevKeyCode.KEY_DOWN => "Down",
             _ => null
         };
 
@@ -179,6 +181,60 @@ public class LinuxHotkeyService
             catch (Exception ex)
             {
                 Console.WriteLine($"Failed to execute CaptureAndAnalyze: {ex.Message}");
+            }
+        }
+        // Check for Ctrl + Alt + Up
+        else if (pressedKeys.Contains("Ctrl") && pressedKeys.Contains("Alt") && pressedKeys.Contains("Up") &&
+                 DateTime.Now.Subtract(keyTimes["Ctrl"]).TotalSeconds < 3 &&
+                 DateTime.Now.Subtract(keyTimes["Alt"]).TotalSeconds < 3 &&
+                 DateTime.Now.Subtract(keyTimes["Up"]).TotalSeconds < 3)
+        {
+            Console.WriteLine("Hotkey Ctrl + Alt + Up pressed");
+            pressedKeys.Remove("Ctrl");
+            pressedKeys.Remove("Alt");
+            pressedKeys.Remove("Up");
+            keyTimes.Remove("Ctrl");
+            keyTimes.Remove("Alt");
+            keyTimes.Remove("Up");
+
+            // execute relay command SelectPreviousTask
+            try
+            {
+                Dispatcher.UIThread.Post(() =>
+                {
+                    DataContext?.SelectPreviousTask();
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to execute SelectPreviousTask: {ex.Message}");
+            }
+        }
+        // Check for Ctrl + Alt + Down
+        else if (pressedKeys.Contains("Ctrl") && pressedKeys.Contains("Alt") && pressedKeys.Contains("Down") &&
+                 DateTime.Now.Subtract(keyTimes["Ctrl"]).TotalSeconds < 3 &&
+                 DateTime.Now.Subtract(keyTimes["Alt"]).TotalSeconds < 3 &&
+                 DateTime.Now.Subtract(keyTimes["Down"]).TotalSeconds < 3)
+        {
+            Console.WriteLine("Hotkey Ctrl + Alt + Down pressed");
+            pressedKeys.Remove("Ctrl");
+            pressedKeys.Remove("Alt");
+            pressedKeys.Remove("Down");
+            keyTimes.Remove("Ctrl");
+            keyTimes.Remove("Alt");
+            keyTimes.Remove("Down");
+
+            // execute relay command SelectNextTask
+            try
+            {
+                Dispatcher.UIThread.Post(() =>
+                {
+                    DataContext?.SelectNextTask();
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to execute SelectNextTask: {ex.Message}");
             }
         }
     }

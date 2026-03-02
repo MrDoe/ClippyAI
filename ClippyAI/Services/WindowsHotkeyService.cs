@@ -17,6 +17,8 @@ namespace ClippyAI.Services
         private const int MOD_NOREPEAT = 0x4000;
         private const int VK_C = 0x43;
         private const int VK_A = 0x41;
+        private const int VK_UP = 0x26;
+        private const int VK_DOWN = 0x28;
         private const int WM_HOTKEY = 0x0312;
 
         private readonly MainWindow _window;
@@ -93,11 +95,13 @@ namespace ClippyAI.Services
                 // block RegisterHotKey — the WndProc hook handles WM_HOTKEY reliably in all cases.
                 bool result1 = RegisterHotKey(_windowHandle, 1, MOD_CONTROL | MOD_ALT | MOD_NOREPEAT, VK_C);
                 bool result2 = RegisterHotKey(_windowHandle, 2, MOD_CONTROL | MOD_ALT | MOD_NOREPEAT, VK_A);
+                bool result3 = RegisterHotKey(_windowHandle, 3, MOD_CONTROL | MOD_ALT | MOD_NOREPEAT, VK_UP);
+                bool result4 = RegisterHotKey(_windowHandle, 4, MOD_CONTROL | MOD_ALT | MOD_NOREPEAT, VK_DOWN);
 
-                if (result1 || result2)
+                if (result1 || result2 || result3 || result4)
                 {
                     _isRegistered = true;
-                    Console.WriteLine($"Windows hotkeys registered: Ctrl+Alt+C={result1}, Ctrl+Alt+A={result2}");
+                    Console.WriteLine($"Windows hotkeys registered: Ctrl+Alt+C={result1}, Ctrl+Alt+A={result2}, Ctrl+Alt+Up={result3}, Ctrl+Alt+Down={result4}");
                 }
                 else
                 {
@@ -138,6 +142,8 @@ namespace ClippyAI.Services
                 {
                     UnregisterHotKey(_windowHandle, 1);
                     UnregisterHotKey(_windowHandle, 2);
+                    UnregisterHotKey(_windowHandle, 3);
+                    UnregisterHotKey(_windowHandle, 4);
                     _isRegistered = false;
                 }
 
@@ -169,6 +175,16 @@ namespace ClippyAI.Services
                         {
                             await _viewModel.CaptureAndAnalyze();
                         });
+                        break;
+
+                    case 3: // Ctrl+Alt+Up
+                        Console.WriteLine("Ctrl+Alt+Up hotkey detected");
+                        await Dispatcher.UIThread.InvokeAsync(() => _viewModel.SelectPreviousTask());
+                        break;
+
+                    case 4: // Ctrl+Alt+Down
+                        Console.WriteLine("Ctrl+Alt+Down hotkey detected");
+                        await Dispatcher.UIThread.InvokeAsync(() => _viewModel.SelectNextTask());
                         break;
                 }
             }

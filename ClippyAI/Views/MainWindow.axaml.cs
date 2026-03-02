@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Timers;
 using Avalonia;
 using Avalonia.Controls;
@@ -222,7 +224,7 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
         }
     }
 
-    public async void ShowNotification(string title, string body, bool showAbortButton = false, bool showViewButton = false)
+    public async void ShowNotification(string title, string body, bool showAbortButton = false, bool showViewButton = false, int timeoutMilliseconds = 0)
     {
         try
         {
@@ -255,8 +257,35 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
                     Body = body
                 };
             }
-            await _notificationManager.ShowNotification(nf);
+
+            DateTimeOffset? expirationTime = null;
+            if (timeoutMilliseconds > 0)
+            {
+                expirationTime = DateTimeOffset.Now.AddMilliseconds(timeoutMilliseconds);
+            }
+
+            await _notificationManager.ShowNotification(nf, expirationTime);
             _lastNotification = nf;
+
+            // Manual hide for Windows as it often ignores short ExpirationTime
+            if (OperatingSystem.IsWindows() && timeoutMilliseconds > 0)
+            {
+                _ = Task.Run(async () =>
+                {
+                    await Task.Delay(timeoutMilliseconds);
+                    await Dispatcher.UIThread.InvokeAsync(async () =>
+                    {
+                        try
+                        {
+                            await _notificationManager.HideNotification(nf);
+                        }
+                        catch (Exception)
+                        {
+                            // Ignore if already hidden or failed
+                        }
+                    });
+                });
+            }
         }
         catch (Exception ex)
         {

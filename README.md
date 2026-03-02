@@ -82,9 +82,22 @@ For secure remote connections to Ollama instances or PostgreSQL databases:
 
 1. Choose a task from the dropdown list.
 2. Copy or cut some text from an application (e.g., email, chat, or document) via [Ctrl]+[C].
-3. Click `Send` or use the keyboard shortcut [Ctrl]+[Alt]+[C] to send the clipboard contents with the task to the local LLM or
+3. Click `Send` or use the keyboard shortcut [Ctrl]+[Alt]+[C] to send the clipboard contents with the task to the local LLM, or
    click `Analyze Image` to send the image in the clipboard or a webcam image to a local vision LLM.
 4. Review or paste ([Ctrl]+[V]) your generated task in the application where you need it.
+
+**Keyboard Shortcuts**
+
+ClippyAI provides convenient global hotkeys that work even when the window is hidden or minimized:
+
+| Hotkey | Action |
+|--------|--------|
+| **Ctrl + Alt + C** | Send clipboard content with selected task to the LLM |
+| **Ctrl + Alt + A** | Capture and analyze image from clipboard or webcam |
+| **Ctrl + Alt + Up** | Select previous task in the task list |
+| **Ctrl + Alt + Down** | Select next task in the task list |
+
+All hotkeys trigger notifications to display the current status or selected task, providing visual feedback even when the main window is hidden.
 
 **Disclaimer**
 

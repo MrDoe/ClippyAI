@@ -48,6 +48,9 @@ public partial class ConfigurationDialog : Window
                     
                     // Reinitialize services (SSH, Embeddings)
                     App.Current?.ReinitializeServices();
+
+                    // Close the dialog to prevent PlatformImpl null errors
+                    Close(true);
                 };
             }
             

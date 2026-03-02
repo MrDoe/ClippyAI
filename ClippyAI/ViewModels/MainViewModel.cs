@@ -650,6 +650,46 @@ public partial class MainViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    public void SelectPreviousTask()
+    {
+        if (TaskConfigurations == null || TaskConfigurations.Count == 0 || SelectedTaskConfiguration == null)
+        {
+            return;
+        }
+
+        int currentIndex = TaskConfigurations.IndexOf(SelectedTaskConfiguration);
+        int newIndex = currentIndex <= 0 ? TaskConfigurations.Count - 1 : currentIndex - 1;
+        
+        SelectedTaskConfiguration = TaskConfigurations[newIndex];
+        
+        // Show notification with selected task
+        if (mainWindow != null)
+        {
+            mainWindow.ShowNotification("ClippyAI", $"Task: {SelectedTaskConfiguration?.TaskName}", false, false, 800);
+        }
+    }
+
+    [RelayCommand]
+    public void SelectNextTask()
+    {
+        if (TaskConfigurations == null || TaskConfigurations.Count == 0 || SelectedTaskConfiguration == null)
+        {
+            return;
+        }
+
+        int currentIndex = TaskConfigurations.IndexOf(SelectedTaskConfiguration);
+        int newIndex = currentIndex >= TaskConfigurations.Count - 1 ? 0 : currentIndex + 1;
+        
+        SelectedTaskConfiguration = TaskConfigurations[newIndex];
+        
+        // Show notification with selected task
+        if (mainWindow != null)
+        {
+            mainWindow.ShowNotification("ClippyAI", $"Task: {SelectedTaskConfiguration?.TaskName}", false, false, 800);
+        8
+    }
+
+    [RelayCommand]
     public async Task ConfigureHotkeyDevice()
     {
         // only for Linux

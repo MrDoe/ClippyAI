@@ -116,7 +116,7 @@ public partial class App : Application
             _sshService = new SSHService();
             _sshService.Connect();
 
-            _mainWindow = new MainWindow { DataContext = new MainViewModel() };
+            _mainWindow = new MainWindow();
             desktop.MainWindow = _mainWindow;
 
             var iconUri = new Uri("avares://ClippyAI/Assets/bulb.ico");
