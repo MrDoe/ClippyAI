@@ -1,8 +1,6 @@
 using Avalonia.Threading;
 using ClippyAI.Views;
 using EvDevSharp;
-using EvDevSharp.Enums;
-using EvDevSharp.EventArgs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

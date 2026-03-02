@@ -570,8 +570,10 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
         if (OperatingSystem.IsWindows())
         {
             // Windows-specific code to get video devices
+#if WINDOWS
             DsDevice[] systemDeviceEnum = DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice);
             devices.AddRange(systemDeviceEnum.Select(device => device.Name));
+#endif
         }
         else if (OperatingSystem.IsLinux() || OperatingSystem.IsMacOS())
         {
