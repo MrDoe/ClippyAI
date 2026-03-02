@@ -5,51 +5,98 @@ name: .NET Publish Release
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
-  build:
+  build-windows:
+    runs-on: windows-latest
 
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        fetch-depth: 0
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 10.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Publish ClickOnce
+      run: dotnet publish ClippyAI/ClippyAI.csproj -c Release -p:PublishProfile=Properties/PublishProfiles/ClickOnceProfile.pubxml -p:PublishDir=publish/
+    - name: Zip ClickOnce output
+      run: Compress-Archive -Path ClippyAI/publish/* -DestinationPath ClippyAI/ClippyAI-ClickOnce.zip
+      shell: pwsh
+    - name: Upload ClickOnce artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: clickonce
+        path: ClippyAI/ClippyAI-ClickOnce.zip
+
+  build-linux:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        fetch-depth: 0
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
-    - name: Cleanup
-      run: dotnet clean
+        dotnet-version: 10.0.x
+    - name: Install dotnet-packaging tools
+      # Packaging.Targets (in Directory.Build.props) provides deb/rpm/tarball MSBuild targets;
+      # the global tools below are the CLI front-ends for those targets.
+      run: |
+        dotnet tool install --global dotnet-deb
+        dotnet tool install --global dotnet-rpm
+        dotnet tool install --global dotnet-tarball
+        echo "${HOME}/.dotnet/tools" >> $GITHUB_PATH
     - name: Restore dependencies
       run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Publish
-      run: dotnet publish -c Release -p:PublishDir=./bin/publish/ -p:PublishProfile=Properties/PublishProfiles/ClickOnceProfile.pubxml --framework "net9.0-windows10.0.17763.0"
-    - name: Upload artifact
+    - name: Build DEB package
+      run: dotnet deb -c Release
+      working-directory: ${{ github.workspace }}/ClippyAI
+    - name: Build RPM package
+      run: dotnet rpm -c Release
+      working-directory: ${{ github.workspace }}/ClippyAI
+    - name: Build tarball
+      run: dotnet tarball -c Release
+      working-directory: ${{ github.workspace }}/ClippyAI
+    - name: Upload Linux artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: ClickOnce Installer
-        path: ./bin/publish/
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        name: linux-packages
+        path: |
+          ClippyAI/*.deb
+          ClippyAI/*.rpm
+          ClippyAI/*.tar.gz
+
+  release:
+    needs: [build-windows, build-linux]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: Download ClickOnce artifact
+      uses: actions/download-artifact@v4
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        draft: false
-        prerelease: false
-    - name: Upload Release Asset
-      id: upload_release_asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        name: clickonce
+        path: ./artifacts
+    - name: Download Linux artifacts
+      uses: actions/download-artifact@v4
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./bin/publish/ClippyAI.exe
-        asset_name: ClippyAI.exe
-        asset_content_type: application/octet-stream
+        name: linux-packages
+        path: ./artifacts
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: ./artifacts/*
+        generate_release_notes: true
