@@ -686,7 +686,7 @@ public partial class MainViewModel : ViewModelBase
         if (mainWindow != null)
         {
             mainWindow.ShowNotification("ClippyAI", $"Task: {SelectedTaskConfiguration?.TaskName}", false, false, 800);
-        8
+        }
     }
 
     [RelayCommand]
