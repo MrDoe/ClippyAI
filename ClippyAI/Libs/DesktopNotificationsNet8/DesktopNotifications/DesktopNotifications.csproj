@@ -27,4 +27,13 @@
 	    <PackagePath>\</PackagePath>
 	  </None>
 	</ItemGroup>
+	
+	<ItemGroup>
+	  <PackageReference Include="Tmds.DBus" Version="0.92.0" />
+	  <PackageReference Include="Tmds.DBus.Protocol" Version="0.92.0" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <PackageReference Update="Packaging.Targets" Version="0.1.232" />
+	</ItemGroup>
 </Project>

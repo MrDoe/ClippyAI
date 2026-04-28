@@ -17,9 +17,8 @@
     Topmost="True"
     ShowInTaskbar="False"
     ExtendClientAreaToDecorationsHint="True"
-    ExtendClientAreaChromeHints="NoChrome"
     ExtendClientAreaTitleBarHeightHint="-1"
-    SystemDecorations="BorderOnly">
+    WindowDecorations="BorderOnly">
 
     <Border x:Name="border" CornerRadius="6" BorderBrush="DimGray" Background="#e9333333" BorderThickness="1"
         DockPanel.Dock="Top">
