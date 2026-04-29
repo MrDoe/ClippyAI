@@ -16,12 +16,15 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-        submodules: recursive
+        submodules: false
         fetch-depth: 0
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 10.0.x
+    - name: Remove stale broken submodule path
+      run: |
+        rm -rf ClippyAI/Libs/evdev-sharp
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
