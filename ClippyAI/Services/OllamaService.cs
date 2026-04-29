@@ -201,16 +201,18 @@ public class OllamaProvider : IAIProvider
         return Task.Run(() => GetModelsAsync(token)).GetAwaiter().GetResult();
     }
 
-    public async Task<string> AnalyzeImage(byte[] image)
+    public async Task<string> AnalyzeImage(byte[] image, TaskConfiguration? taskConfig = null)
     {
         UpdateConfig();
 
         string base64Image = Convert.ToBase64String(image);
+        string modelToUse = taskConfig?.Model ?? visionModel ?? "";
+        string promptToUse = taskConfig?.SystemPrompt ?? visionPrompt ?? "Describe the image.";
 
         OllamaRequest body = new()
         {
-            model = visionModel,
-            prompt = visionPrompt,
+            model = modelToUse,
+            prompt = promptToUse,
             images = [base64Image],
             stream = false
         };
@@ -771,10 +773,11 @@ public static class OllamaService
     /// Analyze an image using the AI API.
     /// </summary>
     /// <param name="image">The image to analyze.</param>
+    /// <param name="taskConfig">Optional task-specific configuration (model and prompt override).</param>
     /// <returns>The analysis result.</returns>
-    public static async Task<string> AnalyzeImage(byte[] image)
+    public static async Task<string> AnalyzeImage(byte[] image, TaskConfiguration? taskConfig = null)
     {
         IAIProvider provider = GetCurrentProvider();
-        return await provider.AnalyzeImage(image);
+        return await provider.AnalyzeImage(image, taskConfig);
     }
 }

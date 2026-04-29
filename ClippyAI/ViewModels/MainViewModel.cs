@@ -175,6 +175,13 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     public async Task AskClippy(CancellationToken token)
     {
+        // If the selected task is an image task, dispatch to image analysis
+        if (SelectedTaskConfiguration?.IsImageTask == true)
+        {
+            await CaptureAndAnalyze();
+            return;
+        }
+
         if (string.IsNullOrEmpty(Input))
         {
             // get text from clipboard
@@ -715,22 +722,32 @@ public partial class MainViewModel : ViewModelBase
         try
         {
             byte[] frame;
+            string imageSource = SelectedTaskConfiguration?.ImageSource ?? "Clipboard";
 
-            // Check if there is an image in the clipboard
-            if (ClipboardImage != null)
-            {
-                using MemoryStream ms = new();
-                ClipboardImage.Save(ms);
-                frame = ms.ToArray();
-            }
-            else
+            if (imageSource == "Webcam")
             {
                 // Capture a frame from the webcam
                 frame = CaptureFrame();
             }
+            else
+            {
+                // Check if there is an image in the clipboard
+                if (ClipboardImage != null)
+                {
+                    using MemoryStream ms = new();
+                    ClipboardImage.Save(ms);
+                    frame = ms.ToArray();
+                }
+                else
+                {
+                    ErrorMessages?.Add(Resources.Resources.NoImageInClipboard);
+                    ShowErrorMessage(Resources.Resources.NoImageInClipboard);
+                    return;
+                }
+            }
 
-            // Send the frame to Ollama for analysis
-            string analysisResult = await OllamaService.AnalyzeImage(frame);
+            // Send the frame to Ollama for analysis using task-specific configuration
+            string analysisResult = await OllamaService.AnalyzeImage(frame, SelectedTaskConfiguration);
 
             // Store the analysis result in the clipboard
             await ClipboardService.SetText(analysisResult);

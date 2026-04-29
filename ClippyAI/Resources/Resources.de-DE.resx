@@ -456,4 +456,19 @@
     <data name="CaptureScreenshot" xml:space="preserve">
         <value>📸 Screenshot aufnehmen</value>
     </data>
+    <data name="NoImageInClipboard" xml:space="preserve">
+        <value>❌ Kein Bild in der Zwischenablage. Kopieren Sie zuerst ein Bild.</value>
+    </data>
+    <data name="IsImageTask" xml:space="preserve">
+        <value>🖼️ Bildanalyse-Aufgabe</value>
+    </data>
+    <data name="ImageSource" xml:space="preserve">
+        <value>📷 Bildquelle:</value>
+    </data>
+    <data name="ImageSourceClipboard" xml:space="preserve">
+        <value>📋 Zwischenablage</value>
+    </data>
+    <data name="ImageSourceWebcam" xml:space="preserve">
+        <value>🎥 Webcam</value>
+    </data>
 </root>

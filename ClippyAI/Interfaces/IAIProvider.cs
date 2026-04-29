@@ -41,8 +41,9 @@ public interface IAIProvider
     /// Analyzes an image if the provider supports vision capabilities.
     /// </summary>
     /// <param name="image">The image bytes to analyze.</param>
+    /// <param name="taskConfig">Optional task-specific configuration (model and prompt override).</param>
     /// <returns>The analysis result.</returns>
-    Task<string> AnalyzeImage(byte[] image);
+    Task<string> AnalyzeImage(byte[] image, TaskConfiguration? taskConfig = null);
 
     /// <summary>
     /// Checks if the provider supports the specified capability.

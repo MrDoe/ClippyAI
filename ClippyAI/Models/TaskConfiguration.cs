@@ -15,6 +15,8 @@ public class TaskConfiguration
     public double RepeatPenalty { get; set; } = 1.1;
     public int NumCtx { get; set; } = 2048;
     public bool IsActive { get; set; } = true;
+    public bool IsImageTask { get; set; } = false;
+    public string ImageSource { get; set; } = "Clipboard";
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime UpdatedAt { get; set; } = DateTime.Now;
 }

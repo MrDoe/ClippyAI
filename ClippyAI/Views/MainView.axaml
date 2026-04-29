@@ -77,11 +77,6 @@
                 HorizontalAlignment="Left" Margin="10 10 0 0"
                 ToolTip.Tip="Stop the current task" />
 
-            <Button Content="{x:Static resources:Resources.AnalyzeImage}"
-                Command="{Binding CaptureAndAnalyzeCommand}"
-                HorizontalAlignment="Left" Margin="10 10 0 0"
-                ToolTip.Tip="Analyze image in the clipboard or from webcam feed" />
-
             <Button Content="{x:Static resources:Resources.ViewCamera}"
                 Command="{Binding ShowCameraCommand}"
                 HorizontalAlignment="Left" Margin="10 10 0 0"

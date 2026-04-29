@@ -137,6 +137,9 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     // Static reference to ModelItems for XAML binding
     public static ObservableCollection<string> AvailableModels { get; set; } = [];
 
+    // Static list of image sources for XAML binding in DataTemplate
+    public static ObservableCollection<string> ImageSources { get; } = ["Clipboard", "Webcam"];
+
     // Task-specific configurations
     [ObservableProperty]
     private ObservableCollection<TaskConfiguration> _taskConfigurations = [];

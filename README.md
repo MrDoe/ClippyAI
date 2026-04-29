@@ -80,11 +80,21 @@ For secure remote connections to Ollama instances or PostgreSQL databases:
 
 **Using ClippyAI**
 
-1. Choose a task from the dropdown list.
-2. Copy or cut some text from an application (e.g., email, chat, or document) via [Ctrl]+[C].
-3. Click `Send` or use the keyboard shortcut [Ctrl]+[Alt]+[C] to send the clipboard contents with the task to the local LLM, or
-   click `Analyze Image` to send the image in the clipboard or a webcam image to a local vision LLM.
-4. Review or paste ([Ctrl]+[V]) your generated task in the application where you need it.
+1. Choose a task from the dropdown list. For image analysis, select an image task (tasks with "Image Analysis Task" enabled).
+2. For text tasks: Copy or cut some text from an application (e.g., email, chat, or document) via [Ctrl]+[C].
+   For image tasks: Either copy an image to the clipboard (for "Clipboard" source tasks) or ensure your webcam is connected (for "Webcam" source tasks).
+3. Click `Send` or use the keyboard shortcut [Ctrl]+[Alt]+[C] to execute the selected task.
+4. Review or paste ([Ctrl]+[V]) your generated result in the application where you need it.
+
+**Image Analysis Tasks**
+
+Image analysis is now integrated into the task system. You can create dedicated image analysis tasks in the Configuration dialog under the **Tasks** tab:
+
+- Enable "Image Analysis Task" checkbox for a task to make it an image analysis task.
+- Set "Image Source" to **Clipboard** (use an image from clipboard) or **Webcam** (capture from webcam).
+- Configure the model and system prompt (vision prompt) for each image task independently.
+
+Default image tasks "Analyze Clipboard Image" and "Analyze Webcam Image" are provided out of the box.
 
 **Keyboard Shortcuts**
 
@@ -92,8 +102,7 @@ ClippyAI provides convenient global hotkeys that work even when the window is hi
 
 | Hotkey | Action |
 |--------|--------|
-| **Ctrl + Alt + C** | Send clipboard content with selected task to the LLM |
-| **Ctrl + Alt + A** | Capture and analyze image from clipboard or webcam |
+| **Ctrl + Alt + C** | Execute the selected task (text or image analysis) |
 | **Ctrl + Alt + Up** | Select previous task in the task list |
 | **Ctrl + Alt + Down** | Select next task in the task list |
 

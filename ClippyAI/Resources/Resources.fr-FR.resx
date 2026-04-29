@@ -458,4 +458,19 @@
     <data name="CaptureScreenshot" xml:space="preserve">
         <value>📸 Capturer l'Écran</value>
     </data>
+    <data name="NoImageInClipboard" xml:space="preserve">
+        <value>❌ Aucune image dans le presse-papiers. Copiez d'abord une image.</value>
+    </data>
+    <data name="IsImageTask" xml:space="preserve">
+        <value>🖼️ Tâche d'Analyse d'Image</value>
+    </data>
+    <data name="ImageSource" xml:space="preserve">
+        <value>📷 Source d'Image :</value>
+    </data>
+    <data name="ImageSourceClipboard" xml:space="preserve">
+        <value>📋 Presse-papiers</value>
+    </data>
+    <data name="ImageSourceWebcam" xml:space="preserve">
+        <value>🎥 Webcam</value>
+    </data>
 </root>

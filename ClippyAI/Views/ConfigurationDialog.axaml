@@ -315,6 +315,19 @@
                                                           Margin="0,0,0,10" Width="300"
                                                           ToolTip.Tip="Select the AI model for this task"/>
                                                 
+                                                <CheckBox IsChecked="{Binding IsImageTask}"
+                                                          Content="{x:Static resources:Resources.IsImageTask}"
+                                                          Margin="0,0,0,10"
+                                                          ToolTip.Tip="Enable to use this task for image analysis instead of text"/>
+                                                
+                                                <Label Content="{x:Static resources:Resources.ImageSource}"
+                                                       IsVisible="{Binding IsImageTask}"/>
+                                                <ComboBox ItemsSource="{x:Static vm:ConfigurationDialogViewModel.ImageSources}"
+                                                          SelectedItem="{Binding ImageSource}"
+                                                          Margin="0,0,0,10" Width="200"
+                                                          IsVisible="{Binding IsImageTask}"
+                                                          ToolTip.Tip="Select the image source: Clipboard or Webcam"/>
+                                                
                                                 <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
                                                     <Label Grid.Row="0" Grid.Column="0" Content="{x:Static resources:Resources.Temperature}"/>
                                                     <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">

@@ -459,4 +459,19 @@
     <data name="CaptureScreenshot" xml:space="preserve">
         <value>📸 Capturar Pantalla</value>
     </data>
+    <data name="NoImageInClipboard" xml:space="preserve">
+        <value>❌ No se encontró imagen en el portapapeles. Copie primero una imagen.</value>
+    </data>
+    <data name="IsImageTask" xml:space="preserve">
+        <value>🖼️ Tarea de Análisis de Imagen</value>
+    </data>
+    <data name="ImageSource" xml:space="preserve">
+        <value>📷 Fuente de Imagen:</value>
+    </data>
+    <data name="ImageSourceClipboard" xml:space="preserve">
+        <value>📋 Portapapeles</value>
+    </data>
+    <data name="ImageSourceWebcam" xml:space="preserve">
+        <value>🎥 Webcam</value>
+    </data>
 </root>
