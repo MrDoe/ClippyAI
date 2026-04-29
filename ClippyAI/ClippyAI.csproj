@@ -64,6 +64,7 @@
     <PackageReference Include="ReactiveUI" Version="23.2.19" />
     <PackageReference Include="ReactiveUI.Avalonia" Version="12.0.1" />
     <PackageReference Include="SSH.NET" Version="2025.1.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.0" />
     <PackageReference Include="Tmds.DBus" Version="0.92.0" />
     <PackageReference Include="Tmds.DBus.Protocol" Version="0.92.0" />
   </ItemGroup>
