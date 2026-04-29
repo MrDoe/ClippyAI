@@ -4,6 +4,9 @@ namespace ClippyAI.Models;
 
 public class TaskConfiguration
 {
+    public const string ImageSourceClipboard = "Clipboard";
+    public const string ImageSourceWebcam = "Webcam";
+
     public int Id { get; set; }
     public string TaskName { get; set; } = string.Empty;
     public string SystemPrompt { get; set; } = string.Empty;
@@ -16,7 +19,7 @@ public class TaskConfiguration
     public int NumCtx { get; set; } = 2048;
     public bool IsActive { get; set; } = true;
     public bool IsImageTask { get; set; } = false;
-    public string ImageSource { get; set; } = "Clipboard";
+    public string ImageSource { get; set; } = ImageSourceClipboard;
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime UpdatedAt { get; set; } = DateTime.Now;
 }

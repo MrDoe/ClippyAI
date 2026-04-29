@@ -98,13 +98,16 @@ public static class ConfigurationService
 
     private static void MigrateTaskConfigurationsSchema(SqliteConnection connection)
     {
+        // SQLite error code 1 (SQLITE_ERROR) is returned for "duplicate column name"
+        const int SqliteDuplicateColumnError = 1;
+
         // Add IsImageTask column if it doesn't exist
         try
         {
             using SqliteCommand cmd = new("ALTER TABLE TaskConfigurations ADD COLUMN IsImageTask INTEGER NOT NULL DEFAULT 0", connection);
             cmd.ExecuteNonQuery();
         }
-        catch (SqliteException)
+        catch (SqliteException ex) when (ex.SqliteErrorCode == SqliteDuplicateColumnError)
         {
             // Column already exists, ignore
         }
@@ -115,7 +118,7 @@ public static class ConfigurationService
             using SqliteCommand cmd = new("ALTER TABLE TaskConfigurations ADD COLUMN ImageSource TEXT NOT NULL DEFAULT 'Clipboard'", connection);
             cmd.ExecuteNonQuery();
         }
-        catch (SqliteException)
+        catch (SqliteException ex) when (ex.SqliteErrorCode == SqliteDuplicateColumnError)
         {
             // Column already exists, ignore
         }
@@ -166,7 +169,7 @@ public static class ConfigurationService
                     Temperature = 0.5,
                     MaxLength = 2048,
                     IsImageTask = true,
-                    ImageSource = "Clipboard"
+                    ImageSource = TaskConfiguration.ImageSourceClipboard
                 },
                 new TaskConfiguration
                 {
@@ -176,7 +179,7 @@ public static class ConfigurationService
                     Temperature = 0.5,
                     MaxLength = 2048,
                     IsImageTask = true,
-                    ImageSource = "Webcam"
+                    ImageSource = TaskConfiguration.ImageSourceWebcam
                 }
             };
 
@@ -220,7 +223,7 @@ public static class ConfigurationService
                 NumCtx = reader.GetInt32(9),
                 IsActive = reader.GetInt32(10) == 1,
                 IsImageTask = reader.GetInt32(11) == 1,
-                ImageSource = reader.IsDBNull(12) ? "Clipboard" : reader.GetString(12),
+                ImageSource = reader.IsDBNull(12) ? TaskConfiguration.ImageSourceClipboard : reader.GetString(12),
                 CreatedAt = DateTime.Parse(reader.GetString(13)),
                 UpdatedAt = DateTime.Parse(reader.GetString(14))
             });
@@ -260,7 +263,7 @@ public static class ConfigurationService
                 NumCtx = reader.GetInt32(9),
                 IsActive = reader.GetInt32(10) == 1,
                 IsImageTask = reader.GetInt32(11) == 1,
-                ImageSource = reader.IsDBNull(12) ? "Clipboard" : reader.GetString(12),
+                ImageSource = reader.IsDBNull(12) ? TaskConfiguration.ImageSourceClipboard : reader.GetString(12),
                 CreatedAt = DateTime.Parse(reader.GetString(13)),
                 UpdatedAt = DateTime.Parse(reader.GetString(14))
             }
@@ -732,7 +735,7 @@ public static class ConfigurationService
                 NumCtx = 2048,
                 IsActive = true,
                 IsImageTask = true,
-                ImageSource = "Clipboard",
+                ImageSource = TaskConfiguration.ImageSourceClipboard,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
             },
@@ -749,7 +752,7 @@ public static class ConfigurationService
                 NumCtx = 2048,
                 IsActive = true,
                 IsImageTask = true,
-                ImageSource = "Webcam",
+                ImageSource = TaskConfiguration.ImageSourceWebcam,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
             }

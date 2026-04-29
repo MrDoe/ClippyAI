@@ -722,9 +722,9 @@ public partial class MainViewModel : ViewModelBase
         try
         {
             byte[] frame;
-            string imageSource = SelectedTaskConfiguration?.ImageSource ?? "Clipboard";
+            string imageSource = SelectedTaskConfiguration?.ImageSource ?? TaskConfiguration.ImageSourceClipboard;
 
-            if (imageSource == "Webcam")
+            if (imageSource == TaskConfiguration.ImageSourceWebcam)
             {
                 // Capture a frame from the webcam
                 frame = CaptureFrame();
