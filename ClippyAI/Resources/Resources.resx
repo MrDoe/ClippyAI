@@ -194,10 +194,10 @@
         <value>🖼️ Analyze Image</value>
     </data>
     <data name="Show" xml:space="preserve">
-        <value>👁️ Show</value>
+        <value>Show</value>
     </data>
     <data name="Exit" xml:space="preserve">
-        <value>🚪 Exit</value>
+        <value>Exit</value>
     </data>
     <data name="ModelPullCompleted" xml:space="preserve">
         <value>✅ Model pull completed.</value>
