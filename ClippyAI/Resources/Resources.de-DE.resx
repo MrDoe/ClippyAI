@@ -289,7 +289,7 @@
         <value>⚠️ Keine Modelle verfügbar</value>
     </data>
     <data name="ViewCamera" xml:space="preserve">
-        <value>📷 Webcam-Vorschau</value>
+        <value>📷 Webcam</value>
     </data>
     <data name="TestConnection" xml:space="preserve">
         <value>🔗 Verbindung testen</value>
@@ -361,16 +361,10 @@
         <value># Datensätze:</value>
     </data>
     <data name="VisionSettings" xml:space="preserve">
-        <value>👁️ Vision-Einstellungen</value>
-    </data>
-    <data name="VisionModel" xml:space="preserve">
-        <value>👁️ Vision-Modell:</value>
+        <value>📷 Kamera</value>
     </data>
     <data name="VideoDevice" xml:space="preserve">
         <value>📹 Videogerät:</value>
-    </data>
-    <data name="VisionPrompt" xml:space="preserve">
-        <value>💬 Vision-Prompt:</value>
     </data>
     <data name="SystemSettings" xml:space="preserve">
         <value>⚙️ Systemeinstellungen</value>
@@ -382,7 +376,7 @@
         <value>📝 Aufgabenspezifische Konfigurationen</value>
     </data>
     <data name="Tasks" xml:space="preserve">
-        <value>📝 Aufgaben:</value>
+        <value>📝 Aufgaben</value>
     </data>
     <data name="NewTaskName" xml:space="preserve">
         <value>✏️ Neue Aufgabe:</value>
@@ -397,10 +391,10 @@
         <value>⚙️ Aufgabenkonfiguration</value>
     </data>
     <data name="TaskName" xml:space="preserve">
-        <value>📝 Aufgabenname:</value>
+        <value>📝 Bezeichnung:</value>
     </data>
     <data name="Prompt" xml:space="preserve">
-        <value>Aufforderung:</value>
+        <value>💬 Systemprompt:</value>
     </data>
     <data name="Temperature" xml:space="preserve">
         <value>Temperatur:</value>
@@ -439,7 +433,7 @@
         <value>📊 Einbettungen</value>
     </data>
     <data name="VisionTab" xml:space="preserve">
-        <value>👁️ Vision</value>
+        <value>📷 Kamera</value>
     </data>
     <data name="SystemTab" xml:space="preserve">
         <value>⚙️ System</value>

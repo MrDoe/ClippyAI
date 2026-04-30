@@ -183,10 +183,10 @@ public class OpenAIService : IAIProvider
         // Use task-specific model/prompt if provided, otherwise fall back to configuration
         string visionModel = !string.IsNullOrEmpty(taskConfig?.Model)
             ? taskConfig!.Model
-            : ConfigurationService.GetConfigurationValue("OpenAIVisionModel", "gpt-4-vision-preview");
+            : "";
         string visionPrompt = !string.IsNullOrEmpty(taskConfig?.SystemPrompt)
             ? taskConfig!.SystemPrompt
-            : ConfigurationService.GetConfigurationValue("VisionPrompt", "Describe the image.");
+            : "Describe the image.";
 
         // Convert image to base64
         string base64Image = Convert.ToBase64String(image);

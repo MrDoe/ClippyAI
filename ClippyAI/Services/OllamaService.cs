@@ -31,8 +31,6 @@ public class OllamaProvider : IAIProvider
 
     private static string? url = ConfigurationService.GetConfigurationValue("OllamaUrl", "http://localhost:11434/api");
     private static string? system = ConfigurationService.GetConfigurationValue("System");
-    private static string? visionModel = ConfigurationService.GetConfigurationValue("VisionModel");
-    private static string? visionPrompt = ConfigurationService.GetConfigurationValue("VisionPrompt");
 
     public void UpdateConfig()
     {
@@ -70,8 +68,6 @@ public class OllamaProvider : IAIProvider
         }
 
         system = ConfigurationService.GetConfigurationValue("System");
-        visionModel = ConfigurationService.GetConfigurationValue("VisionModel");
-        visionPrompt = ConfigurationService.GetConfigurationValue("VisionPrompt");
     }
 
     public async Task<string?> SendRequestWithConfig(string input, string task, string model,
@@ -206,8 +202,8 @@ public class OllamaProvider : IAIProvider
         UpdateConfig();
 
         string base64Image = Convert.ToBase64String(image);
-        string modelToUse = taskConfig?.Model ?? visionModel ?? "";
-        string promptToUse = taskConfig?.SystemPrompt ?? visionPrompt ?? "Describe the image.";
+        string modelToUse = taskConfig?.Model ?? "";
+        string promptToUse = taskConfig?.SystemPrompt ?? "Describe the image.";
 
         OllamaRequest body = new()
         {

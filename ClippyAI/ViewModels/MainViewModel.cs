@@ -104,12 +104,6 @@ public partial class MainViewModel : ViewModelBase
     private string _videoDevice = ConfigurationService.GetConfigurationValue("VideoDevice") ?? "";
 
     [ObservableProperty]
-    private string _visionModel = ConfigurationService.GetConfigurationValue("VisionModel", "llama3.2-vision") ?? "llama3.2-vision";
-
-    [ObservableProperty]
-    private string _visionPrompt = ConfigurationService.GetConfigurationValue("VisionPrompt", "Detect what you can find in the image. Use markdown to format the text.") ?? "Detect what you can find in the image. Use markdown to format the text.";
-
-    [ObservableProperty]
     private ObservableCollection<string> _videoDevices = [];
 
     [ObservableProperty]
@@ -896,8 +890,6 @@ public partial class MainViewModel : ViewModelBase
             UseEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings") == "True";
             StoreAllResponses = ConfigurationService.GetConfigurationValue("StoreAllResponses") == "True";
             VideoDevice = ConfigurationService.GetConfigurationValue("VideoDevice") ?? "";
-            VisionModel = ConfigurationService.GetConfigurationValue("VisionModel", "llama3.2-vision") ?? "llama3.2-vision";
-            VisionPrompt = ConfigurationService.GetConfigurationValue("VisionPrompt", "Detect what you can find in the image. Use markdown to format the text.") ?? "Detect what you can find in the image. Use markdown to format the text.";
             Threshold = float.Parse(ConfigurationService.GetConfigurationValue("Threshold", "0.2"));
 
             System.Diagnostics.Debug.WriteLine("Configurations refreshed successfully");

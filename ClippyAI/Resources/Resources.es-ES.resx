@@ -292,7 +292,7 @@
         <value>⚠️ No hay modelos disponibles</value>
     </data>
     <data name="ViewCamera" xml:space="preserve">
-        <value>📷 Ver cámara</value>
+        <value>📷 Webcam</value>
     </data>
     <data name="TestConnection" xml:space="preserve">
         <value>🔗 Probar Conexión</value>
@@ -364,16 +364,10 @@
         <value>📊 # Incrustaciones:</value>
     </data>
     <data name="VisionSettings" xml:space="preserve">
-        <value>👁️ Configuración de Visión</value>
-    </data>
-    <data name="VisionModel" xml:space="preserve">
-        <value>👁️ Modelo de Visión:</value>
+        <value>📷 Configuración de Cámara</value>
     </data>
     <data name="VideoDevice" xml:space="preserve">
         <value>📹 Dispositivo de Video:</value>
-    </data>
-    <data name="VisionPrompt" xml:space="preserve">
-        <value>💬 Indicación de Visión:</value>
     </data>
     <data name="SystemSettings" xml:space="preserve">
         <value>⚙️ Configuración del Sistema</value>
@@ -442,7 +436,7 @@
         <value>📊 Incrustaciones</value>
     </data>
     <data name="VisionTab" xml:space="preserve">
-        <value>👁️ Visión</value>
+        <value>📷 Cámara</value>
     </data>
     <data name="SystemTab" xml:space="preserve">
         <value>⚙️ Sistema</value>

@@ -22,10 +22,10 @@
         <TabControl Grid.Row="0" Margin="10">
             
             <!-- General Settings Tab -->
-            <TabItem Header="{x:Static resources:Resources.General}" FontSize="14"> 
+            <TabItem Header="{x:Static resources:Resources.General}" FontSize="12"> 
                 <ScrollViewer>
                     <StackPanel Margin="10">
-                        <Label Content="{x:Static resources:Resources.AIProviderSettings}" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                        <Label Content="{x:Static resources:Resources.AIProviderSettings}" FontSize="13" FontWeight="Bold" Margin="0,0,0,10"/>
                         
                         <Label Content="{x:Static resources:Resources.AIProvider}"/>
                         <ComboBox ItemsSource="{Binding AiProviderItems}" SelectedItem="{Binding AiProvider}" 
@@ -55,14 +55,14 @@
                         </Border>
                         
                         <!-- Ollama Settings -->
-                        <Label Content="{x:Static resources:Resources.OllamaSettings}" FontSize="14" FontWeight="Bold" Margin="0,0,0,5"/>
+                        <Label Content="{x:Static resources:Resources.OllamaSettings}" FontSize="13" FontWeight="Bold" Margin="0,0,0,5"/>
                         
                         <Label Content="{x:Static resources:Resources.OllamaUrl}"/>
                         <TextBox Text="{Binding OllamaUrl}" Margin="0,0,0,10" 
                                  ToolTip.Tip="URL for Ollama API"/>
                         
                         <!-- OpenAI Settings -->
-                        <Label Content="{x:Static resources:Resources.OpenAISettings}" FontSize="14" FontWeight="Bold" Margin="0,10,0,5"/>
+                        <Label Content="{x:Static resources:Resources.OpenAISettings}" FontSize="13" FontWeight="Bold" Margin="0,10,0,5"/>
                         
                         <Label Content="{x:Static resources:Resources.OpenAIApiKey}"/>
                         <TextBox Text="{Binding OpenAIApiKey}" Margin="0,0,0,10" 
@@ -72,7 +72,7 @@
                         <TextBox Text="{Binding OpenAIBaseUrl}" Margin="0,0,0,10" 
                                  ToolTip.Tip="OpenAI API base URL (default: https://api.openai.com/v1)"/>
 
-                        <Label Content="{x:Static resources:Resources.DefaultModel}" FontSize="14" FontWeight="Bold" Margin="0,0,0,5"/>
+                        <Label Content="{x:Static resources:Resources.DefaultModel}" FontSize="13" FontWeight="Bold" Margin="0,0,0,5"/>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                             <ComboBox ItemsSource="{Binding ModelItems}" SelectedItem="{Binding OllamaModel}" 
                                       Width="300" ToolTip.Tip="Select a model from the list"/>
@@ -104,10 +104,10 @@
             </TabItem>
 
             <!-- Embeddings Tab -->
-            <TabItem Header="{x:Static resources:Resources.Embeddings}" FontSize="14">
+            <TabItem Header="{x:Static resources:Resources.Embeddings}" FontSize="13">
                 <ScrollViewer>
                     <StackPanel Margin="10">
-                        <Label Content="{x:Static resources:Resources.VectorDatabaseSettings}" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                        <Label Content="{x:Static resources:Resources.VectorDatabaseSettings}" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>
                         
                         <CheckBox IsChecked="{Binding UseEmbeddings}" Content="{x:Static resources:Resources.UseEmbeddings}" Margin="0,0,0,10"
                                   ToolTip.Tip="Enable vector database for faster response retrieval"/>
@@ -144,8 +144,8 @@
                         
                         <!-- Embeddings Count -->
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Label Content="{x:Static resources:Resources.EmbeddingsCount}" FontSize="14" VerticalAlignment="Center"/>
-                            <Label Content="{Binding EmbeddingsCount}" FontSize="14" VerticalAlignment="Center"
+                            <Label Content="{x:Static resources:Resources.EmbeddingsCount}" FontSize="13" VerticalAlignment="Center"/>
+                            <Label Content="{Binding EmbeddingsCount}" FontSize="13" VerticalAlignment="Center"
                                    ToolTip.Tip="Displays the number of embeddings"/>
                         </StackPanel>
                     </StackPanel>
@@ -153,17 +153,10 @@
             </TabItem>
 
             <!-- Vision Tab -->
-            <TabItem Header="{x:Static resources:Resources.VisionTab}" FontSize="14">
+            <TabItem Header="{x:Static resources:Resources.VisionTab}" FontSize="13">
                 <ScrollViewer>
                     <StackPanel Margin="10">
-                        <Label Content="{x:Static resources:Resources.VisionSettings}" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
-                        
-                        <Label Content="{x:Static resources:Resources.VisionModel}"/>
-                        <ComboBox ItemsSource="{Binding AvailableModels}" 
-                                    SelectedItem="{Binding VisionModel}" 
-                                    Margin="0,0,0,10" Width="300"
-                                    ToolTip.Tip="Select the AI model for this task"/>
-                        
+                        <Label Content="{x:Static resources:Resources.VisionSettings}" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>                        
                         <Label Content="{x:Static resources:Resources.VideoDevice}"/>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                             <ComboBox ItemsSource="{Binding VideoDevices}" SelectedItem="{Binding VideoDevice}" 
@@ -173,20 +166,15 @@
                             <Button Content="{x:Static resources:Resources.ViewCamera}" Command="{Binding ShowCamera}"
                                     Margin="4,0,0,0" ToolTip.Tip="Preview Video Output"/>
                         </StackPanel>
-                        
-                        <Label Content="{x:Static resources:Resources.VisionPrompt}"/>
-                        <TextBox Text="{Binding VisionPrompt}" Height="300" TextWrapping="Wrap"
-                                 AcceptsReturn="True" Margin="0,0,0,10"
-                                 ToolTip.Tip="Default prompt for image analysis"/>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
 
             <!-- System Tab -->
-            <TabItem Header="{x:Static resources:Resources.SystemTab}" FontSize="14">
+            <TabItem Header="{x:Static resources:Resources.SystemTab}" FontSize="13">
                 <ScrollViewer>
                     <StackPanel Margin="10">
-                        <Label Content="{x:Static resources:Resources.SystemSettings}" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                        <Label Content="{x:Static resources:Resources.SystemSettings}" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>
                         
                         <Label Content="{x:Static resources:Resources.LinuxKeyboardDevice}"/>
                         <TextBox Text="{Binding LinuxKeyboardDevice}" Margin="0,0,0,10"
@@ -201,10 +189,10 @@
             </TabItem>
 
             <!-- SSH Tab -->
-            <TabItem Header="{x:Static resources:Resources.SSH}" FontSize="14">
+            <TabItem Header="{x:Static resources:Resources.SSH}" FontSize="13">
                 <ScrollViewer>
                     <StackPanel Margin="10">
-                        <Label Content="{x:Static resources:Resources.SSHTunnelSettings}" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                        <Label Content="{x:Static resources:Resources.SSHTunnelSettings}" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>
                         
                         <CheckBox IsChecked="{Binding UseSSH}" Content="{x:Static resources:Resources.EnableSSHTunneling}" Margin="0,0,0,10"
                                   ToolTip.Tip="Enable SSH tunneling for secure connections"/>
@@ -260,11 +248,11 @@
             </TabItem>
 
             <!-- Task Configurations Tab -->
-            <TabItem Header="{x:Static resources:Resources.TasksTab}" FontSize="14">
+            <TabItem Header="{x:Static resources:Resources.TasksTab}" FontSize="13">
                 <Grid RowDefinitions="Auto,*,Auto" Margin="10">
-                    <!-- Header -->
-                    <Label Grid.Row="0" Content="{x:Static resources:Resources.TaskSpecificConfigurations}" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
-                    
+                    <!-- Header 
+                    <Label Grid.Row="0" Content="{x:Static resources:Resources.TaskSpecificConfigurations}" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>
+                    -->
                     <!-- Main content -->
                     <Grid Grid.Row="1" ColumnDefinitions="250,*">
                         <!-- Left panel - Task list -->
@@ -284,11 +272,11 @@
                             <Label Content="{x:Static resources:Resources.NewTaskName}"/>
                             <TextBox Text="{Binding NewTaskName}" Margin="0,0,0,5"/>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                <Button Content="{x:Static resources:Resources.Add}" Command="{Binding AddNewTaskCommand}" Margin="0,0,5,0" Width="60"/>
-                                <Button Content="{x:Static resources:Resources.Delete}" Command="{Binding DeleteTaskCommand}" Width="60" Margin="0,0,5,0"/>
+                                <Button Content="{x:Static resources:Resources.Add}" Command="{Binding AddNewTaskCommand}" Margin="0,0,5,0" Width="40" FontSize="12" />
+                                <Button Content="{x:Static resources:Resources.Delete}" Command="{Binding DeleteTaskCommand}" Width="80" Margin="0,0,5,0" FontSize="12"/>
                                 <Button Content="{x:Static resources:Resources.RestoreDefault}"
                                         Command="{Binding RestoreDefaultTasksCommand}" HorizontalAlignment="Left" Margin="0,0,5,0"
-                                        Width="120" ToolTip.Tip="Restore the default task configurations"/>
+                                        Width="120" ToolTip.Tip="Restore the default task configurations" FontSize="12"/>
                             </StackPanel>
                         </StackPanel>
                         
