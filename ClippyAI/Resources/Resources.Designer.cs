@@ -508,7 +508,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🚪 Exit.
+        ///   Looks up a localized string similar to Exit.
         /// </summary>
         public static string Exit {
             get {
@@ -1183,7 +1183,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 👁️ Show.
+        ///   Looks up a localized string similar to Show.
         /// </summary>
         public static string Show {
             get {
