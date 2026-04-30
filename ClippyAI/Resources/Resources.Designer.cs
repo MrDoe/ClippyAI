@@ -121,7 +121,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Automatically run the default task when the hotkey is pressed.
+        ///   Looks up a localized string similar to Enable automatic mode for clipboard processing.
         /// </summary>
         public static string AutoModeDescription {
             get {
@@ -337,7 +337,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select the default language for responses.
+        ///   Looks up a localized string similar to The default language for the application.
         /// </summary>
         public static string DefaultLanguageDescription {
             get {
@@ -364,7 +364,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select the default task to run in auto mode.
+        ///   Looks up a localized string similar to The default task for new requests.
         /// </summary>
         public static string DefaultTaskDescription {
             get {
@@ -391,7 +391,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Delete the selected model (Ollama only).
+        ///   Looks up a localized string similar to Delete the selected model.
         /// </summary>
         public static string DeleteModelDescription {
             get {
@@ -778,7 +778,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to URL for the local Ollama API (default: http://localhost:11434).
+        ///   Looks up a localized string similar to URL of the Ollama server.
         /// </summary>
         public static string OllamaUrlDescription {
             get {
@@ -796,7 +796,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your OpenAI API key.
+        ///   Looks up a localized string similar to Your OpenAI API key for authentication.
         /// </summary>
         public static string OpenAIApiKeyDescription {
             get {
@@ -814,7 +814,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to OpenAI API base URL (default: https://api.openai.com/v1).
+        ///   Looks up a localized string similar to Custom base URL for OpenAI API (optional).
         /// </summary>
         public static string OpenAIBaseUrlDescription {
             get {
@@ -994,7 +994,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pull / add a new model (Ollama only).
+        ///   Looks up a localized string similar to Download a new model from the server.
         /// </summary>
         public static string PullModelDescription {
             get {
@@ -1021,7 +1021,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Refresh the model list.
+        ///   Looks up a localized string similar to Refresh the list of available models.
         /// </summary>
         public static string RefreshModelListDescription {
             get {
@@ -1156,7 +1156,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select a model from the list.
+        ///   Looks up a localized string similar to Select the AI model to use.
         /// </summary>
         public static string SelectModelDescription {
             get {
@@ -1309,7 +1309,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Global system prompt prepended to every AI request.
+        ///   Looks up a localized string similar to The system prompt that defines AI behavior.
         /// </summary>
         public static string SystemPromptDescription {
             get {
@@ -1471,7 +1471,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Test the connection to the configured AI provider.
+        ///   Looks up a localized string similar to Test the connection to the selected AI provider.
         /// </summary>
         public static string TestConnectionDescription {
             get {
