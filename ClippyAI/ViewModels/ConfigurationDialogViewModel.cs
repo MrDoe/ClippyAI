@@ -428,8 +428,10 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
 
         try
         {
+#if LINUX
             LinuxHotkeyService hotkeyService = new(_mainWindow);
             await hotkeyService.SetupHotkeyDevice();
+#endif
             LinuxKeyboardDevice = ConfigurationService.GetConfigurationValue("LinuxKeyboardDevice", "");
         }
         catch (Exception ex)

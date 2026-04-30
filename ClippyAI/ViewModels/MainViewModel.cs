@@ -31,7 +31,9 @@ public partial class MainViewModel : ViewModelBase
 
     public MainWindow? mainWindow;
     private CancellationTokenSource _askClippyCts = new();
+#if LINUX
     private LinuxHotkeyService? hotkeyService;
+#endif
     private bool initialized = false;
 
     [ObservableProperty]
@@ -695,8 +697,10 @@ public partial class MainViewModel : ViewModelBase
             ErrorMessages?.Add("This feature is only supported on Linux.");
             return;
         }
+#if LINUX
         hotkeyService = new LinuxHotkeyService(mainWindow!);
         await hotkeyService.SetupHotkeyDevice();
+#endif
     }
 
     [RelayCommand]

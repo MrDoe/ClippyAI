@@ -106,4 +106,10 @@
     <PostInstallScript>chmod 777 /usr/share/ClippyAI
 chmod 666 /usr/share/ClippyAI/ClippyAI.dll.config</PostInstallScript>  
   </PropertyGroup>
+  <ItemGroup Condition="'$(OS)' == 'Windows_NT'">
+    <Compile Remove="Services\LinuxHotkeyService.cs" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(OS)' != 'Windows_NT'">
+    <Compile Remove="Services\WindowsHotkeyService.cs" />
+  </ItemGroup>
 </Project>
