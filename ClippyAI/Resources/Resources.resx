@@ -68,7 +68,7 @@
         <value>📝 Task</value>
     </data>
     <data name="TaskLabel" xml:space="preserve">
-        <value>❓ What I should do for you:</value>
+        <value>What I should do for you:</value>
     </data>
     <data name="TaskStart" xml:space="preserve">
         <value>▶️ Execute</value>
@@ -155,10 +155,7 @@
         <value>❌ Cancel</value>
     </data>
     <data name="ConfirmClose" xml:space="preserve">
-        <value>❓ Do you really want to close ClippyAI?</value>
-    </data>
-    <data name="ConfirmDelete" xml:space="preserve">
-        <value>⚠️ Do you really want to delete the selected model?</value>
+        <value>Do you really want to close ClippyAI?</value>
     </data>
     <data name="CloseApplication" xml:space="preserve">
         <value>🚪 Close ClippyAI</value>
@@ -185,7 +182,7 @@
         <value>📊 Threshold:</value>
     </data>
     <data name="UseEmbeddings" xml:space="preserve">
-        <value>🧬 Use Embeddings</value>
+        <value>Use Embeddings</value>
     </data>
     <data name="PostgreSqlConnection" xml:space="preserve">
         <value>🗄️ PostgreSQL Connection:</value>
@@ -320,7 +317,7 @@
         <value>📊 Vector Database Settings</value>
     </data>
     <data name="StoreAllResponses" xml:space="preserve">
-        <value>💾 Store All Responses</value>
+        <value>Store All Responses</value>
     </data>
     <data name="PostgreSQLConnectionString" xml:space="preserve">
         <value>🗄️ PostgreSQL Connection String:</value>
@@ -444,5 +441,194 @@
     </data>
     <data name="ImageSourceWebcam" xml:space="preserve">
         <value>🎥 Webcam</value>
+    </data>
+    <data name="AIProviderDescription" xml:space="preserve">
+        <value>Select the AI provider (Ollama or OpenAI)</value>
+    </data>
+    <data name="TestConnectionDescription" xml:space="preserve">
+        <value>Test the connection to the configured AI provider</value>
+    </data>
+    <data name="OllamaUrlDescription" xml:space="preserve">
+        <value>URL for the local Ollama API (default: http://localhost:11434)</value>
+    </data>
+    <data name="OpenAIApiKeyDescription" xml:space="preserve">
+        <value>Your OpenAI API key</value>
+    </data>
+    <data name="OpenAIBaseUrlDescription" xml:space="preserve">
+        <value>OpenAI API base URL (default: https://api.openai.com/v1)</value>
+    </data>
+    <data name="SelectModelDescription" xml:space="preserve">
+        <value>Select a model from the list</value>
+    </data>
+    <data name="PullModelDescription" xml:space="preserve">
+        <value>Pull / add a new model (Ollama only)</value>
+    </data>
+    <data name="DeleteModelDescription" xml:space="preserve">
+        <value>Delete the selected model (Ollama only)</value>
+    </data>
+    <data name="RefreshModelListDescription" xml:space="preserve">
+        <value>Refresh the model list</value>
+    </data>
+    <data name="DefaultLanguageDescription" xml:space="preserve">
+        <value>Select the default language for responses</value>
+    </data>
+    <data name="AutoModeDescription" xml:space="preserve">
+        <value>Automatically run the default task when the hotkey is pressed</value>
+    </data>
+    <data name="DefaultTaskDescription" xml:space="preserve">
+        <value>Select the default task to run in auto mode</value>
+    </data>
+    <data name="SystemPromptDescription" xml:space="preserve">
+        <value>Global system prompt prepended to every AI request</value>
+    </data>
+    <data name="PostgreSQLConnectionStringDescription" xml:space="preserve">
+        <value>PostgreSQL connection string for the embeddings database</value>
+    </data>
+    <data name="PostgresOllamaUrlDescription" xml:space="preserve">
+        <value>Ollama URL accessible from the PostgreSQL server</value>
+    </data>
+    <data name="EmbeddingModelDescription" xml:space="preserve">
+        <value>Model to use for generating embeddings (e.g. nomic-embed-text)</value>
+    </data>
+    <data name="VideoDeviceDescription" xml:space="preserve">
+        <value>Select the video / webcam device to use</value>
+    </data>
+    <data name="RefreshVideoDevicesDescription" xml:space="preserve">
+        <value>Refresh the list of available video devices</value>
+    </data>
+    <data name="ViewCameraDescription" xml:space="preserve">
+        <value>Preview the selected video device</value>
+    </data>
+    <data name="LinuxKeyboardDeviceDescription" xml:space="preserve">
+        <value>Linux evdev keyboard device used for global hotkey detection</value>
+    </data>
+    <data name="ConfigureHotkeyDeviceDescription" xml:space="preserve">
+        <value>Auto-detect and configure the keyboard device for hotkeys</value>
+    </data>
+    <data name="EnableSSHTunnelingDescription" xml:space="preserve">
+        <value>Route Ollama traffic through an SSH tunnel</value>
+    </data>
+    <data name="SSHUsernameDescription" xml:space="preserve">
+        <value>Username for the SSH connection</value>
+    </data>
+    <data name="SSHServerDescription" xml:space="preserve">
+        <value>SSH server hostname or IP address</value>
+    </data>
+    <data name="SSHPortDescription" xml:space="preserve">
+        <value>SSH server port (default: 22)</value>
+    </data>
+    <data name="LocalTunnelDescription" xml:space="preserve">
+        <value>Local port forwarding (format: local_port:remote_host:remote_port)</value>
+    </data>
+    <data name="RemoteTunnelDescription" xml:space="preserve">
+        <value>Remote port forwarding (format: remote_port:local_host:local_port)</value>
+    </data>
+    <data name="PrivateKeyFileDescription" xml:space="preserve">
+        <value>Path to the SSH private key file</value>
+    </data>
+    <data name="RestoreDefaultTasksDescription" xml:space="preserve">
+        <value>Restore the built-in default task configurations</value>
+    </data>
+    <data name="ModelDescription" xml:space="preserve">
+        <value>Select the AI model to use for this task</value>
+    </data>
+    <data name="IsImageTaskDescription" xml:space="preserve">
+        <value>Enable to process images instead of text for this task</value>
+    </data>
+    <data name="ImageSourceDescription" xml:space="preserve">
+        <value>Select the image source: Clipboard or Webcam</value>
+    </data>
+    <data name="ClipboardContentDescription" xml:space="preserve">
+        <value>Displays the current clipboard text content</value>
+    </data>
+    <data name="ClipboardImageDescription" xml:space="preserve">
+        <value>Displays the current clipboard image content</value>
+    </data>
+    <data name="SelectTaskDescription" xml:space="preserve">
+        <value>Select a configured task to execute</value>
+    </data>
+    <data name="TaskStartDescription" xml:space="preserve">
+        <value>Start executing the selected task</value>
+    </data>
+    <data name="TaskStopDescription" xml:space="preserve">
+        <value>Stop the currently running task</value>
+    </data>
+    <data name="CaptureScreenshotDescription" xml:space="preserve">
+        <value>Capture a screenshot and use it as input</value>
+    </data>
+    <data name="ConfigurationDescription" xml:space="preserve">
+        <value>Open the configuration dialog</value>
+    </data>
+    <data name="OutputDescription" xml:space="preserve">
+        <value>Displays the AI response output</value>
+    </data>
+    <data name="GetNextResponseDescription" xml:space="preserve">
+        <value>Get the next stored response for this query</value>
+    </data>
+    <data name="ThumbUpDescription" xml:space="preserve">
+        <value>Store this response as a template in the database</value>
+    </data>
+    <data name="ThumbDownDescription" xml:space="preserve">
+        <value>Delete this response template from the database</value>
+    </data>
+    <data name="RegenerateDescription" xml:space="preserve">
+        <value>Regenerate the AI response</value>
+    </data>
+    <data name="ResponseCounterDescription" xml:space="preserve">
+        <value>Number of stored template matches found</value>
+    </data>
+    <data name="ResponseDistanceDescription" xml:space="preserve">
+        <value>Similarity distance of the best matching template</value>
+    </data>
+    <data name="AIProviderDescription" xml:space="preserve">
+        <value>Select the AI provider (Ollama or OpenAI)</value>
+    </data>
+    <data name="TestConnectionDescription" xml:space="preserve">
+        <value>Test the connection to the selected AI provider</value>
+    </data>
+    <data name="OllamaUrlDescription" xml:space="preserve">
+        <value>URL of the Ollama server</value>
+    </data>
+    <data name="OpenAIApiKeyDescription" xml:space="preserve">
+        <value>Your OpenAI API key for authentication</value>
+    </data>
+    <data name="OpenAIBaseUrlDescription" xml:space="preserve">
+        <value>Custom base URL for OpenAI API (optional)</value>
+    </data>
+    <data name="SelectModelDescription" xml:space="preserve">
+        <value>Select the AI model to use</value>
+    </data>
+    <data name="PullModelDescription" xml:space="preserve">
+        <value>Download a new model from the server</value>
+    </data>
+    <data name="DeleteModelDescription" xml:space="preserve">
+        <value>Delete the selected model</value>
+    </data>
+    <data name="RefreshModelListDescription" xml:space="preserve">
+        <value>Refresh the list of available models</value>
+    </data>
+    <data name="DefaultLanguageDescription" xml:space="preserve">
+        <value>The default language for the application</value>
+    </data>
+    <data name="AutoModeDescription" xml:space="preserve">
+        <value>Enable automatic mode for clipboard processing</value>
+    </data>
+    <data name="DefaultTaskDescription" xml:space="preserve">
+        <value>The default task for new requests</value>
+    </data>
+    <data name="SystemPromptDescription" xml:space="preserve">
+        <value>The system prompt that defines AI behavior</value>
+    </data>
+    <data name="UseEmbeddingsDescription" xml:space="preserve">
+        <value>Use vector embeddings for response caching</value>
+    </data>
+    <data name="StoreAllResponsesDescription" xml:space="preserve">
+        <value>Store all AI responses as templates in the database</value>
+    </data>
+    <data name="ThresholdDescription" xml:space="preserve">
+        <value>Similarity threshold for embedding matches</value>
+    </data>
+    <data name="ClearDatabaseDescription" xml:space="preserve">
+        <value>Remove all stored embeddings from the database</value>
     </data>
 </root>

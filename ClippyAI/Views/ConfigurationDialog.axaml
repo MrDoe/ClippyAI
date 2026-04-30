@@ -17,356 +17,460 @@
     CanResize="True"
     ShowInTaskbar="False">
 
-    <Grid RowDefinitions="*,Auto" Background="#e9333333">
+    <Grid RowDefinitions="*,Auto" Background="#ff333333">
+        <Grid.Styles>
+            <Style Selector="TabItem">
+                <Setter Property="FontSize" Value="13"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Padding" Value="12,10"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="MinHeight" Value="45"/>
+            </Style>
+            <Style Selector="Label">
+                <Setter Property="Margin" Value="0,10,0,2"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="FontSize" Value="12.5"/>
+            </Style>
+            <Style Selector="TextBox">
+                <Setter Property="Margin" Value="0,0,0,8"/>
+                <Setter Property="FontSize" Value="13"/>
+            </Style>
+            <Style Selector="ComboBox">
+                <Setter Property="Margin" Value="0,0,0,8"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="FontSize" Value="13"/>
+            </Style>
+            <Style Selector="HeaderedContentControl">
+                <Setter Property="Template">
+                        <ControlTemplate>
+                            <StackPanel Margin="0,0,50,10">
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <TextBlock Text="{TemplateBinding Header}" 
+                                                FontSize="14" 
+                                                FontWeight="Bold" 
+                                                Foreground="#FF007ACC"
+                                                VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <Border BorderBrush="#33FFFFFF" 
+                                        BorderThickness="0,1,0,0" 
+                                        Margin="0,0,0,15"/>
+                                <ContentPresenter Content="{TemplateBinding Content}"/>
+                            </StackPanel>
+                        </ControlTemplate>
+                </Setter>
+            </Style>
+        </Grid.Styles>
         <!-- Main content -->
-        <TabControl Grid.Row="0" Margin="10">
-            
+        <TabControl Grid.Row="0" Margin="0,0,0,10" TabStripPlacement="Left">
             <!-- General Settings Tab -->
-            <TabItem Header="{x:Static resources:Resources.General}" FontSize="12"> 
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{x:Static resources:Resources.General}"/>
+                    </StackPanel>
+                </TabItem.Header>
                 <ScrollViewer>
-                    <StackPanel Margin="10">
-                        <Label Content="{x:Static resources:Resources.AIProviderSettings}" FontSize="13" FontWeight="Bold" Margin="0,0,0,10"/>
-                        
-                        <Label Content="{x:Static resources:Resources.AIProvider}"/>
-                        <ComboBox ItemsSource="{Binding AiProviderItems}" SelectedItem="{Binding AiProvider}" 
-                                  Margin="0,0,0,15" ToolTip.Tip="Select the AI provider (Ollama or OpenAI)"/>
-                        
-                        <!-- Test Connection Section -->
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
-                            <Button Content="{x:Static resources:Resources.TestConnection}" 
-                                    Command="{Binding TestConnectionCommand}"
-                                    IsEnabled="{Binding !GeneralTestInProgress}"
-                                    Margin="0,0,10,0"
-                                    ToolTip.Tip="Test the connection to the configured AI provider"/>
-                            <TextBlock Text="{x:Static resources:Resources.Testing}" 
-                                       IsVisible="{Binding GeneralTestInProgress}"
-                                       VerticalAlignment="Center"
-                                       Foreground="Orange"/>
-                        </StackPanel>
-                        
-                        <Border Background="LightGray" 
-                                CornerRadius="3" 
-                                Padding="8"
-                                Margin="0,0,0,15"
-                                IsVisible="{Binding GeneralTestResult, Converter={x:Static ObjectConverters.IsNotNull}}">
-                            <TextBlock Text="{Binding GeneralTestResult}" 
-                                       TextWrapping="Wrap"
-                                       Foreground="Black"/>
-                        </Border>
-                        
-                        <!-- Ollama Settings -->
-                        <Label Content="{x:Static resources:Resources.OllamaSettings}" FontSize="13" FontWeight="Bold" Margin="0,0,0,5"/>
-                        
-                        <Label Content="{x:Static resources:Resources.OllamaUrl}"/>
-                        <TextBox Text="{Binding OllamaUrl}" Margin="0,0,0,10" 
-                                 ToolTip.Tip="URL for Ollama API"/>
-                        
-                        <!-- OpenAI Settings -->
-                        <Label Content="{x:Static resources:Resources.OpenAISettings}" FontSize="13" FontWeight="Bold" Margin="0,10,0,5"/>
-                        
-                        <Label Content="{x:Static resources:Resources.OpenAIApiKey}"/>
-                        <TextBox Text="{Binding OpenAIApiKey}" Margin="0,0,0,10" 
-                                 ToolTip.Tip="Your OpenAI API key"/>
-                        
-                        <Label Content="{x:Static resources:Resources.OpenAIBaseUrl}"/>
-                        <TextBox Text="{Binding OpenAIBaseUrl}" Margin="0,0,0,10" 
-                                 ToolTip.Tip="OpenAI API base URL (default: https://api.openai.com/v1)"/>
+                    <StackPanel Margin="15">
+                        <HeaderedContentControl Header="{x:Static resources:Resources.AIProviderSettings}">
+                            <StackPanel>
+                                <Label Content="{x:Static resources:Resources.AIProvider}"/>
+                                <ComboBox ItemsSource="{Binding AiProviderItems}" SelectedItem="{Binding AiProvider}" 
+                                          ToolTip.Tip="{x:Static resources:Resources.AIProviderDescription}"/>
+                                
+                                <!-- Test Connection Section -->
+                                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                    <Button Command="{Binding TestConnectionCommand}"
+                                            IsEnabled="{Binding !GeneralTestInProgress}"
+                                            Margin="0,0,10,0"
+                                            ToolTip.Tip="{x:Static resources:Resources.TestConnectionDescription}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{x:Static resources:Resources.TestConnection}"/>
+                                        </StackPanel>
+                                    </Button>
+                                    <TextBlock Text="{x:Static resources:Resources.Testing}" 
+                                               IsVisible="{Binding GeneralTestInProgress}"
+                                               VerticalAlignment="Center"
+                                               Foreground="Orange"/>
+                                </StackPanel>
+                                
+                                <Border Background="#33000000" 
+                                        CornerRadius="4" 
+                                        Padding="10"
+                                        Margin="0,10,0,0"
+                                        IsVisible="{Binding GeneralTestResult, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                    <TextBlock Text="{Binding GeneralTestResult}" 
+                                               TextWrapping="Wrap"
+                                               Foreground="White"/>
+                                </Border>
+                            </StackPanel>
+                        </HeaderedContentControl>
 
-                        <Label Content="{x:Static resources:Resources.DefaultModel}" FontSize="13" FontWeight="Bold" Margin="0,0,0,5"/>
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                            <ComboBox ItemsSource="{Binding ModelItems}" SelectedItem="{Binding OllamaModel}" 
-                                      Width="300" ToolTip.Tip="Select a model from the list"/>
-                            <Button Content="{x:Static resources:Resources.Pull}" Command="{Binding AddModelCommand}" Margin="4,0,0,0"
-                                    ToolTip.Tip="Pull/add a model (Ollama only)"/>
-                            <Button Content="{x:Static resources:Resources.Delete}" Command="{Binding DeleteModelCommand}" Margin="4,0,0,0"
-                                    ToolTip.Tip="Delete the selected model (Ollama only)"/>
-                            <Button Content="{x:Static resources:Resources.Refresh}" Command="{Binding RefreshModelsCommand}" Margin="4,0,0,0"
-                                    ToolTip.Tip="Refresh the model list"/>
-                        </StackPanel>
-                        
-                        <Label Content="{x:Static resources:Resources.Language}"/>
-                        <ComboBox ItemsSource="{Binding LanguageItems}" SelectedItem="{Binding DefaultLanguage}" 
-                                  Margin="0,0,0,10" ToolTip.Tip="Select the default language"/>
-                        
-                        <CheckBox IsChecked="{Binding AutoMode}" Content="{x:Static resources:Resources.AutoMode}" Margin="0,0,0,10"
-                                  ToolTip.Tip="Enable automatic mode"/>
-                        
-                        <Label Content="{x:Static resources:Resources.DefaultTask}"/>
-                        <ComboBox ItemsSource="{Binding AvailableTasks}" SelectedItem="{Binding DefaultTask}" 
-                                  Margin="0,0,0,10" ToolTip.Tip="Select the default task"/>
-                        
-                        <Label Content="{x:Static resources:Resources.SystemPrompt}"/>
-                        <TextBox Text="{Binding SystemPrompt}" Height="210" TextWrapping="Wrap"
-                                 AcceptsReturn="True" Margin="0,0,0,10"
-                                 ToolTip.Tip="System prompt for the AI model"/>
+                        <HeaderedContentControl Header="{x:Static resources:Resources.OllamaSettings}">
+                            <StackPanel>
+                                <Label Content="{x:Static resources:Resources.OllamaUrl}"/>
+                                <TextBox Text="{Binding OllamaUrl}" 
+                                         ToolTip.Tip="{x:Static resources:Resources.OllamaUrlDescription}"/>
+                            </StackPanel>
+                        </HeaderedContentControl>
+
+                        <HeaderedContentControl Header="{x:Static resources:Resources.OpenAISettings}">
+                            <StackPanel>
+                                <Label Content="{x:Static resources:Resources.OpenAIApiKey}"/>
+                                <TextBox Text="{Binding OpenAIApiKey}" PasswordChar="*"
+                                         ToolTip.Tip="{x:Static resources:Resources.OpenAIApiKeyDescription}"/>
+                                
+                                <Label Content="{x:Static resources:Resources.OpenAIBaseUrl}"/>
+                                <TextBox Text="{Binding OpenAIBaseUrl}" 
+                                         ToolTip.Tip="{x:Static resources:Resources.OpenAIBaseUrlDescription}"/>
+                            </StackPanel>
+                        </HeaderedContentControl>
+
+                        <HeaderedContentControl Header="{x:Static resources:Resources.DefaultModel}">
+                            <StackPanel>
+                                <Grid ColumnDefinitions="*,Auto,Auto,Auto" Margin="0,0,0,10">
+                                    <ComboBox ItemsSource="{Binding ModelItems}" SelectedItem="{Binding OllamaModel}" 
+                                              ToolTip.Tip="{x:Static resources:Resources.SelectModelDescription}"/>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="5,0,0,0">
+                                        <Button Command="{Binding AddModelCommand}" Margin="2"
+                                                ToolTip.Tip="{x:Static resources:Resources.PullModelDescription}">
+                                            <TextBlock Text="&#xf019;" FontFamily="avares://ClippyAI/Assets/fontawesome/otfs/Font Awesome 6 Free-Solid-900.otf#Font Awesome 6"/>
+                                        </Button>
+                                        <Button Command="{Binding DeleteModelCommand}" Margin="2"
+                                                ToolTip.Tip="{x:Static resources:Resources.DeleteModelDescription}">
+                                            <TextBlock Text="&#xf2ed;" FontFamily="avares://ClippyAI/Assets/fontawesome/otfs/Font Awesome 6 Free-Solid-900.otf#Font Awesome 6"/>
+                                        </Button>
+                                        <Button Command="{Binding RefreshModelsCommand}" Margin="2"
+                                                ToolTip.Tip="{x:Static resources:Resources.RefreshModelListDescription}">
+                                            <TextBlock Text="&#xf2f1;" FontFamily="avares://ClippyAI/Assets/fontawesome/otfs/Font Awesome 6 Free-Solid-900.otf#Font Awesome 6"/>
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </HeaderedContentControl>
+
+                        <HeaderedContentControl Header="{x:Static resources:Resources.General}">
+                            <StackPanel>
+                                <Label Content="{x:Static resources:Resources.Language}"/>
+                                <ComboBox ItemsSource="{Binding LanguageItems}" SelectedItem="{Binding DefaultLanguage}" 
+                                          ToolTip.Tip="{x:Static resources:Resources.DefaultLanguageDescription}"/>
+                                
+                                <CheckBox IsChecked="{Binding AutoMode}" Content="{x:Static resources:Resources.AutoMode}" Margin="0,10,0,10"
+                                          ToolTip.Tip="{x:Static resources:Resources.AutoModeDescription}"/>
+                                
+                                <Label Content="{x:Static resources:Resources.DefaultTask}"/>
+                                <ComboBox ItemsSource="{Binding AvailableTasks}" SelectedItem="{Binding DefaultTask}" 
+                                          ToolTip.Tip="{x:Static resources:Resources.DefaultTaskDescription}"/>
+                                
+                                <Label Content="{x:Static resources:Resources.SystemPrompt}"/>
+                                <TextBox Text="{Binding SystemPrompt}" Height="150" TextWrapping="Wrap"
+                                         AcceptsReturn="True"
+                                         ToolTip.Tip="{x:Static resources:Resources.SystemPromptDescription}"/>
+                            </StackPanel>
+                        </HeaderedContentControl>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
 
             <!-- Embeddings Tab -->
-            <TabItem Header="{x:Static resources:Resources.Embeddings}" FontSize="13">
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{x:Static resources:Resources.Embeddings}"/>
+                    </StackPanel>
+                </TabItem.Header>
                 <ScrollViewer>
-                    <StackPanel Margin="10">
-                        <Label Content="{x:Static resources:Resources.VectorDatabaseSettings}" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>
-                        
-                        <CheckBox IsChecked="{Binding UseEmbeddings}" Content="{x:Static resources:Resources.UseEmbeddings}" Margin="0,0,0,10"
-                                  ToolTip.Tip="Enable vector database for faster response retrieval"/>
-                        
-                        <CheckBox IsChecked="{Binding StoreAllResponses}" Content="{x:Static resources:Resources.StoreAllResponses}" Margin="0,0,0,10"
-                                  ToolTip.Tip="Store all AI responses as embeddings"/>
-                        
-                        <Label Content="{x:Static resources:Resources.PostgreSQLConnectionString}"/>
-                        <TextBox Text="{Binding PostgreSqlConnection}" Height="30" TextWrapping="Wrap"
-                                 AcceptsReturn="True" Margin="0,0,0,10"
-                                 ToolTip.Tip="PostgreSQL connection string"/>
-                        
-                        <Label Content="{x:Static resources:Resources.PostgresOllamaUrl}"/>
-                        <TextBox Text="{Binding PostgresOllamaUrl}" Margin="0,0,0,10"
-                                 ToolTip.Tip="Ollama URL accessible from PostgreSQL"/>
-                        
-                        <Label Content="{x:Static resources:Resources.EmbeddingModel}"/>
-                        <TextBox Text="{Binding EmbeddingModel}" Margin="0,0,0,10"
-                                 ToolTip.Tip="Model to use for generating embeddings" 
-                                 IsEnabled="{Binding UseEmbeddings}"/>
-                        
-                        <!-- Threshold -->
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,10,0,0">
-                            <Label Content="{x:Static resources:Resources.Threshold}" VerticalAlignment="Center" Width="100"/>
-                            <Slider Value="{Binding Threshold}" Minimum="-1" Maximum="1" Width="150" 
-                                    TickFrequency="0.1" ToolTip.Tip="Set the threshold value"/>
-                            <TextBox Text="{Binding Threshold}" Width="70" Margin="10,0,0,0"/>
-                        </StackPanel>
-                        
-                        <!-- Clear Database Button -->
-                        <Button Content="{x:Static resources:Resources.ClearDatabase}" Command="{Binding ClearEmbeddingsCommand}"
-                                HorizontalAlignment="Left" Margin="0,10,0,10"
-                                ToolTip.Tip="Clear the embeddings database"/>
-                        
-                        <!-- Embeddings Count -->
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Label Content="{x:Static resources:Resources.EmbeddingsCount}" FontSize="13" VerticalAlignment="Center"/>
-                            <Label Content="{Binding EmbeddingsCount}" FontSize="13" VerticalAlignment="Center"
-                                   ToolTip.Tip="Displays the number of embeddings"/>
-                        </StackPanel>
+                    <StackPanel Margin="15">
+                        <HeaderedContentControl Header="{x:Static resources:Resources.VectorDatabaseSettings}">
+                            <StackPanel>
+                                <CheckBox IsChecked="{Binding UseEmbeddings}" Content="{x:Static resources:Resources.UseEmbeddings}" Margin="0,0,0,10"
+                                          ToolTip.Tip="{x:Static resources:Resources.UseEmbeddingsDescription}"/>
+                                
+                                <CheckBox IsChecked="{Binding StoreAllResponses}" Content="{x:Static resources:Resources.StoreAllResponses}" Margin="0,0,0,10"
+                                          ToolTip.Tip="{x:Static resources:Resources.StoreAllResponsesDescription}"/>
+                                
+                                <Label Content="{x:Static resources:Resources.PostgreSQLConnectionString}"/>
+                                <TextBox Text="{Binding PostgreSqlConnection}" Height="60" TextWrapping="Wrap"
+                                         AcceptsReturn="True"
+                                         ToolTip.Tip="{x:Static resources:Resources.PostgreSQLConnectionStringDescription}"/>
+                                
+                                <Label Content="{x:Static resources:Resources.PostgresOllamaUrl}"/>
+                                <TextBox Text="{Binding PostgresOllamaUrl}" 
+                                         ToolTip.Tip="{x:Static resources:Resources.PostgresOllamaUrlDescription}"/>
+                                
+                                <Label Content="{x:Static resources:Resources.EmbeddingModel}"/>
+                                <TextBox Text="{Binding EmbeddingModel}" 
+                                         ToolTip.Tip="{x:Static resources:Resources.EmbeddingModelDescription}" 
+                                         IsEnabled="{Binding UseEmbeddings}"/>
+                                
+                                <Label Content="{x:Static resources:Resources.Threshold}"/>
+                                <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,10">
+                                    <Slider Value="{Binding Threshold}" Minimum="-1" Maximum="1" 
+                                            TickFrequency="0.1" ToolTip.Tip="{x:Static resources:Resources.ThresholdDescription}"/>
+                                    <TextBox Grid.Column="1" Text="{Binding Threshold}" Width="60" Margin="10,0,0,0"/>
+                                </Grid>
+                                
+                                <Button Content="{x:Static resources:Resources.ClearDatabase}" Command="{Binding ClearEmbeddingsCommand}"
+                                        HorizontalAlignment="Left" Margin="0,10,0,10"
+                                        ToolTip.Tip="{x:Static resources:Resources.ClearDatabaseDescription}"/>
+                                
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,10,0,0">
+                                    <Label Content="{x:Static resources:Resources.EmbeddingsCount}" VerticalAlignment="Center" Margin="0"/>
+                                    <Border Background="#33000000" CornerRadius="4" Padding="8,4" Margin="10,0,0,0">
+                                        <TextBlock Text="{Binding EmbeddingsCount}" FontWeight="Bold"/>
+                                    </Border>
+                                </StackPanel>
+                            </StackPanel>
+                        </HeaderedContentControl>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
 
             <!-- Vision Tab -->
-            <TabItem Header="{x:Static resources:Resources.VisionTab}" FontSize="13">
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{x:Static resources:Resources.VisionTab}"/>
+                    </StackPanel>
+                </TabItem.Header>
                 <ScrollViewer>
-                    <StackPanel Margin="10">
-                        <Label Content="{x:Static resources:Resources.VisionSettings}" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>                        
-                        <Label Content="{x:Static resources:Resources.VideoDevice}"/>
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                            <ComboBox ItemsSource="{Binding VideoDevices}" SelectedItem="{Binding VideoDevice}" 
-                                      Width="300" ToolTip.Tip="Select the video device from the list"/>
-                            <Button Content="{x:Static resources:Resources.Refresh}" Command="{Binding RefreshVideoDevicesCommand}" 
-                                    Margin="4,0,0,0" ToolTip.Tip="Refresh the list of video devices"/>
-                            <Button Content="{x:Static resources:Resources.ViewCamera}" Command="{Binding ShowCamera}"
-                                    Margin="4,0,0,0" ToolTip.Tip="Preview Video Output"/>
-                        </StackPanel>
+                    <StackPanel Margin="15">
+                        <HeaderedContentControl Header="{x:Static resources:Resources.VisionSettings}">
+                            <StackPanel>
+                                <Label Content="{x:Static resources:Resources.VideoDevice}"/>
+                                <Grid ColumnDefinitions="*,Auto,Auto">
+                                    <ComboBox ItemsSource="{Binding VideoDevices}" SelectedItem="{Binding VideoDevice}" 
+                                              ToolTip.Tip="{x:Static resources:Resources.VideoDeviceDescription}"/>
+                                    <Button Grid.Column="1" Content="{x:Static resources:Resources.Refresh}" Command="{Binding RefreshVideoDevicesCommand}" 
+                                            Margin="4,0,0,8" ToolTip.Tip="{x:Static resources:Resources.RefreshVideoDevicesDescription}"/>
+                                    <Button Grid.Column="2" Content="{x:Static resources:Resources.ViewCamera}" Command="{Binding ShowCamera}" 
+                                            Margin="4,0,0,8" ToolTip.Tip="{x:Static resources:Resources.ViewCameraDescription}"/>
+                                </Grid>
+                            </StackPanel>
+                        </HeaderedContentControl>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
 
             <!-- System Tab -->
-            <TabItem Header="{x:Static resources:Resources.SystemTab}" FontSize="13">
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{x:Static resources:Resources.SystemTab}"/>
+                    </StackPanel>
+                </TabItem.Header>
                 <ScrollViewer>
-                    <StackPanel Margin="10">
-                        <Label Content="{x:Static resources:Resources.SystemSettings}" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>
-                        
-                        <Label Content="{x:Static resources:Resources.LinuxKeyboardDevice}"/>
-                        <TextBox Text="{Binding LinuxKeyboardDevice}" Margin="0,0,0,10"
-                                 ToolTip.Tip="Linux keyboard device for hotkey handling"/>
-                        
-                        <!-- Configure Hotkey Device Button -->
-                        <Button Content="{x:Static resources:Resources.ConfigureHotkeyDevice}" Command="{Binding ConfigureHotkeyDeviceCommand}"
-                                HorizontalAlignment="Left" Margin="0,0,0,10"
-                                ToolTip.Tip="Configure the hotkey device for Linux systems"/>
+                    <StackPanel Margin="15">
+                        <HeaderedContentControl Header="{x:Static resources:Resources.SystemSettings}">
+                            <StackPanel>
+                                <Label Content="{x:Static resources:Resources.LinuxKeyboardDevice}"/>
+                                <TextBox Text="{Binding LinuxKeyboardDevice}" 
+                                         ToolTip.Tip="{x:Static resources:Resources.LinuxKeyboardDeviceDescription}"/>
+                                
+                                <Button Content="{x:Static resources:Resources.ConfigureHotkeyDevice}" Command="{Binding ConfigureHotkeyDeviceCommand}"
+                                        HorizontalAlignment="Left" Margin="0,10,0,0"
+                                        ToolTip.Tip="{x:Static resources:Resources.ConfigureHotkeyDeviceDescription}"/>
+                            </StackPanel>
+                        </HeaderedContentControl>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
 
             <!-- SSH Tab -->
-            <TabItem Header="{x:Static resources:Resources.SSH}" FontSize="13">
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{x:Static resources:Resources.SSH}"/>
+                    </StackPanel>
+                </TabItem.Header>
                 <ScrollViewer>
-                    <StackPanel Margin="10">
-                        <Label Content="{x:Static resources:Resources.SSHTunnelSettings}" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>
-                        
-                        <CheckBox IsChecked="{Binding UseSSH}" Content="{x:Static resources:Resources.EnableSSHTunneling}" Margin="0,0,0,10"
-                                  ToolTip.Tip="Enable SSH tunneling for secure connections"/>
-                        
-                        <Label Content="{x:Static resources:Resources.SSHUsername}"/>
-                        <TextBox Text="{Binding SshUsername}" Margin="0,0,0,10"
-                                 ToolTip.Tip="SSH username for authentication"/>
-                        
-                        <Label Content="{x:Static resources:Resources.SSHServer}"/>
-                        <TextBox Text="{Binding SshServerUrl}" Margin="0,0,0,10"
-                                 ToolTip.Tip="SSH server hostname or IP address"/>
-                        
-                        <Label Content="{x:Static resources:Resources.SSHPort}"/>
-                        <TextBox Text="{Binding SshPort}" Margin="0,0,0,10"
-                                 ToolTip.Tip="SSH server port (default: 22)"/>
-                        
-                        <Label Content="{x:Static resources:Resources.LocalTunnel}"/>
-                        <TextBox Text="{Binding SshLocalTunnel}" Margin="0,0,0,10"
-                                 ToolTip.Tip="Local port forwarding (format: local_host:local_port:remote_host:remote_port)"/>
-                        
-                        <Label Content="{x:Static resources:Resources.RemoteTunnel}"/>
-                        <TextBox Text="{Binding SshRemoteTunnel}" Margin="0,0,0,10"
-                                 ToolTip.Tip="Remote port forwarding (format: remote_host:remote_port:local_host:local_port)"/>
-                        
-                        <Label Content="{x:Static resources:Resources.PrivateKeyFile}"/>
-                        <TextBox Text="{Binding SshPrivateKeyFile}" Margin="0,0,0,10"
-                                 ToolTip.Tip="Path to SSH private key file"/>
-                        
-                        <!-- SSH Test Section -->
-                        <StackPanel Orientation="Horizontal" Margin="0,10,0,10">
-                            <Button Content="{x:Static resources:Resources.TestSSHConnection}" 
-                                    Command="{Binding TestSSHConnectionCommand}"
-                                    IsEnabled="{Binding !SshTestInProgress}"
-                                    HorizontalAlignment="Left" 
-                                    Margin="0,0,10,0"/>
-                            <TextBlock Text="{x:Static resources:Resources.Testing}" 
-                                       IsVisible="{Binding SshTestInProgress}"
-                                       VerticalAlignment="Center"
-                                       Foreground="Orange"/>
-                        </StackPanel>
-                        
-                        <Border Background="LightGray" 
-                                CornerRadius="3" 
-                                Padding="8"
-                                Margin="0,0,0,10"
-                                IsVisible="{Binding SshTestResult, Converter={x:Static ObjectConverters.IsNotNull}}">
-                            <TextBlock Text="{Binding SshTestResult}" 
-                                       TextWrapping="Wrap"
-                                       Foreground="Black"/>
-                        </Border>
+                    <StackPanel Margin="15">
+                        <HeaderedContentControl Header="{x:Static resources:Resources.SSHTunnelSettings}">
+                            <StackPanel>
+                                <CheckBox IsChecked="{Binding UseSSH}" Content="{x:Static resources:Resources.EnableSSHTunneling}" Margin="0,0,0,10"
+                                          ToolTip.Tip="{x:Static resources:Resources.EnableSSHTunnelingDescription}"/>
+                                
+                                <Label Content="{x:Static resources:Resources.SSHUsername}"/>
+                                <TextBox Text="{Binding SshUsername}" 
+                                         ToolTip.Tip="{x:Static resources:Resources.SSHUsernameDescription}"/>
+                                
+                                <Label Content="{x:Static resources:Resources.SSHServer}"/>
+                                <TextBox Text="{Binding SshServerUrl}" 
+                                         ToolTip.Tip="{x:Static resources:Resources.SSHServerDescription}"/>
+                                
+                                <Grid ColumnDefinitions="*,*">
+                                    <StackPanel Grid.Column="0" Margin="0,0,5,0">
+                                        <Label Content="{x:Static resources:Resources.SSHPort}"/>
+                                        <TextBox Text="{Binding SshPort}" 
+                                                 ToolTip.Tip="{x:Static resources:Resources.SSHPortDescription}"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                                        <Label Content="{x:Static resources:Resources.LocalTunnel}"/>
+                                        <TextBox Text="{Binding SshLocalTunnel}" 
+                                                 ToolTip.Tip="{x:Static resources:Resources.LocalTunnelDescription}"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <Label Content="{x:Static resources:Resources.RemoteTunnel}"/>
+                                <TextBox Text="{Binding SshRemoteTunnel}" 
+                                         ToolTip.Tip="{x:Static resources:Resources.RemoteTunnelDescription}"/>
+                                
+                                <Label Content="{x:Static resources:Resources.PrivateKeyFile}"/>
+                                <TextBox Text="{Binding SshPrivateKeyFile}" 
+                                         ToolTip.Tip="{x:Static resources:Resources.PrivateKeyFileDescription}"/>
+                                
+                                <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
+                                    <Button Content="{x:Static resources:Resources.TestSSHConnection}" 
+                                            Command="{Binding TestSSHConnectionCommand}"
+                                            IsEnabled="{Binding !SshTestInProgress}"
+                                            Margin="0,0,10,0"/>
+                                    <TextBlock Text="{x:Static resources:Resources.Testing}" 
+                                               IsVisible="{Binding SshTestInProgress}"
+                                               VerticalAlignment="Center"
+                                               Foreground="Orange"/>
+                                </StackPanel>
+                                
+                                <Border Background="#33000000" 
+                                        CornerRadius="4" 
+                                        Padding="10"
+                                        Margin="0,10,0,0"
+                                        IsVisible="{Binding SshTestResult, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                    <TextBlock Text="{Binding SshTestResult}" 
+                                               TextWrapping="Wrap"
+                                               Foreground="White"/>
+                                </Border>
+                            </StackPanel>
+                        </HeaderedContentControl>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
 
             <!-- Task Configurations Tab -->
-            <TabItem Header="{x:Static resources:Resources.TasksTab}" FontSize="13">
-                <Grid RowDefinitions="Auto,*,Auto" Margin="10">
-                    <!-- Header 
-                    <Label Grid.Row="0" Content="{x:Static resources:Resources.TaskSpecificConfigurations}" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>
-                    -->
-                    <!-- Main content -->
-                    <Grid Grid.Row="1" ColumnDefinitions="250,*">
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{x:Static resources:Resources.TasksTab}"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid RowDefinitions="*,Auto" Margin="10">
+                    <Grid Grid.Row="0" ColumnDefinitions="280,*">
                         <!-- Left panel - Task list -->
-                        <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                            <Label Content="{x:Static resources:Resources.Tasks}" FontWeight="Bold" Margin="0,0,0,5"/>
-                            <ListBox ItemsSource="{Binding TaskConfigurations}" 
-                                     SelectedItem="{Binding SelectedTaskConfiguration}"
-                                     Height="500" Margin="0,0,0,10">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate x:DataType="models:TaskConfiguration">
-                                        <TextBlock Text="{Binding TaskName}" />
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                            
-                            <!-- New task -->
-                            <Label Content="{x:Static resources:Resources.NewTaskName}"/>
-                            <TextBox Text="{Binding NewTaskName}" Margin="0,0,0,5"/>
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                <Button Content="{x:Static resources:Resources.Add}" Command="{Binding AddNewTaskCommand}" Margin="0,0,5,0" Width="40" FontSize="12" />
-                                <Button Content="{x:Static resources:Resources.Delete}" Command="{Binding DeleteTaskCommand}" Width="80" Margin="0,0,5,0" FontSize="12"/>
+                        <Border Grid.Column="0" Background="#11FFFFFF" CornerRadius="4" Margin="0,0,10,0" Padding="10">
+                            <StackPanel>
+                                <Label Content="{x:Static resources:Resources.Tasks}" Margin="0,0,0,10"/>
+                                <ListBox ItemsSource="{Binding TaskConfigurations}" 
+                                         SelectedItem="{Binding SelectedTaskConfiguration}"
+                                         Height="400" Margin="0,0,0,10">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate x:DataType="models:TaskConfiguration">
+                                            <TextBlock Text="{Binding TaskName}" Padding="5"/>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                                
+                                <Label Content="{x:Static resources:Resources.NewTaskName}"/>
+                                <TextBox Text="{Binding NewTaskName}" />
+                                <UniformGrid Columns="2" Margin="0,5,0,0">
+                                    <Button Content="{x:Static resources:Resources.Add}" Command="{Binding AddNewTaskCommand}" HorizontalAlignment="Stretch" Margin="2"/>
+                                    <Button Content="{x:Static resources:Resources.Delete}" Command="{Binding DeleteTaskCommand}" HorizontalAlignment="Stretch" Margin="2"/>
+                                </UniformGrid>
                                 <Button Content="{x:Static resources:Resources.RestoreDefault}"
-                                        Command="{Binding RestoreDefaultTasksCommand}" HorizontalAlignment="Left" Margin="0,0,5,0"
-                                        Width="120" ToolTip.Tip="Restore the default task configurations" FontSize="12"/>
+                                        Command="{Binding RestoreDefaultTasksCommand}" 
+                                        HorizontalAlignment="Stretch" 
+                                        Margin="2,5,2,0"
+                                        ToolTip.Tip="{x:Static resources:Resources.RestoreDefaultTasksDescription}"/>
                             </StackPanel>
-                        </StackPanel>
+                        </Border>
                         
-                        <!-- Right panel - Task details and actions -->
-                        <Grid Grid.Column="1" RowDefinitions="*,Auto">
-                            <!-- Task details (use ContentControl to avoid null-binding errors) -->
-                            <ContentControl Grid.Row="0" Content="{Binding SelectedTaskConfiguration}">
+                        <!-- Right panel - Task details -->
+                        <Border Grid.Column="1" Background="#11FFFFFF" CornerRadius="4" Padding="15">
+                            <ContentControl Content="{Binding SelectedTaskConfiguration}">
                                 <ContentControl.ContentTemplate>
                                     <DataTemplate x:DataType="models:TaskConfiguration">
                                         <ScrollViewer>
                                             <StackPanel>
-                                                <Label Content="{x:Static resources:Resources.TaskConfiguration}" FontWeight="Bold" Margin="0,0,0,10"/>
-                                                
-                                                <Label Content="{x:Static resources:Resources.TaskName}"/>
-                                                <TextBox Text="{Binding TaskName}" Margin="0,0,0,10" IsReadOnly="True"/>
-                                                
-                                                <Label Content="{x:Static resources:Resources.Prompt}"/>
-                                                <TextBox Text="{Binding SystemPrompt}" Height="120" 
-                                                         TextWrapping="Wrap" AcceptsReturn="True" Margin="0,0,0,10"/>
-                                                
-                                                <Label Content="{x:Static resources:Resources.Model}"/>
-                                                <ComboBox ItemsSource="{x:Static vm:ConfigurationDialogViewModel.AvailableModels}" 
-                                                          SelectedItem="{Binding Model}" 
-                                                          Margin="0,0,0,10" Width="300"
-                                                          ToolTip.Tip="Select the AI model for this task"/>
-                                                
-                                                <CheckBox IsChecked="{Binding IsImageTask}"
-                                                          Content="{x:Static resources:Resources.IsImageTask}"
-                                                          Margin="0,0,0,10"
-                                                          ToolTip.Tip="Enable to use this task for image analysis instead of text"/>
-                                                
-                                                <Label Content="{x:Static resources:Resources.ImageSource}"
-                                                       IsVisible="{Binding IsImageTask}"/>
-                                                <ComboBox ItemsSource="{x:Static vm:ConfigurationDialogViewModel.ImageSources}"
-                                                          SelectedItem="{Binding ImageSource}"
-                                                          Margin="0,0,0,10" Width="200"
-                                                          IsVisible="{Binding IsImageTask}"
-                                                          ToolTip.Tip="Select the image source: Clipboard or Webcam"/>
-                                                
-                                                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
-                                                    <Label Grid.Row="0" Grid.Column="0" Content="{x:Static resources:Resources.Temperature}"/>
-                                                    <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
-                                                        <Slider Value="{Binding Temperature}" 
-                                                                Minimum="0" Maximum="2" Width="100"/>
-                                                        <TextBox Text="{Binding Temperature}" Width="60" Margin="5,0,0,0"/>
+                                                <HeaderedContentControl Header="{x:Static resources:Resources.TaskConfiguration}">
+                                                    <StackPanel>
+                                                        <Label Content="{x:Static resources:Resources.TaskName}"/>
+                                                        <TextBox Text="{Binding TaskName}" IsReadOnly="True" Background="#22000000"/>
+                                                        
+                                                        <Label Content="{x:Static resources:Resources.Prompt}"/>
+                                                        <TextBox Text="{Binding SystemPrompt}" Height="120" 
+                                                                 TextWrapping="Wrap" AcceptsReturn="True"/>
+                                                        
+                                                        <Label Content="{x:Static resources:Resources.Model}"/>
+                                                        <ComboBox ItemsSource="{x:Static vm:ConfigurationDialogViewModel.AvailableModels}" 
+                                                                  SelectedItem="{Binding Model}" 
+                                                                  ToolTip.Tip="{x:Static resources:Resources.ModelDescription}"/>
+                                                        
+                                                        <CheckBox IsChecked="{Binding IsImageTask}"
+                                                                  Content="{x:Static resources:Resources.IsImageTask}"
+                                                                  Margin="0,10,0,10"
+                                                                  ToolTip.Tip="{x:Static resources:Resources.IsImageTaskDescription}"/>
+                                                        
+                                                        <StackPanel IsVisible="{Binding IsImageTask}">
+                                                            <Label Content="{x:Static resources:Resources.ImageSource}"/>
+                                                            <ComboBox ItemsSource="{x:Static vm:ConfigurationDialogViewModel.ImageSources}"
+                                                                      SelectedItem="{Binding ImageSource}"
+                                                                      ToolTip.Tip="{x:Static resources:Resources.ImageSourceDescription}"/>
+                                                        </StackPanel>
+
+                                                        <Border Background="#11FFFFFF" CornerRadius="4" Padding="10" Margin="0,15,0,0">
+                                                            <Grid ColumnDefinitions="*,1.5*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+                                                                <Label Grid.Row="0" Grid.Column="0" Content="{x:Static resources:Resources.Temperature}" VerticalAlignment="Center"/>
+                                                                <Grid Grid.Row="0" Grid.Column="1" ColumnDefinitions="*,60" Margin="0,5">
+                                                                    <Slider Value="{Binding Temperature}" Minimum="0" Maximum="2"/>
+                                                                    <TextBox Grid.Column="1" Text="{Binding Temperature}" Margin="10,0,0,0"/>
+                                                                </Grid>
+                                                                
+                                                                <Label Grid.Row="1" Grid.Column="0" Content="{x:Static resources:Resources.MaxLength}" VerticalAlignment="Center"/>
+                                                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MaxLength}" HorizontalAlignment="Left" Width="100"/>
+                                                                
+                                                                <Label Grid.Row="2" Grid.Column="0" Content="{x:Static resources:Resources.TopP}" VerticalAlignment="Center"/>
+                                                                <Grid Grid.Row="2" Grid.Column="1" ColumnDefinitions="*,60" Margin="0,5">
+                                                                    <Slider Value="{Binding TopP}" Minimum="0" Maximum="1"/>
+                                                                    <TextBox Grid.Column="1" Text="{Binding TopP}" Margin="10,0,0,0"/>
+                                                                </Grid>
+                                                                
+                                                                <Label Grid.Row="3" Grid.Column="0" Content="{x:Static resources:Resources.TopK}" VerticalAlignment="Center"/>
+                                                                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding TopK}" HorizontalAlignment="Left" Width="100"/>
+                                                                
+                                                                <Label Grid.Row="4" Grid.Column="0" Content="{x:Static resources:Resources.RepeatPenalty}" VerticalAlignment="Center"/>
+                                                                <Grid Grid.Row="4" Grid.Column="1" ColumnDefinitions="*,60" Margin="0,5">
+                                                                    <Slider Value="{Binding RepeatPenalty}" Minimum="0.5" Maximum="2"/>
+                                                                    <TextBox Grid.Column="1" Text="{Binding RepeatPenalty}" Margin="10,0,0,0"/>
+                                                                </Grid>
+                                                                
+                                                                <Label Grid.Row="5" Grid.Column="0" Content="{x:Static resources:Resources.ContextLength}" VerticalAlignment="Center"/>
+                                                                <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding NumCtx}" HorizontalAlignment="Left" Width="100"/>
+                                                            </Grid>
+                                                        </Border>
                                                     </StackPanel>
-                                                    
-                                                    <Label Grid.Row="1" Grid.Column="0" Content="{x:Static resources:Resources.MaxLength}" Margin="0,10,0,0"/>
-                                                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MaxLength}" 
-                                                             Width="100" HorizontalAlignment="Left" Margin="0,10,0,0"/>
-                                                    
-                                                    <Label Grid.Row="2" Grid.Column="0" Content="{x:Static resources:Resources.TopP}" Margin="0,10,0,0"/>
-                                                    <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="0,10,0,0">
-                                                        <Slider Value="{Binding TopP}" 
-                                                                Minimum="0" Maximum="1" Width="100"/>
-                                                        <TextBox Text="{Binding TopP}" Width="60" Margin="5,0,0,0"/>
-                                                    </StackPanel>
-                                                    
-                                                    <Label Grid.Row="3" Grid.Column="0" Content="{x:Static resources:Resources.TopK}" Margin="0,10,0,0"/>
-                                                    <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding TopK}" 
-                                                             Width="100" HorizontalAlignment="Left" Margin="0,10,0,0"/>
-                                                    
-                                                    <Label Grid.Row="4" Grid.Column="0" Content="{x:Static resources:Resources.RepeatPenalty}" Margin="0,10,0,0"/>
-                                                    <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" Margin="0,10,0,0">
-                                                        <Slider Value="{Binding RepeatPenalty}" 
-                                                                Minimum="0.5" Maximum="2" Width="100"/>
-                                                        <TextBox Text="{Binding RepeatPenalty}" Width="60" Margin="5,0,0,0"/>
-                                                    </StackPanel>
-                                                    
-                                                    <Label Grid.Row="5" Grid.Column="0" Content="{x:Static resources:Resources.ContextLength}" Margin="0,10,0,0"/>
-                                                    <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding NumCtx}" 
-                                                             Width="100" HorizontalAlignment="Left" Margin="0,10,0,0"/>
-                                                </Grid>
+                                                </HeaderedContentControl>
                                             </StackPanel>
                                         </ScrollViewer>
                                     </DataTemplate>
                                 </ContentControl.ContentTemplate>
                             </ContentControl>
-                        </Grid>
+                        </Border>
                     </Grid>
                 </Grid>
             </TabItem>
         </TabControl>
 
         <!-- Buttons -->
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
-            <Button Name="SaveButton" Content="{x:Static resources:Resources.Save}" Margin="0,0,10,0" 
-                    Width="120" IsDefault="True"/>
-            <Button Name="CloseButton" Content="{x:Static resources:Resources.Close}" Width="120" 
-                    IsCancel="True"/>
-        </StackPanel>
+        <Border Grid.Row="1" Background="#22000000" Padding="15">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Name="SaveButton" Classes="accent" Margin="0,0,10,0" Width="120" IsDefault="True">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{x:Static resources:Resources.Save}"/>
+                    </StackPanel>
+                </Button>
+                <Button Name="CloseButton" Width="120" IsCancel="True">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{x:Static resources:Resources.Close}"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>

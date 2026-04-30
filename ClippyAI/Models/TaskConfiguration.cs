@@ -1,11 +1,42 @@
 using System;
+using System.ComponentModel;
 
 namespace ClippyAI.Models;
 
-public class TaskConfiguration
+public class TaskConfiguration : INotifyPropertyChanged
 {
     public const string ImageSourceClipboard = "Clipboard";
     public const string ImageSourceWebcam = "Webcam";
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private bool _isImageTask = false;
+    public bool IsImageTask
+    {
+        get => _isImageTask;
+        set
+        {
+            if (_isImageTask != value)
+            {
+                _isImageTask = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsImageTask)));
+            }
+        }
+    }
+
+    private string _imageSource = ImageSourceClipboard;
+    public string ImageSource
+    {
+        get => _imageSource;
+        set
+        {
+            if (_imageSource != value)
+            {
+                _imageSource = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ImageSource)));
+            }
+        }
+    }
 
     public int Id { get; set; }
     public string TaskName { get; set; } = string.Empty;
@@ -18,8 +49,6 @@ public class TaskConfiguration
     public double RepeatPenalty { get; set; } = 1.1;
     public int NumCtx { get; set; } = 2048;
     public bool IsActive { get; set; } = true;
-    public bool IsImageTask { get; set; } = false;
-    public string ImageSource { get; set; } = ImageSourceClipboard;
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime UpdatedAt { get; set; } = DateTime.Now;
 }

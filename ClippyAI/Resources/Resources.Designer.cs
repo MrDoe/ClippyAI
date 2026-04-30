@@ -26,7 +26,7 @@ namespace ClippyAI.Resources {
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        public Resources() {
+        internal Resources() {
         }
         
         /// <summary>
@@ -85,6 +85,15 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select the AI provider (Ollama or OpenAI).
+        /// </summary>
+        public static string AIProviderDescription {
+            get {
+                return ResourceManager.GetString("AIProviderDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ⚙️ AI Provider Settings.
         /// </summary>
         public static string AIProviderSettings {
@@ -108,6 +117,15 @@ namespace ClippyAI.Resources {
         public static string AutoMode {
             get {
                 return ResourceManager.GetString("AutoMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Automatically run the default task when the hotkey is pressed.
+        /// </summary>
+        public static string AutoModeDescription {
+            get {
+                return ResourceManager.GetString("AutoModeDescription", resourceCulture);
             }
         }
         
@@ -139,11 +157,29 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Capture a screenshot and use it as input.
+        /// </summary>
+        public static string CaptureScreenshotDescription {
+            get {
+                return ResourceManager.GetString("CaptureScreenshotDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 🗑️ Clear Database.
         /// </summary>
         public static string ClearDatabase {
             get {
                 return ResourceManager.GetString("ClearDatabase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove all stored embeddings from the database.
+        /// </summary>
+        public static string ClearDatabaseDescription {
+            get {
+                return ResourceManager.GetString("ClearDatabaseDescription", resourceCulture);
             }
         }
         
@@ -162,6 +198,24 @@ namespace ClippyAI.Resources {
         public static string ClipboardContent {
             get {
                 return ResourceManager.GetString("ClipboardContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Displays the current clipboard text content.
+        /// </summary>
+        public static string ClipboardContentDescription {
+            get {
+                return ResourceManager.GetString("ClipboardContentDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Displays the current clipboard image content.
+        /// </summary>
+        public static string ClipboardImageDescription {
+            get {
+                return ResourceManager.GetString("ClipboardImageDescription", resourceCulture);
             }
         }
         
@@ -220,6 +274,15 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open the configuration dialog.
+        /// </summary>
+        public static string ConfigurationDescription {
+            get {
+                return ResourceManager.GetString("ConfigurationDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ⚙️ Configure Hotkey Device.
         /// </summary>
         public static string ConfigureHotkeyDevice {
@@ -229,20 +292,20 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ❓ Do you really want to close ClippyAI?.
+        ///   Looks up a localized string similar to Auto-detect and configure the keyboard device for hotkeys.
         /// </summary>
-        public static string ConfirmClose {
+        public static string ConfigureHotkeyDeviceDescription {
             get {
-                return ResourceManager.GetString("ConfirmClose", resourceCulture);
+                return ResourceManager.GetString("ConfigureHotkeyDeviceDescription", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ⚠️ Do you really want to delete the selected model?.
+        ///   Looks up a localized string similar to Do you really want to close ClippyAI?.
         /// </summary>
-        public static string ConfirmDelete {
+        public static string ConfirmClose {
             get {
-                return ResourceManager.GetString("ConfirmDelete", resourceCulture);
+                return ResourceManager.GetString("ConfirmClose", resourceCulture);
             }
         }
         
@@ -274,6 +337,15 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select the default language for responses.
+        /// </summary>
+        public static string DefaultLanguageDescription {
+            get {
+                return ResourceManager.GetString("DefaultLanguageDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 🧠 Default Model:.
         /// </summary>
         public static string DefaultModel {
@@ -288,6 +360,15 @@ namespace ClippyAI.Resources {
         public static string DefaultTask {
             get {
                 return ResourceManager.GetString("DefaultTask", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select the default task to run in auto mode.
+        /// </summary>
+        public static string DefaultTaskDescription {
+            get {
+                return ResourceManager.GetString("DefaultTaskDescription", resourceCulture);
             }
         }
         
@@ -310,6 +391,15 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete the selected model (Ollama only).
+        /// </summary>
+        public static string DeleteModelDescription {
+            get {
+                return ResourceManager.GetString("DeleteModelDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ❌ Disabled.
         /// </summary>
         public static string Disabled {
@@ -324,6 +414,15 @@ namespace ClippyAI.Resources {
         public static string EmbeddingModel {
             get {
                 return ResourceManager.GetString("EmbeddingModel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Model to use for generating embeddings (e.g. nomic-embed-text).
+        /// </summary>
+        public static string EmbeddingModelDescription {
+            get {
+                return ResourceManager.GetString("EmbeddingModelDescription", resourceCulture);
             }
         }
         
@@ -373,6 +472,15 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Route Ollama traffic through an SSH tunnel.
+        /// </summary>
+        public static string EnableSSHTunnelingDescription {
+            get {
+                return ResourceManager.GetString("EnableSSHTunnelingDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 🏷️ Enter Model Name:.
         /// </summary>
         public static string EnterModelName {
@@ -418,6 +526,15 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Get the next stored response for this query.
+        /// </summary>
+        public static string GetNextResponseDescription {
+            get {
+                return ResourceManager.GetString("GetNextResponseDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 📷 Image Source:.
         /// </summary>
         public static string ImageSource {
@@ -432,6 +549,15 @@ namespace ClippyAI.Resources {
         public static string ImageSourceClipboard {
             get {
                 return ResourceManager.GetString("ImageSourceClipboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select the image source: Clipboard or Webcam.
+        /// </summary>
+        public static string ImageSourceDescription {
+            get {
+                return ResourceManager.GetString("ImageSourceDescription", resourceCulture);
             }
         }
         
@@ -454,6 +580,15 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enable to process images instead of text for this task.
+        /// </summary>
+        public static string IsImageTaskDescription {
+            get {
+                return ResourceManager.GetString("IsImageTaskDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 🌐 Language:.
         /// </summary>
         public static string Language {
@@ -472,11 +607,29 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Linux evdev keyboard device used for global hotkey detection.
+        /// </summary>
+        public static string LinuxKeyboardDeviceDescription {
+            get {
+                return ResourceManager.GetString("LinuxKeyboardDeviceDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 🔄 Local Tunnel:.
         /// </summary>
         public static string LocalTunnel {
             get {
                 return ResourceManager.GetString("LocalTunnel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Local port forwarding (format: local_port:remote_host:remote_port).
+        /// </summary>
+        public static string LocalTunnelDescription {
+            get {
+                return ResourceManager.GetString("LocalTunnelDescription", resourceCulture);
             }
         }
         
@@ -522,6 +675,15 @@ namespace ClippyAI.Resources {
         public static string ModelDeletionFailedWithStatus {
             get {
                 return ResourceManager.GetString("ModelDeletionFailedWithStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select the AI model to use for this task.
+        /// </summary>
+        public static string ModelDescription {
+            get {
+                return ResourceManager.GetString("ModelDescription", resourceCulture);
             }
         }
         
@@ -616,6 +778,15 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to URL for the local Ollama API (default: http://localhost:11434).
+        /// </summary>
+        public static string OllamaUrlDescription {
+            get {
+                return ResourceManager.GetString("OllamaUrlDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 🔑 OpenAI API Key:.
         /// </summary>
         public static string OpenAIApiKey {
@@ -625,11 +796,29 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Your OpenAI API key.
+        /// </summary>
+        public static string OpenAIApiKeyDescription {
+            get {
+                return ResourceManager.GetString("OpenAIApiKeyDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 🔗 OpenAI Base URL:.
         /// </summary>
         public static string OpenAIBaseUrl {
             get {
                 return ResourceManager.GetString("OpenAIBaseUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OpenAI API base URL (default: https://api.openai.com/v1).
+        /// </summary>
+        public static string OpenAIBaseUrlDescription {
+            get {
+                return ResourceManager.GetString("OpenAIBaseUrlDescription", resourceCulture);
             }
         }
         
@@ -652,6 +841,15 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Displays the AI response output.
+        /// </summary>
+        public static string OutputDescription {
+            get {
+                return ResourceManager.GetString("OutputDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ⏳ Please wait....
         /// </summary>
         public static string PleaseWait {
@@ -666,6 +864,15 @@ namespace ClippyAI.Resources {
         public static string PostgresOllamaUrl {
             get {
                 return ResourceManager.GetString("PostgresOllamaUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ollama URL accessible from the PostgreSQL server.
+        /// </summary>
+        public static string PostgresOllamaUrlDescription {
+            get {
+                return ResourceManager.GetString("PostgresOllamaUrlDescription", resourceCulture);
             }
         }
         
@@ -688,11 +895,29 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to PostgreSQL connection string for the embeddings database.
+        /// </summary>
+        public static string PostgreSQLConnectionStringDescription {
+            get {
+                return ResourceManager.GetString("PostgreSQLConnectionStringDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 🔑 Private Key File:.
         /// </summary>
         public static string PrivateKeyFile {
             get {
                 return ResourceManager.GetString("PrivateKeyFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Path to the SSH private key file.
+        /// </summary>
+        public static string PrivateKeyFileDescription {
+            get {
+                return ResourceManager.GetString("PrivateKeyFileDescription", resourceCulture);
             }
         }
         
@@ -769,6 +994,15 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pull / add a new model (Ollama only).
+        /// </summary>
+        public static string PullModelDescription {
+            get {
+                return ResourceManager.GetString("PullModelDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 🔗 Visit https://ollama.ai/models to see available models..
         /// </summary>
         public static string PullModelSubText {
@@ -787,11 +1021,47 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Refresh the model list.
+        /// </summary>
+        public static string RefreshModelListDescription {
+            get {
+                return ResourceManager.GetString("RefreshModelListDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh the list of available video devices.
+        /// </summary>
+        public static string RefreshVideoDevicesDescription {
+            get {
+                return ResourceManager.GetString("RefreshVideoDevicesDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Regenerate the AI response.
+        /// </summary>
+        public static string RegenerateDescription {
+            get {
+                return ResourceManager.GetString("RegenerateDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 🔄 Remote Tunnel:.
         /// </summary>
         public static string RemoteTunnel {
             get {
                 return ResourceManager.GetString("RemoteTunnel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remote port forwarding (format: remote_port:local_host:local_port).
+        /// </summary>
+        public static string RemoteTunnelDescription {
+            get {
+                return ResourceManager.GetString("RemoteTunnelDescription", resourceCulture);
             }
         }
         
@@ -814,11 +1084,38 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Number of stored template matches found.
+        /// </summary>
+        public static string ResponseCounterDescription {
+            get {
+                return ResourceManager.GetString("ResponseCounterDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Similarity distance of the best matching template.
+        /// </summary>
+        public static string ResponseDistanceDescription {
+            get {
+                return ResourceManager.GetString("ResponseDistanceDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 🔄 Restore Default.
         /// </summary>
         public static string RestoreDefault {
             get {
                 return ResourceManager.GetString("RestoreDefault", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restore the built-in default task configurations.
+        /// </summary>
+        public static string RestoreDefaultTasksDescription {
+            get {
+                return ResourceManager.GetString("RestoreDefaultTasksDescription", resourceCulture);
             }
         }
         
@@ -859,11 +1156,29 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select a model from the list.
+        /// </summary>
+        public static string SelectModelDescription {
+            get {
+                return ResourceManager.GetString("SelectModelDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ⚠️ Please select a task!.
         /// </summary>
         public static string SelectTask {
             get {
                 return ResourceManager.GetString("SelectTask", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select a configured task to execute.
+        /// </summary>
+        public static string SelectTaskDescription {
+            get {
+                return ResourceManager.GetString("SelectTaskDescription", resourceCulture);
             }
         }
         
@@ -895,11 +1210,29 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SSH server port (default: 22).
+        /// </summary>
+        public static string SSHPortDescription {
+            get {
+                return ResourceManager.GetString("SSHPortDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 🖥️ SSH Server:.
         /// </summary>
         public static string SSHServer {
             get {
                 return ResourceManager.GetString("SSHServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SSH server hostname or IP address.
+        /// </summary>
+        public static string SSHServerDescription {
+            get {
+                return ResourceManager.GetString("SSHServerDescription", resourceCulture);
             }
         }
         
@@ -940,11 +1273,29 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 💾 Store All Responses.
+        ///   Looks up a localized string similar to Username for the SSH connection.
+        /// </summary>
+        public static string SSHUsernameDescription {
+            get {
+                return ResourceManager.GetString("SSHUsernameDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Store All Responses.
         /// </summary>
         public static string StoreAllResponses {
             get {
                 return ResourceManager.GetString("StoreAllResponses", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Store all AI responses as templates in the database.
+        /// </summary>
+        public static string StoreAllResponsesDescription {
+            get {
+                return ResourceManager.GetString("StoreAllResponsesDescription", resourceCulture);
             }
         }
         
@@ -954,6 +1305,15 @@ namespace ClippyAI.Resources {
         public static string SystemPrompt {
             get {
                 return ResourceManager.GetString("SystemPrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Global system prompt prepended to every AI request.
+        /// </summary>
+        public static string SystemPromptDescription {
+            get {
+                return ResourceManager.GetString("SystemPromptDescription", resourceCulture);
             }
         }
         
@@ -1003,7 +1363,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ❓ What I should do for you:.
+        ///   Looks up a localized string similar to What I should do for you:.
         /// </summary>
         public static string TaskLabel {
             get {
@@ -1057,11 +1417,29 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Start executing the selected task.
+        /// </summary>
+        public static string TaskStartDescription {
+            get {
+                return ResourceManager.GetString("TaskStartDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ⏹️ Cancel.
         /// </summary>
         public static string TaskStop {
             get {
                 return ResourceManager.GetString("TaskStop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop the currently running task.
+        /// </summary>
+        public static string TaskStopDescription {
+            get {
+                return ResourceManager.GetString("TaskStopDescription", resourceCulture);
             }
         }
         
@@ -1093,6 +1471,15 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Test the connection to the configured AI provider.
+        /// </summary>
+        public static string TestConnectionDescription {
+            get {
+                return ResourceManager.GetString("TestConnectionDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ⏳ Testing....
         /// </summary>
         public static string Testing {
@@ -1120,6 +1507,33 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Similarity threshold for embedding matches.
+        /// </summary>
+        public static string ThresholdDescription {
+            get {
+                return ResourceManager.GetString("ThresholdDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete this response template from the database.
+        /// </summary>
+        public static string ThumbDownDescription {
+            get {
+                return ResourceManager.GetString("ThumbDownDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Store this response as a template in the database.
+        /// </summary>
+        public static string ThumbUpDescription {
+            get {
+                return ResourceManager.GetString("ThumbUpDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 📊 Top K:.
         /// </summary>
         public static string TopK {
@@ -1138,11 +1552,20 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🧬 Use Embeddings.
+        ///   Looks up a localized string similar to Use Embeddings.
         /// </summary>
         public static string UseEmbeddings {
             get {
                 return ResourceManager.GetString("UseEmbeddings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use vector embeddings for response caching.
+        /// </summary>
+        public static string UseEmbeddingsDescription {
+            get {
+                return ResourceManager.GetString("UseEmbeddingsDescription", resourceCulture);
             }
         }
         
@@ -1165,11 +1588,29 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select the video / webcam device to use.
+        /// </summary>
+        public static string VideoDeviceDescription {
+            get {
+                return ResourceManager.GetString("VideoDeviceDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 📷 View Camera.
         /// </summary>
         public static string ViewCamera {
             get {
                 return ResourceManager.GetString("ViewCamera", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Preview the selected video device.
+        /// </summary>
+        public static string ViewCameraDescription {
+            get {
+                return ResourceManager.GetString("ViewCameraDescription", resourceCulture);
             }
         }
         

@@ -25,19 +25,19 @@
         <value>💡 ClippyAI</value>
     </data>
     <data name="Task" xml:space="preserve">
-        <value>Aufgabe</value>
+        <value>Aufgabe:</value>
     </data>
     <data name="TaskLabel" xml:space="preserve">
-        <value>❓ Was ich für dich tun soll:</value>
+        <value>Was ich für dich tun soll:</value>
     </data>
     <data name="TaskStart" xml:space="preserve">
-        <value>Ausführen</value>
+        <value>▶️ Ausführen</value>
     </data>
     <data name="TaskStop" xml:space="preserve">
-        <value>Abbrechen</value>
+        <value>⏹️ Abbrechen</value>
     </data>
     <data name="AutoMode" xml:space="preserve">
-        <value>🤖 Auto-Modus:</value>
+        <value>Auto-Modus</value>
     </data>
     <data name="Enabled" xml:space="preserve">
         <value>✅ An</value>
@@ -118,7 +118,7 @@
         <value>Schreibe eine Antwort auf die E-Mail und teile mit, dass du dich bald um das Problem kümmern wirst.</value>
     </data>
     <data name="Task_22" xml:space="preserve">
-        <value>Fasse diesen Text zusammen.</value>
+        <value>Fasse den Text zusammen.</value>
     </data>
     <data name="Data" xml:space="preserve">
         <value>Daten</value>
@@ -139,28 +139,28 @@
         <value>🧠 Modell:</value>
     </data>
     <data name="SelectTask" xml:space="preserve">
-        <value>⚠️ Bitte wählen Sie eine Aufgabe aus!</value>
+        <value>⚠️ Bitte wähle eine Aufgabe aus!</value>
     </data>
     <data name="SelectModel" xml:space="preserve">
-        <value>⚠️ Bitte wählen Sie ein Modell aus!</value>
+        <value>⚠️ Bitte wähle ein Modell aus!</value>
     </data>
     <data name="TaskCompleted" xml:space="preserve">
         <value>Ergebnis:</value>
     </data>
     <data name="TaskView" xml:space="preserve">
-        <value>Ansehen</value>
+        <value>📋 Ansehen</value>
     </data>
     <data name="Delete" xml:space="preserve">
-        <value>Löschen</value>
+        <value>❌ Löschen</value>
     </data>
     <data name="DeleteModel" xml:space="preserve">
-        <value>Modell löschen</value>
+        <value>❌ Modell löschen</value>
     </data>
     <data name="ConfirmDeleteModel" xml:space="preserve">
-        <value>Möchten Sie das Modell wirklich löschen?</value>
+        <value>⚠️ Möchtest du das Modell wirklich löschen?</value>
     </data>
     <data name="Pull" xml:space="preserve">
-        <value>Pull</value>
+        <value>Pullen</value>
     </data>
     <data name="Yes" xml:space="preserve">
         <value>✅ Ja</value>
@@ -172,19 +172,16 @@
         <value>❌ Fehler</value>
     </data>
     <data name="ErrorMessage" xml:space="preserve">
-        <value>⚠️ Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.</value>
+        <value>⚠️ Ein Fehler ist aufgetreten. Bitte versuche es erneut.</value>
     </data>
     <data name="OK" xml:space="preserve">
-        <value>OK</value>
+        <value>✅ OK</value>
     </data>
     <data name="Cancel" xml:space="preserve">
-        <value>Abbrechen</value>
+        <value>❌ Abbrechen</value>
     </data>
     <data name="ConfirmClose" xml:space="preserve">
-        <value>❓ Möchten Sie ClippyAI wirklich schließen?</value>
-    </data>
-    <data name="ConfirmDelete" xml:space="preserve">
-        <value>⚠️ Möchten Sie das Modell wirklich löschen?</value>
+        <value>Möchtest du ClippyAI wirklich schließen?</value>
     </data>
     <data name="CloseApplication" xml:space="preserve">
         <value>🚪 ClippyAI schließen</value>
@@ -193,7 +190,7 @@
         <value>⬇️ Modell abrufen</value>
     </data>
     <data name="EnterModelName" xml:space="preserve">
-        <value>🏷️ Geben Sie den Modellnamen ein:</value>
+        <value>🏷️ Gib den Modellnamen ein:</value>
     </data>
     <data name="PullingModel" xml:space="preserve">
         <value>⏳ Modell abrufen...</value>
@@ -205,7 +202,7 @@
         <value>✅ Modellabruf erfolgreich!</value>
     </data>
     <data name="PullModelSubText" xml:space="preserve">
-        <value>🔗 Besuchen Sie https://ollama.ai/models, um die verfügbaren Modelle zu sehen.</value>
+        <value>🔗 Besuche https://ollama.ai/models, um die verfügbaren Modelle zu sehen.</value>
     </data>
     <data name="Threshold" xml:space="preserve">
         <value>Schwellwert:</value>
@@ -223,10 +220,10 @@
         <value>Analysiere Bild</value>
     </data>
     <data name="Show" xml:space="preserve">
-        <value>Anzeigen</value>
+        <value>👁️ Anzeigen</value>
     </data>
     <data name="Exit" xml:space="preserve">
-        <value>Beenden</value>
+        <value>🚪 Beenden</value>
     </data>
     <data name="ModelPullCompleted" xml:space="preserve">
         <value>✅ Modell-Download abgeschlossen.</value>
@@ -235,7 +232,7 @@
         <value>❌ Modell-Download fehlgeschlagen.</value>
     </data>
     <data name="ModelPullFailedWithStatus" xml:space="preserve">
-        <value>Modell-Download fehlgeschlagen mit Status: {0}</value>
+        <value>❌ Modell-Download fehlgeschlagen mit Status: {0}</value>
     </data>
     <data name="ModelDeletedSuccessfully" xml:space="preserve">
         <value>✅ Modell erfolgreich gelöscht.</value>
@@ -244,13 +241,13 @@
         <value>❌ Modell-Löschung fehlgeschlagen.</value>
     </data>
     <data name="ModelDeletionFailedWithStatus" xml:space="preserve">
-        <value>Modell-Löschung fehlgeschlagen mit Status: {0}</value>
+        <value>❌ Modell-Löschung fehlgeschlagen mit Status: {0}</value>
     </data>
     <data name="ResultStoredSuccessfully" xml:space="preserve">
         <value>✅ Ergebnis erfolgreich als Vorlage in der Datenbank gespeichert!</value>
     </data>
     <data name="CameraWindow" xml:space="preserve">
-        <value>Kamera-Fenster</value>
+        <value>📷 Kamera-Ansicht</value>
     </data>
     <data name="ClippyAIResult" xml:space="preserve">
         <value>📄 ClippyAI Ergebnis</value>
@@ -277,7 +274,7 @@
         <value>🔄 Remote-Tunnel:</value>
     </data>
     <data name="PublicKey" xml:space="preserve">
-        <value>Öffentlicher Schlüssel:</value>
+        <value>🔑 Öffentlicher Schlüssel:</value>
     </data>
     <data name="EnableSSHTunnel" xml:space="preserve">
         <value>SSH-Tunnel aktivieren</value>
@@ -319,13 +316,13 @@
         <value>📝 Standardaufgabe:</value>
     </data>
     <data name="SystemPrompt" xml:space="preserve">
-        <value>💬 Systemaufforderung:</value>
+        <value>💬 System-Prompt:</value>
     </data>
     <data name="LinuxKeyboardDevice" xml:space="preserve">
-        <value>⌨️ Linux-Tastatur-Gerät:</value>
+        <value>⌨️ Linux-Tastatur:</value>
     </data>
     <data name="ConfigureHotkeyDevice" xml:space="preserve">
-        <value>⚙️ Tastaturkürzel-Gerät konfigurieren</value>
+        <value>⚙️ Tastatur konfigurieren</value>
     </data>
     <data name="EnableSSHTunneling" xml:space="preserve">
         <value>🔒 SSH-Tunneling aktivieren</value>
@@ -346,7 +343,7 @@
         <value>📊 Vektordatenbank-Einstellungen</value>
     </data>
     <data name="StoreAllResponses" xml:space="preserve">
-        <value>💾 Alle Antworten speichern</value>
+        <value>Alle Antworten speichern</value>
     </data>
     <data name="PostgreSQLConnectionString" xml:space="preserve">
         <value>🗄️ PostgreSQL-Verbindungszeichenfolge:</value>
@@ -373,7 +370,7 @@
         <value>🔐 SSH-Tunnel-Einstellungen</value>
     </data>
     <data name="TaskSpecificConfigurations" xml:space="preserve">
-        <value>📝 Aufgabenspezifische Konfigurationen</value>
+        <value>📝 Aufgaben konfigurieren</value>
     </data>
     <data name="Tasks" xml:space="preserve">
         <value>📝 Aufgaben</value>
@@ -382,7 +379,7 @@
         <value>✏️ Neue Aufgabe:</value>
     </data>
     <data name="Add" xml:space="preserve">
-        <value>Neu</value>
+        <value>➕ Neu</value>
     </data>
     <data name="RestoreDefault" xml:space="preserve">
         <value>🔄 Zurücksetzen</value>
@@ -424,7 +421,7 @@
         <value>🔄 Aktualisieren</value>
     </data>
     <data name="AICompanion" xml:space="preserve">
-        <value> - Ihr KI-Begleiter</value>
+        <value> - Dein KI-Begleiter</value>
     </data>
     <data name="General" xml:space="preserve">
         <value>⚙️ Allgemein</value>
@@ -451,10 +448,10 @@
         <value>📸 Screenshot aufnehmen</value>
     </data>
     <data name="NoImageInClipboard" xml:space="preserve">
-        <value>❌ Kein Bild in der Zwischenablage. Kopieren Sie zuerst ein Bild.</value>
+        <value>❌ Kein Bild in der Zwischenablage. Kopiere zuerst ein Bild in die Zwischenablage!</value>
     </data>
     <data name="IsImageTask" xml:space="preserve">
-        <value>🖼️ Bildanalyse-Aufgabe</value>
+        <value>🖼️ Bildanalyse</value>
     </data>
     <data name="ImageSource" xml:space="preserve">
         <value>📷 Bildquelle:</value>
@@ -464,5 +461,203 @@
     </data>
     <data name="ImageSourceWebcam" xml:space="preserve">
         <value>🎥 Webcam</value>
+    </data>
+    <data name="AIProviderDescription" xml:space="preserve">
+        <value>Den KI-Anbieter auswählen (Ollama oder OpenAI)</value>
+    </data>
+    <data name="AIProviderSettingsDescription" xml:space="preserve">
+        <value>Einstellungen für den ausgewählten KI-Anbieter konfigurieren</value>
+    </data>
+    <data name="OllamaSettingsDescription" xml:space="preserve">
+        <value>Ollama-Server-Einstellungen konfigurieren</value>
+    </data>
+    <data name="OpenAISettingsDescription" xml:space="preserve">
+        <value>OpenAI-API-Einstellungen konfigurieren</value>
+    </data>
+    <data name="OpenAIApiKeyDescription" xml:space="preserve">
+        <value>Ihr OpenAI-API-Schlüssel für die Authentifizierung</value>
+    </data>
+    <data name="OpenAIBaseUrlDescription" xml:space="preserve">
+        <value>Benutzerdefinierte Basis-URL für OpenAI-API (optional)</value>
+    </data>
+    <data name="DefaultModelDescription" xml:space="preserve">
+        <value>Das Standard-KI-Modell für neue Aufgaben</value>
+    </data>
+    <data name="DefaultTaskDescription" xml:space="preserve">
+        <value>Die Standardaufgabe für neue Anfragen</value>
+    </data>
+    <data name="SystemPromptDescription" xml:space="preserve">
+        <value>Der System-Prompt, der das Verhalten der KI definiert</value>
+    </data>
+    <data name="VectorDatabaseSettingsDescription" xml:space="preserve">
+        <value>Einstellungen für die Vektordatenbank und Embeddings</value>
+    </data>
+    <data name="StoreAllResponsesDescription" xml:space="preserve">
+        <value>Alle KI-Antworten als Vorlagen in der Datenbank speichern</value>
+    </data>
+    <data name="PostgreSQLConnectionStringDescription" xml:space="preserve">
+        <value>Verbindungszeichenfolge für die PostgreSQL-Datenbank</value>
+    </data>
+    <data name="EmbeddingModelDescription" xml:space="preserve">
+        <value>Das Modell für die Erstellung von Embeddings</value>
+    </data>
+    <data name="ClearDatabaseDescription" xml:space="preserve">
+        <value>Alle gespeicherten Embeddings aus der Datenbank entfernen</value>
+    </data>
+    <data name="EmbeddingsCountDescription" xml:space="preserve">
+        <value>Anzahl der gespeicherten Embedding-Datensätze</value>
+    </data>
+    <data name="VisionSettingsDescription" xml:space="preserve">
+        <value>Einstellungen für Bildverarbeitung und Webcam</value>
+    </data>
+    <data name="VideoDeviceDescription" xml:space="preserve">
+        <value>Das zu verwendende Video-/Webcam-Gerät auswählen</value>
+    </data>
+    <data name="RefreshVideoDevicesDescription" xml:space="preserve">
+        <value>Die Liste der verfügbaren Videogeräte aktualisieren</value>
+    </data>
+    <data name="ViewCameraDescription" xml:space="preserve">
+        <value>Vorschau des ausgewählten Videogeräts anzeigen</value>
+    </data>
+    <data name="LinuxKeyboardDeviceDescription" xml:space="preserve">
+        <value>Linux evdev Tastaturgerät für globale Hotkey-Erkennung</value>
+    </data>
+    <data name="ConfigureHotkeyDeviceDescription" xml:space="preserve">
+        <value>Tastaturgerät für Hotkeys automatisch erkennen und konfigurieren</value>
+    </data>
+    <data name="EnableSSHTunnelingDescription" xml:space="preserve">
+        <value>Lokalen LLM-Zugriff über einen SSH-Tunnel leiten</value>
+    </data>
+    <data name="SSHUsernameDescription" xml:space="preserve">
+        <value>Benutzername für die SSH-Verbindung</value>
+    </data>
+    <data name="SSHServerDescription" xml:space="preserve">
+        <value>SSH-Server-Hostname oder IP-Adresse</value>
+    </data>
+    <data name="SSHPortDescription" xml:space="preserve">
+        <value>SSH-Server-Port (Standard: 22)</value>
+    </data>
+    <data name="LocalTunnelDescription" xml:space="preserve">
+        <value>Lokale Port-Weiterleitung (Format: lokaler_port:entfernter_host:entfernter_port)</value>
+    </data>
+    <data name="RemoteTunnelDescription" xml:space="preserve">
+        <value>Entfernte Port-Weiterleitung (Format: entfernter_port:lokaler_host:lokaler_port)</value>
+    </data>
+    <data name="PrivateKeyFileDescription" xml:space="preserve">
+        <value>Pfad zur SSH-privaten Schlüsseldatei</value>
+    </data>
+    <data name="RestoreDefaultTasksDescription" xml:space="preserve">
+        <value>Die eingebauten Standardaufgaben wiederherstellen</value>
+    </data>
+    <data name="ModelDescription" xml:space="preserve">
+        <value>Das KI-Modell, das für diese Aufgabe verwendet werden soll</value>
+    </data>
+    <data name="IsImageTaskDescription" xml:space="preserve">
+        <value>Aktivieren, um Bilder anstatt Text für diese Aufgabe zu verarbeiten</value>
+    </data>
+    <data name="ImageSourceDescription" xml:space="preserve">
+        <value>Quelle für Bildanalyse: Zwischenablage oder Webcam</value>
+    </data>
+    <data name="ClipboardContentDescription" xml:space="preserve">
+        <value>Zeigt den aktuellen Textinhalt der Zwischenablage an</value>
+    </data>
+    <data name="ClipboardImageDescription" xml:space="preserve">
+        <value>Zeigt den aktuellen Bildinhalt der Zwischenablage an</value>
+    </data>
+    <data name="SelectTaskDescription" xml:space="preserve">
+        <value>Eine konfigurierte Aufgabe zur Ausführung auswählen</value>
+    </data>
+    <data name="TaskStartDescription" xml:space="preserve">
+        <value>Die ausgewählte Aufgabe starten</value>
+    </data>
+    <data name="TaskStopDescription" xml:space="preserve">
+        <value>Die aktuell laufende Aufgabe stoppen</value>
+    </data>
+    <data name="CaptureScreenshotDescription" xml:space="preserve">
+        <value>Einen Screenshot aufnehmen und als Eingabe verwenden</value>
+    </data>
+    <data name="ConfigurationDescription" xml:space="preserve">
+        <value>Den Konfigurationsdialog öffnen</value>
+    </data>
+    <data name="OutputDescription" xml:space="preserve">
+        <value>Zeigt die KI-Antwort-Ausgabe an</value>
+    </data>
+    <data name="GetNextResponseDescription" xml:space="preserve">
+        <value>Die nächste gespeicherte Antwort für diese Anfrage abrufen</value>
+    </data>
+    <data name="ThumbUpDescription" xml:space="preserve">
+        <value>Diese Antwort als Vorlage in der Datenbank speichern</value>
+    </data>
+    <data name="ThumbDownDescription" xml:space="preserve">
+        <value>Diese Antwortvorlage aus der Datenbank löschen</value>
+    </data>
+    <data name="RegenerateDescription" xml:space="preserve">
+        <value>Die KI-Antwort neu generieren</value>
+    </data>
+    <data name="ResponseCounterDescription" xml:space="preserve">
+        <value>Anzahl der gefundenen Vorlagen im Cache</value>
+    </data>
+    <data name="ResponseDistanceDescription" xml:space="preserve">
+        <value>Ähnlichkeitsabstand der besten übereinstimmenden Vorlage</value>
+    </data>
+    <data name="TestConnectionDescription" xml:space="preserve">
+        <value>Die Verbindung zum KI-Anbieter testen</value>
+    </data>
+    <data name="SaveDescription" xml:space="preserve">
+        <value>Die aktuellen Einstellungen speichern</value>
+    </data>
+    <data name="CloseDescription" xml:space="preserve">
+        <value>Den Konfigurationsdialog schließen</value>
+    </data>
+    <data name="RefreshDescription" xml:space="preserve">
+        <value>Die Liste der verfügbaren Modelle aktualisieren</value>
+    </data>
+    <data name="PullDescription" xml:space="preserve">
+        <value>Ein neues Modell vom Server herunterladen</value>
+    </data>
+    <data name="DeleteDescription" xml:space="preserve">
+        <value>Das ausgewählte Modell löschen</value>
+    </data>
+    <data name="AddDescription" xml:space="preserve">
+        <value>Eine neue Aufgabe hinzufügen</value>
+    </data>
+    <data name="RestoreDefaultDescription" xml:space="preserve">
+        <value>Alle Einstellungen auf Standardwerte zurücksetzen</value>
+    </data>
+    <data name="TaskViewDescription" xml:space="preserve">
+        <value>Das Ergebnis der Aufgabe in einem separaten Fenster anzeigen</value>
+    </data>
+    <data name="ShowDescription" xml:space="preserve">
+        <value>Das Kamerafenster anzeigen</value>
+    </data>
+    <data name="ExitDescription" xml:space="preserve">
+        <value>Die Anwendung beenden</value>
+    </data>
+    <data name="AnalyzeImageDescription" xml:space="preserve">
+        <value>Das Bild in der Zwischenablage analysieren</value>
+    </data>
+    <data name="OllamaUrlDescription" xml:space="preserve">
+        <value>URL des Ollama-Servers</value>
+    </data>
+    <data name="SelectModelDescription" xml:space="preserve">
+        <value>Wähle das zu verwendende KI-Modell aus</value>
+    </data>
+    <data name="PullModelDescription" xml:space="preserve">
+        <value>Lade ein neues Modell vom Server herunter</value>
+    </data>
+    <data name="DeleteModelDescription" xml:space="preserve">
+        <value>Lösche das ausgewählte Modell</value>
+    </data>
+    <data name="RefreshModelListDescription" xml:space="preserve">
+        <value>Aktualisiere die Liste der verfügbaren Modelle</value>
+    </data>
+    <data name="UseEmbeddingsDescription" xml:space="preserve">
+        <value>Verwende Vektor-Embeddings für die Antwort-Zwischenspeicherung</value>
+    </data>
+    <data name="PostgresOllamaUrlDescription" xml:space="preserve">
+        <value>Ollama-URL für PostgreSQL-Embeddings</value>
+    </data>
+    <data name="ThresholdDescription" xml:space="preserve">
+        <value>Ähnlichkeitsschwellwert für Embedding-Übereinstimmungen</value>
     </data>
 </root>

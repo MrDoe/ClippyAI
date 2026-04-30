@@ -13,29 +13,35 @@
         <vm:MainViewModel />
     </Design.DataContext>
 
+    <UserControl.Styles>
+        <Style Selector="Label">
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+        <Style Selector="TextBox">
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+    </UserControl.Styles>
+
     <!-- Margins: left, top, right, bottom -->
     <StackPanel Width="490" Margin="0">
         <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
             <Image Source="/Assets/bulb_high_128.png" Width="40" Height="40"
                 VerticalAlignment="Center" HorizontalAlignment="Left" />
             <Label Content="ClippyAI" HorizontalAlignment="Center" VerticalAlignment="Center"
-                FontSize="16" />
-            <Label Content="{x:Static resources:Resources.AICompanion}" HorizontalAlignment="Right" VerticalAlignment="Center"
-                FontSize="14" />
+                FontSize="18" FontWeight="Bold" />
+            <Label Content="{x:Static resources:Resources.AICompanion}" HorizontalAlignment="Right" VerticalAlignment="Center" />
         </StackPanel>
         
         <!-- Input -->
         <Label Content="{x:Static resources:Resources.ClipboardContent}" Margin="0 0 0 3"
-            HorizontalAlignment="Left"
-            FontSize="14" />
+            HorizontalAlignment="Left" />
         <TextBox x:Name="txtInput" Text="{Binding Input}"
             IsReadOnly="True"
             Width="490"
             Height="350"
-            FontSize="14"
             ScrollViewer.VerticalScrollBarVisibility="Auto"
             TextWrapping="Wrap"
-            ToolTip.Tip="Displays the input text"
+            ToolTip.Tip="{x:Static resources:Resources.ClipboardContentDescription}"
             IsVisible="{Binding IsTextInputVisible}" />
 
         <!-- Display clipboard image -->
@@ -43,19 +49,19 @@
             Width="490" Height="200" 
             Stretch="Uniform" 
             Margin="0 10 0 0" 
-            ToolTip.Tip="Displays the clipboard image"
+            ToolTip.Tip="{x:Static resources:Resources.ClipboardImageDescription}"
             IsVisible="{Binding IsImageInputVisible}" />
 
         <!-- Task selection -->
         <Label Content="{x:Static resources:Resources.TaskLabel}" HorizontalAlignment="Left"
-            FontSize="14" Margin="0 10 0 3" />
+            Margin="0 10 0 3" />
         
         <!-- Task Configuration Dropdown -->
         <StackPanel Orientation="Vertical" Margin="0,0,0,10">
             <ComboBox x:Name="cboTaskConfig" SelectedItem="{Binding SelectedTaskConfiguration}"
                 ItemsSource="{Binding TaskConfigurations}"
                 HorizontalAlignment="Left" Width="490"
-                ToolTip.Tip="Select a configured task">
+                ToolTip.Tip="{x:Static resources:Resources.SelectTaskDescription}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding TaskName}" />
@@ -68,51 +74,49 @@
         <StackPanel Orientation="Horizontal">
             <Button Content="{x:Static resources:Resources.TaskStart}"
                 Command="{Binding AskClippyCommand}"
-                HorizontalAlignment="Left" Margin="0 10 0 0"
-                ToolTip.Tip="Start the selected task">
-            </Button>
+                HorizontalAlignment="Left" Margin="0 10 0 0" Height="30"
+                ToolTip.Tip="{x:Static resources:Resources.TaskStartDescription}"
+            />
 
             <Button Content="{x:Static resources:Resources.TaskStop}"
                 Command="{Binding StopClippyTaskCommand}"
-                HorizontalAlignment="Left" Margin="10 10 0 0"
-                ToolTip.Tip="Stop the current task" />
+                HorizontalAlignment="Left" Margin="10 10 0 0" Height="30"
+                ToolTip.Tip="{x:Static resources:Resources.TaskStopDescription}" />
 
             <Button Content="{x:Static resources:Resources.ViewCamera}"
                 Command="{Binding ShowCameraCommand}"
-                HorizontalAlignment="Left" Margin="10 10 0 0"
-                ToolTip.Tip="Show the webcam video feed" />
+                HorizontalAlignment="Left" Margin="10 10 0 0" Height="30"
+                ToolTip.Tip="{x:Static resources:Resources.ViewCameraDescription}" />
 
             <Button Content="{x:Static resources:Resources.CaptureScreenshot}" 
                 Command="{Binding CaptureScreenshotCommand}"
-                HorizontalAlignment="Left" Margin="10 10 0 0"
-                ToolTip.Tip="Capture a screenshot" IsVisible="false" />
+                HorizontalAlignment="Left" Margin="10 10 0 0" Height="30"
+                ToolTip.Tip="{x:Static resources:Resources.CaptureScreenshotDescription}" IsVisible="false" />
 
             <Button Content="{x:Static resources:Resources.Configuration}"
                 Command="{Binding OpenConfigurationCommand}"
                 HorizontalAlignment="Right" VerticalAlignment="Center" 
-                Margin="10 10 0 0"
-                ToolTip.Tip="Open Configuration Dialog" />
+                Margin="10 10 0 0" Height="30"
+                ToolTip.Tip="{x:Static resources:Resources.ConfigurationDescription}" />
         </StackPanel>
 
         <!-- Output -->
         <Label Content="{x:Static resources:Resources.Output}" Margin="0 10 0 3"
-            HorizontalAlignment="Left"
-            FontSize="14" />
+            HorizontalAlignment="Left" />
         <TextBox x:Name="txtOutput" Text="{Binding Output}"
             AcceptsReturn="True"
             AcceptsTab="True"
             Width="490"
             Height="550"
-            FontSize="14"
             ScrollViewer.VerticalScrollBarVisibility="Auto"
             TextWrapping="Wrap"
-            ToolTip.Tip="Displays the output text" />
+            ToolTip.Tip="{x:Static resources:Resources.OutputDescription}" />
         
         <!-- Next answer button (play symbol) -->
         <Button Content="&#xf101;" FontFamily="avares://ClippyAI/Assets/fontawesome/otfs/Font Awesome 6 Free-Solid-900.otf#Font Awesome 6"
             FontSize="16" Width="32" Height="30" Margin="4 -38 0 0"
             Command="{Binding GetNextResponseCommand}"
-            ToolTip.Tip="Get next response"
+            ToolTip.Tip="{x:Static resources:Resources.GetNextResponseDescription}"
             HorizontalAlignment="Left" />
 
         <!-- thumbs up button -->
@@ -120,7 +124,7 @@
             FontSize="16" Width="32" Height="30" Margin="38 -38 0 0"
             Command="{Binding ThumbUpCommand}"
             HorizontalAlignment="Left" 
-            ToolTip.Tip="Store response as template in database" />
+            ToolTip.Tip="{x:Static resources:Resources.ThumbUpDescription}" />
 
         <!-- thumbs down button -->
         <Button Content="&#xf165;"
@@ -128,23 +132,23 @@
         FontSize="16" Width="32" Height="30" Margin="72 -38 0 0"
         Command="{Binding ThumbDownCommand}"
         HorizontalAlignment="Left" 
-        ToolTip.Tip="Delete response template from database" />
+        ToolTip.Tip="{x:Static resources:Resources.ThumbDownDescription}" />
 
         <!-- regenerate button -->
         <Button Content="&#x21BB;" FontFamily="avares://ClippyAI/Assets/fontawesome/otfs/Font Awesome 6 Free-Solid-900.otf#Font Awesome 6"
             FontSize="16" Width="32" Height="30" Margin="108 -38 0 0"
             Command="{Binding RegenerateCommand}"
             HorizontalAlignment="Left"
-            ToolTip.Tip="Regenerate response" />
+            ToolTip.Tip="{x:Static resources:Resources.RegenerateDescription}" />
 
         <!-- Response counter -->
         <Label Content="{Binding ResponseCounter}" HorizontalAlignment="Left"
-            FontSize="14" Margin="440 -30 0 0"
-            ToolTip.Tip="Number of matches" />
+            Margin="440 -30 0 0"
+            ToolTip.Tip="{x:Static resources:Resources.ResponseCounterDescription}" />
 
         <!-- Response distance -->
         <Label Content="{Binding ResponseDistance}" HorizontalAlignment="Left"
-            FontSize="14" Margin="150 -30 0 0"
-            ToolTip.Tip="The distance of the template to the original question." />
+            Margin="150 -30 0 0"
+            ToolTip.Tip="{x:Static resources:Resources.ResponseDistanceDescription}" />
     </StackPanel>
 </UserControl>

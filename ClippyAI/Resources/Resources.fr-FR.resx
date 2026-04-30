@@ -30,16 +30,16 @@
         <value>Tâche</value>
     </data>
     <data name="TaskLabel" xml:space="preserve">
-        <value>❓ Ce que je dois faire pour vous:</value>
+        <value>Ce que je dois faire pour vous:</value>
     </data>
     <data name="TaskStart" xml:space="preserve">
-        <value>Exécuter</value>
+        <value>▶️ Exécuter</value>
     </data>
     <data name="TaskStop" xml:space="preserve">
-        <value>Annuler</value>
+        <value>⏹️ Annuler</value>
     </data>
     <data name="AutoMode" xml:space="preserve">
-        <value>🤖 Mode automatique :</value>
+        <value>Mode automatique</value>
     </data>
     <data name="Enabled" xml:space="preserve">
         <value>✅ Activé</value>
@@ -54,7 +54,7 @@
         <value>Réponse :</value>
     </data>
     <data name="Clipboard" xml:space="preserve">
-        <value>Clipboard</value>
+        <value>📋 Clipboard</value>
     </data>
     <data name="Task_1" xml:space="preserve">
         <value>Écrire une réponse à l'e-mail.</value>
@@ -158,9 +158,6 @@
     <data name="DeleteModel" xml:space="preserve">
         <value>Supprimer le modèle</value>
     </data>
-    <data name="ConfirmDelete" xml:space="preserve">
-        <value>Voulez-vous vraiment supprimer le modèle?</value>
-    </data>
     <data name="Pull" xml:space="preserve">
         <value>Pull</value>
     </data>
@@ -177,13 +174,13 @@
         <value>⚠️ Une erreur s'est produite. Veuillez réessayer.</value>
     </data>
     <data name="OK" xml:space="preserve">
-        <value>OK</value>
+        <value>✅ OK</value>
     </data>
     <data name="Cancel" xml:space="preserve">
-        <value>Annuler</value>
+        <value>❌ Annuler</value>
     </data>
     <data name="ConfirmClose" xml:space="preserve">
-        <value>❓ Voulez-vous vraiment fermer ClippyAI?</value>
+        <value>Voulez-vous vraiment fermer ClippyAI?</value>
     </data>
     <data name="ConfirmDeleteModel" xml:space="preserve">
         <value>⚠️ Voulez-vous vraiment supprimer le modèle?</value>
@@ -213,7 +210,7 @@
         <value>📊 Seuil:</value>
     </data>
     <data name="UseEmbeddings" xml:space="preserve">
-        <value>🧬 Utiliser les embeddings</value>
+        <value>Utiliser les embeddings</value>
     </data>
     <data name="PostgreSqlConnection" xml:space="preserve">
         <value>🗄️ Connexion PostgreSQL:</value>
@@ -348,7 +345,7 @@
         <value>📊 Paramètres de Base de Données Vectorielle</value>
     </data>
     <data name="StoreAllResponses" xml:space="preserve">
-        <value>💾 Stocker Toutes les Réponses</value>
+        <value>Stocker Toutes les Réponses</value>
     </data>
     <data name="PostgreSQLConnectionString" xml:space="preserve">
         <value>🗄️ Chaîne de Connexion PostgreSQL :</value>

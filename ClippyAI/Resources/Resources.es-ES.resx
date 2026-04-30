@@ -30,16 +30,16 @@
         <value>Tarea</value>
     </data>
     <data name="TaskLabel" xml:space="preserve">
-        <value>❓ Lo que debo hacer por usted:</value>
+        <value>Lo que debo hacer por usted:</value>
     </data>
     <data name="TaskStart" xml:space="preserve">
-        <value>Ejecutar</value>
+        <value>▶️ Ejecutar</value>
     </data>
     <data name="TaskStop" xml:space="preserve">
-        <value>Cancelar</value>
+        <value>⏹️ Cancelar</value>
     </data>
     <data name="AutoMode" xml:space="preserve">
-        <value>🤖 Modo automático:</value>
+        <value>Modo automático</value>
     </data>
     <data name="Enabled" xml:space="preserve">
         <value>✅ Activado</value>
@@ -178,16 +178,13 @@
         <value>⚠️ Se ha producido un error. Por favor, inténtelo de nuevo.</value>
     </data>
     <data name="OK" xml:space="preserve">
-        <value>Aceptar</value>
+        <value>✅ Aceptar</value>
     </data>
     <data name="Cancel" xml:space="preserve">
-        <value>Cancelar</value>
+        <value>❌ Cancelar</value>
     </data>
     <data name="ConfirmClose" xml:space="preserve">
-        <value>❓ ¿Realmente desea cerrar ClippyAI?</value>
-    </data>
-    <data name="ConfirmDelete" xml:space="preserve">
-        <value>⚠️ ¿Realmente desea eliminar el modelo?</value>
+        <value>¿Realmente desea cerrar ClippyAI?</value>
     </data>
     <data name="CloseApplication" xml:space="preserve">
         <value>🚪 Cerrar ClippyAI</value>
@@ -214,7 +211,7 @@
         <value>📊 Umbral:</value>
     </data>
     <data name="UseEmbeddings" xml:space="preserve">
-        <value>🧬 Usar incrustaciones</value>
+        <value>Usar incrustaciones</value>
     </data>
     <data name="PostgreSqlConnection" xml:space="preserve">
         <value>🗄️ Conexión PostgreSQL:</value>
@@ -226,10 +223,10 @@
         <value>Analizar imagen</value>
     </data>
     <data name="Show" xml:space="preserve">
-        <value>Mostrar</value>
+        <value>👁️ Mostrar</value>
     </data>
     <data name="Exit" xml:space="preserve">
-        <value>Salir</value>
+        <value>🚪 Salir</value>
     </data>
     <data name="ModelPullCompleted" xml:space="preserve">
         <value>✅ Descarga del modelo completada.</value>
@@ -349,7 +346,7 @@
         <value>📊 Configuración de Base de Datos Vectorial</value>
     </data>
     <data name="StoreAllResponses" xml:space="preserve">
-        <value>💾 Almacenar Todas las Respuestas</value>
+        <value>Almacenar Todas las Respuestas</value>
     </data>
     <data name="PostgreSQLConnectionString" xml:space="preserve">
         <value>🗄️ Cadena de Conexión PostgreSQL:</value>

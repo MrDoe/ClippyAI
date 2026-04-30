@@ -34,13 +34,13 @@
 
                     <!-- Minimize Button -->
                     <Button Grid.Column="1" Content="_" Width="30" Click="MinimizeButton_Click" Padding="11 5 5 5"
-                        Background="Transparent" Foreground="White" VerticalAlignment="Center" FontSize="12" FontWeight="Bold"
+                        Background="Transparent" Foreground="White" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"
                         BorderBrush="Transparent" />
 
                     <!-- Close Button -->
                     <Button Grid.Column="2" Content="x" Width="30" Click="CloseButton_Click" FontWeight="Bold"
                         Background="Transparent" Foreground="White" VerticalAlignment="Center" Padding="11 5 5 5"
-                        BorderBrush="Transparent" FontSize="12"/>
+                        BorderBrush="Transparent" FontSize="14"/>
                 </Grid>
                 <!-- Main Content -->
                 <views:MainView Margin="0,-20,0,0" />
