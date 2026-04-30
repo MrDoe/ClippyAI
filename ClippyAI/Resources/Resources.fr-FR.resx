@@ -291,7 +291,7 @@
         <value>⚠️ Aucun modèle disponible</value>
     </data>
     <data name="ViewCamera" xml:space="preserve">
-        <value>📷 Voir la caméra</value>
+        <value>📷 Webcam</value>
     </data>
     <data name="TestConnection" xml:space="preserve">
         <value>🔗 Tester la Connexion</value>
@@ -363,16 +363,10 @@
         <value>📊 # Incorporations :</value>
     </data>
     <data name="VisionSettings" xml:space="preserve">
-        <value>👁️ Paramètres de Vision</value>
-    </data>
-    <data name="VisionModel" xml:space="preserve">
-        <value>👁️ Modèle de Vision :</value>
+        <value>📷 Paramètres de Caméra</value>
     </data>
     <data name="VideoDevice" xml:space="preserve">
         <value>📹 Périphérique Vidéo :</value>
-    </data>
-    <data name="VisionPrompt" xml:space="preserve">
-        <value>💬 Invite de Vision :</value>
     </data>
     <data name="SystemSettings" xml:space="preserve">
         <value>⚙️ Paramètres Système</value>
@@ -441,7 +435,7 @@
         <value>📊 Incorporations</value>
     </data>
     <data name="VisionTab" xml:space="preserve">
-        <value>👁️ Vision</value>
+        <value>📷 Caméra</value>
     </data>
     <data name="SystemTab" xml:space="preserve">
         <value>⚙️ Système</value>
@@ -457,5 +451,20 @@
     </data>
     <data name="CaptureScreenshot" xml:space="preserve">
         <value>📸 Capturer l'Écran</value>
+    </data>
+    <data name="NoImageInClipboard" xml:space="preserve">
+        <value>❌ Aucune image dans le presse-papiers. Copiez d'abord une image.</value>
+    </data>
+    <data name="IsImageTask" xml:space="preserve">
+        <value>🖼️ Tâche d'Analyse d'Image</value>
+    </data>
+    <data name="ImageSource" xml:space="preserve">
+        <value>📷 Source d'Image :</value>
+    </data>
+    <data name="ImageSourceClipboard" xml:space="preserve">
+        <value>📋 Presse-papiers</value>
+    </data>
+    <data name="ImageSourceWebcam" xml:space="preserve">
+        <value>🎥 Webcam</value>
     </data>
 </root>

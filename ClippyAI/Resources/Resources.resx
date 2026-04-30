@@ -430,4 +430,19 @@
     <data name="CaptureScreenshot" xml:space="preserve">
         <value>📸 Capture Screenshot</value>
     </data>
+    <data name="NoImageInClipboard" xml:space="preserve">
+        <value>❌ No image found in clipboard. Copy an image first.</value>
+    </data>
+    <data name="IsImageTask" xml:space="preserve">
+        <value>🖼️ Image Analysis Task</value>
+    </data>
+    <data name="ImageSource" xml:space="preserve">
+        <value>📷 Image Source:</value>
+    </data>
+    <data name="ImageSourceClipboard" xml:space="preserve">
+        <value>📋 Clipboard</value>
+    </data>
+    <data name="ImageSourceWebcam" xml:space="preserve">
+        <value>🎥 Webcam</value>
+    </data>
 </root>

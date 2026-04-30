@@ -173,16 +173,20 @@ public class OpenAIService : IAIProvider
         return Task.Run(() => GetModelsAsync(token)).GetAwaiter().GetResult();
     }
 
-    public async Task<string> AnalyzeImage(byte[] image)
+    public async Task<string> AnalyzeImage(byte[] image, TaskConfiguration? taskConfig = null)
     {
         if (string.IsNullOrEmpty(apiKey))
         {
             throw new InvalidOperationException("OpenAI API key is not configured.");
         }
 
-        // OpenAI vision requires GPT-4 Vision model
-        string visionModel = ConfigurationService.GetConfigurationValue("OpenAIVisionModel", "gpt-4-vision-preview");
-        string visionPrompt = ConfigurationService.GetConfigurationValue("VisionPrompt", "Describe the image.");
+        // Use task-specific model/prompt if provided, otherwise fall back to configuration
+        string visionModel = !string.IsNullOrEmpty(taskConfig?.Model)
+            ? taskConfig!.Model
+            : "";
+        string visionPrompt = !string.IsNullOrEmpty(taskConfig?.SystemPrompt)
+            ? taskConfig!.SystemPrompt
+            : "Describe the image.";
 
         // Convert image to base64
         string base64Image = Convert.ToBase64String(image);

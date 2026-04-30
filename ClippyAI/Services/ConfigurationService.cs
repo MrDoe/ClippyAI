@@ -54,6 +54,8 @@ public static class ConfigurationService
                 RepeatPenalty REAL NOT NULL DEFAULT 1.1,
                 NumCtx INTEGER NOT NULL DEFAULT 2048,
                 IsActive INTEGER NOT NULL DEFAULT 1,
+                IsImageTask INTEGER NOT NULL DEFAULT 0,
+                ImageSource TEXT NOT NULL DEFAULT 'Clipboard',
                 CreatedAt TEXT NOT NULL,
                 UpdatedAt TEXT NOT NULL
             )";
@@ -80,6 +82,9 @@ public static class ConfigurationService
         using SqliteCommand command2 = new(createJobConfigTable, connection);
         _ = command2.ExecuteNonQuery();
 
+        // Migrate schema: add IsImageTask and ImageSource columns if they don't exist
+        MigrateTaskConfigurationsSchema(connection);
+
         // Migrate App.config settings to database if not already done
         MigrateAppConfigToDatabase(connection);
 
@@ -89,6 +94,34 @@ public static class ConfigurationService
         // Migrate legacy tasks
         connection.Close();
         MigrateLegacyTasks();
+    }
+
+    private static void MigrateTaskConfigurationsSchema(SqliteConnection connection)
+    {
+        // SQLite error code 1 (SQLITE_ERROR) is returned for "duplicate column name"
+        const int SqliteDuplicateColumnError = 1;
+
+        // Add IsImageTask column if it doesn't exist
+        try
+        {
+            using SqliteCommand cmd = new("ALTER TABLE TaskConfigurations ADD COLUMN IsImageTask INTEGER NOT NULL DEFAULT 0", connection);
+            cmd.ExecuteNonQuery();
+        }
+        catch (SqliteException ex) when (ex.SqliteErrorCode == SqliteDuplicateColumnError)
+        {
+            // Column already exists, ignore
+        }
+
+        // Add ImageSource column if it doesn't exist
+        try
+        {
+            using SqliteCommand cmd = new("ALTER TABLE TaskConfigurations ADD COLUMN ImageSource TEXT NOT NULL DEFAULT 'Clipboard'", connection);
+            cmd.ExecuteNonQuery();
+        }
+        catch (SqliteException ex) when (ex.SqliteErrorCode == SqliteDuplicateColumnError)
+        {
+            // Column already exists, ignore
+        }
     }
 
     private static void InsertDefaultTaskConfigurations(SqliteConnection connection)
@@ -127,6 +160,26 @@ public static class ConfigurationService
                     Model = ConfigurationManager.AppSettings["OllamaModel"] ?? "",
                     Temperature = 0.3,
                     MaxLength = 2048
+                },
+                new TaskConfiguration
+                {
+                    TaskName = "Analyze Clipboard Image",
+                    SystemPrompt = "Detect what you can find in the image. Use markdown to format the text.",
+                    Model = ConfigurationManager.AppSettings["VisionModel"] ?? "",
+                    Temperature = 0.5,
+                    MaxLength = 2048,
+                    IsImageTask = true,
+                    ImageSource = TaskConfiguration.ImageSourceClipboard
+                },
+                new TaskConfiguration
+                {
+                    TaskName = "Analyze Webcam Image",
+                    SystemPrompt = "Detect what you can find in the image. Use markdown to format the text.",
+                    Model = ConfigurationManager.AppSettings["VisionModel"] ?? "",
+                    Temperature = 0.5,
+                    MaxLength = 2048,
+                    IsImageTask = true,
+                    ImageSource = TaskConfiguration.ImageSourceWebcam
                 }
             };
 
@@ -146,7 +199,7 @@ public static class ConfigurationService
 
         string selectCommand = @"
             SELECT Id, TaskName, SystemPrompt, Model, Temperature, MaxLength, 
-                   TopP, TopK, RepeatPenalty, NumCtx, IsActive, CreatedAt, UpdatedAt
+                   TopP, TopK, RepeatPenalty, NumCtx, IsActive, IsImageTask, ImageSource, CreatedAt, UpdatedAt
             FROM TaskConfigurations 
             WHERE IsActive = 1
             ORDER BY TaskName";
@@ -169,8 +222,10 @@ public static class ConfigurationService
                 RepeatPenalty = reader.GetDouble(8),
                 NumCtx = reader.GetInt32(9),
                 IsActive = reader.GetInt32(10) == 1,
-                CreatedAt = DateTime.Parse(reader.GetString(11)),
-                UpdatedAt = DateTime.Parse(reader.GetString(12))
+                IsImageTask = reader.GetInt32(11) == 1,
+                ImageSource = reader.IsDBNull(12) ? TaskConfiguration.ImageSourceClipboard : reader.GetString(12),
+                CreatedAt = DateTime.Parse(reader.GetString(13)),
+                UpdatedAt = DateTime.Parse(reader.GetString(14))
             });
         }
 
@@ -184,7 +239,7 @@ public static class ConfigurationService
 
         string selectCommand = @"
             SELECT Id, TaskName, SystemPrompt, Model, Temperature, MaxLength, 
-                   TopP, TopK, RepeatPenalty, NumCtx, IsActive, CreatedAt, UpdatedAt
+                   TopP, TopK, RepeatPenalty, NumCtx, IsActive, IsImageTask, ImageSource, CreatedAt, UpdatedAt
             FROM TaskConfigurations 
             WHERE TaskName = @taskName AND IsActive = 1";
 
@@ -207,8 +262,10 @@ public static class ConfigurationService
                 RepeatPenalty = reader.GetDouble(8),
                 NumCtx = reader.GetInt32(9),
                 IsActive = reader.GetInt32(10) == 1,
-                CreatedAt = DateTime.Parse(reader.GetString(11)),
-                UpdatedAt = DateTime.Parse(reader.GetString(12))
+                IsImageTask = reader.GetInt32(11) == 1,
+                ImageSource = reader.IsDBNull(12) ? TaskConfiguration.ImageSourceClipboard : reader.GetString(12),
+                CreatedAt = DateTime.Parse(reader.GetString(13)),
+                UpdatedAt = DateTime.Parse(reader.GetString(14))
             }
             : null;
     }
@@ -228,9 +285,9 @@ public static class ConfigurationService
             string insertCommand = @"
                 INSERT OR REPLACE INTO TaskConfigurations 
                 (TaskName, SystemPrompt, Model, Temperature, MaxLength, TopP, TopK, 
-                 RepeatPenalty, NumCtx, IsActive, CreatedAt, UpdatedAt)
+                 RepeatPenalty, NumCtx, IsActive, IsImageTask, ImageSource, CreatedAt, UpdatedAt)
                 VALUES (@taskName, @systemPrompt, @model, @temperature, @maxLength, 
-                        @topP, @topK, @repeatPenalty, @numCtx, @isActive, @createdAt, @updatedAt)";
+                        @topP, @topK, @repeatPenalty, @numCtx, @isActive, @isImageTask, @imageSource, @createdAt, @updatedAt)";
 
             using SqliteCommand command = new(insertCommand, connection);
             _ = command.Parameters.AddWithValue("@taskName", config.TaskName);
@@ -243,6 +300,8 @@ public static class ConfigurationService
             _ = command.Parameters.AddWithValue("@repeatPenalty", config.RepeatPenalty);
             _ = command.Parameters.AddWithValue("@numCtx", config.NumCtx);
             _ = command.Parameters.AddWithValue("@isActive", config.IsActive ? 1 : 0);
+            _ = command.Parameters.AddWithValue("@isImageTask", config.IsImageTask ? 1 : 0);
+            _ = command.Parameters.AddWithValue("@imageSource", config.ImageSource);
             _ = command.Parameters.AddWithValue("@createdAt", config.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss"));
             _ = command.Parameters.AddWithValue("@updatedAt", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 
@@ -660,6 +719,40 @@ public static class ConfigurationService
                 RepeatPenalty = 1.1,
                 NumCtx = 2048,
                 IsActive = true,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            },
+            new TaskConfiguration
+            {
+                TaskName = "Analyze Clipboard Image",
+                SystemPrompt = "Detect what you can find in the image. Use markdown to format the text.",
+                Model = ConfigurationManager.AppSettings["VisionModel"] ?? "",
+                Temperature = 0.5,
+                MaxLength = 2048,
+                TopP = 0.9,
+                TopK = 40,
+                RepeatPenalty = 1.1,
+                NumCtx = 2048,
+                IsActive = true,
+                IsImageTask = true,
+                ImageSource = TaskConfiguration.ImageSourceClipboard,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            },
+            new TaskConfiguration
+            {
+                TaskName = "Analyze Webcam Image",
+                SystemPrompt = "Detect what you can find in the image. Use markdown to format the text.",
+                Model = ConfigurationManager.AppSettings["VisionModel"] ?? "",
+                Temperature = 0.5,
+                MaxLength = 2048,
+                TopP = 0.9,
+                TopK = 40,
+                RepeatPenalty = 1.1,
+                NumCtx = 2048,
+                IsActive = true,
+                IsImageTask = true,
+                ImageSource = TaskConfiguration.ImageSourceWebcam,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
             }

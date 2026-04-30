@@ -104,12 +104,6 @@ public partial class MainViewModel : ViewModelBase
     private string _videoDevice = ConfigurationService.GetConfigurationValue("VideoDevice") ?? "";
 
     [ObservableProperty]
-    private string _visionModel = ConfigurationService.GetConfigurationValue("VisionModel", "llama3.2-vision") ?? "llama3.2-vision";
-
-    [ObservableProperty]
-    private string _visionPrompt = ConfigurationService.GetConfigurationValue("VisionPrompt", "Detect what you can find in the image. Use markdown to format the text.") ?? "Detect what you can find in the image. Use markdown to format the text.";
-
-    [ObservableProperty]
     private ObservableCollection<string> _videoDevices = [];
 
     [ObservableProperty]
@@ -175,6 +169,13 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     public async Task AskClippy(CancellationToken token)
     {
+        // If the selected task is an image task, dispatch to image analysis
+        if (SelectedTaskConfiguration?.IsImageTask == true)
+        {
+            await CaptureAndAnalyze();
+            return;
+        }
+
         if (string.IsNullOrEmpty(Input))
         {
             // get text from clipboard
@@ -715,22 +716,32 @@ public partial class MainViewModel : ViewModelBase
         try
         {
             byte[] frame;
+            string imageSource = SelectedTaskConfiguration?.ImageSource ?? TaskConfiguration.ImageSourceClipboard;
 
-            // Check if there is an image in the clipboard
-            if (ClipboardImage != null)
-            {
-                using MemoryStream ms = new();
-                ClipboardImage.Save(ms);
-                frame = ms.ToArray();
-            }
-            else
+            if (imageSource == TaskConfiguration.ImageSourceWebcam)
             {
                 // Capture a frame from the webcam
                 frame = CaptureFrame();
             }
+            else
+            {
+                // Check if there is an image in the clipboard
+                if (ClipboardImage != null)
+                {
+                    using MemoryStream ms = new();
+                    ClipboardImage.Save(ms);
+                    frame = ms.ToArray();
+                }
+                else
+                {
+                    ErrorMessages?.Add(Resources.Resources.NoImageInClipboard);
+                    ShowErrorMessage(Resources.Resources.NoImageInClipboard);
+                    return;
+                }
+            }
 
-            // Send the frame to Ollama for analysis
-            string analysisResult = await OllamaService.AnalyzeImage(frame);
+            // Send the frame to Ollama for analysis using task-specific configuration
+            string analysisResult = await OllamaService.AnalyzeImage(frame, SelectedTaskConfiguration);
 
             // Store the analysis result in the clipboard
             await ClipboardService.SetText(analysisResult);
@@ -879,8 +890,6 @@ public partial class MainViewModel : ViewModelBase
             UseEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings") == "True";
             StoreAllResponses = ConfigurationService.GetConfigurationValue("StoreAllResponses") == "True";
             VideoDevice = ConfigurationService.GetConfigurationValue("VideoDevice") ?? "";
-            VisionModel = ConfigurationService.GetConfigurationValue("VisionModel", "llama3.2-vision") ?? "llama3.2-vision";
-            VisionPrompt = ConfigurationService.GetConfigurationValue("VisionPrompt", "Detect what you can find in the image. Use markdown to format the text.") ?? "Detect what you can find in the image. Use markdown to format the text.";
             Threshold = float.Parse(ConfigurationService.GetConfigurationValue("Threshold", "0.2"));
 
             System.Diagnostics.Debug.WriteLine("Configurations refreshed successfully");

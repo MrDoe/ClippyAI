@@ -418,6 +418,42 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 📷 Image Source:.
+        /// </summary>
+        public static string ImageSource {
+            get {
+                return ResourceManager.GetString("ImageSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 📋 Clipboard.
+        /// </summary>
+        public static string ImageSourceClipboard {
+            get {
+                return ResourceManager.GetString("ImageSourceClipboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 🎥 Webcam.
+        /// </summary>
+        public static string ImageSourceWebcam {
+            get {
+                return ResourceManager.GetString("ImageSourceWebcam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 🖼️ Image Analysis Task.
+        /// </summary>
+        public static string IsImageTask {
+            get {
+                return ResourceManager.GetString("IsImageTask", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 🌐 Language:.
         /// </summary>
         public static string Language {
@@ -531,6 +567,15 @@ namespace ClippyAI.Resources {
         public static string No {
             get {
                 return ResourceManager.GetString("No", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ❌ No image found in clipboard. Copy an image first..
+        /// </summary>
+        public static string NoImageInClipboard {
+            get {
+                return ResourceManager.GetString("NoImageInClipboard", resourceCulture);
             }
         }
         

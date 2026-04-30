@@ -292,7 +292,7 @@
         <value>⚠️ No hay modelos disponibles</value>
     </data>
     <data name="ViewCamera" xml:space="preserve">
-        <value>📷 Ver cámara</value>
+        <value>📷 Webcam</value>
     </data>
     <data name="TestConnection" xml:space="preserve">
         <value>🔗 Probar Conexión</value>
@@ -364,16 +364,10 @@
         <value>📊 # Incrustaciones:</value>
     </data>
     <data name="VisionSettings" xml:space="preserve">
-        <value>👁️ Configuración de Visión</value>
-    </data>
-    <data name="VisionModel" xml:space="preserve">
-        <value>👁️ Modelo de Visión:</value>
+        <value>📷 Configuración de Cámara</value>
     </data>
     <data name="VideoDevice" xml:space="preserve">
         <value>📹 Dispositivo de Video:</value>
-    </data>
-    <data name="VisionPrompt" xml:space="preserve">
-        <value>💬 Indicación de Visión:</value>
     </data>
     <data name="SystemSettings" xml:space="preserve">
         <value>⚙️ Configuración del Sistema</value>
@@ -442,7 +436,7 @@
         <value>📊 Incrustaciones</value>
     </data>
     <data name="VisionTab" xml:space="preserve">
-        <value>👁️ Visión</value>
+        <value>📷 Cámara</value>
     </data>
     <data name="SystemTab" xml:space="preserve">
         <value>⚙️ Sistema</value>
@@ -458,5 +452,20 @@
     </data>
     <data name="CaptureScreenshot" xml:space="preserve">
         <value>📸 Capturar Pantalla</value>
+    </data>
+    <data name="NoImageInClipboard" xml:space="preserve">
+        <value>❌ No se encontró imagen en el portapapeles. Copie primero una imagen.</value>
+    </data>
+    <data name="IsImageTask" xml:space="preserve">
+        <value>🖼️ Tarea de Análisis de Imagen</value>
+    </data>
+    <data name="ImageSource" xml:space="preserve">
+        <value>📷 Fuente de Imagen:</value>
+    </data>
+    <data name="ImageSourceClipboard" xml:space="preserve">
+        <value>📋 Portapapeles</value>
+    </data>
+    <data name="ImageSourceWebcam" xml:space="preserve">
+        <value>🎥 Webcam</value>
     </data>
 </root>

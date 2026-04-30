@@ -77,11 +77,6 @@
                 HorizontalAlignment="Left" Margin="10 10 0 0"
                 ToolTip.Tip="Stop the current task" />
 
-            <Button Content="{x:Static resources:Resources.AnalyzeImage}"
-                Command="{Binding CaptureAndAnalyzeCommand}"
-                HorizontalAlignment="Left" Margin="10 10 0 0"
-                ToolTip.Tip="Analyze image in the clipboard or from webcam feed" />
-
             <Button Content="{x:Static resources:Resources.ViewCamera}"
                 Command="{Binding ShowCameraCommand}"
                 HorizontalAlignment="Left" Margin="10 10 0 0"
@@ -91,13 +86,11 @@
                 Command="{Binding CaptureScreenshotCommand}"
                 HorizontalAlignment="Left" Margin="10 10 0 0"
                 ToolTip.Tip="Capture a screenshot" IsVisible="false" />
-        </StackPanel>
-        
-        <StackPanel Orientation="Horizontal">
+
             <Button Content="{x:Static resources:Resources.Configuration}"
                 Command="{Binding OpenConfigurationCommand}"
                 HorizontalAlignment="Right" VerticalAlignment="Center" 
-                Margin="0 10 0 0"
+                Margin="10 10 0 0"
                 ToolTip.Tip="Open Configuration Dialog" />
         </StackPanel>
 

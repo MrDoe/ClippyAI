@@ -110,14 +110,6 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
     {
         HotkeyService = new LinuxHotkeyService(this);
     }
-
-    private async void OnAnalyzeVideoHotkeyHandler(object? sender, EventArgs e)
-    {
-        Console.WriteLine("Analyze video hotkey pressed");
-
-        // execute relay command AnalyzeVideo
-        await ((MainViewModel)DataContext!).CaptureAndAnalyze();
-    }
 #endif
 
     private void MainWindow_Loaded(object? sender, RoutedEventArgs e)

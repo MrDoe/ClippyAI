@@ -61,12 +61,6 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     private string _postgresOllamaUrl = ConfigurationService.GetConfigurationValue("PostgresOllamaUrl", "");
 
     [ObservableProperty]
-    private string _visionModel = ConfigurationService.GetConfigurationValue("VisionModel", "");
-
-    [ObservableProperty]
-    private string _visionPrompt = ConfigurationService.GetConfigurationValue("VisionPrompt", "Describe the image.");
-
-    [ObservableProperty]
     private string _videoDevice = ConfigurationService.GetConfigurationValue("VideoDevice", "");
 
     [ObservableProperty]
@@ -136,6 +130,9 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
 
     // Static reference to ModelItems for XAML binding
     public static ObservableCollection<string> AvailableModels { get; set; } = [];
+
+    // Static list of image sources for XAML binding in DataTemplate
+    public static ObservableCollection<string> ImageSources { get; } = ["Clipboard", "Webcam"];
 
     // Task-specific configurations
     [ObservableProperty]
@@ -620,8 +617,6 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
         ConfigurationService.SetConfigurationValue("AutoMode", AutoMode.ToString());
         ConfigurationService.SetConfigurationValue("PostgreSqlConnection", PostgreSqlConnection);
         ConfigurationService.SetConfigurationValue("PostgresOllamaUrl", PostgresOllamaUrl);
-        ConfigurationService.SetConfigurationValue("VisionModel", VisionModel);
-        ConfigurationService.SetConfigurationValue("VisionPrompt", VisionPrompt);
         ConfigurationService.SetConfigurationValue("VideoDevice", VideoDevice);
         ConfigurationService.SetConfigurationValue("DefaultLanguage", DefaultLanguage);
         ConfigurationService.SetConfigurationValue("LinuxKeyboardDevice", LinuxKeyboardDevice);

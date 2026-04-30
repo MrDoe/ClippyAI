@@ -31,8 +31,6 @@ public class OllamaProvider : IAIProvider
 
     private static string? url = ConfigurationService.GetConfigurationValue("OllamaUrl", "http://localhost:11434/api");
     private static string? system = ConfigurationService.GetConfigurationValue("System");
-    private static string? visionModel = ConfigurationService.GetConfigurationValue("VisionModel");
-    private static string? visionPrompt = ConfigurationService.GetConfigurationValue("VisionPrompt");
 
     public void UpdateConfig()
     {
@@ -70,8 +68,6 @@ public class OllamaProvider : IAIProvider
         }
 
         system = ConfigurationService.GetConfigurationValue("System");
-        visionModel = ConfigurationService.GetConfigurationValue("VisionModel");
-        visionPrompt = ConfigurationService.GetConfigurationValue("VisionPrompt");
     }
 
     public async Task<string?> SendRequestWithConfig(string input, string task, string model,
@@ -201,16 +197,18 @@ public class OllamaProvider : IAIProvider
         return Task.Run(() => GetModelsAsync(token)).GetAwaiter().GetResult();
     }
 
-    public async Task<string> AnalyzeImage(byte[] image)
+    public async Task<string> AnalyzeImage(byte[] image, TaskConfiguration? taskConfig = null)
     {
         UpdateConfig();
 
         string base64Image = Convert.ToBase64String(image);
+        string modelToUse = taskConfig?.Model ?? "";
+        string promptToUse = taskConfig?.SystemPrompt ?? "Describe the image.";
 
         OllamaRequest body = new()
         {
-            model = visionModel,
-            prompt = visionPrompt,
+            model = modelToUse,
+            prompt = promptToUse,
             images = [base64Image],
             stream = false
         };
@@ -771,10 +769,11 @@ public static class OllamaService
     /// Analyze an image using the AI API.
     /// </summary>
     /// <param name="image">The image to analyze.</param>
+    /// <param name="taskConfig">Optional task-specific configuration (model and prompt override).</param>
     /// <returns>The analysis result.</returns>
-    public static async Task<string> AnalyzeImage(byte[] image)
+    public static async Task<string> AnalyzeImage(byte[] image, TaskConfiguration? taskConfig = null)
     {
         IAIProvider provider = GetCurrentProvider();
-        return await provider.AnalyzeImage(image);
+        return await provider.AnalyzeImage(image, taskConfig);
     }
 }

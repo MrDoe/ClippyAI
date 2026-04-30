@@ -157,33 +157,6 @@ public class LinuxHotkeyService
                 Console.WriteLine($"Failed to execute AskClippy: {ex.Message}");
             }
         }
-        // Check for Ctrl + Alt + A
-        else if (pressedKeys.Contains("Ctrl") && pressedKeys.Contains("Alt") && pressedKeys.Contains("A") &&
-                 DateTime.Now.Subtract(keyTimes["Ctrl"]).TotalSeconds < 3 &&
-                 DateTime.Now.Subtract(keyTimes["Alt"]).TotalSeconds < 3 &&
-                 DateTime.Now.Subtract(keyTimes["A"]).TotalSeconds < 3)
-        {
-            Console.WriteLine("Hotkey Ctrl + Alt + A pressed");
-            _ = pressedKeys.Remove("Ctrl");
-            _ = pressedKeys.Remove("Alt");
-            _ = pressedKeys.Remove("A");
-            _ = keyTimes.Remove("Ctrl");
-            _ = keyTimes.Remove("Alt");
-            _ = keyTimes.Remove("A");
-
-            // execute relay command CaptureAndAnalyze
-            try
-            {
-                Dispatcher.UIThread.Post(() =>
-                {
-                    _ = (DataContext?.CaptureAndAnalyze());
-                });
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to execute CaptureAndAnalyze: {ex.Message}");
-            }
-        }
         // Check for Ctrl + Alt + Up
         else if (pressedKeys.Contains("Ctrl") && pressedKeys.Contains("Alt") && pressedKeys.Contains("Up") &&
                  DateTime.Now.Subtract(keyTimes["Ctrl"]).TotalSeconds < 3 &&
