@@ -442,45 +442,6 @@
     <data name="ImageSourceWebcam" xml:space="preserve">
         <value>🎥 Webcam</value>
     </data>
-    <data name="AIProviderDescription" xml:space="preserve">
-        <value>Select the AI provider (Ollama or OpenAI)</value>
-    </data>
-    <data name="TestConnectionDescription" xml:space="preserve">
-        <value>Test the connection to the configured AI provider</value>
-    </data>
-    <data name="OllamaUrlDescription" xml:space="preserve">
-        <value>URL for the local Ollama API (default: http://localhost:11434)</value>
-    </data>
-    <data name="OpenAIApiKeyDescription" xml:space="preserve">
-        <value>Your OpenAI API key</value>
-    </data>
-    <data name="OpenAIBaseUrlDescription" xml:space="preserve">
-        <value>OpenAI API base URL (default: https://api.openai.com/v1)</value>
-    </data>
-    <data name="SelectModelDescription" xml:space="preserve">
-        <value>Select a model from the list</value>
-    </data>
-    <data name="PullModelDescription" xml:space="preserve">
-        <value>Pull / add a new model (Ollama only)</value>
-    </data>
-    <data name="DeleteModelDescription" xml:space="preserve">
-        <value>Delete the selected model (Ollama only)</value>
-    </data>
-    <data name="RefreshModelListDescription" xml:space="preserve">
-        <value>Refresh the model list</value>
-    </data>
-    <data name="DefaultLanguageDescription" xml:space="preserve">
-        <value>Select the default language for responses</value>
-    </data>
-    <data name="AutoModeDescription" xml:space="preserve">
-        <value>Automatically run the default task when the hotkey is pressed</value>
-    </data>
-    <data name="DefaultTaskDescription" xml:space="preserve">
-        <value>Select the default task to run in auto mode</value>
-    </data>
-    <data name="SystemPromptDescription" xml:space="preserve">
-        <value>Global system prompt prepended to every AI request</value>
-    </data>
     <data name="PostgreSQLConnectionStringDescription" xml:space="preserve">
         <value>PostgreSQL connection string for the embeddings database</value>
     </data>
