@@ -18,14 +18,29 @@ fi
 
 tag="v$version"
 
-mapfile -t assets < <(
-  find "$workspace_root/ClippyAI/bin/Release" -maxdepth 3 -type f \
-    \( -name "ClippyAI.$version.deb" -o -name "ClippyAI.$version.rpm" -o -name "ClippyAI.$version.tar.gz" \) \
-    | sort
+expected_assets=(
+  "ClippyAI.$version.deb"
+  "ClippyAI.$version.rpm"
+  "ClippyAI.$version.tar.gz"
 )
 
-if [[ ${#assets[@]} -eq 0 ]]; then
-  echo "No Linux release assets were found for version $version. Run the Linux packaging tasks first." >&2
+assets=()
+missing_assets=()
+
+for asset_name in "${expected_assets[@]}"; do
+  asset_path="$(find "$workspace_root/ClippyAI/bin/Release" -maxdepth 3 -type f -name "$asset_name" | head -n 1)"
+
+  if [[ -n "$asset_path" ]]; then
+    assets+=("$asset_path")
+  else
+    missing_assets+=("$asset_name")
+  fi
+done
+
+if [[ ${#missing_assets[@]} -gt 0 ]]; then
+  printf 'Missing Linux release assets for version %s:\n' "$version" >&2
+  printf '  %s\n' "${missing_assets[@]}" >&2
+  echo "Run the Linux packaging tasks first and rerun publish-linux." >&2
   exit 1
 fi
 
