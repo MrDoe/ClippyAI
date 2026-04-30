@@ -1,0 +1,58 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package
+    Name="ClippyAI"
+    Manufacturer="MrDoe"
+    Version="$(var.AppVersion)"
+    UpgradeCode="F7733928-6A5E-4A71-8DB1-495B1B8FBAB2"
+    Scope="perMachine"
+    InstallerVersion="500">
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Icon Id="AppIcon" SourceFile="..\ClippyAI\bulb.ico" />
+    <Property Id="ARPPRODUCTICON" Value="AppIcon" />
+    <Property Id="ARPURLINFOABOUT" Value="https://github.com/MrDoe/ClippyAI" />
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLDIR" Name="ClippyAI" />
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ApplicationProgramsFolder" Name="ClippyAI" />
+    </StandardDirectory>
+
+    <Feature Id="MainFeature" Title="ClippyAI" Level="1">
+      <ComponentGroupRef Id="PublishedApplicationFiles" />
+      <ComponentRef Id="ApplicationShortcut" />
+    </Feature>
+  </Package>
+
+  <Fragment>
+    <ComponentGroup Id="PublishedApplicationFiles" Directory="INSTALLDIR">
+      <Files Include="!(bindpath.PublishDir)**">
+        <Exclude Files="!(bindpath.PublishDir)**\*.pdb" />
+      </Files>
+    </ComponentGroup>
+  </Fragment>
+
+  <Fragment>
+    <DirectoryRef Id="ApplicationProgramsFolder">
+      <Component Id="ApplicationShortcut" Guid="0FB067AB-9E6E-4B27-8772-EA85DA5D0F81">
+        <Shortcut
+          Id="ApplicationStartMenuShortcut"
+          Name="ClippyAI"
+          Target="[INSTALLDIR]ClippyAI.exe"
+          WorkingDirectory="INSTALLDIR" />
+        <RemoveFolder Id="ApplicationProgramsFolderCleanup" On="uninstall" />
+        <RegistryValue
+          Root="HKLM"
+          Key="Software\MrDoe\ClippyAI"
+          Name="Installed"
+          Type="integer"
+          Value="1"
+          KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+</Wix>

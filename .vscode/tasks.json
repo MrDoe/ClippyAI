@@ -59,18 +59,54 @@
                 "${workspaceFolder}/ClippyAI/ClippyAI.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary;ForceNoAlign",
-                "/p:TargetFramework=net9.0-windows10.0.17763.0"
+                "/p:TargetFramework=net10.0-windows10.0.17763.0"
             ],
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "publish-linux-deb",
-            "dependsOn": "",
-            "command": "dotnet-deb",
+            "label": "publish-windows-msi",
+            "command": "dotnet",
             "type": "process",
             "args": [
-                "-c",
-                "Release"
+                "build",
+                "${workspaceFolder}/Installer/ClippyAI.Installer.wixproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary;ForceNoAlign",
+                "/p:Configuration=Release"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "publish-windows-msi-release",
+            "dependsOn": ["publish-windows-msi"],
+            "dependsOrder": "sequence",
+            "command": "pwsh",
+            "type": "process",
+            "args": [
+                "-NoLogo",
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-File",
+                "${workspaceFolder}/scripts/publish-windows-msi-release.ps1"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "publish-linux-deb",
+            "dependsOn": "",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "msbuild",
+                "${workspaceFolder}/ClippyAI/ClippyAI.csproj",
+                "/t:CreateDeb",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary;ForceNoAlign",
+                "/p:Configuration=Release"
             ],
             "options":{
                 "cwd": "${workspaceFolder}/ClippyAI"
@@ -80,11 +116,15 @@
         {
             "label": "publish-linux-rpm",
             "dependsOn": "",
-            "command": "dotnet-rpm",
+            "command": "dotnet",
             "type": "process",
             "args": [
-                "-c",
-                "Release"
+                "msbuild",
+                "${workspaceFolder}/ClippyAI/ClippyAI.csproj",
+                "/t:CreateRpm",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary;ForceNoAlign",
+                "/p:Configuration=Release"
             ],
             "options":{
                 "cwd": "${workspaceFolder}/ClippyAI"
@@ -94,11 +134,15 @@
         {
             "label": "publish-linux-tar",
             "dependsOn": "",
-            "command": "dotnet-tarball",
+            "command": "dotnet",
             "type": "process",
             "args": [
-                "-c",
-                "Release"
+                "msbuild",
+                "${workspaceFolder}/ClippyAI/ClippyAI.csproj",
+                "/t:CreateTarball",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary;ForceNoAlign",
+                "/p:Configuration=Release"
             ],
             "options":{
                 "cwd": "${workspaceFolder}/ClippyAI"
@@ -109,12 +153,14 @@
             "label": "publish-linux",
             "dependsOn": ["publish-linux-deb", "publish-linux-rpm", "publish-linux-tar"],
             "dependsOrder": "sequence",
-            "command": "",
-            "type": "shell",
+            "command": "bash",
+            "type": "process",
             "args": [
-                "echo",
-                "Done"
+                "${workspaceFolder}/scripts/upload-linux-release-assets.sh"
             ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
             "problemMatcher": []
         },
         {
