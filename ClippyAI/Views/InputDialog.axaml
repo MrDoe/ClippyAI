@@ -9,7 +9,6 @@
     x:Class="ClippyAI.Views.InputDialog"
     Title=""
     ExtendClientAreaToDecorationsHint="True"
-    ExtendClientAreaChromeHints="NoChrome"
     ExtendClientAreaTitleBarHeightHint="0"
     CanResize="False"
     KeyDown="Window_KeyDown"

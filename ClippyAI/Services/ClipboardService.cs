@@ -3,7 +3,6 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Media.Imaging;
 using System;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -40,9 +39,8 @@ public static class ClipboardService
 
         try
         {
-#pragma warning disable CS0618
-            _lastFormats = await provider.GetFormatsAsync();
-#pragma warning restore CS0618
+            IAsyncDataTransfer? dataTransfer = await provider.TryGetDataAsync();
+            _lastFormats = dataTransfer?.Formats.Select(f => f.Identifier).ToArray();
             _lastFormatsCheck = now;
             return _lastFormats;
         }
@@ -74,7 +72,15 @@ public static class ClipboardService
         _lastFormats = null;
         _lastFormatsCheck = DateTime.MinValue;
 
-        await provider.SetTextAsync(text);
+        if (text is null)
+        {
+            await provider.ClearAsync();
+            return;
+        }
+
+        DataTransfer dataTransfer = new();
+        dataTransfer.Add(DataTransferItem.CreateText(text));
+        await provider.SetDataAsync(dataTransfer);
     }
 
     /// <summary>
@@ -89,12 +95,13 @@ public static class ClipboardService
             throw new NullReferenceException("Missing Clipboard instance.");
         }
 
-        // Directly call GetTextAsync() — it returns null when no text is present.
-        // Avoid GetFormatsAsync() here because it can fail silently when the window
-        // is hidden (e.g. minimised to taskbar), which would suppress all updates.
-#pragma warning disable CS0618
-        return await provider.GetTextAsync();
-#pragma warning restore CS0618
+        IAsyncDataTransfer? dataTransfer = await provider.TryGetDataAsync();
+        if (dataTransfer is null)
+        {
+            return null;
+        }
+
+        return await dataTransfer.TryGetTextAsync();
     }
 
     /// <summary>
@@ -109,37 +116,18 @@ public static class ClipboardService
             return null;
         }
 
-        // Check formats with caching to reduce API calls
         string[] formats = await GetFormatsWithCache() ?? [];
-        if (!formats.Contains("image") && (!formats.Contains("PNG") || !formats.Contains("image/png")))
+        if (!formats.Any(f => string.Equals(f, DataFormat.Bitmap.Identifier, StringComparison.OrdinalIgnoreCase)))
         {
             return null;
         }
 
-        // Get the image data from the clipboard
-#pragma warning disable CS0618
-        object? data = await clipboard.GetDataAsync("image/png");
-        data ??= await clipboard.GetDataAsync("PNG");
-        data ??= await clipboard.GetDataAsync("image/bmp");
-        data ??= await clipboard.GetDataAsync("image/x-bmp");
-        data ??= await clipboard.GetDataAsync("image/x-MS-bmp");
-        data ??= await clipboard.GetDataAsync("image/x-win-bitmap");
-        data ??= await clipboard.GetDataAsync("image/jpeg");
-        data ??= await clipboard.GetDataAsync("image/tiff");
-        data ??= await clipboard.GetDataAsync("image/webp");
-        data ??= await clipboard.GetDataAsync("image/ico");
-        data ??= await clipboard.GetDataAsync("image/icon");
-#pragma warning restore CS0618
-        if (data == null)
+        IAsyncDataTransfer? dataTransfer = await clipboard.TryGetDataAsync();
+        if (dataTransfer is null)
         {
             return null;
         }
-        else if (data is byte[] imageData)
-        {
-            using MemoryStream stream = new(imageData);
-            return new Bitmap(stream);
-        }
 
-        return null;
+        return await dataTransfer.TryGetBitmapAsync();
     }
 }

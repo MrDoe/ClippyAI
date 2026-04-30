@@ -11,7 +11,6 @@
     Topmost="True"
     TransparencyLevelHint="AcrylicBlur"
     ExtendClientAreaToDecorationsHint="True"
-    ExtendClientAreaChromeHints="NoChrome"
     WindowStartupLocation="CenterScreen"
     Title="{x:Static resources:Resources.ClippyAIResult}">
     <Border CornerRadius="6" BorderBrush="DimGray" Background="#e9333333" BorderThickness="1">

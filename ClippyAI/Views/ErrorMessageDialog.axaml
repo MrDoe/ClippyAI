@@ -9,9 +9,8 @@
     TransparencyLevelHint="AcrylicBlur"
     Background="Transparent"
     ExtendClientAreaToDecorationsHint="True"
-    ExtendClientAreaChromeHints="NoChrome"
     ExtendClientAreaTitleBarHeightHint="-1"
-    SystemDecorations="BorderOnly"
+    WindowDecorations="BorderOnly"
     WindowStartupLocation="CenterScreen"
     CanResize="false"
     Topmost="True">
