@@ -27,7 +27,7 @@ namespace ClippyAI.Resources {
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resources() {
+        public Resources() {
         }
         
         /// <summary>
@@ -509,7 +509,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🚪 Exit.
+        ///   Looks up a localized string similar to Exit.
         /// </summary>
         public static string Exit {
             get {
@@ -1184,7 +1184,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 👁️ Show.
+        ///   Looks up a localized string similar to Show.
         /// </summary>
         public static string Show {
             get {

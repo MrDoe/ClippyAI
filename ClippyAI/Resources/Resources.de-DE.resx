@@ -220,10 +220,10 @@
         <value>Analysiere Bild</value>
     </data>
     <data name="Show" xml:space="preserve">
-        <value>👁️ Anzeigen</value>
+        <value>Anzeigen</value>
     </data>
     <data name="Exit" xml:space="preserve">
-        <value>🚪 Beenden</value>
+        <value>Beenden</value>
     </data>
     <data name="ModelPullCompleted" xml:space="preserve">
         <value>✅ Modell-Download abgeschlossen.</value>
