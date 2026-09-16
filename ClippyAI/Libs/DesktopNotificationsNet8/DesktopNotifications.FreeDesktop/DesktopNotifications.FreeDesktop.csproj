@@ -23,8 +23,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Tmds.DBus" Version="0.92.0" />
-		<PackageReference Include="Tmds.DBus.Protocol" Version="0.92.0" />
+		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.53.3" />
+		<PackageReference Include="SSH.NET" Version="2026.0.0" />
+		<PackageReference Include="Tmds.DBus" Version="0.95.1" />
+		<PackageReference Include="Tmds.DBus.Protocol" Version="0.95.1" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -46,7 +46,7 @@
           WorkingDirectory="INSTALLDIR" />
         <RemoveFolder Id="ApplicationProgramsFolderCleanup" On="uninstall" />
         <RegistryValue
-          Root="HKLM"
+          Root="HKCU"
           Key="Software\MrDoe\ClippyAI"
           Name="Installed"
           Type="integer"

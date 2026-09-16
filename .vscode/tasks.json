@@ -65,14 +65,15 @@
         },
         {
             "label": "publish-windows-msi",
-            "command": "dotnet",
+            "command": "powershell",
             "type": "process",
             "args": [
-                "build",
-                "${workspaceFolder}/Installer/ClippyAI.Installer.wixproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary;ForceNoAlign",
-                "/p:Configuration=Release"
+                "-NoLogo",
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-Command",
+                "& '${workspaceFolder}/scripts/publish-windows-msi-release.ps1' --check-only; if ($LASTEXITCODE -ne 0) { dotnet build '${workspaceFolder}/Installer/ClippyAI.Installer.wixproj' /property:GenerateFullPaths=true /consoleloggerparameters:NoSummary;ForceNoAlign /p:Configuration=Release }"
             ],
             "problemMatcher": "$msCompile"
         },
@@ -80,7 +81,7 @@
             "label": "publish-windows-msi-release",
             "dependsOn": ["publish-windows-msi"],
             "dependsOrder": "sequence",
-            "command": "pwsh",
+            "command": "powershell",
             "type": "process",
             "args": [
                 "-NoLogo",
