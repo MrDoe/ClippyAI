@@ -2,7 +2,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.ComponentModel;
 using ReactiveUI;
 using System.Linq;
-using System.Reactive;
+using ReactiveUI.Primitives;
 namespace ClippyAI.Views;
 
 public partial class InputDialogViewModel : ObservableObject
@@ -20,9 +20,9 @@ public partial class InputDialogViewModel : ObservableObject
     [ObservableProperty]
     private string _title;
 
-    public ReactiveCommand<Unit, Unit> CloseCommand { get; }
+    public ReactiveCommand<RxVoid, RxVoid> CloseCommand { get; }
 
-    public ReactiveCommand<Unit, Unit>? SubmitCommand { get; }
+    public ReactiveCommand<RxVoid, RxVoid>? SubmitCommand { get; }
 
     private void CloseWindow()
     {
