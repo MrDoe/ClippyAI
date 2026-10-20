@@ -87,6 +87,17 @@ The `.vscode/tasks.json` defines several useful tasks:
 - `watch` - File watcher mode for development
 - `publish-windows` - Windows-specific publish
 - `publish-linux-deb/rpm/tar` - Linux package creation
+- `publish-linux` - Builds the Linux packages and uploads them to the GitHub release
+
+### Linux Packaging
+The Linux packages are built by the `Packaging.Targets` NuGet package
+(`CreateDeb`, `CreateRpm`, `CreateTarball` targets). Its `.deb` writer
+compresses the payload with liblzma's **multithreaded** encoder, which fails
+intermittently on Linux with `MSB4018 ... Specified preset is not supported`.
+The packaging tasks therefore run with `DOTNET_PROCESSOR_COUNT=1`, which makes
+the package use liblzma's single threaded encoder. The packages land in
+`ClippyAI/bin/Release/net10.0/` and are named `ClippyAI.<version>.deb`,
+`.rpm` and `.tar.gz`.
 
 ### Making Changes
 1. Always build first: `dotnet build`
