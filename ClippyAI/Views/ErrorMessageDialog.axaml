@@ -5,8 +5,8 @@
     xmlns:vm="clr-namespace:ClippyAI.Views"
     xmlns:resources="clr-namespace:ClippyAI.Resources"
     Width="480"
-    Height="280"
-    MinHeight="200"
+    SizeToContent="Height"
+    MaxHeight="280"
     TransparencyLevelHint="AcrylicBlur"
     Background="Transparent"
     ExtendClientAreaToDecorationsHint="True"
@@ -31,6 +31,7 @@
 
             <!-- A long exception must not push the button out of the dialog. -->
             <ScrollViewer Grid.Row="1"
+                          MaxHeight="160"
                           VerticalScrollBarVisibility="Auto"
                           Margin="0,14,0,0">
                 <TextBlock Text="{Binding ErrorMessage}"
