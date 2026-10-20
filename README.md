@@ -6,6 +6,15 @@
 ClippyAI is an innovative tool which enables you to use local AI more efficiently for your daily tasks. It takes the content from your clipboard and sends them along with a task to a local AI provider.
 After being processed, the response will be available in the clipboard and can be pasted into any application.
 
+**What is new in 1.6**
+
+* A reworked interface: a floating panel that docks to the left edge of the
+  screen, a settings dialog organised in tabs, and one consistent set of icons.
+* One model selection everywhere. The model and embedding model lists follow
+  the AI provider you picked, so there is no separate Ollama and OpenAI list.
+* A design system with light and dark themes, accessible contrast and a
+  consistent spacing and type scale.
+
 **Features**
 
 * **Highest Level of Data Privacy**: Your data stays your data and nothing leaves your PC. After installation, you can
@@ -27,7 +36,26 @@ after it is copied or cut. The clipboard's content can then be sent along with a
 * Summarize a long text in a few sentences
 * Do OCR image analysis of a document captured by a webcam
 
-![Clippy Example Screenshot](./Images/clippy.png)
+![ClippyAI floating panel](./Images/clippy.png)
+
+The panel stays out of your way: it docks to the left edge of the screen, shows
+what is currently on the clipboard, and lets you pick a task and run it. The
+gear button in the title bar opens the settings.
+
+![ClippyAI settings](./Images/clippy-settings.png)
+
+The settings are organised in tabs - General, Embeddings, Vision, System, SSH
+and Tasks - with the actions always reachable at the bottom.
+
+![ClippyAI task configuration](./Images/clippy-tasks.png)
+
+Every task has its own prompt, model and parameters. The task list on the left
+picks the task, the editor on the right configures it.
+
+![ClippyAI embedding settings](./Images/clippy-embeddings.png)
+
+Model choices follow the provider you selected: pick Ollama or OpenAI and the
+model lists show what that provider actually offers.
 
 **Getting Started**
 
@@ -35,25 +63,25 @@ after it is copied or cut. The clipboard's content can then be sent along with a
 2. Download the latest release of ClippyAI for your OS (Windows or Linux).
 3. Run the Windows `.msi` installer or install the `.deb`/`.rpm` packages on Linux/X11 systems.
 4. Run `ClippyAI` from the start menu of your OS and click on the tray icon to open it.
-5. Click on the `Pull` button in the `Options` section and enter `gemma4` to let ClippyAI download and install the Google Gemma4 AI model to your local PC. Please be patient, as the downloading can take a few minutes, depending on how fast your internet connection is.
+5. Click the gear button in the title bar to open the settings, then go to the `General` tab. Click the download button next to `Default Model` and enter `gemma4` to let ClippyAI download and install the Google Gemma4 AI model to your local PC. Please be patient, as the downloading can take a few minutes, depending on how fast your internet connection is.
 6. Uncheck `Use Embeddings`, if you want to use the application without caching via an embedding vector database, otherwise follow the instructions in the next section.
 
 **Alternative: Using OpenAI API**
 
 If you prefer cloud-based AI processing or want to use vLLM:
 1. Obtain an OpenAI API key from [https://platform.openai.com/](https://platform.openai.com/).
-2. Open ClippyAI and go to `Options` → `General Settings`.
+2. Open ClippyAI and click the gear button in the title bar, then go to the `General` tab.
 3. Select "OpenAI" from the AI Provider dropdown.
 4. Enter your OpenAI API key in the provided field.
-5. Optionally, customize the model and vision model.
+5. Optionally, customize the default model. The model list follows the provider, so it shows the models your endpoint offers.
 6. Save the configuration. Note that cloud OpenAI usage may incur costs based on your API plan.
 
 **Setting Up the Embedding Cache (optional)**
-1. Open `Options` → `Embeddings` and enable `Use Embeddings`.
+1. Click the gear button in the title bar, go to the `Embeddings` tab and enable `Use Embeddings`.
 2. Embeddings use the AI provider selected on the `General` tab:
-   - **Ollama**: pull an embedding model, e.g. click `Pull` and enter `nomic-embed-text`.
+   - **Ollama**: pull an embedding model, e.g. click the download button next to `Default Model` and enter `nomic-embed-text`.
    - **OpenAI**: enter your API key on the `General` tab; the default model is `text-embedding-3-small`.
-3. Adjust the embedding model for each provider in the `Embeddings` tab.
+3. Pick the embedding model in the `Embeddings` tab. There is one list, and it shows the models of the provider you selected.
 4. Answers are stored locally in an embedded LanceDB database under the ClippyAI app-data folder
    (`~/.config/ClippyAI/lancedb` on Linux, `%APPDATA%\ClippyAI\lancedb` on Windows). Set a custom
    folder in the `Embeddings` tab if you prefer.
@@ -63,7 +91,7 @@ No PostgreSQL, pgai extension, Docker container, or `OLLAMA_HOST=0.0.0.0` config
 **Setting Up SSH Tunneling (optional)**
 
 For secure remote connections to Ollama/OpenAI instances:
-1. Configure SSH tunnel settings in ClippyAI's configuration dialog under the SSH tab.
+1. Click the gear button in the title bar and configure the SSH tunnel settings under the `SSH` tab.
 2. Enter your remote host details (hostname, port, username).
 3. Specify the local and remote ports for tunneling (e.g., local port 11434 to remote Ollama port 11434).
 4. Provide SSH private key file or password for authentication.
@@ -74,7 +102,7 @@ For secure remote connections to Ollama/OpenAI instances:
 1. Choose a task from the dropdown list. For image analysis, select an image task (tasks with "Image Analysis Task" enabled).
 2. For text tasks: Copy or cut some text from an application (e.g., email, chat, or document) via [Ctrl]+[C].
    For image tasks: Either copy an image to the clipboard (for "Clipboard" source tasks) or ensure your webcam is connected (for "Webcam" source tasks).
-3. Click `Send` or use the keyboard shortcut [Ctrl]+[Alt]+[C] to execute the selected task.
+3. Click `Execute` or use the keyboard shortcut [Ctrl]+[Alt]+[C] to execute the selected task.
 4. Review or paste ([Ctrl]+[V]) your generated result in the application where you need it.
 
 **Request Limits**
@@ -95,7 +123,7 @@ The input and timeout limits can be changed in the configuration database
 
 **Image Analysis Tasks**
 
-Image analysis is now integrated into the task system. You can create dedicated image analysis tasks in the Configuration dialog under the **Tasks** tab:
+Image analysis is now integrated into the task system. You can create dedicated image analysis tasks in the settings under the **Tasks** tab:
 
 - Enable "Image Analysis Task" checkbox for a task to make it an image analysis task.
 - Set "Image Source" to **Clipboard** (use an image from clipboard) or **Webcam** (capture from webcam).
@@ -124,7 +152,7 @@ The user must be allowed to read those devices:
 sudo usermod -aG input $USER
 ```
 
-Log out and back in afterwards, then select the keyboard under `Options` → `System` → `Configure Hotkey Device`.
+Log out and back in afterwards, then select the keyboard under the gear button → `System` tab → `Configure Hotkey Device`.
 The dialog lists every keyboard it can read and switches the running monitor immediately.
 
 **Disclaimer**
