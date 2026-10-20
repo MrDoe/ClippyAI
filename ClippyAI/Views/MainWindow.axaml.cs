@@ -147,7 +147,9 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
             return;
         }
 
-        PixelSize screenSize = screen.Bounds.Size;
+        // The working area excludes panels such as the taskbar, so the panel
+        // never ends up under them.
+        PixelSize screenSize = screen.WorkingArea.Size;
         Height = screenSize.Height;
         Position = new PixelPoint(0, 0);
     }

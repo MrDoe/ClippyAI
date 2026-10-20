@@ -155,6 +155,70 @@
             <SolidColorBrush x:Key="ComboBoxDropDownBorderBrush" Color="#FF363B47" />
 
             <!-- Slim, quiet scrollbars. -->
+            <!-- Combo box items: the selected item must not fall back to the
+                 stock blue highlight. -->
+            <!--
+                The Fluent "system accent" family. The stock blue shows up in
+                list selections, check boxes, sliders and text highlights, so
+                the whole family is retinted to the product accent. Without
+                this, the interface ends up with two accents.
+            -->
+            <Color x:Key="SystemAccentColor">#FFF5C242</Color>
+            <Color x:Key="SystemAccentColorLight1">#FFFFD264</Color>
+            <Color x:Key="SystemAccentColorLight2">#FFFFE08A</Color>
+            <Color x:Key="SystemAccentColorLight3">#FFFFEAB0</Color>
+            <Color x:Key="SystemAccentColorDark1">#FFE0A92B</Color>
+            <Color x:Key="SystemAccentColorDark2">#FFC78C10</Color>
+            <Color x:Key="SystemAccentColorDark3">#FFA66F08</Color>
+            <SolidColorBrush x:Key="SystemControlBackgroundAccentBrush" Color="#FFF5C242" />
+            <SolidColorBrush x:Key="SystemControlHighlightAccentBrush" Color="#FFF5C242" />
+            <SolidColorBrush x:Key="SystemControlHighlightAccentRevealBackgroundBrush" Color="#FFF5C242" />
+            <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="#FFF5C242" />
+            <SolidColorBrush x:Key="SystemControlHighlightListLowBrush" Color="#FF272B35" />
+            <SolidColorBrush x:Key="SystemControlHighlightListMediumBrush" Color="#FF313644" />
+            <SolidColorBrush x:Key="SystemControlHighlightListAccentLowBrush" Color="#FF2A2E38" />
+            <SolidColorBrush x:Key="SystemControlHighlightListAccentMediumBrush" Color="#FF343A47" />
+            <SolidColorBrush x:Key="SystemControlHighlightListAccentHighBrush" Color="#FF3C4351" />
+            <SolidColorBrush x:Key="SystemControlHighlightAltListAccentLowBrush" Color="#FF2A2E38" />
+            <SolidColorBrush x:Key="SystemControlHighlightAltListAccentMediumBrush" Color="#FF343A47" />
+            <SolidColorBrush x:Key="SystemControlHighlightAltListAccentHighBrush" Color="#FF3C4351" />
+            <SolidColorBrush x:Key="SystemControlHighlightAltBaseHighBrush" Color="#FFF2F4F8" />
+            <SolidColorBrush x:Key="SystemControlHighlightTransparentBrush" Color="Transparent" />
+            <SolidColorBrush x:Key="ComboBoxItemBackground" Color="Transparent" />
+            <SolidColorBrush x:Key="ComboBoxItemBackgroundPointerOver" Color="#FF272B35" />
+            <SolidColorBrush x:Key="ComboBoxItemBackgroundPressed" Color="#FF313644" />
+            <SolidColorBrush x:Key="ComboBoxItemBackgroundSelected" Color="#FF2A2E38" />
+            <SolidColorBrush x:Key="ComboBoxItemBackgroundSelectedPointerOver" Color="#FF343A47" />
+            <SolidColorBrush x:Key="ComboBoxItemBackgroundSelectedPressed" Color="#FF3C4351" />
+            <SolidColorBrush x:Key="ComboBoxItemForeground" Color="#FFF2F4F8" />
+            <SolidColorBrush x:Key="ComboBoxItemForegroundSelected" Color="#FFF2F4F8" />
+            <SolidColorBrush x:Key="ComboBoxItemBorderBrushSelected" Color="Transparent" />
+
+            <!-- Check boxes: the box itself carries the accent. -->
+            <SolidColorBrush x:Key="CheckBoxBackgroundUnchecked" Color="#FF1F222A" />
+            <SolidColorBrush x:Key="CheckBoxBackgroundUncheckedPointerOver" Color="#FF23262E" />
+            <SolidColorBrush x:Key="CheckBoxBackgroundChecked" Color="#FFF5C242" />
+            <SolidColorBrush x:Key="CheckBoxBackgroundCheckedPointerOver" Color="#FFFFD264" />
+            <SolidColorBrush x:Key="CheckBoxBackgroundCheckedPressed" Color="#FFE0A92B" />
+            <SolidColorBrush x:Key="CheckBoxBorderBrushUnchecked" Color="#FF363B47" />
+            <SolidColorBrush x:Key="CheckBoxBorderBrushChecked" Color="#FFF5C242" />
+            <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUnchecked" Color="Transparent" />
+            <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="#FF14151A" />
+            <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundUnchecked" Color="#FF828998" />
+            <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="#FF14151A" />
+
+            <!-- Sliders: filled track and thumb in the accent. -->
+            <SolidColorBrush x:Key="SliderContainerBackground" Color="Transparent" />
+            <SolidColorBrush x:Key="SliderTrackFill" Color="#FF262A33" />
+            <SolidColorBrush x:Key="SliderTrackValueFill" Color="#FFF5C242" />
+            <SolidColorBrush x:Key="SliderTrackValueFillPointerOver" Color="#FFFFD264" />
+            <SolidColorBrush x:Key="SliderTrackValueFillPressed" Color="#FFE0A92B" />
+            <SolidColorBrush x:Key="SliderTrackValueFillDisabled" Color="#FF3A3218" />
+            <SolidColorBrush x:Key="SliderThumbBackground" Color="#FFF5C242" />
+            <SolidColorBrush x:Key="SliderThumbBackgroundPointerOver" Color="#FFFFD264" />
+            <SolidColorBrush x:Key="SliderThumbBackgroundPressed" Color="#FFE0A92B" />
+            <SolidColorBrush x:Key="SliderThumbBackgroundDisabled" Color="#FF3A3218" />
+            <SolidColorBrush x:Key="SliderTickBarFill" Color="#FF363B47" />
             <SolidColorBrush x:Key="ScrollBarBackground" Color="Transparent" />
             <SolidColorBrush x:Key="ScrollBarBackgroundPointerOver" Color="Transparent" />
             <SolidColorBrush x:Key="ScrollBarBorderBrush" Color="Transparent" />
@@ -269,6 +333,60 @@
             <SolidColorBrush x:Key="ComboBoxDropDownBorderBrush" Color="#FFC4CAD6" />
 
             <!-- Slim, quiet scrollbars. -->
+            <Color x:Key="SystemAccentColor">#FFB45309</Color>
+            <Color x:Key="SystemAccentColorLight1">#FFC78C10</Color>
+            <Color x:Key="SystemAccentColorLight2">#FFD9A406</Color>
+            <Color x:Key="SystemAccentColorLight3">#FFE7BE5A</Color>
+            <Color x:Key="SystemAccentColorDark1">#FF8A3E07</Color>
+            <Color x:Key="SystemAccentColorDark2">#FF6F3105</Color>
+            <Color x:Key="SystemAccentColorDark3">#FF542503</Color>
+            <SolidColorBrush x:Key="SystemControlBackgroundAccentBrush" Color="#FFB45309" />
+            <SolidColorBrush x:Key="SystemControlHighlightAccentBrush" Color="#FFB45309" />
+            <SolidColorBrush x:Key="SystemControlHighlightAccentRevealBackgroundBrush" Color="#FFB45309" />
+            <SolidColorBrush x:Key="SystemControlHighlightAltAccentBrush" Color="#FFB45309" />
+            <SolidColorBrush x:Key="SystemControlHighlightListLowBrush" Color="#FFE6E9EF" />
+            <SolidColorBrush x:Key="SystemControlHighlightListMediumBrush" Color="#FFDCE0E8" />
+            <SolidColorBrush x:Key="SystemControlHighlightListAccentLowBrush" Color="#FFF3E8D6" />
+            <SolidColorBrush x:Key="SystemControlHighlightListAccentMediumBrush" Color="#FFEFDFC6" />
+            <SolidColorBrush x:Key="SystemControlHighlightListAccentHighBrush" Color="#FFE7D3B4" />
+            <SolidColorBrush x:Key="SystemControlHighlightAltListAccentLowBrush" Color="#FFF3E8D6" />
+            <SolidColorBrush x:Key="SystemControlHighlightAltListAccentMediumBrush" Color="#FFEFDFC6" />
+            <SolidColorBrush x:Key="SystemControlHighlightAltListAccentHighBrush" Color="#FFE7D3B4" />
+            <SolidColorBrush x:Key="SystemControlHighlightAltBaseHighBrush" Color="#FF12141A" />
+            <SolidColorBrush x:Key="SystemControlHighlightTransparentBrush" Color="Transparent" />
+            <SolidColorBrush x:Key="ComboBoxItemBackground" Color="Transparent" />
+            <SolidColorBrush x:Key="ComboBoxItemBackgroundPointerOver" Color="#FFE6E9EF" />
+            <SolidColorBrush x:Key="ComboBoxItemBackgroundPressed" Color="#FFDCE0E8" />
+            <SolidColorBrush x:Key="ComboBoxItemBackgroundSelected" Color="#FFF3E8D6" />
+            <SolidColorBrush x:Key="ComboBoxItemBackgroundSelectedPointerOver" Color="#FFEFDFC6" />
+            <SolidColorBrush x:Key="ComboBoxItemBackgroundSelectedPressed" Color="#FFE7D3B4" />
+            <SolidColorBrush x:Key="ComboBoxItemForeground" Color="#FF12141A" />
+            <SolidColorBrush x:Key="ComboBoxItemForegroundSelected" Color="#FF12141A" />
+            <SolidColorBrush x:Key="ComboBoxItemBorderBrushSelected" Color="Transparent" />
+
+            <SolidColorBrush x:Key="CheckBoxBackgroundUnchecked" Color="#FFFFFFFF" />
+            <SolidColorBrush x:Key="CheckBoxBackgroundUncheckedPointerOver" Color="#FFF0F2F6" />
+            <SolidColorBrush x:Key="CheckBoxBackgroundChecked" Color="#FFB45309" />
+            <SolidColorBrush x:Key="CheckBoxBackgroundCheckedPointerOver" Color="#FF92400E" />
+            <SolidColorBrush x:Key="CheckBoxBackgroundCheckedPressed" Color="#FF78350F" />
+            <SolidColorBrush x:Key="CheckBoxBorderBrushUnchecked" Color="#FFC4CAD6" />
+            <SolidColorBrush x:Key="CheckBoxBorderBrushChecked" Color="#FFB45309" />
+            <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUnchecked" Color="Transparent" />
+            <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="#FFFFFFFF" />
+            <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundUnchecked" Color="#FF646B7A" />
+            <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="#FFFFFFFF" />
+
+            <SolidColorBrush x:Key="SliderContainerBackground" Color="Transparent" />
+            <SolidColorBrush x:Key="SliderTrackFill" Color="#FFE1E5EC" />
+            <SolidColorBrush x:Key="SliderTrackValueFill" Color="#FFB45309" />
+            <SolidColorBrush x:Key="SliderTrackValueFillPointerOver" Color="#FF92400E" />
+            <SolidColorBrush x:Key="SliderTrackValueFillPressed" Color="#FF78350F" />
+            <SolidColorBrush x:Key="SliderTrackValueFillDisabled" Color="#FFEBD3B4" />
+            <SolidColorBrush x:Key="SliderThumbBackground" Color="#FFB45309" />
+            <SolidColorBrush x:Key="SliderThumbBackgroundPointerOver" Color="#FF92400E" />
+            <SolidColorBrush x:Key="SliderThumbBackgroundPressed" Color="#FF78350F" />
+            <SolidColorBrush x:Key="SliderThumbBackgroundDisabled" Color="#FFEBD3B4" />
+            <SolidColorBrush x:Key="SliderTickBarFill" Color="#FFC4CAD6" />
             <SolidColorBrush x:Key="ScrollBarBackground" Color="Transparent" />
             <SolidColorBrush x:Key="ScrollBarBackgroundPointerOver" Color="Transparent" />
             <SolidColorBrush x:Key="ScrollBarBorderBrush" Color="Transparent" />

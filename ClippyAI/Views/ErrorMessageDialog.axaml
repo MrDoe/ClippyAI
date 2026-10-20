@@ -9,8 +9,6 @@
     TransparencyLevelHint="AcrylicBlur"
     Background="Transparent"
     ExtendClientAreaToDecorationsHint="True"
-    ExtendClientAreaTitleBarHeightHint="-1"
-    WindowDecorations="BorderOnly"
     WindowStartupLocation="CenterScreen"
     CanResize="false"
     Topmost="True">
@@ -19,14 +17,16 @@
             BorderThickness="1"
             Background="{DynamicResource UiWindowBgTranslucentBrush}">
         <Grid RowDefinitions="Auto,Auto,Auto" Margin="22,20,22,18">
-            <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10">
-                <TextBlock Classes="icon lg" Text="&#xf071;"
-                           Foreground="{DynamicResource UiDangerBrush}" />
-                <TextBlock Text="{x:Static resources:Resources.ClippyAIError}"
-                           FontSize="16"
-                           FontWeight="SemiBold"
-                           VerticalAlignment="Center" />
-            </StackPanel>
+            <Border Grid.Row="0" Background="Transparent" WindowDecorationProperties.ElementRole="TitleBar">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <TextBlock Classes="icon lg" Text="&#xf071;"
+                               Foreground="{DynamicResource UiDangerBrush}" />
+                    <TextBlock Text="{x:Static resources:Resources.ClippyAIError}"
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+            </Border>
 
             <TextBlock Grid.Row="1"
                        Text="{Binding ErrorMessage}"

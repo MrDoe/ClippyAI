@@ -29,6 +29,13 @@ public partial class ConfigurationDialog : Window
             Button? closeButton = this.FindControl<Button>("CloseButton");
             StackPanel? saveStatus = this.FindControl<StackPanel>("SaveStatusPanel");
 
+            // Show the first task straight away. An empty detail pane reads as
+            // a broken screen even though the list is full.
+            if (viewModel.SelectedTaskConfiguration is null && viewModel.TaskConfigurations.Count > 0)
+            {
+                viewModel.SelectedTaskConfiguration = viewModel.TaskConfigurations[0];
+            }
+
             // Override the commands to handle dialog closing
             saveButton?.Click += (s, args) =>
                 {

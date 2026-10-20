@@ -8,7 +8,7 @@
     xmlns:resources="clr-namespace:ClippyAI.Resources"
     Title="{x:Static resources:Resources.Configuration}"
     Width="860" Height="840"
-    MinWidth="700" MinHeight="520"
+    MinWidth="780" MinHeight="520"
     WindowStartupLocation="CenterScreen"
     TransparencyLevelHint="AcrylicBlur"
     Background="Transparent"
@@ -104,7 +104,7 @@
                         </StackPanel>
                     </TabItem.Header>
                     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                        <StackPanel Margin="0,18,0,24" MaxWidth="760" HorizontalAlignment="Left">
+                        <StackPanel Margin="0,18,0,24" Width="720" HorizontalAlignment="Left">
                             <HeaderedContentControl Header="{x:Static resources:Resources.AIProviderSettings}">
                                 <StackPanel>
                                     <Label Content="{x:Static resources:Resources.AIProvider}" />
@@ -212,7 +212,7 @@
                         </StackPanel>
                     </TabItem.Header>
                     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                        <StackPanel Margin="0,18,0,24" MaxWidth="760" HorizontalAlignment="Left">
+                        <StackPanel Margin="0,18,0,24" Width="720" HorizontalAlignment="Left">
                             <HeaderedContentControl Header="{x:Static resources:Resources.VectorDatabaseSettings}">
                                 <StackPanel>
                                     <CheckBox IsChecked="{Binding UseEmbeddings}"
@@ -281,7 +281,7 @@
                         </StackPanel>
                     </TabItem.Header>
                     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                        <StackPanel Margin="0,18,0,24" MaxWidth="760" HorizontalAlignment="Left">
+                        <StackPanel Margin="0,18,0,24" Width="720" HorizontalAlignment="Left">
                             <HeaderedContentControl Header="{x:Static resources:Resources.VisionSettings}">
                                 <StackPanel>
                                     <Label Content="{x:Static resources:Resources.VideoDevice}" />
@@ -312,7 +312,7 @@
                         </StackPanel>
                     </TabItem.Header>
                     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                        <StackPanel Margin="0,18,0,24" MaxWidth="760" HorizontalAlignment="Left">
+                        <StackPanel Margin="0,18,0,24" Width="720" HorizontalAlignment="Left">
                             <HeaderedContentControl Header="{x:Static resources:Resources.SystemSettings}">
                                 <StackPanel>
                                     <Label Content="{x:Static resources:Resources.LinuxKeyboardDevice}" />
@@ -339,7 +339,7 @@
                         </StackPanel>
                     </TabItem.Header>
                     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                        <StackPanel Margin="0,18,0,24" MaxWidth="760" HorizontalAlignment="Left">
+                        <StackPanel Margin="0,18,0,24" Width="720" HorizontalAlignment="Left">
                             <HeaderedContentControl Header="{x:Static resources:Resources.SSHTunnelSettings}">
                                 <StackPanel>
                                     <CheckBox IsChecked="{Binding UseSSH}"
@@ -411,7 +411,7 @@
                         </StackPanel>
                     </TabItem.Header>
 
-                    <Grid Margin="0,18,0,24" ColumnDefinitions="300,*">
+                    <Grid Width="720" HorizontalAlignment="Left" Margin="0,18,0,24" ColumnDefinitions="300,*">
                         <!-- Task list -->
                         <Border Grid.Column="0" Classes="panel" Padding="14" Margin="0,0,14,0">
                             <Grid RowDefinitions="Auto,*,Auto">
@@ -439,6 +439,7 @@
                                                 HorizontalAlignment="Stretch" Margin="0,0,4,0" />
                                         <Button Content="{x:Static resources:Resources.Delete}"
                                                 Command="{Binding DeleteTaskCommand}"
+                                                IsEnabled="{Binding IsTaskSelected}"
                                                 HorizontalAlignment="Stretch" Margin="4,0,0,0" />
                                     </UniformGrid>
 
