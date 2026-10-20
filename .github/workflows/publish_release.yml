@@ -72,6 +72,10 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
+      - name: Restore the application for the Windows target
+        shell: pwsh
+        run: |
+          dotnet restore ClippyAI/ClippyAI.csproj -p:TargetFramework=net10.0-windows10.0.17763.0 -p:RuntimeIdentifier=win-x64
       - name: Build the installer
         shell: pwsh
         run: dotnet build Installer/ClippyAI.Installer.wixproj -c Release
