@@ -5,19 +5,33 @@
     Name="ClippyAI"
     x:Class="ClippyAI.App"
     x:DataType="vm:ApplicationViewModel"
-    RequestedThemeVariant="Default">
+    RequestedThemeVariant="Dark">
     <Application.DataTemplates>
         <local:ViewLocator />
     </Application.DataTemplates>
 
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="avares://ClippyAI/Styles/Theme.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+
     <Application.Styles>
         <FluentTheme />
+
+        <!-- Component styles, kept out of the app shell. -->
+        <StyleInclude Source="avares://ClippyAI/Styles/Controls.axaml" />
+
         <Style Selector="Window">
-            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontFamily" Value="Inter" />
+            <Setter Property="FontSize" Value="13" />
         </Style>
+
         <Style Selector="ToolTip">
-            <Setter Property="MaxWidth" Value="800"/>
-            <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
+            <Setter Property="MaxWidth" Value="320" />
+            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
         </Style>
     </Application.Styles>
 </Application>
