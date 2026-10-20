@@ -2,16 +2,38 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:resources="clr-namespace:ClippyAI.Resources"
         x:Class="ClippyAI.Views.CameraWindow"
-        Title="{x:Static resources:Resources.CameraWindow}" Width="640" Height="480"
+        Title="{x:Static resources:Resources.CameraWindow}" Width="640" Height="520"
+        MinWidth="320" MinHeight="240"
         WindowStartupLocation="CenterScreen"
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaTitleBarHeightHint="-1"
         TransparencyLevelHint="AcrylicBlur"
         Background="Transparent"
-        BorderBrush="DimGray" BorderThickness="1" CornerRadius="6"
         CanResize="True"
         Topmost="True">
-    <Border CornerRadius="6" BorderBrush="DimGray" BorderThickness="1" Background="#e0333333">
-        <Image x:Name="imgCamera" Stretch="Uniform" />
+    <Border CornerRadius="12"
+            BorderBrush="{DynamicResource UiBorderBrush}"
+            BorderThickness="1"
+            Background="{DynamicResource UiWindowBgTranslucentBrush}"
+            ClipToBounds="True">
+        <DockPanel LastChildFill="True">
+            <Border DockPanel.Dock="Top"
+                    Padding="20,16,20,12"
+                    Background="Transparent"
+                    WindowDecorationProperties.ElementRole="TitleBar">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <TextBlock Classes="icon lg" Text="&#xf030;"
+                               Foreground="{DynamicResource UiAccentBrush}" />
+                    <TextBlock Text="{x:Static resources:Resources.CameraWindow}"
+                               FontSize="15"
+                               FontWeight="SemiBold"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+            </Border>
+
+            <Border Margin="16,0,16,16" CornerRadius="10" ClipToBounds="True">
+                <Image x:Name="imgCamera" Stretch="Uniform" />
+            </Border>
+        </DockPanel>
     </Border>
 </Window>

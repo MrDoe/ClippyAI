@@ -4,8 +4,8 @@
     x:DataType="vm:ErrorMessageDialogViewModel"
     xmlns:vm="clr-namespace:ClippyAI.Views"
     xmlns:resources="clr-namespace:ClippyAI.Resources"
-    Width="500"
-    Height="150"
+    Width="460"
+    Height="200"
     TransparencyLevelHint="AcrylicBlur"
     Background="Transparent"
     ExtendClientAreaToDecorationsHint="True"
@@ -14,12 +14,33 @@
     WindowStartupLocation="CenterScreen"
     CanResize="false"
     Topmost="True">
-    <Border CornerRadius="6" BorderBrush="DimGray" Background="#e9333333" BorderThickness="1">
-        <StackPanel>
-            <TextBlock Text="{x:Static resources:Resources.ClippyAIError}" FontSize="20" FontWeight="Bold" Margin="10,10,10,10" />
-            <TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap" Margin="10,0,20,10" />
-            <Button Content="{x:Static resources:Resources.OK}" HorizontalContentAlignment="Center" Command="{Binding CloseCommand}"
-            Width="100" HorizontalAlignment="Center" />
-        </StackPanel>
+    <Border CornerRadius="12"
+            BorderBrush="{DynamicResource UiBorderBrush}"
+            BorderThickness="1"
+            Background="{DynamicResource UiWindowBgTranslucentBrush}">
+        <Grid RowDefinitions="Auto,Auto,Auto" Margin="22,20,22,18">
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10">
+                <TextBlock Classes="icon lg" Text="&#xf071;"
+                           Foreground="{DynamicResource UiDangerBrush}" />
+                <TextBlock Text="{x:Static resources:Resources.ClippyAIError}"
+                           FontSize="16"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center" />
+            </StackPanel>
+
+            <TextBlock Grid.Row="1"
+                       Text="{Binding ErrorMessage}"
+                       TextWrapping="Wrap"
+                       Foreground="{DynamicResource UiTextSecondaryBrush}"
+                       Margin="0,14,0,0" />
+
+            <Button Grid.Row="2"
+                    Content="{x:Static resources:Resources.OK}"
+                    Classes="accent"
+                    HorizontalAlignment="Right"
+                    Width="110"
+                    Margin="0,20,0,0"
+                    Command="{Binding CloseCommand}" />
+        </Grid>
     </Border>
 </Window>

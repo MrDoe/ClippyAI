@@ -4,10 +4,14 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="clr-namespace:ClippyAI.Views"
-    xmlns:assets="clr-namespace:ClippyAI.Resources"
+    xmlns:resources="clr-namespace:ClippyAI.Resources"
     mc:Ignorable="d"
-    Width="510"
+    Width="520"
+    Height="780"
+    MinWidth="420"
+    MinHeight="520"
     x:Class="ClippyAI.Views.MainWindow"
+    x:DataType="vm:MainViewModel"
     Icon="avares://ClippyAI/Assets/bulb.png"
     Title="ClippyAI"
     TransparencyLevelHint="AcrylicBlur"
@@ -20,32 +24,70 @@
     ExtendClientAreaTitleBarHeightHint="-1"
     WindowDecorations="BorderOnly">
 
-    <Border x:Name="border" CornerRadius="6" BorderBrush="DimGray" Background="#e9333333" BorderThickness="1"
-        DockPanel.Dock="Top">
-        <ScrollViewer>
-        <DockPanel Margin="0">
-            <StackPanel Orientation="Vertical">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+    <!-- Floating panel: a single calm surface with a hairline edge. -->
+    <Border Name="border"
+            CornerRadius="14"
+            BorderBrush="{DynamicResource UiBorderBrush}"
+            BorderThickness="1"
+            Background="{DynamicResource UiWindowBgTranslucentBrush}"
+            ClipToBounds="True">
 
-                    <!-- Minimize Button -->
-                    <Button Grid.Column="1" Content="_" Width="30" Click="MinimizeButton_Click" Padding="11 5 5 5"
-                        Background="Transparent" Foreground="White" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"
-                        BorderBrush="Transparent" />
+        <DockPanel LastChildFill="True">
 
-                    <!-- Close Button -->
-                    <Button Grid.Column="2" Content="x" Width="30" Click="CloseButton_Click" FontWeight="Bold"
-                        Background="Transparent" Foreground="White" VerticalAlignment="Center" Padding="11 5 5 5"
-                        BorderBrush="Transparent" FontSize="14"/>
+            <!-- Title bar. Tagged as TitleBar so the window stays draggable. -->
+            <Border DockPanel.Dock="Top"
+                    Padding="16,14,10,12"
+                    Background="Transparent"
+                    WindowDecorationProperties.ElementRole="TitleBar">
+                <Grid ColumnDefinitions="Auto,*,Auto">
+
+                    <Border Grid.Column="0"
+                            Width="30" Height="30"
+                            CornerRadius="8"
+                            Background="{DynamicResource UiSurfaceAltBrush}"
+                            ClipToBounds="True">
+                        <Image Source="/Assets/bulb_high_128.png" Stretch="UniformToFill" />
+                    </Border>
+
+                    <StackPanel Grid.Column="1"
+                                Orientation="Horizontal"
+                                Spacing="8"
+                                Margin="10,0,0,0"
+                                VerticalAlignment="Center">
+                        <TextBlock Text="ClippyAI" Classes="title" VerticalAlignment="Center" />
+                        <Border Classes="pill" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Ellipse Width="6" Height="6" Fill="{DynamicResource UiAccentBrush}"
+                                         VerticalAlignment="Center" />
+                                <TextBlock Text="{x:Static resources:Resources.AICompanion}"
+                                           FontSize="{DynamicResource UiFontSizeMicro}"
+                                           Foreground="{DynamicResource UiTextSecondaryBrush}"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="2">
+                        <Button Classes="icon"
+                                Command="{Binding OpenConfigurationCommand}"
+                                ToolTip.Tip="{x:Static resources:Resources.ConfigurationDescription}">
+                            <TextBlock Classes="icon" Text="&#xf013;" />
+                        </Button>
+                        <Button Classes="icon"
+                                Click="MinimizeButton_Click"
+                                ToolTip.Tip="{x:Static resources:Resources.Minimize}">
+                            <TextBlock Classes="icon" Text="&#xf068;" />
+                        </Button>
+                        <Button Classes="icon danger"
+                                Click="CloseButton_Click"
+                                ToolTip.Tip="{x:Static resources:Resources.CloseApplication}">
+                            <TextBlock Classes="icon" Text="&#xf00d;" />
+                        </Button>
+                    </StackPanel>
                 </Grid>
-                <!-- Main Content -->
-                <views:MainView Margin="0,-20,0,0" />
-            </StackPanel>
+            </Border>
+
+            <views:MainView />
         </DockPanel>
-        </ScrollViewer>
     </Border>
 </Window>

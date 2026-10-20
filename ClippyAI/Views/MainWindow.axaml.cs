@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -137,7 +138,16 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
 
     private void SetWindowPos()
     {
-        PixelSize screenSize = Screens.Primary!.Bounds.Size;
+        // Headless / virtual displays (CI, Xvfb) may not expose a primary
+        // screen, so fall back to any known screen and skip the positioning
+        // entirely when the platform reports none at all.
+        var screen = Screens.Primary ?? Screens.All.FirstOrDefault();
+        if (screen is null)
+        {
+            return;
+        }
+
+        PixelSize screenSize = screen.Bounds.Size;
         Height = screenSize.Height;
         Position = new PixelPoint(0, 0);
     }

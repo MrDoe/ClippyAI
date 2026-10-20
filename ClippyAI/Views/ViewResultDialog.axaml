@@ -4,8 +4,9 @@
     x:DataType="vm:ViewResultDialogViewModel"
     xmlns:vm="clr-namespace:ClippyAI.Views"
     xmlns:resources="clr-namespace:ClippyAI.Resources"
-    Width="1000"
-    Height="500"
+    Width="900"
+    Height="600"
+    MinWidth="480" MinHeight="320"
     Background="Transparent"
     CanResize="True"
     Topmost="True"
@@ -13,13 +14,40 @@
     ExtendClientAreaToDecorationsHint="True"
     WindowStartupLocation="CenterScreen"
     Title="{x:Static resources:Resources.ClippyAIResult}">
-    <Border CornerRadius="6" BorderBrush="DimGray" Background="#e9333333" BorderThickness="1">
-        <StackPanel>
-            <TextBlock Text="{x:Static resources:Resources.Result}" FontSize="20" FontWeight="Bold" Margin="10,10,10,10" />
-            <TextBox Text="{Binding ResultText}" Margin="10,0,20,10" Height="400" Width="950"
-            TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" />
-            <Button Content="{x:Static resources:Resources.OK}" HorizontalContentAlignment="Center" Command="{Binding CloseCommand}"
-            Width="100" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
-        </StackPanel>
+    <Border CornerRadius="12"
+            BorderBrush="{DynamicResource UiBorderBrush}"
+            BorderThickness="1"
+            Background="{DynamicResource UiWindowBgTranslucentBrush}">
+        <DockPanel LastChildFill="True">
+
+            <Border DockPanel.Dock="Top"
+                    Padding="24,20,24,14"
+                    Background="Transparent"
+                    WindowDecorationProperties.ElementRole="TitleBar">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <TextBlock Classes="icon lg" Text="&#xf15c;"
+                               Foreground="{DynamicResource UiAccentBrush}" />
+                    <TextBlock Text="{x:Static resources:Resources.ClippyAIResult}"
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+            </Border>
+
+            <Border DockPanel.Dock="Bottom" Padding="24,12,24,18">
+                <Button Content="{x:Static resources:Resources.OK}"
+                        Classes="accent"
+                        HorizontalAlignment="Right"
+                        Width="110"
+                        Command="{Binding CloseCommand}" />
+            </Border>
+
+            <Border Margin="24,4,24,0">
+                <TextBox Text="{Binding ResultText}"
+                         Classes="multiline"
+                         TextWrapping="Wrap"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto" />
+            </Border>
+        </DockPanel>
     </Border>
 </Window>

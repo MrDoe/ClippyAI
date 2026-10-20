@@ -4,7 +4,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:ClippyAI.Views"
     xmlns:resources="clr-namespace:ClippyAI.Resources"
-    mc:Ignorable="d" d:DesignWidth="490" d:DesignHeight="490"
+    mc:Ignorable="d" d:DesignWidth="520" d:DesignHeight="780"
     Padding="0"
     x:Class="ClippyAI.Views.MainView"
     x:DataType="vm:MainViewModel"
@@ -13,142 +13,158 @@
         <vm:MainViewModel />
     </Design.DataContext>
 
-    <UserControl.Styles>
-        <Style Selector="Label">
-            <Setter Property="FontSize" Value="14"/>
-        </Style>
-        <Style Selector="TextBox">
-            <Setter Property="FontSize" Value="14"/>
-        </Style>
-    </UserControl.Styles>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Grid Margin="16,4,16,16" RowDefinitions="Auto,Auto,*">
 
-    <!-- Margins: left, top, right, bottom -->
-    <StackPanel Width="490" Margin="0">
-        <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
-            <Image Source="/Assets/bulb_high_128.png" Width="40" Height="40"
-                VerticalAlignment="Center" HorizontalAlignment="Left" />
-            <Label Content="ClippyAI" HorizontalAlignment="Center" VerticalAlignment="Center"
-                FontSize="18" FontWeight="Bold" />
-            <Label Content="{x:Static resources:Resources.AICompanion}" HorizontalAlignment="Right" VerticalAlignment="Center" />
-        </StackPanel>
-        
-        <!-- Input -->
-        <Label Content="{x:Static resources:Resources.ClipboardContent}" Margin="0 0 0 3"
-            HorizontalAlignment="Left" />
-        <TextBox x:Name="txtInput" Text="{Binding Input}"
-            IsReadOnly="True"
-            Width="490"
-            Height="350"
-            ScrollViewer.VerticalScrollBarVisibility="Auto"
-            TextWrapping="Wrap"
-            ToolTip.Tip="{x:Static resources:Resources.ClipboardContentDescription}"
-            IsVisible="{Binding IsTextInputVisible}" />
+            <!-- ============================ Clipboard =========================== -->
+            <Border Grid.Row="0" Classes="card">
+                <StackPanel Spacing="10">
 
-        <!-- Display clipboard image -->
-        <Image x:Name="imgClipboard" Source="{Binding ClipboardImage}" 
-            Width="490" Height="200" 
-            Stretch="Uniform" 
-            Margin="0 10 0 0" 
-            ToolTip.Tip="{x:Static resources:Resources.ClipboardImageDescription}"
-            IsVisible="{Binding IsImageInputVisible}" />
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <TextBlock Classes="icon" Text="&#xf328;" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <TextBlock Grid.Column="1"
+                                   Classes="label"
+                                   Text="{x:Static resources:Resources.ClipboardContent}"
+                                   VerticalAlignment="Center" />
 
-        <!-- Task selection -->
-        <Label Content="{x:Static resources:Resources.TaskLabel}" HorizontalAlignment="Left"
-            Margin="0 10 0 3" />
-        
-        <!-- Task Configuration Dropdown -->
-        <StackPanel Orientation="Vertical" Margin="0,0,0,10">
-            <ComboBox x:Name="cboTaskConfig" SelectedItem="{Binding SelectedTaskConfiguration}"
-                ItemsSource="{Binding TaskConfigurations}"
-                HorizontalAlignment="Left" Width="490"
-                ToolTip.Tip="{x:Static resources:Resources.SelectTaskDescription}">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding TaskName}" />
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
-        </StackPanel>
-        
-        <!-- Start/Stop buttons -->
-        <StackPanel Orientation="Horizontal">
-            <Button Content="{x:Static resources:Resources.TaskStart}"
-                Command="{Binding AskClippyCommand}"
-                HorizontalAlignment="Left" Margin="0 10 0 0" Height="30"
-                ToolTip.Tip="{x:Static resources:Resources.TaskStartDescription}"
-            />
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="2">
+                            <Button Classes="icon"
+                                    Command="{Binding ShowCameraCommand}"
+                                    ToolTip.Tip="{x:Static resources:Resources.ViewCameraDescription}">
+                                <TextBlock Classes="icon" Text="&#xf030;" />
+                            </Button>
+                            <Button Classes="icon"
+                                    Command="{Binding CaptureScreenshotCommand}"
+                                    ToolTip.Tip="{x:Static resources:Resources.CaptureScreenshotDescription}">
+                                <TextBlock Classes="icon" Text="&#xf03e;" />
+                            </Button>
+                        </StackPanel>
+                    </Grid>
 
-            <Button Content="{x:Static resources:Resources.TaskStop}"
-                Command="{Binding StopClippyTaskCommand}"
-                HorizontalAlignment="Left" Margin="10 10 0 0" Height="30"
-                ToolTip.Tip="{x:Static resources:Resources.TaskStopDescription}" />
+                    <TextBox x:Name="txtInput"
+                             Classes="readonly"
+                             Text="{Binding Input}"
+                             IsReadOnly="True"
+                             Height="132"
+                             TextWrapping="Wrap"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             ToolTip.Tip="{x:Static resources:Resources.ClipboardContentDescription}"
+                             IsVisible="{Binding IsTextInputVisible}" />
 
-            <Button Content="{x:Static resources:Resources.ViewCamera}"
-                Command="{Binding ShowCameraCommand}"
-                HorizontalAlignment="Left" Margin="10 10 0 0" Height="30"
-                ToolTip.Tip="{x:Static resources:Resources.ViewCameraDescription}" />
+                    <Image x:Name="imgClipboard"
+                           Source="{Binding ClipboardImage}"
+                           Height="180"
+                           Stretch="Uniform"
+                           ToolTip.Tip="{x:Static resources:Resources.ClipboardImageDescription}"
+                           IsVisible="{Binding IsImageInputVisible}" />
+                </StackPanel>
+            </Border>
 
-            <Button Content="{x:Static resources:Resources.CaptureScreenshot}" 
-                Command="{Binding CaptureScreenshotCommand}"
-                HorizontalAlignment="Left" Margin="10 10 0 0" Height="30"
-                ToolTip.Tip="{x:Static resources:Resources.CaptureScreenshotDescription}" IsVisible="false" />
+            <!-- ============================== Task ============================== -->
+            <Border Grid.Row="1" Classes="card" Margin="0,14,0,0">
+                <StackPanel Spacing="10">
 
-            <Button Content="{x:Static resources:Resources.Configuration}"
-                Command="{Binding OpenConfigurationCommand}"
-                HorizontalAlignment="Right" VerticalAlignment="Center" 
-                Margin="10 10 0 0" Height="30"
-                ToolTip.Tip="{x:Static resources:Resources.ConfigurationDescription}" />
-        </StackPanel>
+                    <Grid ColumnDefinitions="Auto,*">
+                        <TextBlock Classes="icon" Text="&#xf0eb;" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <TextBlock Grid.Column="1"
+                                   Classes="label"
+                                   Text="{x:Static resources:Resources.Task}"
+                                   VerticalAlignment="Center" />
+                    </Grid>
 
-        <!-- Output -->
-        <Label Content="{x:Static resources:Resources.Output}" Margin="0 10 0 3"
-            HorizontalAlignment="Left" />
-        <TextBox x:Name="txtOutput" Text="{Binding Output}"
-            AcceptsReturn="True"
-            AcceptsTab="True"
-            Width="490"
-            Height="550"
-            ScrollViewer.VerticalScrollBarVisibility="Auto"
-            TextWrapping="Wrap"
-            ToolTip.Tip="{x:Static resources:Resources.OutputDescription}" />
-        
-        <!-- Next answer button (play symbol) -->
-        <Button Content="&#xf101;" FontFamily="avares://ClippyAI/Assets/fontawesome/otfs/Font Awesome 6 Free-Solid-900.otf#Font Awesome 6"
-            FontSize="16" Width="32" Height="30" Margin="4 -38 0 0"
-            Command="{Binding GetNextResponseCommand}"
-            ToolTip.Tip="{x:Static resources:Resources.GetNextResponseDescription}"
-            HorizontalAlignment="Left" />
+                    <ComboBox x:Name="cboTaskConfig"
+                              SelectedItem="{Binding SelectedTaskConfiguration}"
+                              ItemsSource="{Binding TaskConfigurations}"
+                              HorizontalAlignment="Stretch"
+                              ToolTip.Tip="{x:Static resources:Resources.SelectTaskDescription}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding TaskName}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
 
-        <!-- thumbs up button -->
-        <Button Content="&#xf164;" FontFamily="avares://ClippyAI/Assets/fontawesome/otfs/Font Awesome 6 Free-Solid-900.otf#Font Awesome 6"
-            FontSize="16" Width="32" Height="30" Margin="38 -38 0 0"
-            Command="{Binding ThumbUpCommand}"
-            HorizontalAlignment="Left" 
-            ToolTip.Tip="{x:Static resources:Resources.ThumbUpDescription}" />
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <Button Grid.Column="0"
+                                Classes="accent"
+                                Command="{Binding AskClippyCommand}"
+                                Height="38"
+                                HorizontalAlignment="Stretch"
+                                ToolTip.Tip="{x:Static resources:Resources.TaskStartDescription}">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <TextBlock Classes="icon"
+                                           Text="&#xf04b;"
+                                           Foreground="{DynamicResource UiOnAccentBrush}" />
+                                <TextBlock Text="{x:Static resources:Resources.TaskStart}"
+                                           Foreground="{DynamicResource UiOnAccentBrush}" />
+                            </StackPanel>
+                        </Button>
 
-        <!-- thumbs down button -->
-        <Button Content="&#xf165;"
-        FontFamily="avares://ClippyAI/Assets/fontawesome/otfs/Font Awesome 6 Free-Solid-900.otf#Font Awesome 6"
-        FontSize="16" Width="32" Height="30" Margin="72 -38 0 0"
-        Command="{Binding ThumbDownCommand}"
-        HorizontalAlignment="Left" 
-        ToolTip.Tip="{x:Static resources:Resources.ThumbDownDescription}" />
+                        <Button Grid.Column="1"
+                                Classes="icon"
+                                Command="{Binding StopClippyTaskCommand}"
+                                ToolTip.Tip="{x:Static resources:Resources.TaskStopDescription}">
+                            <TextBlock Classes="icon" Text="&#xf04d;" />
+                        </Button>
+                    </Grid>
+                </StackPanel>
+            </Border>
 
-        <!-- regenerate button -->
-        <Button Content="&#x21BB;" FontFamily="avares://ClippyAI/Assets/fontawesome/otfs/Font Awesome 6 Free-Solid-900.otf#Font Awesome 6"
-            FontSize="16" Width="32" Height="30" Margin="108 -38 0 0"
-            Command="{Binding RegenerateCommand}"
-            HorizontalAlignment="Left"
-            ToolTip.Tip="{x:Static resources:Resources.RegenerateDescription}" />
+            <!-- ============================ Response ============================ -->
+            <Border Grid.Row="2" Classes="card" Margin="0,14,0,0">
+                <Grid RowDefinitions="Auto,*,Auto">
+                    <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto">
+                        <TextBlock Classes="icon" Text="&#xf15c;" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <TextBlock Grid.Column="1"
+                                   Classes="label"
+                                   Text="{x:Static resources:Resources.Output}"
+                                   VerticalAlignment="Center" />
 
-        <!-- Response counter -->
-        <Label Content="{Binding ResponseCounter}" HorizontalAlignment="Left"
-            Margin="440 -30 0 0"
-            ToolTip.Tip="{x:Static resources:Resources.ResponseCounterDescription}" />
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="12">
+                            <TextBlock Classes="mono"
+                                       Text="{Binding ResponseCounter}"
+                                       ToolTip.Tip="{x:Static resources:Resources.ResponseCounterDescription}" />
+                            <TextBlock Classes="mono"
+                                       Text="{Binding ResponseDistance}"
+                                       ToolTip.Tip="{x:Static resources:Resources.ResponseDistanceDescription}" />
+                        </StackPanel>
+                    </Grid>
 
-        <!-- Response distance -->
-        <Label Content="{Binding ResponseDistance}" HorizontalAlignment="Left"
-            Margin="150 -30 0 0"
-            ToolTip.Tip="{x:Static resources:Resources.ResponseDistanceDescription}" />
-    </StackPanel>
+                    <TextBox x:Name="txtOutput"
+                             Grid.Row="1"
+                             Text="{Binding Output}"
+                             AcceptsReturn="True"
+                             AcceptsTab="True"
+                             MinHeight="200"
+                             Margin="0,10,0,10"
+                             TextWrapping="Wrap"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             ToolTip.Tip="{x:Static resources:Resources.OutputDescription}" />
+
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="4">
+                        <Button Classes="icon"
+                                Command="{Binding GetNextResponseCommand}"
+                                ToolTip.Tip="{x:Static resources:Resources.GetNextResponseDescription}">
+                            <TextBlock Classes="icon" Text="&#xf101;" />
+                        </Button>
+                        <Button Classes="icon"
+                                Command="{Binding ThumbUpCommand}"
+                                ToolTip.Tip="{x:Static resources:Resources.ThumbUpDescription}">
+                            <TextBlock Classes="icon" Text="&#xf164;" />
+                        </Button>
+                        <Button Classes="icon"
+                                Command="{Binding ThumbDownCommand}"
+                                ToolTip.Tip="{x:Static resources:Resources.ThumbDownDescription}">
+                            <TextBlock Classes="icon" Text="&#xf165;" />
+                        </Button>
+                        <Button Classes="icon"
+                                Command="{Binding RegenerateCommand}"
+                                ToolTip.Tip="{x:Static resources:Resources.RegenerateDescription}">
+                            <TextBlock Classes="icon" Text="&#xf2f1;" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </ScrollViewer>
 </UserControl>

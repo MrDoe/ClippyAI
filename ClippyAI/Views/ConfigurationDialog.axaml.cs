@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using ClippyAI.ViewModels;
 using System;
+using System.Threading.Tasks;
 
 namespace ClippyAI.Views;
 
@@ -26,6 +27,7 @@ public partial class ConfigurationDialog : Window
             // Subscribe to command execution to close dialog
             Button? saveButton = this.FindControl<Button>("SaveButton");
             Button? closeButton = this.FindControl<Button>("CloseButton");
+            StackPanel? saveStatus = this.FindControl<StackPanel>("SaveStatusPanel");
 
             // Override the commands to handle dialog closing
             saveButton?.Click += (s, args) =>
@@ -47,6 +49,10 @@ public partial class ConfigurationDialog : Window
                     // Reinitialize services (SSH, Embeddings)
                     App.Current?.ReinitializeServices();
 
+                    // The dialog stays open so the user can keep working, but the
+                    // save has to be visible - otherwise it looks like nothing happened.
+                    ShowSaveStatus(saveStatus);
+
                     // Close the dialog to prevent PlatformImpl null errors
                     //Close(true);
                 };
@@ -56,5 +62,22 @@ public partial class ConfigurationDialog : Window
                 Close(false);
             };
         }
+    }
+
+    /// <summary>
+    /// Briefly confirms a successful save in the dialog footer.
+    /// </summary>
+    private async void ShowSaveStatus(StackPanel? saveStatus)
+    {
+        if (saveStatus is null)
+        {
+            return;
+        }
+
+        saveStatus.IsVisible = true;
+
+        await Task.Delay(2500);
+
+        saveStatus.IsVisible = false;
     }
 }
