@@ -80,9 +80,23 @@ jobs:
           dotnet restore ClippyAI.sln
           # Then the application itself for the runtime the installer ships.
           dotnet restore ClippyAI/ClippyAI.csproj -p:RuntimeIdentifier=win-x64
+      - name: Publish the application
+        shell: pwsh
+        run: >
+          dotnet publish ClippyAI/ClippyAI.csproj -c Release
+          -f net10.0-windows10.0.17763.0 -r win-x64 --self-contained true
+          -p:PublishSingleFile=false -p:PublishTrimmed=false
+          -p:PublishDir=Installer/bin/Release/publish/
       - name: Build the installer
         shell: pwsh
         run: dotnet build Installer/ClippyAI.Installer.wixproj -c Release
+      - name: Check the installer
+        shell: pwsh
+        run: |
+          $msi = Get-ChildItem Installer/bin/Release/*.msi | Select-Object -First 1
+          if (-not $msi) { throw "No installer was produced" }
+          if ($msi.Length -lt 10MB) { throw "The installer is only $($msi.Length) bytes, the application files are missing" }
+          Write-Host "Installer: $($msi.Name) $([math]::Round($msi.Length / 1MB)) MB"
       - name: Collect the installer
         shell: pwsh
         run: |
