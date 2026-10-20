@@ -26,7 +26,10 @@ public class OllamaProvider : IAIProvider
     };
     private static readonly HttpClient client = new(handler)
     {
-        Timeout = TimeSpan.FromMinutes(5)
+        // Timeouts are enforced per request with a linked CancellationTokenSource
+        // so a timeout can be reported instead of looking like a user cancel.
+        // This value is only a last-resort backstop.
+        Timeout = TimeSpan.FromSeconds(RequestLimits.MaxTimeoutSeconds)
     };
 
     private static string? url = ConfigurationService.GetConfigurationValue("OllamaUrl", "http://localhost:11434/api");
@@ -79,17 +82,18 @@ public class OllamaProvider : IAIProvider
 
         // Load advanced configuration options
         double temperature = taskConfig?.Temperature ?? 0.8;
-        int maxLength = taskConfig?.MaxLength ?? 2048;
+        int maxLength = RequestLimits.ClampOutputTokens(taskConfig?.MaxLength);
         double topP = taskConfig?.TopP ?? 0.9;
         int topK = taskConfig?.TopK ?? 40;
         double repeatPenalty = taskConfig?.RepeatPenalty ?? 1.1;
         int numCtx = taskConfig?.NumCtx ?? 2048;
         string modelToUse = taskConfig?.Model ?? model;
         string? systemPrompt = taskConfig?.SystemPrompt ?? system;
+        string userInput = RequestLimits.TruncateInput(input);
 
         OllamaRequest body = new()
         {
-            prompt = $"# TEXT\n\n'''{input.Trim()}'''\n# TASK\n\n'{task.Trim()}'",
+            prompt = $"# TEXT\n\n'''{userInput}'''\n# TASK\n\n'{task.Trim()}'",
             model = modelToUse,
             system = systemPrompt,
             stream = true,
@@ -106,38 +110,51 @@ public class OllamaProvider : IAIProvider
         };
         Console.WriteLine("Sending request...");
 
-        // send the request
-        using HttpResponseMessage response = await client.PostAsync(
-                             url + "/generate",
-                             new StringContent(JsonSerializer.Serialize(body),
-                             Encoding.UTF8,
-                             "application/json"),
-                             token).ConfigureAwait(false);
+        int timeoutSeconds = RequestLimits.TimeoutSeconds;
+        using CancellationTokenSource timeoutCts = RequestLimits.CreateTimeoutSource(token, timeoutSeconds);
 
-        if (response.IsSuccessStatusCode)
+        Console.WriteLine($"Ollama request: model={modelToUse}, num_predict={maxLength}, timeout={timeoutSeconds}s");
+
+        try
         {
-            Console.WriteLine("Request successful.");
+            // send the request
+            using HttpResponseMessage response = await client.PostAsync(
+                                 url + "/generate",
+                                 new StringContent(JsonSerializer.Serialize(body),
+                                 Encoding.UTF8,
+                                 "application/json"),
+                                 timeoutCts.Token).ConfigureAwait(false);
 
-            using Stream responseStream = await response.Content.ReadAsStreamAsync(token);
-            using StreamReader reader = new(responseStream);
-
-            string? line;
-            while ((line = await reader.ReadLineAsync(token)) != null &&
-                    !token.IsCancellationRequested)
+            if (response.IsSuccessStatusCode)
             {
-                if (!string.IsNullOrWhiteSpace(line))
+                Console.WriteLine("Request successful.");
+
+                using Stream responseStream = await response.Content.ReadAsStreamAsync(timeoutCts.Token);
+                using StreamReader reader = new(responseStream);
+
+                string? line;
+                while ((line = await reader.ReadLineAsync(timeoutCts.Token)) != null &&
+                        !timeoutCts.IsCancellationRequested)
                 {
-                    OllamaResponse? responseObj = JsonSerializer.Deserialize<OllamaResponse>(line);
-                    string? responseText = responseObj?.response;
-                    fullResponse += responseText;
+                    if (!string.IsNullOrWhiteSpace(line))
+                    {
+                        OllamaResponse? responseObj = JsonSerializer.Deserialize<OllamaResponse>(line);
+                        string? responseText = responseObj?.response;
+                        fullResponse += responseText;
+                    }
                 }
+                Console.WriteLine("Response fully received.");
             }
-            Console.WriteLine("Response fully received.");
+            else
+            {
+                string errorContent = await response.Content.ReadAsStringAsync(timeoutCts.Token);
+                throw new Exception($"Ollama request failed with status: {response.StatusCode}. Response: {errorContent}");
+            }
         }
-        else
+        catch (OperationCanceledException) when (!token.IsCancellationRequested)
         {
-            Console.WriteLine($"Request failed with status: {response.StatusCode}.");
-            //throw new Exception($"Request failed with status: {response.StatusCode}.");
+            // The linked token fired, but the caller did not cancel: this is our timeout.
+            throw RequestLimits.CreateTimeoutException(timeoutSeconds);
         }
 
         // remove double quotes from the beginning and end of the response
@@ -153,12 +170,14 @@ public class OllamaProvider : IAIProvider
     {
         List<string> models = [];
         HttpResponseMessage? response = null;
+        using CancellationTokenSource timeoutCts =
+            RequestLimits.CreateTimeoutSource(token, RequestLimits.MetadataTimeoutSeconds);
         try
         {
             UpdateConfig();
             response = await client.GetAsync(
                                  $"{url}/tags",
-                                 token).ConfigureAwait(false);
+                                 timeoutCts.Token).ConfigureAwait(false);
         }
         catch (Exception e)
         {
@@ -166,7 +185,7 @@ public class OllamaProvider : IAIProvider
         }
         if (response != null && response.IsSuccessStatusCode)
         {
-            using Stream stream = await response.Content.ReadAsStreamAsync(token);
+            using Stream stream = await response.Content.ReadAsStreamAsync(timeoutCts.Token);
             using StreamReader reader = new(stream);
             string? output = await reader.ReadToEndAsync();
 
@@ -213,21 +232,33 @@ public class OllamaProvider : IAIProvider
             stream = false
         };
 
-        using HttpResponseMessage response = await client.PostAsync(
-                             url + "/generate",
-                             new StringContent(JsonSerializer.Serialize(body),
-                             Encoding.UTF8,
-                             "application/json")).ConfigureAwait(false);
+        int timeoutSeconds = RequestLimits.TimeoutSeconds;
+        using CancellationTokenSource timeoutCts =
+            RequestLimits.CreateTimeoutSource(CancellationToken.None, timeoutSeconds);
 
-        if (response.IsSuccessStatusCode)
+        try
         {
-            string responseContent = await response.Content.ReadAsStringAsync();
-            OllamaResponse? responseObj = JsonSerializer.Deserialize<OllamaResponse>(responseContent);
-            return responseObj?.response ?? "Unable to analyze image.";
+            using HttpResponseMessage response = await client.PostAsync(
+                                 url + "/generate",
+                                 new StringContent(JsonSerializer.Serialize(body),
+                                 Encoding.UTF8,
+                                 "application/json"),
+                                 timeoutCts.Token).ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                string responseContent = await response.Content.ReadAsStringAsync(timeoutCts.Token);
+                OllamaResponse? responseObj = JsonSerializer.Deserialize<OllamaResponse>(responseContent);
+                return responseObj?.response ?? "Unable to analyze image.";
+            }
+            else
+            {
+                throw new Exception($"Image analysis failed with status: {response.StatusCode}.");
+            }
         }
-        else
+        catch (OperationCanceledException)
         {
-            throw new Exception($"Image analysis failed with status: {response.StatusCode}.");
+            throw RequestLimits.CreateTimeoutException(timeoutSeconds);
         }
     }
 

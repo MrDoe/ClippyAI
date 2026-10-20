@@ -262,6 +262,9 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
 
         try
         {
+            // Never persist a MaxLength the request path would have to clamp later.
+            SelectedTaskConfiguration.MaxLength =
+                RequestLimits.ClampOutputTokens(SelectedTaskConfiguration.MaxLength);
             ConfigurationService.SaveTaskConfiguration(SelectedTaskConfiguration);
         }
         catch (Exception ex)

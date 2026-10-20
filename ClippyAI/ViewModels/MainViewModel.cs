@@ -205,24 +205,26 @@ public partial class MainViewModel : ViewModelBase
         _responseList.Clear();
         string? response = null;
         _lastOutputGenerated = false;
+        bool usedEmbeddings = false;
+        MainWindow? mainWindow = null;
 
         // get task string
         string task = GetFullTask();
 
         try
         {
-            string model = ModelItems[ModelItems.IndexOf(Model)];
-            if (model == null)
+            int modelIndex = ModelItems.IndexOf(Model);
+            if (modelIndex < 0)
             {
                 ErrorMessages?.Add(Resources.Resources.SelectModel);
-                IsBusy = false;
                 return;
             }
+            string model = ModelItems[modelIndex];
 
             if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                MainWindow mainWindow = (MainWindow)desktop.MainWindow!;
-                mainWindow!.ShowNotification("ClippyAI", Resources.Resources.PleaseWait, true, false);
+                mainWindow = (MainWindow)desktop.MainWindow!;
+                mainWindow.ShowNotification("ClippyAI", Resources.Resources.PleaseWait, true, false);
             }
             else
             {
@@ -236,33 +238,42 @@ public partial class MainViewModel : ViewModelBase
                 if (_responseList.Count > 0)
                 {
                     _responseIndex = 0;
-                    await SetResponse(_responseList[0].Answer);
-                    return;
+                    response = _responseList[0].Answer;
+                    usedEmbeddings = true;
                 }
             }
 
-            // Use task configuration if available, otherwise use the current model
-            response = SelectedTaskConfiguration != null
-                ? await OllamaService.SendRequestWithConfig(Input!,
-                                                           task,
-                                                           SelectedTaskConfiguration.Model,
-                                                           SelectedTaskConfiguration,
-                                                           _askClippyCts.Token)
-                : await OllamaService.SendRequestForTask(Input!,
-                                                           task,
-                                                           model,
-                                                           _askClippyCts.Token);
-
-            if (!string.IsNullOrEmpty(response) && !string.IsNullOrEmpty(task) &&
-                !string.IsNullOrEmpty(Input) && StoreAllResponses && UseEmbeddings)
+            if (!usedEmbeddings)
             {
-                await OllamaService.StoreSqlEmbedding(task, Input, response);
-                ++EmbeddingsCount;
+                // Use task configuration if available, otherwise use the current model
+                response = SelectedTaskConfiguration != null
+                    ? await OllamaService.SendRequestWithConfig(Input!,
+                                                               task,
+                                                               SelectedTaskConfiguration.Model,
+                                                               SelectedTaskConfiguration,
+                                                               _askClippyCts.Token)
+                    : await OllamaService.SendRequestForTask(Input!,
+                                                               task,
+                                                               model,
+                                                               _askClippyCts.Token);
+
+                if (!string.IsNullOrEmpty(response) && !string.IsNullOrEmpty(task) &&
+                    !string.IsNullOrEmpty(Input) && StoreAllResponses && UseEmbeddings)
+                {
+                    await OllamaService.StoreSqlEmbedding(task, Input, response);
+                    ++EmbeddingsCount;
+                }
             }
         }
         catch (OperationCanceledException)
         {
-            // Handle the task cancellation here if needed
+            // The user pressed Stop. The finally block restores the UI and there
+            // is nothing to report, because the user asked for the cancellation.
+        }
+        catch (TimeoutException e)
+        {
+            ErrorMessages?.Add(e.Message);
+            ShowErrorMessage(e.Message);
         }
         catch (Exception e)
         {
@@ -271,17 +282,26 @@ public partial class MainViewModel : ViewModelBase
             // show error message in dialog
             ShowErrorMessage(e.Message);
         }
+        finally
+        {
+            // Always leave the UI usable. Previously IsBusy was only cleared by
+            // SetResponse, which never runs when no response arrives, so a
+            // cancelled, timed out or failed request left the app in the
+            // "Please wait" state forever.
+            IsBusy = false;
+            mainWindow?.HideLastNotification();
+            Input = null;
+        }
 
         if (response != null)
         {
-            _lastOutputGenerated = true;
-            _responseList.Add(new Embedding { Id = 0, Answer = response });
+            if (!usedEmbeddings)
+            {
+                _lastOutputGenerated = true;
+                _responseList.Add(new Embedding { Id = 0, Answer = response });
+            }
             await SetResponse(response);
         }
-
-        // Clear Input so the next invocation reads fresh clipboard content
-        // instead of reusing the input from this run.
-        Input = null;
     }
 
     private async Task SetResponse(string response, bool showNotification = true)
@@ -346,11 +366,10 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     public void StopClippyTask()
     {
-        if (!_askClippyCts.IsCancellationRequested)
-        {
-            _askClippyCts.Cancel(); // Cancel the ongoing task
-            _askClippyCts = new CancellationTokenSource(); // Reset the CancellationTokenSource for future use
-        }
+        // Cancel whatever is running and always install a fresh source, so the
+        // next request can never inherit an already-cancelled token.
+        _askClippyCts.Cancel();
+        _askClippyCts = new CancellationTokenSource();
     }
 
     [RelayCommand]

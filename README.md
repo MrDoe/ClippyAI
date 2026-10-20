@@ -85,6 +85,22 @@ For secure remote connections to Ollama/OpenAI instances or PostgreSQL databases
 3. Click `Send` or use the keyboard shortcut [Ctrl]+[Alt]+[C] to execute the selected task.
 4. Review or paste ([Ctrl]+[V]) your generated result in the application where you need it.
 
+**Request Limits**
+
+Every model request is bounded so a slow or runaway model cannot lock up the app:
+
+- **Max Length** (per task, in the Tasks tab) is capped at **8192 tokens**.
+- Clipboard input is truncated at **24,000 characters** before it is sent.
+- A request is aborted after **600 seconds**; the app reports a timeout instead of staying in the "Please wait" state forever.
+
+The input and timeout limits can be changed in the configuration database
+(`~/.config/ClippyAI/clippyai_config.db`, table `Configuration`) and take effect on the next request:
+
+| Key | Default | Allowed range |
+|-----|---------|---------------|
+| `RequestTimeoutSeconds` | 600 | 15–3600 |
+| `MaxInputCharacters` | 24000 | 1000–128000 |
+
 **Image Analysis Tasks**
 
 Image analysis is now integrated into the task system. You can create dedicated image analysis tasks in the Configuration dialog under the **Tasks** tab:

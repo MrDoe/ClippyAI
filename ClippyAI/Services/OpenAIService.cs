@@ -21,7 +21,10 @@ public class OpenAIService : IAIProvider
     };
     private static readonly HttpClient client = new(handler)
     {
-        Timeout = TimeSpan.FromMinutes(5)
+        // Timeouts are enforced per request with a linked CancellationTokenSource
+        // so a timeout can be reported to the user and told apart from Cancel.
+        // This value is only a last-resort backstop.
+        Timeout = TimeSpan.FromSeconds(RequestLimits.MaxTimeoutSeconds)
     };
 
     private static string? apiKey = ConfigurationService.GetConfigurationValue("OpenAIApiKey");
@@ -62,12 +65,13 @@ public class OpenAIService : IAIProvider
 
         // Load configuration options
         double temperature = taskConfig?.Temperature ?? 0.8;
-        int maxTokens = taskConfig?.MaxLength ?? 2048;
+        int maxTokens = RequestLimits.ClampOutputTokens(taskConfig?.MaxLength);
         double topP = taskConfig?.TopP ?? 0.9;
         double frequencyPenalty = taskConfig?.RepeatPenalty ?? 0.0;
         double presencePenalty = 0.0; // OpenAI doesn't have direct equivalent to repeat_penalty
         string? systemPrompt = taskConfig?.SystemPrompt ?? system;
         string modelToUse = taskConfig?.Model ?? model;
+        string userInput = RequestLimits.TruncateInput(input);
 
         // Prepare messages
         List<OpenAIMessage> messages = [];
@@ -84,7 +88,7 @@ public class OpenAIService : IAIProvider
         messages.Add(new OpenAIMessage
         {
             Role = "user",
-            Content = $"# TEXT\n\n'''{input.Trim()}'''\n# TASK\n\n'{task.Trim()}'"
+            Content = $"# TEXT\n\n'''{userInput}'''\n# TASK\n\n'{task.Trim()}'"
         });
 
         OpenAIRequest request = new()
@@ -104,21 +108,34 @@ public class OpenAIService : IAIProvider
         string json = JsonSerializer.Serialize(request);
         using StringContent content = new(json, Encoding.UTF8, "application/json");
 
-        using HttpResponseMessage response = await client.PostAsync($"{baseUrl}/chat/completions", content, token);
+        int timeoutSeconds = RequestLimits.TimeoutSeconds;
+        using CancellationTokenSource timeoutCts = RequestLimits.CreateTimeoutSource(token, timeoutSeconds);
 
-        if (response.IsSuccessStatusCode)
+        Console.WriteLine($"OpenAI request: model={modelToUse}, max_tokens={maxTokens}, timeout={timeoutSeconds}s");
+
+        try
         {
-            Console.WriteLine("OpenAI request successful.");
+            using HttpResponseMessage response = await client.PostAsync($"{baseUrl}/chat/completions", content, timeoutCts.Token);
 
-            string responseJson = await response.Content.ReadAsStringAsync(token);
-            OpenAIResponse? openAIResponse = JsonSerializer.Deserialize<OpenAIResponse>(responseJson);
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("OpenAI request successful.");
 
-            return openAIResponse?.Choices?[0]?.Message?.Content?.Trim('"').Trim('\'');
+                string responseJson = await response.Content.ReadAsStringAsync(timeoutCts.Token);
+                OpenAIResponse? openAIResponse = JsonSerializer.Deserialize<OpenAIResponse>(responseJson);
+
+                return openAIResponse?.Choices?[0]?.Message?.Content?.Trim('"').Trim('\'');
+            }
+            else
+            {
+                string errorContent = await response.Content.ReadAsStringAsync(timeoutCts.Token);
+                throw new Exception($"OpenAI request failed with status: {response.StatusCode}. Response: {errorContent}");
+            }
         }
-        else
+        catch (OperationCanceledException) when (!token.IsCancellationRequested)
         {
-            string errorContent = await response.Content.ReadAsStringAsync(token);
-            throw new Exception($"OpenAI request failed with status: {response.StatusCode}. Response: {errorContent}");
+            // The linked token fired, but the caller did not cancel: this is our timeout.
+            throw RequestLimits.CreateTimeoutException(timeoutSeconds);
         }
     }
 
@@ -138,11 +155,13 @@ public class OpenAIService : IAIProvider
 
         try
         {
-            using HttpResponseMessage response = await client.GetAsync($"{baseUrl}/models", token);
+            using CancellationTokenSource timeoutCts =
+                RequestLimits.CreateTimeoutSource(token, RequestLimits.MetadataTimeoutSeconds);
+            using HttpResponseMessage response = await client.GetAsync($"{baseUrl}/models", timeoutCts.Token);
 
             if (response.IsSuccessStatusCode)
             {
-                string responseJson = await response.Content.ReadAsStringAsync(token);
+                string responseJson = await response.Content.ReadAsStringAsync(timeoutCts.Token);
                 OpenAIModelsResponse? modelsResponse = JsonSerializer.Deserialize<OpenAIModelsResponse>(responseJson);
 
                 if (modelsResponse?.Data != null)
@@ -218,19 +237,30 @@ public class OpenAIService : IAIProvider
         string json = JsonSerializer.Serialize(request);
         using StringContent content = new(json, Encoding.UTF8, "application/json");
 
-        using HttpResponseMessage response = await client.PostAsync($"{baseUrl}/chat/completions", content);
+        int timeoutSeconds = RequestLimits.TimeoutSeconds;
+        using CancellationTokenSource timeoutCts =
+            RequestLimits.CreateTimeoutSource(CancellationToken.None, timeoutSeconds);
 
-        if (response.IsSuccessStatusCode)
+        try
         {
-            string responseJson = await response.Content.ReadAsStringAsync();
-            OpenAIResponse? openAIResponse = JsonSerializer.Deserialize<OpenAIResponse>(responseJson);
+            using HttpResponseMessage response = await client.PostAsync($"{baseUrl}/chat/completions", content, timeoutCts.Token);
 
-            return openAIResponse?.Choices?[0]?.Message?.Content ?? "Unable to analyze image.";
+            if (response.IsSuccessStatusCode)
+            {
+                string responseJson = await response.Content.ReadAsStringAsync(timeoutCts.Token);
+                OpenAIResponse? openAIResponse = JsonSerializer.Deserialize<OpenAIResponse>(responseJson);
+
+                return openAIResponse?.Choices?[0]?.Message?.Content ?? "Unable to analyze image.";
+            }
+            else
+            {
+                string errorContent = await response.Content.ReadAsStringAsync(timeoutCts.Token);
+                throw new Exception($"OpenAI vision request failed: {response.StatusCode}. Response: {errorContent}");
+            }
         }
-        else
+        catch (OperationCanceledException)
         {
-            string errorContent = await response.Content.ReadAsStringAsync();
-            throw new Exception($"OpenAI vision request failed: {response.StatusCode}. Response: {errorContent}");
+            throw RequestLimits.CreateTimeoutException(timeoutSeconds);
         }
     }
 
