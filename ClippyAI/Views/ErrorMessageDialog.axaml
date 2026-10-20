@@ -29,11 +29,15 @@
                 </StackPanel>
             </Border>
 
-            <TextBlock Grid.Row="1"
-                       Text="{Binding ErrorMessage}"
-                       TextWrapping="Wrap"
-                       Foreground="{DynamicResource UiTextSecondaryBrush}"
-                       Margin="0,14,0,0" />
+            <!-- A long exception must not push the button out of the dialog. -->
+            <ScrollViewer Grid.Row="1"
+                          MaxHeight="150"
+                          VerticalScrollBarVisibility="Auto"
+                          Margin="0,14,0,0">
+                <TextBlock Text="{Binding ErrorMessage}"
+                           TextWrapping="Wrap"
+                           Foreground="{DynamicResource UiTextSecondaryBrush}" />
+            </ScrollViewer>
 
             <Button Grid.Row="2"
                     Content="{x:Static resources:Resources.OK}"

@@ -50,6 +50,12 @@
          so all glyphs share one weight and one optical size. -->
     <FontFamily x:Key="UiIconFont">avares://ClippyAI/Assets/fontawesome/otfs/Font Awesome 6 Free-Solid-900.otf#Font Awesome 6</FontFamily>
 
+    <!-- =========================== Scroll bars ================================ -->
+    <!-- The Fluent theme scales the scroll bar thumb down to a 2 px hairline.
+         This brings it back to a 6 px thumb that can actually be seen. -->
+    <ScaleTransform x:Key="VerticalSmallScrollThumbScaleTransform" ScaleX="0.6" ScaleY="1" />
+    <ScaleTransform x:Key="HorizontalSmallScrollThumbScaleTransform" ScaleX="1" ScaleY="0.6" />
+
     <!-- ============================ Colors ===================================== -->
     <ResourceDictionary.ThemeDictionaries>
 
@@ -252,11 +258,11 @@
             <SolidColorBrush x:Key="ScrollBarTrackFill" Color="Transparent" />
             <SolidColorBrush x:Key="ScrollBarTrackFillPointerOver" Color="Transparent" />
             <SolidColorBrush x:Key="ScrollBarTrackStroke" Color="Transparent" />
-            <SolidColorBrush x:Key="ScrollBarThumbBackgroundColor" Color="#FF2E3340" />
-            <SolidColorBrush x:Key="ScrollBarPanningThumbBackground" Color="#FF2E3340" />
+            <SolidColorBrush x:Key="ScrollBarThumbBackgroundColor" Color="#FF646C7E" />
+            <SolidColorBrush x:Key="ScrollBarPanningThumbBackground" Color="#FF646C7E" />
             <SolidColorBrush x:Key="ScrollBarThumbFillDisabled" Color="#FF22252D" />
-            <SolidColorBrush x:Key="ScrollBarThumbFillPointerOver" Color="#FF3A4150" />
-            <SolidColorBrush x:Key="ScrollBarThumbFillPressed" Color="#FF474F60" />
+            <SolidColorBrush x:Key="ScrollBarThumbFillPointerOver" Color="#FF737C90" />
+            <SolidColorBrush x:Key="ScrollBarThumbFillPressed" Color="#FF8A93A7" />
             <x:Double x:Key="ScrollBarSize">10</x:Double>
         </ResourceDictionary>
 

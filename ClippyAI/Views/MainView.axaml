@@ -125,7 +125,7 @@
                                        Text="{Binding ResponseCounter}"
                                        ToolTip.Tip="{x:Static resources:Resources.ResponseCounterDescription}" />
                             <TextBlock Classes="mono"
-                                       Text="{Binding ResponseDistance}"
+                                       Text="{Binding ResponseDistance, Converter={StaticResource InvariantNumber}}"
                                        ToolTip.Tip="{x:Static resources:Resources.ResponseDistanceDescription}" />
                         </StackPanel>
                     </Grid>

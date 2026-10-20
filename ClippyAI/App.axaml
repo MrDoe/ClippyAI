@@ -2,6 +2,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:vm="using:ClippyAI.Views"
     xmlns:local="using:ClippyAI"
+    xmlns:converters="using:ClippyAI.Converters"
     Name="ClippyAI"
     x:Class="ClippyAI.App"
     x:DataType="vm:ApplicationViewModel"
@@ -12,6 +13,7 @@
 
     <Application.Resources>
         <ResourceDictionary>
+            <converters:InvariantNumberConverter x:Key="InvariantNumber" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceInclude Source="avares://ClippyAI/Styles/Theme.axaml" />
             </ResourceDictionary.MergedDictionaries>
