@@ -1,55 +1,91 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+# Builds the release artefacts for every supported OS and attaches them to
+# the GitHub release of the pushed tag.
+#
+# The release itself is created from the tag, so a release is:
+#   git tag v1.6.0 && git push origin v1.6.0
+#
+# Linux packages are built with the Packaging.Targets package that the project
+# references, the Windows installer is built with the WiX project in
+# Installer/.
 
-name: .NET Publish Release
+name: Publish Release
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    tags: [ "v*" ]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing tag to publish (e.g. v1.6.0)"
+        required: true
+
+permissions:
+  contents: write
+
+env:
+  DOTNET_PROCESSOR_COUNT: 1
 
 jobs:
-  build:
-
+  linux:
+    name: Linux packages
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-    - name: Cleanup
-      run: dotnet clean
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Publish
-      run: dotnet publish -c Release -p:PublishDir=./bin/publish/ -p:PublishProfile=Properties/PublishProfiles/ClickOnceProfile.pubxml --framework "net9.0-windows10.0.17763.0"
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: ClickOnce Installer
-        path: ./bin/publish/
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        draft: false
-        prerelease: false
-    - name: Upload Release Asset
-      id: upload_release_asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./bin/publish/ClippyAI.exe
-        asset_name: ClippyAI.exe
-        asset_content_type: application/octet-stream
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build the packages
+        run: |
+          dotnet msbuild ClippyAI/ClippyAI.csproj -t:CreateDeb -p:Configuration=Release
+          dotnet msbuild ClippyAI/ClippyAI.csproj -t:CreateRpm -p:Configuration=Release
+          dotnet msbuild ClippyAI/ClippyAI.csproj -t:CreateTarball -p:Configuration=Release
+      - name: Collect the packages
+        run: |
+          mkdir -p release
+          cp ClippyAI/bin/Release/net10.0/*.deb release/ || true
+          cp ClippyAI/bin/Release/net10.0/*.rpm release/ || true
+          cp ClippyAI/bin/Release/net10.0/*.tar.gz release/ || true
+          ls -la release/
+      - name: Upload the packages to the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.event.inputs.tag || github.ref_name }}
+        run: |
+          gh release view "$TAG" > /dev/null 2>&1 || gh release create "$TAG" --title "ClippyAI $TAG" --generate-notes
+          gh release upload "$TAG" release/* --clobber
+
+  windows:
+    name: Windows installer
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Build the installer
+        shell: pwsh
+        run: dotnet build Installer/ClippyAI.Installer.wixproj -c Release
+      - name: Collect the installer
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path release | Out-Null
+          Copy-Item Installer/bin/Release/*.msi release/
+          Get-ChildItem release
+      - name: Upload the installer to the release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.event.inputs.tag || github.ref_name }}
+        run: |
+          gh release view "$env:TAG" > $null 2>&1; if ($LASTEXITCODE -ne 0) { gh release create $env:TAG --title "ClippyAI $env:TAG" --generate-notes }
+          gh release upload $env:TAG release/* --clobber
