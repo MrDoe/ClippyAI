@@ -5,8 +5,8 @@
     xmlns:vm="clr-namespace:ClippyAI.Views"
     xmlns:resources="clr-namespace:ClippyAI.Resources"
     Width="480"
-    Height="220"
-    MinHeight="180"
+    Height="280"
+    MinHeight="200"
     TransparencyLevelHint="AcrylicBlur"
     Background="Transparent"
     ExtendClientAreaToDecorationsHint="True"
@@ -17,7 +17,7 @@
             BorderBrush="{DynamicResource UiBorderBrush}"
             BorderThickness="1"
             Background="{DynamicResource UiWindowBgTranslucentBrush}">
-        <Grid RowDefinitions="Auto,Auto,Auto" Margin="22,20,22,18">
+        <Grid RowDefinitions="Auto,*,Auto" Margin="22,20,22,18">
             <Border Grid.Row="0" Background="Transparent" WindowDecorationProperties.ElementRole="TitleBar">
                 <StackPanel Orientation="Horizontal" Spacing="10">
                     <TextBlock Classes="icon lg" Text="&#xf071;"
@@ -31,7 +31,6 @@
 
             <!-- A long exception must not push the button out of the dialog. -->
             <ScrollViewer Grid.Row="1"
-                          MaxHeight="150"
                           VerticalScrollBarVisibility="Auto"
                           Margin="0,14,0,0">
                 <TextBlock Text="{Binding ErrorMessage}"
