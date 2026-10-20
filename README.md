@@ -123,6 +123,18 @@ ClippyAI provides convenient global hotkeys that work even when the window is hi
 
 All hotkeys trigger notifications to display the current status or selected task, providing visual feedback even when the main window is hidden.
 
+**Linux hotkey permissions**
+
+On Linux, ClippyAI reads key events directly from `/dev/input/event*`, which is owned by `root:input`.
+The user must be allowed to read those devices:
+
+```bash
+sudo usermod -aG input $USER
+```
+
+Log out and back in afterwards, then select the keyboard under `Options` → `System` → `Configure Hotkey Device`.
+The dialog lists every keyboard it can read and switches the running monitor immediately.
+
 **Disclaimer**
 
 This tool is in an early development phase. Use it at your own risk. We take no responsibility, if it accidently deletes or overwrites your currently opened documents or if your LLM creates faulty or dangerous content.

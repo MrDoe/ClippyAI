@@ -31,9 +31,6 @@ public partial class MainViewModel : ViewModelBase
 
     public MainWindow? mainWindow;
     private CancellationTokenSource _askClippyCts = new();
-#if LINUX
-    private LinuxHotkeyService? hotkeyService;
-#endif
     private bool initialized = false;
 
     [ObservableProperty]
@@ -717,8 +714,18 @@ public partial class MainViewModel : ViewModelBase
             return;
         }
 #if LINUX
-        hotkeyService = new LinuxHotkeyService(mainWindow!);
-        await hotkeyService.SetupHotkeyDevice();
+        try
+        {
+            if (mainWindow != null)
+            {
+                await mainWindow.ConfigureHotkeyDeviceAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessages?.Add(ex.Message);
+            ShowErrorMessage(ex.Message);
+        }
 #endif
     }
 

@@ -110,6 +110,17 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
     {
         HotkeyService = new LinuxHotkeyService(this);
     }
+
+    /// <summary>
+    /// Lets the user pick the keyboard that is monitored for global hotkeys and
+    /// switches the already running monitor to it.
+    /// </summary>
+    [SupportedOSPlatform("linux")]
+    public async Task ConfigureHotkeyDeviceAsync()
+    {
+        HotkeyService ??= new LinuxHotkeyService(this);
+        await HotkeyService.SetupHotkeyDevice();
+    }
 #endif
 
     private void MainWindow_Loaded(object? sender, RoutedEventArgs e)

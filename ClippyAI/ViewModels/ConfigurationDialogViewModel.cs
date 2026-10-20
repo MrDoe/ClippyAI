@@ -419,27 +419,29 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
         // only for Linux
         if (!OperatingSystem.IsLinux())
         {
-            System.Diagnostics.Debug.WriteLine("This feature is only supported on Linux.");
+            ShowErrorMessage("Hotkey devices can only be configured on Linux.");
             return;
         }
 
         if (_mainWindow == null)
         {
-            System.Diagnostics.Debug.WriteLine("MainWindow reference is required for hotkey configuration.");
+            ShowErrorMessage("The main window is not available.");
             return;
         }
 
         try
         {
 #if LINUX
-            LinuxHotkeyService hotkeyService = new(_mainWindow);
-            await hotkeyService.SetupHotkeyDevice();
+            // Reuse the monitor that is already running instead of creating a
+            // second one, so the selected device takes effect immediately.
+            await _mainWindow.ConfigureHotkeyDeviceAsync();
 #endif
             LinuxKeyboardDevice = ConfigurationService.GetConfigurationValue("LinuxKeyboardDevice", "");
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error configuring hotkey device: {ex.Message}");
+            ShowErrorMessage(ex.Message);
         }
     }
 
