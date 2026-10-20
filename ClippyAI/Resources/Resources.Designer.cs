@@ -26,7 +26,7 @@ namespace ClippyAI.Resources {
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resources() {
+        public Resources() {
         }
         
         /// <summary>
@@ -58,7 +58,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ➕ Add.
+        ///   Looks up a localized string similar to Add.
         /// </summary>
         public static string Add {
             get {
@@ -67,7 +67,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to  - Your AI Companion.
+        ///   Looks up a localized string similar to Your AI Companion.
         /// </summary>
         public static string AICompanion {
             get {
@@ -76,7 +76,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🤖 AI Provider:.
+        ///   Looks up a localized string similar to AI Provider.
         /// </summary>
         public static string AIProvider {
             get {
@@ -94,7 +94,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ⚙️ AI Provider Settings.
+        ///   Looks up a localized string similar to AI Provider Settings.
         /// </summary>
         public static string AIProviderSettings {
             get {
@@ -103,7 +103,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🖼️ Analyze Image.
+        ///   Looks up a localized string similar to Analyze Image.
         /// </summary>
         public static string AnalyzeImage {
             get {
@@ -112,7 +112,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🤖 Auto Mode:.
+        ///   Looks up a localized string similar to Auto Mode.
         /// </summary>
         public static string AutoMode {
             get {
@@ -130,7 +130,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 📷 Camera Window.
+        ///   Looks up a localized string similar to Camera Window.
         /// </summary>
         public static string CameraWindow {
             get {
@@ -139,7 +139,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ❌ Cancel.
+        ///   Looks up a localized string similar to Cancel.
         /// </summary>
         public static string Cancel {
             get {
@@ -148,7 +148,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 📸 Capture Screenshot.
+        ///   Looks up a localized string similar to Capture Screenshot.
         /// </summary>
         public static string CaptureScreenshot {
             get {
@@ -166,7 +166,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🗑️ Clear Database.
+        ///   Looks up a localized string similar to Clear Database.
         /// </summary>
         public static string ClearDatabase {
             get {
@@ -184,7 +184,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 📋 Clipboard.
+        ///   Looks up a localized string similar to Clipboard.
         /// </summary>
         public static string Clipboard {
             get {
@@ -193,7 +193,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 📋 Clipboard Content:.
+        ///   Looks up a localized string similar to Clipboard Content.
         /// </summary>
         public static string ClipboardContent {
             get {
@@ -220,7 +220,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 💡 ClippyAI.
+        ///   Looks up a localized string similar to ClippyAI.
         /// </summary>
         public static string ClippyAI {
             get {
@@ -229,7 +229,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ❌ ClippyAI Error.
+        ///   Looks up a localized string similar to ClippyAI Error.
         /// </summary>
         public static string ClippyAIError {
             get {
@@ -238,7 +238,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 📄 ClippyAI Result.
+        ///   Looks up a localized string similar to ClippyAI Result.
         /// </summary>
         public static string ClippyAIResult {
             get {
@@ -247,7 +247,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ❌ Close.
+        ///   Looks up a localized string similar to Close.
         /// </summary>
         public static string Close {
             get {
@@ -256,7 +256,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🚪 Close ClippyAI.
+        ///   Looks up a localized string similar to Close ClippyAI.
         /// </summary>
         public static string CloseApplication {
             get {
@@ -265,7 +265,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ⚙️ Configuration.
+        ///   Looks up a localized string similar to Configuration.
         /// </summary>
         public static string Configuration {
             get {
@@ -283,7 +283,16 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ⚙️ Configure Hotkey Device.
+        ///   Looks up a localized string similar to Provider, models, embeddings and tasks.
+        /// </summary>
+        public static string ConfigurationSubtitle {
+            get {
+                return ResourceManager.GetString("ConfigurationSubtitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configure Hotkey Device.
         /// </summary>
         public static string ConfigureHotkeyDevice {
             get {
@@ -310,7 +319,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ⚠️ Do you really want to delete the selected model?.
+        ///   Looks up a localized string similar to Do you really want to delete the selected model?.
         /// </summary>
         public static string ConfirmDeleteModel {
             get {
@@ -319,7 +328,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 📝 Context Length:.
+        ///   Looks up a localized string similar to Context Length.
         /// </summary>
         public static string ContextLength {
             get {
@@ -328,7 +337,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 💾 Data.
+        ///   Looks up a localized string similar to Data.
         /// </summary>
         public static string Data {
             get {
@@ -346,7 +355,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🧠 Default Model:.
+        ///   Looks up a localized string similar to Default Model.
         /// </summary>
         public static string DefaultModel {
             get {
@@ -355,7 +364,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 📝 Default Task:.
+        ///   Looks up a localized string similar to Default Task.
         /// </summary>
         public static string DefaultTask {
             get {
@@ -373,7 +382,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🗑️ Delete.
+        ///   Looks up a localized string similar to Delete.
         /// </summary>
         public static string Delete {
             get {
@@ -382,7 +391,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🗑️ Delete Model.
+        ///   Looks up a localized string similar to Delete Model.
         /// </summary>
         public static string DeleteModel {
             get {
@@ -400,7 +409,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ❌ Disabled.
+        ///   Looks up a localized string similar to Disabled.
         /// </summary>
         public static string Disabled {
             get {
@@ -409,7 +418,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 📊 Embeddings.
+        ///   Looks up a localized string similar to Embeddings.
         /// </summary>
         public static string Embeddings {
             get {
@@ -418,7 +427,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 📊 # Embeddings:.
+        ///   Looks up a localized string similar to # Embeddings.
         /// </summary>
         public static string EmbeddingsCount {
             get {
@@ -436,7 +445,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ✅ Enabled.
+        ///   Looks up a localized string similar to Enabled.
         /// </summary>
         public static string Enabled {
             get {
@@ -445,7 +454,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🔒 Enable SSH Tunnel.
+        ///   Looks up a localized string similar to Enable SSH Tunnel.
         /// </summary>
         public static string EnableSSHTunnel {
             get {
@@ -454,7 +463,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🔒 Enable SSH Tunneling.
+        ///   Looks up a localized string similar to Enable SSH Tunneling.
         /// </summary>
         public static string EnableSSHTunneling {
             get {
@@ -472,7 +481,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🏷️ Enter Model Name:.
+        ///   Looks up a localized string similar to Enter Model Name.
         /// </summary>
         public static string EnterModelName {
             get {
@@ -481,7 +490,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ❌ Error.
+        ///   Looks up a localized string similar to Error.
         /// </summary>
         public static string Error {
             get {
@@ -490,7 +499,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ⚠️ An error occurred. Please try again..
+        ///   Looks up a localized string similar to An error occurred. Please try again..
         /// </summary>
         public static string ErrorMessage {
             get {
@@ -508,7 +517,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ⚙️ General.
+        ///   Looks up a localized string similar to General.
         /// </summary>
         public static string General {
             get {
@@ -526,7 +535,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 📷 Image Source:.
+        ///   Looks up a localized string similar to Image Source.
         /// </summary>
         public static string ImageSource {
             get {
@@ -535,7 +544,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 📋 Clipboard.
+        ///   Looks up a localized string similar to Clipboard.
         /// </summary>
         public static string ImageSourceClipboard {
             get {
@@ -553,7 +562,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🎥 Webcam.
+        ///   Looks up a localized string similar to Webcam.
         /// </summary>
         public static string ImageSourceWebcam {
             get {
@@ -562,7 +571,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🖼️ Image Analysis Task.
+        ///   Looks up a localized string similar to Image Analysis Task.
         /// </summary>
         public static string IsImageTask {
             get {
@@ -580,7 +589,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🌐 Language:.
+        ///   Looks up a localized string similar to Language.
         /// </summary>
         public static string Language {
             get {
@@ -589,7 +598,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ⌨️ Linux Keyboard Device:.
+        ///   Looks up a localized string similar to Linux Keyboard Device.
         /// </summary>
         public static string LinuxKeyboardDevice {
             get {
@@ -607,7 +616,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🔄 Local Tunnel:.
+        ///   Looks up a localized string similar to Local Tunnel.
         /// </summary>
         public static string LocalTunnel {
             get {
@@ -625,7 +634,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 📏 Max Length:.
+        ///   Looks up a localized string similar to Max Length.
         /// </summary>
         public static string MaxLength {
             get {
@@ -634,7 +643,16 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🧠 Model:.
+        ///   Looks up a localized string similar to Minimize.
+        /// </summary>
+        public static string Minimize {
+            get {
+                return ResourceManager.GetString("Minimize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Model.
         /// </summary>
         public static string Model {
             get {
@@ -643,7 +661,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ✅ Model deleted successfully..
+        ///   Looks up a localized string similar to Model deleted successfully..
         /// </summary>
         public static string ModelDeletedSuccessfully {
             get {
@@ -652,7 +670,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ❌ Model deletion failed..
+        ///   Looks up a localized string similar to Model deletion failed..
         /// </summary>
         public static string ModelDeletionFailed {
             get {
@@ -661,7 +679,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ❌ Model deletion failed with status: {0}.
+        ///   Looks up a localized string similar to Model deletion failed with status: {0}.
         /// </summary>
         public static string ModelDeletionFailedWithStatus {
             get {
@@ -679,7 +697,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ✅ Model pull completed..
+        ///   Looks up a localized string similar to Model pull completed..
         /// </summary>
         public static string ModelPullCompleted {
             get {
@@ -688,7 +706,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ❌ Model pull failed..
+        ///   Looks up a localized string similar to Model pull failed..
         /// </summary>
         public static string ModelPullFailed {
             get {
@@ -697,7 +715,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ❌ Model pull failed with status: {0}.
+        ///   Looks up a localized string similar to Model pull failed with status: {0}.
         /// </summary>
         public static string ModelPullFailedWithStatus {
             get {
@@ -706,7 +724,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ✏️ New Task Name:.
+        ///   Looks up a localized string similar to New Task Name.
         /// </summary>
         public static string NewTaskName {
             get {
@@ -715,7 +733,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ❌ No.
+        ///   Looks up a localized string similar to No.
         /// </summary>
         public static string No {
             get {
@@ -724,7 +742,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ❌ No image found in clipboard. Copy an image first..
+        ///   Looks up a localized string similar to No image found in clipboard. Copy an image first..
         /// </summary>
         public static string NoImageInClipboard {
             get {
@@ -733,7 +751,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ⚠️ No models available.
+        ///   Looks up a localized string similar to No models available.
         /// </summary>
         public static string NoModelsAvailable {
             get {
@@ -742,7 +760,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ✅ OK.
+        ///   Looks up a localized string similar to OK.
         /// </summary>
         public static string OK {
             get {
@@ -751,7 +769,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🧬 Ollama Embedding Model:.
+        ///   Looks up a localized string similar to Ollama Embedding Model.
         /// </summary>
         public static string OllamaEmbeddingModel {
             get {
@@ -769,7 +787,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🔗 Ollama Settings.
+        ///   Looks up a localized string similar to Ollama Settings.
         /// </summary>
         public static string OllamaSettings {
             get {
@@ -778,7 +796,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🔗 Ollama URL:.
+        ///   Looks up a localized string similar to Ollama URL.
         /// </summary>
         public static string OllamaUrl {
             get {
@@ -796,7 +814,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🔑 OpenAI API Key:.
+        ///   Looks up a localized string similar to OpenAI API Key.
         /// </summary>
         public static string OpenAIApiKey {
             get {
@@ -814,7 +832,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🔗 OpenAI Base URL:.
+        ///   Looks up a localized string similar to OpenAI Base URL.
         /// </summary>
         public static string OpenAIBaseUrl {
             get {
@@ -832,7 +850,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🧬 OpenAI Embedding Model:.
+        ///   Looks up a localized string similar to OpenAI Embedding Model.
         /// </summary>
         public static string OpenAIEmbeddingModel {
             get {
@@ -850,7 +868,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🤖 OpenAI Settings.
+        ///   Looks up a localized string similar to OpenAI Settings.
         /// </summary>
         public static string OpenAISettings {
             get {
@@ -859,7 +877,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 📤 Output:.
+        ///   Looks up a localized string similar to Output.
         /// </summary>
         public static string Output {
             get {
@@ -877,7 +895,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ⏳ Please wait....
+        ///   Looks up a localized string similar to Please wait....
         /// </summary>
         public static string PleaseWait {
             get {
@@ -886,7 +904,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🔑 Private Key File:.
+        ///   Looks up a localized string similar to Private Key File.
         /// </summary>
         public static string PrivateKeyFile {
             get {
@@ -904,7 +922,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 💬 Prompt:.
+        ///   Looks up a localized string similar to Prompt.
         /// </summary>
         public static string Prompt {
             get {
@@ -913,7 +931,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🔑 Public Key:.
+        ///   Looks up a localized string similar to Public Key.
         /// </summary>
         public static string PublicKey {
             get {
@@ -922,7 +940,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ⬇️ Pull.
+        ///   Looks up a localized string similar to Pull.
         /// </summary>
         public static string Pull {
             get {
@@ -931,7 +949,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ⏳ Pulling Model....
+        ///   Looks up a localized string similar to Pulling Model....
         /// </summary>
         public static string PullingModel {
             get {
@@ -940,7 +958,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ❌ Pulling Model failed..
+        ///   Looks up a localized string similar to Pulling Model failed..
         /// </summary>
         public static string PullingModelFailed {
             get {
@@ -949,7 +967,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ⏳ Pulling model {0}.
+        ///   Looks up a localized string similar to Pulling model {0}.
         /// </summary>
         public static string PullingModelStatus {
             get {
@@ -958,7 +976,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ✅ Pulling Model succeeded..
+        ///   Looks up a localized string similar to Pulling Model succeeded..
         /// </summary>
         public static string PullingModelSucceeded {
             get {
@@ -967,7 +985,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ⬇️ Pull Model.
+        ///   Looks up a localized string similar to Pull Model.
         /// </summary>
         public static string PullModel {
             get {
@@ -985,7 +1003,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🔗 Visit https://ollama.ai/models to see available models..
+        ///   Looks up a localized string similar to Visit https://ollama.ai/models to see available models..
         /// </summary>
         public static string PullModelSubText {
             get {
@@ -994,7 +1012,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🔄 Refresh.
+        ///   Looks up a localized string similar to Refresh.
         /// </summary>
         public static string Refresh {
             get {
@@ -1030,7 +1048,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🔄 Remote Tunnel:.
+        ///   Looks up a localized string similar to Remote Tunnel.
         /// </summary>
         public static string RemoteTunnel {
             get {
@@ -1048,7 +1066,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ⚠️ Repeat Penalty:.
+        ///   Looks up a localized string similar to Repeat Penalty.
         /// </summary>
         public static string RepeatPenalty {
             get {
@@ -1057,7 +1075,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 📄 Response:.
+        ///   Looks up a localized string similar to Response.
         /// </summary>
         public static string Response {
             get {
@@ -1084,7 +1102,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🔄 Restore Default.
+        ///   Looks up a localized string similar to Restore Default.
         /// </summary>
         public static string RestoreDefault {
             get {
@@ -1102,7 +1120,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 📄 Result:.
+        ///   Looks up a localized string similar to Result.
         /// </summary>
         public static string Result {
             get {
@@ -1111,7 +1129,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ✅ Result successfully stored as template in database!.
+        ///   Looks up a localized string similar to Result successfully stored as template in database!.
         /// </summary>
         public static string ResultStoredSuccessfully {
             get {
@@ -1120,7 +1138,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 💾 Save.
+        ///   Looks up a localized string similar to Save.
         /// </summary>
         public static string Save {
             get {
@@ -1129,7 +1147,16 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ⚠️ Please select a model!.
+        ///   Looks up a localized string similar to Saved.
+        /// </summary>
+        public static string Saved {
+            get {
+                return ResourceManager.GetString("Saved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select a model!.
         /// </summary>
         public static string SelectModel {
             get {
@@ -1147,7 +1174,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ⚠️ Please select a task!.
+        ///   Looks up a localized string similar to Please select a task!.
         /// </summary>
         public static string SelectTask {
             get {
@@ -1174,7 +1201,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🔐 SSH.
+        ///   Looks up a localized string similar to SSH.
         /// </summary>
         public static string SSH {
             get {
@@ -1183,7 +1210,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🚪 SSH Port:.
+        ///   Looks up a localized string similar to SSH Port.
         /// </summary>
         public static string SSHPort {
             get {
@@ -1201,7 +1228,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🖥️ SSH Server:.
+        ///   Looks up a localized string similar to SSH Server.
         /// </summary>
         public static string SSHServer {
             get {
@@ -1219,7 +1246,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🔗 SSH Server URL:.
+        ///   Looks up a localized string similar to SSH Server URL.
         /// </summary>
         public static string SSHServerUrl {
             get {
@@ -1228,7 +1255,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🔐 SSH Settings.
+        ///   Looks up a localized string similar to SSH Settings.
         /// </summary>
         public static string SSHSettings {
             get {
@@ -1237,7 +1264,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🔐 SSH Tunnel Settings.
+        ///   Looks up a localized string similar to SSH Tunnel Settings.
         /// </summary>
         public static string SSHTunnelSettings {
             get {
@@ -1246,7 +1273,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 👤 SSH Username:.
+        ///   Looks up a localized string similar to SSH Username.
         /// </summary>
         public static string SSHUsername {
             get {
@@ -1282,7 +1309,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 💬 System Prompt:.
+        ///   Looks up a localized string similar to System Prompt.
         /// </summary>
         public static string SystemPrompt {
             get {
@@ -1300,7 +1327,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ⚙️ System Settings.
+        ///   Looks up a localized string similar to System Settings.
         /// </summary>
         public static string SystemSettings {
             get {
@@ -1309,7 +1336,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ⚙️ System.
+        ///   Looks up a localized string similar to System.
         /// </summary>
         public static string SystemTab {
             get {
@@ -1318,7 +1345,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 📝 Task.
+        ///   Looks up a localized string similar to Task.
         /// </summary>
         public static string Task {
             get {
@@ -1327,7 +1354,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ✅ Result:.
+        ///   Looks up a localized string similar to Result.
         /// </summary>
         public static string TaskCompleted {
             get {
@@ -1336,7 +1363,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ⚙️ Task Configuration.
+        ///   Looks up a localized string similar to Task Configuration.
         /// </summary>
         public static string TaskConfiguration {
             get {
@@ -1345,7 +1372,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to What I should do for you:.
+        ///   Looks up a localized string similar to What I should do for you.
         /// </summary>
         public static string TaskLabel {
             get {
@@ -1354,7 +1381,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 📝 Task Name:.
+        ///   Looks up a localized string similar to Task Name.
         /// </summary>
         public static string TaskName {
             get {
@@ -1363,7 +1390,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 📝 Tasks:.
+        ///   Looks up a localized string similar to Tasks.
         /// </summary>
         public static string Tasks {
             get {
@@ -1372,7 +1399,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 📝 Task-Specific Configurations.
+        ///   Looks up a localized string similar to Task-Specific Configurations.
         /// </summary>
         public static string TaskSpecificConfigurations {
             get {
@@ -1381,7 +1408,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 📝 Tasks.
+        ///   Looks up a localized string similar to Tasks.
         /// </summary>
         public static string TasksTab {
             get {
@@ -1390,7 +1417,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ▶️ Execute.
+        ///   Looks up a localized string similar to Execute.
         /// </summary>
         public static string TaskStart {
             get {
@@ -1408,7 +1435,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ⏹️ Cancel.
+        ///   Looks up a localized string similar to Cancel.
         /// </summary>
         public static string TaskStop {
             get {
@@ -1426,7 +1453,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 👁️ View.
+        ///   Looks up a localized string similar to View.
         /// </summary>
         public static string TaskView {
             get {
@@ -1435,7 +1462,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🌡️ Temperature:.
+        ///   Looks up a localized string similar to Temperature.
         /// </summary>
         public static string Temperature {
             get {
@@ -1444,7 +1471,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🔗 Test Connection.
+        ///   Looks up a localized string similar to Test Connection.
         /// </summary>
         public static string TestConnection {
             get {
@@ -1462,7 +1489,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ⏳ Testing....
+        ///   Looks up a localized string similar to Testing....
         /// </summary>
         public static string Testing {
             get {
@@ -1471,7 +1498,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🔗 Test SSH Connection.
+        ///   Looks up a localized string similar to Test SSH Connection.
         /// </summary>
         public static string TestSSHConnection {
             get {
@@ -1480,7 +1507,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 📊 Threshold:.
+        ///   Looks up a localized string similar to Threshold.
         /// </summary>
         public static string Threshold {
             get {
@@ -1516,7 +1543,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 📊 Top K:.
+        ///   Looks up a localized string similar to Top K.
         /// </summary>
         public static string TopK {
             get {
@@ -1525,7 +1552,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 📊 Top P:.
+        ///   Looks up a localized string similar to Top P.
         /// </summary>
         public static string TopP {
             get {
@@ -1552,7 +1579,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 📊 Vector Database Settings.
+        ///   Looks up a localized string similar to Vector Database Settings.
         /// </summary>
         public static string VectorDatabaseSettings {
             get {
@@ -1561,7 +1588,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 📁 Vector Database Folder:.
+        ///   Looks up a localized string similar to Vector Database Folder.
         /// </summary>
         public static string VectorDbPath {
             get {
@@ -1579,7 +1606,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 📹 Video Device:.
+        ///   Looks up a localized string similar to Video Device.
         /// </summary>
         public static string VideoDevice {
             get {
@@ -1597,7 +1624,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 📷 View Camera.
+        ///   Looks up a localized string similar to View Camera.
         /// </summary>
         public static string ViewCamera {
             get {
@@ -1615,7 +1642,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 👁️ Vision Model:.
+        ///   Looks up a localized string similar to Vision Model.
         /// </summary>
         public static string VisionModel {
             get {
@@ -1624,7 +1651,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 💬 Vision Prompt:.
+        ///   Looks up a localized string similar to Vision Prompt.
         /// </summary>
         public static string VisionPrompt {
             get {
@@ -1633,7 +1660,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 👁️ Vision Settings.
+        ///   Looks up a localized string similar to Vision Settings.
         /// </summary>
         public static string VisionSettings {
             get {
@@ -1642,7 +1669,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 👁️ Vision.
+        ///   Looks up a localized string similar to Vision.
         /// </summary>
         public static string VisionTab {
             get {
@@ -1651,7 +1678,7 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ✅ Yes.
+        ///   Looks up a localized string similar to Yes.
         /// </summary>
         public static string Yes {
             get {

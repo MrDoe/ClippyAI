@@ -292,7 +292,13 @@
         <Setter Property="FontFamily" Value="Inter" />
         <Setter Property="FontSize" Value="{DynamicResource UiFontSizeBody}" />
         <Setter Property="Foreground" Value="{DynamicResource UiTextPrimaryBrush}" />
+        <Setter Property="Margin" Value="0,0,0,16" />
+        <!-- Breathing room on both sides of the label, so the text is not
+             glued to the box and the hover area does not run to the edge. -->
+        <Setter Property="Padding" Value="10,4,10,4" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
+
 
     <!-- ============================== ListBox ================================== -->
     <Style Selector="ListBox">

@@ -26,7 +26,7 @@
 
         <Style Selector="Window">
             <Setter Property="FontFamily" Value="Inter" />
-            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontSize" Value="14" />
         </Style>
 
         <Style Selector="ToolTip">

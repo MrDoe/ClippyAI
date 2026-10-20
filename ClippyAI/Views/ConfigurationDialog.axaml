@@ -192,11 +192,6 @@
                                     <ComboBox ItemsSource="{Binding AvailableTasks}"
                                               SelectedItem="{Binding DefaultTask}"
                                               ToolTip.Tip="{x:Static resources:Resources.DefaultTaskDescription}" />
-
-                                    <Label Content="{x:Static resources:Resources.SystemPrompt}" />
-                                    <TextBox Text="{Binding SystemPrompt}" Height="150" TextWrapping="Wrap"
-                                             AcceptsReturn="True"
-                                             ToolTip.Tip="{x:Static resources:Resources.SystemPromptDescription}" />
                                 </StackPanel>
                             </HeaderedContentControl>
                         </StackPanel>

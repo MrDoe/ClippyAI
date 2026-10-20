@@ -98,7 +98,7 @@ public partial class InputDialog : Window
         };
         inputDialog.lbl.Content = caption;
         inputDialog.TextBoxVisible = false;
-        inputDialog.Height = 120;
+        inputDialog.Height = 170;
         inputDialog.lblSubText.Content = "";
         inputDialog.btnOK.Content = ClippyAI.Resources.Resources.Yes;
         inputDialog.btnCancel.Content = ClippyAI.Resources.Resources.No;
