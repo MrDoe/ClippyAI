@@ -418,6 +418,24 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Embedding Model.
+        /// </summary>
+        public static string EmbeddingModel {
+            get {
+                return ResourceManager.GetString("EmbeddingModel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The model used to create the embeddings.
+        /// </summary>
+        public static string EmbeddingModelDescription {
+            get {
+                return ResourceManager.GetString("EmbeddingModelDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Embeddings.
         /// </summary>
         public static string Embeddings {

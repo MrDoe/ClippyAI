@@ -21,10 +21,43 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     [ObservableProperty]
     private string _aiProvider = ConfigurationService.GetConfigurationValue("AIProvider", "Ollama");
 
-    private void OnAIProviderChanged(string value)
+    // Models that can produce embeddings. The settings show a single list
+    // and the selection is stored per provider.
+    private static readonly string[] OllamaEmbeddingModels =
+    [
+        "nomic-embed-text",
+        "mxbai-embed-large",
+        "all-minilm",
+        "bge-m3",
+        "snowflake-arctic-embed"
+    ];
+
+    private static readonly string[] OpenAIEmbeddingModels =
+    [
+        "text-embedding-3-small",
+        "text-embedding-3-large",
+        "text-embedding-ada-002"
+    ];
+
+    // Used when the OpenAI endpoint cannot be reached, for example because
+    // no API key is configured yet.
+    private static readonly string[] CommonOpenAIModels =
+    [
+        "gpt-4o",
+        "gpt-4o-mini",
+        "gpt-4.1",
+        "gpt-4.1-mini",
+        "o3-mini"
+    ];
+
+    /// <summary>
+    /// Called when the selected provider changes. The available models come
+    /// from that provider, so both lists have to be rebuilt.
+    /// </summary>
+    partial void OnAiProviderChanged(string value)
     {
-        // Refresh models when provider changes
         _ = RefreshModels();
+        RefreshEmbeddingModels();
     }
 
     [ObservableProperty]
@@ -126,10 +159,38 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     private ObservableCollection<string> _modelItems = [];
 
     [ObservableProperty]
+    private ObservableCollection<string> _embeddingModelItems = [];
+
+    [ObservableProperty]
     private ObservableCollection<string> _videoDevices = [];
 
     // Static reference to ModelItems for XAML binding
     public static ObservableCollection<string> AvailableModels { get; set; } = [];
+
+    /// <summary>
+    /// The embedding model of the provider that is currently selected. The
+    /// value is stored per provider, but the interface shows one list, so the
+    /// selection follows the provider.
+    /// </summary>
+    public string SelectedEmbeddingModel
+    {
+        get => IsOpenAiSelected ? OpenAIEmbeddingModel : OllamaEmbeddingModel;
+        set
+        {
+            if (IsOpenAiSelected)
+            {
+                OpenAIEmbeddingModel = value;
+            }
+            else
+            {
+                OllamaEmbeddingModel = value;
+            }
+
+            OnPropertyChanged();
+        }
+    }
+
+    private bool IsOpenAiSelected => string.Equals(AiProvider, "OpenAI", StringComparison.OrdinalIgnoreCase);
 
     // Static list of image sources for XAML binding in DataTemplate
     public static ObservableCollection<string> ImageSources { get; } = ["Clipboard", "Webcam"];
@@ -157,6 +218,7 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
         _mainWindow = mainWindow;
         LoadTaskConfigurations();
         PopulateAvailableTasks();
+        RefreshEmbeddingModels();
         Task.Run(InitializeCollections).Wait();
     }
 
@@ -298,12 +360,25 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
         {
             ModelItems.Clear();
             AvailableModels.Clear();
-            ObservableCollection<string> models = await OllamaService.GetModelsAsync();
+            ObservableCollection<string> models = await GetModelsForSelectedProviderAsync();
             foreach (string model in models)
             {
                 ModelItems.Add(model);
                 AvailableModels.Add(model);
             }
+
+            if (IsOpenAiSelected && ModelItems.Count == 0)
+            {
+                // The endpoint did not answer, most likely because no API key
+                // is configured yet. Offer the common models instead of an
+                // empty list.
+                foreach (string model in CommonOpenAIModels)
+                {
+                    ModelItems.Add(model);
+                    AvailableModels.Add(model);
+                }
+            }
+
             // Force SelectedItem to update after ItemsSource is populated
             if (!string.IsNullOrEmpty(OllamaModel) && !ModelItems.Contains(OllamaModel))
             {
@@ -323,6 +398,50 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
                 ModelItems.Add(OllamaModel);
                 AvailableModels.Add(OllamaModel);
             }
+        }
+    }
+
+    /// <summary>
+    /// Asks the provider that is selected in the form for its models. The
+    /// provider is chosen through the configuration, so the form value is
+    /// applied for the call and restored afterwards.
+    /// </summary>
+    private async Task<ObservableCollection<string>> GetModelsForSelectedProviderAsync()
+    {
+        string? previous = ConfigurationService.GetConfigurationValue("AIProvider");
+
+        try
+        {
+            ConfigurationService.SetConfigurationValue("AIProvider", AiProvider);
+            return await OllamaService.GetCurrentProvider().GetModelsAsync();
+        }
+        finally
+        {
+            ConfigurationService.SetConfigurationValue("AIProvider", previous ?? AiProvider);
+        }
+    }
+
+    /// <summary>
+    /// Rebuilds the list of embedding models for the selected provider.
+    /// </summary>
+    private void RefreshEmbeddingModels()
+    {
+        EmbeddingModelItems.Clear();
+
+        IEnumerable<string> models = IsOpenAiSelected
+            ? OpenAIEmbeddingModels
+            : OllamaEmbeddingModels;
+
+        foreach (string model in models)
+        {
+            EmbeddingModelItems.Add(model);
+        }
+
+        // A model that is configured but not in the list stays selectable.
+        string current = SelectedEmbeddingModel;
+        if (!string.IsNullOrWhiteSpace(current) && !EmbeddingModelItems.Contains(current))
+        {
+            EmbeddingModelItems.Add(current);
         }
     }
 

@@ -482,4 +482,10 @@
   <data name="Saved" xml:space="preserve">
     <value>Enregistré</value>
   </data>
+  <data name="EmbeddingModel" xml:space="preserve">
+    <value>Modèle d'embedding</value>
+  </data>
+  <data name="EmbeddingModelDescription" xml:space="preserve">
+    <value>Le modèle utilisé pour créer les intégrations</value>
+  </data>
 </root>

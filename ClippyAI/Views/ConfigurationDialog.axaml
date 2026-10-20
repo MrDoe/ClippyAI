@@ -227,15 +227,11 @@
                                              ToolTip.Tip="{x:Static resources:Resources.VectorDbPathDescription}"
                                              IsEnabled="{Binding UseEmbeddings}" />
 
-                                    <Label Content="{x:Static resources:Resources.OllamaEmbeddingModel}" />
-                                    <TextBox Text="{Binding OllamaEmbeddingModel}"
-                                             ToolTip.Tip="{x:Static resources:Resources.OllamaEmbeddingModelDescription}"
-                                             IsEnabled="{Binding UseEmbeddings}" />
-
-                                    <Label Content="{x:Static resources:Resources.OpenAIEmbeddingModel}" />
-                                    <TextBox Text="{Binding OpenAIEmbeddingModel}"
-                                             ToolTip.Tip="{x:Static resources:Resources.OpenAIEmbeddingModelDescription}"
-                                             IsEnabled="{Binding UseEmbeddings}" />
+                                    <Label Content="{x:Static resources:Resources.EmbeddingModel}" />
+                                    <ComboBox ItemsSource="{Binding EmbeddingModelItems}"
+                                              SelectedItem="{Binding SelectedEmbeddingModel}"
+                                              ToolTip.Tip="{x:Static resources:Resources.EmbeddingModelDescription}"
+                                              IsEnabled="{Binding UseEmbeddings}" />
 
                                     <Label Content="{x:Static resources:Resources.Threshold}" />
                                     <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">

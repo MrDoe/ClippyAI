@@ -669,4 +669,10 @@
   <data name="Saved" xml:space="preserve">
     <value>Gespeichert</value>
   </data>
+  <data name="EmbeddingModel" xml:space="preserve">
+    <value>Embedding-Modell</value>
+  </data>
+  <data name="EmbeddingModelDescription" xml:space="preserve">
+    <value>Das Modell, mit dem die Einbettungen erzeugt werden</value>
+  </data>
 </root>

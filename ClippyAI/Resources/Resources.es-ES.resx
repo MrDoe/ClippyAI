@@ -483,4 +483,10 @@
   <data name="Saved" xml:space="preserve">
     <value>Guardado</value>
   </data>
+  <data name="EmbeddingModel" xml:space="preserve">
+    <value>Modelo de embedding</value>
+  </data>
+  <data name="EmbeddingModelDescription" xml:space="preserve">
+    <value>El modelo usado para crear las incrustaciones</value>
+  </data>
 </root>

@@ -601,4 +601,10 @@
   <data name="Saved" xml:space="preserve">
     <value>Saved</value>
   </data>
+  <data name="EmbeddingModel" xml:space="preserve">
+    <value>Embedding Model</value>
+  </data>
+  <data name="EmbeddingModelDescription" xml:space="preserve">
+    <value>The model used to create the embeddings</value>
+  </data>
 </root>
