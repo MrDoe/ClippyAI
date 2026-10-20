@@ -213,12 +213,6 @@
     <data name="UseEmbeddings" xml:space="preserve">
         <value>Usar incrustaciones</value>
     </data>
-    <data name="PostgreSqlConnection" xml:space="preserve">
-        <value>🗄️ Conexión PostgreSQL:</value>
-    </data>
-    <data name="PostgresOllamaUrl" xml:space="preserve">
-        <value>🔗 URL de Ollama PostgreSQL:</value>
-    </data>
     <data name="AnalyzeImage" xml:space="preserve">
         <value>Analizar imagen</value>
     </data>
@@ -348,12 +342,6 @@
     <data name="StoreAllResponses" xml:space="preserve">
         <value>Almacenar Todas las Respuestas</value>
     </data>
-    <data name="PostgreSQLConnectionString" xml:space="preserve">
-        <value>🗄️ Cadena de Conexión PostgreSQL:</value>
-    </data>
-    <data name="EmbeddingModel" xml:space="preserve">
-        <value>🧬 Modelo de Incrustación:</value>
-    </data>
     <data name="ClearDatabase" xml:space="preserve">
         <value>🗑️ Limpiar Base de Datos</value>
     </data>
@@ -464,5 +452,26 @@
     </data>
     <data name="ImageSourceWebcam" xml:space="preserve">
         <value>🎥 Webcam</value>
+    </data>
+    <data name="EmbeddingsProviderHint" xml:space="preserve">
+        <value>Los embeddings se generan con el proveedor de IA seleccionado en la pestaña General. Las respuestas se guardan localmente en una base de datos LanceDB integrada; no se necesita un servidor PostgreSQL.</value>
+    </data>
+    <data name="VectorDbPath" xml:space="preserve">
+        <value>📁 Carpeta de la base de datos vectorial:</value>
+    </data>
+    <data name="VectorDbPathDescription" xml:space="preserve">
+        <value>Carpeta de la base de datos LanceDB integrada. Déjela vacía para usar la carpeta de datos de ClippyAI.</value>
+    </data>
+    <data name="OllamaEmbeddingModel" xml:space="preserve">
+        <value>🧬 Modelo de embedding de Ollama:</value>
+    </data>
+    <data name="OllamaEmbeddingModelDescription" xml:space="preserve">
+        <value>Modelo usado cuando el proveedor de IA es Ollama (p. ej. nomic-embed-text).</value>
+    </data>
+    <data name="OpenAIEmbeddingModel" xml:space="preserve">
+        <value>🧬 Modelo de embedding de OpenAI:</value>
+    </data>
+    <data name="OpenAIEmbeddingModelDescription" xml:space="preserve">
+        <value>Modelo usado cuando el proveedor de IA es OpenAI (p. ej. text-embedding-3-small).</value>
     </data>
 </root>

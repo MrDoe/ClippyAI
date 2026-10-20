@@ -269,7 +269,7 @@ public class OpenAIService : IAIProvider
         return capability switch
         {
             AIProviderCapability.Vision => true,
-            AIProviderCapability.Embeddings => false, // Would need separate embeddings API
+            AIProviderCapability.Embeddings => true, // Uses POST /v1/embeddings
             AIProviderCapability.ModelPulling => false, // Not applicable for cloud API
             AIProviderCapability.ModelDeletion => false, // Not applicable for cloud API  
             AIProviderCapability.Streaming => true, // Can be implemented

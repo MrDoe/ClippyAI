@@ -55,10 +55,7 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     private bool _autoMode = bool.Parse(ConfigurationService.GetConfigurationValue("AutoMode", "False"));
 
     [ObservableProperty]
-    private string _postgreSqlConnection = ConfigurationService.GetConfigurationValue("PostgreSqlConnection", "");
-
-    [ObservableProperty]
-    private string _postgresOllamaUrl = ConfigurationService.GetConfigurationValue("PostgresOllamaUrl", "");
+    private string _vectorDbPath = ConfigurationService.GetConfigurationValue("VectorDbPath", "");
 
     [ObservableProperty]
     private string _videoDevice = ConfigurationService.GetConfigurationValue("VideoDevice", "");
@@ -70,7 +67,10 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     private string _linuxKeyboardDevice = ConfigurationService.GetConfigurationValue("LinuxKeyboardDevice", "");
 
     [ObservableProperty]
-    private string _embeddingModel = ConfigurationService.GetConfigurationValue("EmbeddingModel", "nomic-embed-text");
+    private string _ollamaEmbeddingModel = EmbeddingService.GetModel("Ollama");
+
+    [ObservableProperty]
+    private string _openAIEmbeddingModel = EmbeddingService.GetModel("OpenAI");
 
     // SSH Configuration properties
     [ObservableProperty]
@@ -622,13 +622,13 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
         ConfigurationService.SetConfigurationValue("UseEmbeddings", UseEmbeddings.ToString());
         ConfigurationService.SetConfigurationValue("StoreAllResponses", StoreAllResponses.ToString());
         ConfigurationService.SetConfigurationValue("AutoMode", AutoMode.ToString());
-        ConfigurationService.SetConfigurationValue("PostgreSqlConnection", PostgreSqlConnection);
-        ConfigurationService.SetConfigurationValue("PostgresOllamaUrl", PostgresOllamaUrl);
+        ConfigurationService.SetConfigurationValue("VectorDbPath", VectorDbPath.Trim());
+        ConfigurationService.SetConfigurationValue("OllamaEmbeddingModel", OllamaEmbeddingModel.Trim());
+        ConfigurationService.SetConfigurationValue("OpenAIEmbeddingModel", OpenAIEmbeddingModel.Trim());
         ConfigurationService.SetConfigurationValue("VideoDevice", VideoDevice);
         ConfigurationService.SetConfigurationValue("DefaultLanguage", DefaultLanguage);
         ConfigurationService.SetConfigurationValue("LinuxKeyboardDevice", LinuxKeyboardDevice);
         ConfigurationService.SetConfigurationValue("Threshold", Threshold.ToString());
-        ConfigurationService.SetConfigurationValue("EmbeddingModel", EmbeddingModel);
 
         // SSH Configuration
         ConfigurationService.SetConfigurationValue("UseSSH", UseSSH.ToString());

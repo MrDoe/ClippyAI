@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media.Imaging;
 using ClippyAI.Models;
@@ -74,12 +74,6 @@ public partial class MainViewModel : ViewModelBase
 
     [ObservableProperty]
     private string _model = ConfigurationService.GetConfigurationValue("OllamaModel", "") ?? "";
-
-    [ObservableProperty]
-    private string _PostgreSqlConnection = ConfigurationService.GetConfigurationValue("PostgreSqlConnection") ?? "";
-
-    [ObservableProperty]
-    private string _PostgresOllamaUrl = ConfigurationService.GetConfigurationValue("PostgresOllamaUrl") ?? "";
 
     [ObservableProperty]
     private bool _useEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings") == "True";
@@ -257,8 +251,10 @@ public partial class MainViewModel : ViewModelBase
                 if (!string.IsNullOrEmpty(response) && !string.IsNullOrEmpty(task) &&
                     !string.IsNullOrEmpty(Input) && StoreAllResponses && UseEmbeddings)
                 {
-                    await OllamaService.StoreSqlEmbedding(task, Input, response);
-                    ++EmbeddingsCount;
+                    if (await OllamaService.StoreEmbedding(task, Input, response))
+                    {
+                        ++EmbeddingsCount;
+                    }
                 }
             }
         }
@@ -573,9 +569,13 @@ public partial class MainViewModel : ViewModelBase
             try
             {
                 string task = GetFullTask();
-                if (!string.IsNullOrEmpty(task))
+                if (!string.IsNullOrEmpty(task) && UseEmbeddings)
                 {
-                    await OllamaService.StoreSqlEmbedding(task, Input, Output);
+                    if (!await OllamaService.StoreEmbedding(task, Input, Output))
+                    {
+                        mainWindow!.ShowNotification("ClippyAI", "A similar answer is already stored.", false, false);
+                        return;
+                    }
                 }
             }
             catch (Exception e)
@@ -915,8 +915,6 @@ public partial class MainViewModel : ViewModelBase
             Language = ConfigurationService.GetConfigurationValue("DefaultLanguage", "English") ?? "English";
             OllamaUrl = ConfigurationService.GetConfigurationValue("OllamaUrl", "http://127.0.0.1:11434/api") ?? "http://127.0.0.1:11434/api";
             Model = ConfigurationService.GetConfigurationValue("OllamaModel", "") ?? "";
-            PostgreSqlConnection = ConfigurationService.GetConfigurationValue("PostgreSqlConnection") ?? "";
-            PostgresOllamaUrl = ConfigurationService.GetConfigurationValue("PostgresOllamaUrl") ?? "";
             UseEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings") == "True";
             StoreAllResponses = ConfigurationService.GetConfigurationValue("StoreAllResponses") == "True";
             VideoDevice = ConfigurationService.GetConfigurationValue("VideoDevice") ?? "";

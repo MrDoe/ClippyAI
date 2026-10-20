@@ -184,12 +184,6 @@
     <data name="UseEmbeddings" xml:space="preserve">
         <value>Use Embeddings</value>
     </data>
-    <data name="PostgreSqlConnection" xml:space="preserve">
-        <value>🗄️ PostgreSQL Connection:</value>
-    </data>
-    <data name="PostgresOllamaUrl" xml:space="preserve">
-        <value>🔗 Ollama URL for PostgreSQL:</value>
-    </data>
     <data name="AnalyzeImage" xml:space="preserve">
         <value>🖼️ Analyze Image</value>
     </data>
@@ -319,12 +313,6 @@
     <data name="StoreAllResponses" xml:space="preserve">
         <value>Store All Responses</value>
     </data>
-    <data name="PostgreSQLConnectionString" xml:space="preserve">
-        <value>🗄️ PostgreSQL Connection String:</value>
-    </data>
-    <data name="EmbeddingModel" xml:space="preserve">
-        <value>🧬 Embedding Model:</value>
-    </data>
     <data name="ClearDatabase" xml:space="preserve">
         <value>🗑️ Clear Database</value>
     </data>
@@ -441,15 +429,6 @@
     </data>
     <data name="ImageSourceWebcam" xml:space="preserve">
         <value>🎥 Webcam</value>
-    </data>
-    <data name="PostgreSQLConnectionStringDescription" xml:space="preserve">
-        <value>PostgreSQL connection string for the embeddings database</value>
-    </data>
-    <data name="PostgresOllamaUrlDescription" xml:space="preserve">
-        <value>Ollama URL accessible from the PostgreSQL server</value>
-    </data>
-    <data name="EmbeddingModelDescription" xml:space="preserve">
-        <value>Model to use for generating embeddings (e.g. nomic-embed-text)</value>
     </data>
     <data name="VideoDeviceDescription" xml:space="preserve">
         <value>Select the video / webcam device to use</value>
@@ -591,5 +570,26 @@
     </data>
     <data name="ClearDatabaseDescription" xml:space="preserve">
         <value>Remove all stored embeddings from the database</value>
+    </data>
+    <data name="EmbeddingsProviderHint" xml:space="preserve">
+        <value>Embeddings are generated with the AI provider selected on the General tab. Answers are stored locally in an embedded LanceDB database — no PostgreSQL server is required.</value>
+    </data>
+    <data name="VectorDbPath" xml:space="preserve">
+        <value>📁 Vector Database Folder:</value>
+    </data>
+    <data name="VectorDbPathDescription" xml:space="preserve">
+        <value>Folder for the embedded LanceDB database. Leave empty to use the ClippyAI app-data folder.</value>
+    </data>
+    <data name="OllamaEmbeddingModel" xml:space="preserve">
+        <value>🧬 Ollama Embedding Model:</value>
+    </data>
+    <data name="OllamaEmbeddingModelDescription" xml:space="preserve">
+        <value>Model used when the AI provider is Ollama (e.g. nomic-embed-text).</value>
+    </data>
+    <data name="OpenAIEmbeddingModel" xml:space="preserve">
+        <value>🧬 OpenAI Embedding Model:</value>
+    </data>
+    <data name="OpenAIEmbeddingModelDescription" xml:space="preserve">
+        <value>Model used when the AI provider is OpenAI (e.g. text-embedding-3-small).</value>
     </data>
 </root>

@@ -210,12 +210,6 @@
     <data name="UseEmbeddings" xml:space="preserve">
         <value>🧬 Embeddings verwenden</value>
     </data>
-    <data name="PostgreSqlConnection" xml:space="preserve">
-        <value>🗄️ PostgreSQL-Verbindung:</value>
-    </data>
-    <data name="PostgresOllamaUrl" xml:space="preserve">
-        <value>🔗 PostgreSQL Ollama-URL:</value>
-    </data>
     <data name="AnalyzeImage" xml:space="preserve">
         <value>Analysiere Bild</value>
     </data>
@@ -344,12 +338,6 @@
     </data>
     <data name="StoreAllResponses" xml:space="preserve">
         <value>Alle Antworten speichern</value>
-    </data>
-    <data name="PostgreSQLConnectionString" xml:space="preserve">
-        <value>🗄️ PostgreSQL-Verbindungszeichenfolge:</value>
-    </data>
-    <data name="EmbeddingModel" xml:space="preserve">
-        <value>🧬 Embedding-Modell:</value>
     </data>
     <data name="ClearDatabase" xml:space="preserve">
         <value>🗑️ Datenbank löschen</value>
@@ -494,12 +482,6 @@
     </data>
     <data name="StoreAllResponsesDescription" xml:space="preserve">
         <value>Alle KI-Antworten als Vorlagen in der Datenbank speichern</value>
-    </data>
-    <data name="PostgreSQLConnectionStringDescription" xml:space="preserve">
-        <value>Verbindungszeichenfolge für die PostgreSQL-Datenbank</value>
-    </data>
-    <data name="EmbeddingModelDescription" xml:space="preserve">
-        <value>Das Modell für die Erstellung von Embeddings</value>
     </data>
     <data name="ClearDatabaseDescription" xml:space="preserve">
         <value>Alle gespeicherten Embeddings aus der Datenbank entfernen</value>
@@ -654,10 +636,28 @@
     <data name="UseEmbeddingsDescription" xml:space="preserve">
         <value>Verwende Vektor-Embeddings für die Antwort-Zwischenspeicherung</value>
     </data>
-    <data name="PostgresOllamaUrlDescription" xml:space="preserve">
-        <value>Ollama-URL für PostgreSQL-Embeddings</value>
-    </data>
     <data name="ThresholdDescription" xml:space="preserve">
         <value>Ähnlichkeitsschwellwert für Embedding-Übereinstimmungen</value>
+    </data>
+    <data name="EmbeddingsProviderHint" xml:space="preserve">
+        <value>Embeddings werden mit dem auf der Registerkarte „Allgemein“ ausgewählten KI-Anbieter erzeugt. Antworten werden lokal in einer eingebetteten LanceDB-Datenbank gespeichert — ein PostgreSQL-Server ist nicht erforderlich.</value>
+    </data>
+    <data name="VectorDbPath" xml:space="preserve">
+        <value>📁 Vector-Datenbankordner:</value>
+    </data>
+    <data name="VectorDbPathDescription" xml:space="preserve">
+        <value>Ordner für die eingebettete LanceDB-Datenbank. Leer lassen, um den ClippyAI-App-Datenordner zu verwenden.</value>
+    </data>
+    <data name="OllamaEmbeddingModel" xml:space="preserve">
+        <value>🧬 Ollama-Embedding-Modell:</value>
+    </data>
+    <data name="OllamaEmbeddingModelDescription" xml:space="preserve">
+        <value>Modell für den KI-Anbieter Ollama (z. B. nomic-embed-text).</value>
+    </data>
+    <data name="OpenAIEmbeddingModel" xml:space="preserve">
+        <value>🧬 OpenAI-Embedding-Modell:</value>
+    </data>
+    <data name="OpenAIEmbeddingModelDescription" xml:space="preserve">
+        <value>Modell für den KI-Anbieter OpenAI (z. B. text-embedding-3-small).</value>
     </data>
 </root>

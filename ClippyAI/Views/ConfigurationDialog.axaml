@@ -188,18 +188,22 @@
                                 <CheckBox IsChecked="{Binding StoreAllResponses}" Content="{x:Static resources:Resources.StoreAllResponses}" Margin="0,0,0,10"
                                           ToolTip.Tip="{x:Static resources:Resources.StoreAllResponsesDescription}"/>
                                 
-                                <Label Content="{x:Static resources:Resources.PostgreSQLConnectionString}"/>
-                                <TextBox Text="{Binding PostgreSqlConnection}" Height="60" TextWrapping="Wrap"
-                                         AcceptsReturn="True"
-                                         ToolTip.Tip="{x:Static resources:Resources.PostgreSQLConnectionStringDescription}"/>
-                                
-                                <Label Content="{x:Static resources:Resources.PostgresOllamaUrl}"/>
-                                <TextBox Text="{Binding PostgresOllamaUrl}" 
-                                         ToolTip.Tip="{x:Static resources:Resources.PostgresOllamaUrlDescription}"/>
-                                
-                                <Label Content="{x:Static resources:Resources.EmbeddingModel}"/>
-                                <TextBox Text="{Binding EmbeddingModel}" 
-                                         ToolTip.Tip="{x:Static resources:Resources.EmbeddingModelDescription}" 
+                                <TextBlock Text="{x:Static resources:Resources.EmbeddingsProviderHint}"
+                                           TextWrapping="Wrap" Opacity="0.75" Margin="0,0,0,10"/>
+
+                                <Label Content="{x:Static resources:Resources.VectorDbPath}"/>
+                                <TextBox Text="{Binding VectorDbPath}"
+                                         ToolTip.Tip="{x:Static resources:Resources.VectorDbPathDescription}"
+                                         IsEnabled="{Binding UseEmbeddings}"/>
+
+                                <Label Content="{x:Static resources:Resources.OllamaEmbeddingModel}"/>
+                                <TextBox Text="{Binding OllamaEmbeddingModel}"
+                                         ToolTip.Tip="{x:Static resources:Resources.OllamaEmbeddingModelDescription}"
+                                         IsEnabled="{Binding UseEmbeddings}"/>
+
+                                <Label Content="{x:Static resources:Resources.OpenAIEmbeddingModel}"/>
+                                <TextBox Text="{Binding OpenAIEmbeddingModel}"
+                                         ToolTip.Tip="{x:Static resources:Resources.OpenAIEmbeddingModelDescription}"
                                          IsEnabled="{Binding UseEmbeddings}"/>
                                 
                                 <Label Content="{x:Static resources:Resources.Threshold}"/>
