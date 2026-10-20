@@ -75,7 +75,11 @@ jobs:
       - name: Restore the application for the Windows target
         shell: pwsh
         run: |
-          dotnet restore ClippyAI/ClippyAI.csproj -p:TargetFramework=net10.0-windows10.0.17763.0 -p:RuntimeIdentifier=win-x64
+          # Restore the solution first so every referenced project (the evdev and
+          # notification submodules) is restored for its own target framework.
+          dotnet restore ClippyAI.sln
+          # Then the application itself for the runtime the installer ships.
+          dotnet restore ClippyAI/ClippyAI.csproj -p:RuntimeIdentifier=win-x64
       - name: Build the installer
         shell: pwsh
         run: dotnet build Installer/ClippyAI.Installer.wixproj -c Release
