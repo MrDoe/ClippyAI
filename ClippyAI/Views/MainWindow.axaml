@@ -48,11 +48,10 @@
                         <StackPanel Orientation="Horizontal"
                                     Spacing="8"
                                     VerticalAlignment="Center">
-                            <Border Width="30" Height="30"
-                                    CornerRadius="8"
+                            <Border Width="21" Height="21"
                                     Background="{DynamicResource UiSurfaceAltBrush}"
-                                    ClipToBounds="True">
-                                <Image Source="/Assets/bulb_high_128.png" Stretch="UniformToFill" />
+                                    ClipToBounds="False">
+                                <Image Source="/Assets/bulb_high_128.png" Width="21" Height="30" Stretch="UniformToFill" />
                             </Border>
 
                             <TextBlock Text="ClippyAI" Classes="title" VerticalAlignment="Center" />
