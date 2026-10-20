@@ -51,12 +51,14 @@ public class OpenAIService : IAIProvider
                                                     TaskConfiguration? taskConfig = null,
                                                     CancellationToken token = default)
     {
+        // Refresh from the configuration store first: apiKey/baseUrl are static fields,
+        // so they are stale when the key is configured after the app has started.
+        UpdateConfig();
+
         if (string.IsNullOrEmpty(apiKey))
         {
             throw new InvalidOperationException("OpenAI API key is not configured. Please set the OpenAIApiKey configuration value.");
         }
-
-        UpdateConfig();
 
         // Load configuration options
         double temperature = taskConfig?.Temperature ?? 0.8;
@@ -124,6 +126,11 @@ public class OpenAIService : IAIProvider
     {
         List<string> models = [];
 
+        // Refresh from the configuration store before the apiKey check: the static
+        // field is only populated at type load, so an API key configured while the
+        // app is running would otherwise never be picked up.
+        UpdateConfig();
+
         if (string.IsNullOrEmpty(apiKey))
         {
             return [];
@@ -131,8 +138,6 @@ public class OpenAIService : IAIProvider
 
         try
         {
-            UpdateConfig();
-
             using HttpResponseMessage response = await client.GetAsync($"{baseUrl}/models", token);
 
             if (response.IsSuccessStatusCode)
@@ -175,6 +180,8 @@ public class OpenAIService : IAIProvider
 
     public async Task<string> AnalyzeImage(byte[] image, TaskConfiguration? taskConfig = null)
     {
+        UpdateConfig();
+
         if (string.IsNullOrEmpty(apiKey))
         {
             throw new InvalidOperationException("OpenAI API key is not configured.");
