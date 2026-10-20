@@ -108,6 +108,20 @@
     <PostInstallScript>chmod 777 /usr/share/ClippyAI
 chmod 666 /usr/share/ClippyAI/ClippyAI.dll.config</PostInstallScript>  
   </PropertyGroup>
+  <PropertyGroup>
+    <Authors>Christoph Döllinger</Authors>
+    <PackageProjectUrl>https://github.com/MrDoe/ClippyAI</PackageProjectUrl>
+    <PackageDescription>ClippyAI is an AI assistant that captures your clipboard, sends it to a local AI provider and puts the response back into your clipboard.</PackageDescription>
+  </PropertyGroup>
+  <!-- Dependencies of the generated .deb package (see the CreateDeb target of Packaging.Targets) -->
+  <ItemGroup Condition="'$(OS)' != 'Windows_NT'">
+    <DebDotNetDependencies Include="dotnet-runtime-10.0" />
+    <DebDependency Include="libc6" />
+    <DebDependency Include="libgcc1" />
+    <DebDependency Include="libgssapi-krb5-2" />
+    <DebDependency Include="libstdc++6" />
+    <DebDependency Include="zlib1g" />
+  </ItemGroup>
   <ItemGroup Condition="'$(OS)' == 'Windows_NT'">
     <Compile Remove="Services\LinuxHotkeyService.cs" />
   </ItemGroup>
