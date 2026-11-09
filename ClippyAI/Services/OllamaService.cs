@@ -478,8 +478,60 @@ public static class OllamaService
                                                            string model, TaskConfiguration? taskConfig = null,
                                                            CancellationToken token = default)
     {
+        taskConfig = await WithKnowledgeContextAsync(taskConfig, task, input, token);
         IAIProvider provider = GetCurrentProvider();
         return await provider.SendRequestWithConfig(input, task, model, taskConfig, token);
+    }
+
+    /// <summary>
+    /// Optional RAG augmentation: when the ClickHouse knowledge base is
+    /// enabled, retrieves chunks relevant to the task input and returns a
+    /// copy of the task configuration whose SystemPrompt carries the knowledge
+    /// block. Failures (and disabled/unconfigured state) pass the original
+    /// configuration through unchanged.
+    /// </summary>
+    private static async Task<TaskConfiguration?> WithKnowledgeContextAsync(
+        TaskConfiguration? taskConfig, string task, string input, CancellationToken token)
+    {
+        if (taskConfig == null || !ClickHouseKnowledgeService.Enabled)
+        {
+            return taskConfig;
+        }
+
+        try
+        {
+            string query = task + "\n" + (input.Length > 2000 ? input.Substring(0, 2000) : input);
+            string? context = await ClickHouseKnowledgeService.GetContextAsync(query, token);
+
+            if (string.IsNullOrEmpty(context))
+            {
+                return taskConfig;
+            }
+
+            return new TaskConfiguration
+            {
+                Id = taskConfig.Id,
+                TaskName = taskConfig.TaskName,
+                SystemPrompt = taskConfig.SystemPrompt + "\n\n" + context,
+                Model = taskConfig.Model,
+                Temperature = taskConfig.Temperature,
+                MaxLength = taskConfig.MaxLength,
+                TopP = taskConfig.TopP,
+                TopK = taskConfig.TopK,
+                RepeatPenalty = taskConfig.RepeatPenalty,
+                NumCtx = taskConfig.NumCtx,
+                IsActive = taskConfig.IsActive,
+                IsImageTask = taskConfig.IsImageTask,
+                ImageSource = taskConfig.ImageSource,
+                CreatedAt = taskConfig.CreatedAt,
+                UpdatedAt = taskConfig.UpdatedAt
+            };
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Knowledge augmentation skipped: {ex.Message}");
+            return taskConfig;
+        }
     }
 
     /// <summary>
@@ -691,6 +743,12 @@ public static class OllamaService
     /// <returns>The analysis result.</returns>
     public static async Task<string> AnalyzeImage(byte[] image, TaskConfiguration? taskConfig = null)
     {
+        // Same optional RAG augmentation as text requests: the profile/prompt
+        // text of the image task doubles as the knowledge query.
+        string query = (taskConfig?.TaskName ?? "") + "\n"
+                     + (taskConfig?.SystemPrompt is { Length: > 0 } sp ? (sp.Length > 1500 ? sp.Substring(0, 1500) : sp) : "");
+        taskConfig = await WithKnowledgeContextAsync(taskConfig, taskConfig?.TaskName ?? "", query, CancellationToken.None);
+
         IAIProvider provider = GetCurrentProvider();
         return await provider.AnalyzeImage(image, taskConfig);
     }

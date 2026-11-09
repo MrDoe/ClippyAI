@@ -116,6 +116,76 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     [ObservableProperty]
     private string _openAIEmbeddingModel = EmbeddingService.GetModel("OpenAI");
 
+    // ClickHouse knowledge base (optional RAG background for tasks and manuals)
+    [ObservableProperty]
+    private bool _clickHouseEnabled = bool.Parse(ConfigurationService.GetConfigurationValue("ClickHouseEnabled", "False"));
+
+    [ObservableProperty]
+    private string _clickHouseUrl = ConfigurationService.GetConfigurationValue("ClickHouseUrl", "http://161.42.232.20:8123/");
+
+    [ObservableProperty]
+    private string _clickHouseUser = ConfigurationService.GetConfigurationValue("ClickHouseUser", "starlims");
+
+    [ObservableProperty]
+    private string _clickHousePassword = ConfigurationService.GetConfigurationValue("ClickHousePassword", "");
+
+    [ObservableProperty]
+    private string _clickHouseDatabase = ConfigurationService.GetConfigurationValue("ClickHouseDatabase", "OpenCodeRAG");
+
+    [ObservableProperty]
+    private string _clickHouseTables = ConfigurationService.GetConfigurationValue("ClickHouseTables", "");
+
+    [ObservableProperty]
+    private string _clickHouseMode = ConfigurationService.GetConfigurationValue("ClickHouseMode", "auto");
+
+    [ObservableProperty]
+    private string _clickHouseTopK = ConfigurationService.GetConfigurationValue("ClickHouseTopK", "5");
+
+    [ObservableProperty]
+    private string _clickHouseMaxChars = ConfigurationService.GetConfigurationValue("ClickHouseMaxChars", "2500");
+
+    [ObservableProperty]
+    private string _clickHouseTestResult = "";
+
+    [ObservableProperty]
+    private bool _clickHouseTestInProgress = false;
+
+    public static ObservableCollection<string> ClickHouseModes { get; } = ["auto", "vector", "keyword"];
+
+    [RelayCommand]
+    private async Task TestClickHouse()
+    {
+        ClickHouseTestInProgress = true;
+        ClickHouseTestResult = "";
+        try
+        {
+            string version = await ClickHouseKnowledgeService.TestConnectionAsync(ClickHouseUrl, ClickHouseUser, ClickHousePassword);
+            ClickHouseTestResult = "OK - ClickHouse " + version;
+        }
+        catch (Exception ex)
+        {
+            ClickHouseTestResult = ex.Message;
+        }
+        finally
+        {
+            ClickHouseTestInProgress = false;
+        }
+    }
+
+    [RelayCommand]
+    private async Task DiscoverClickHouseTables()
+    {
+        try
+        {
+            List<string> tables = await ClickHouseKnowledgeService.DiscoverTablesAsync(ClickHouseUrl, ClickHouseUser, ClickHousePassword);
+            ClickHouseTables = string.Join(",", tables);
+        }
+        catch (Exception ex)
+        {
+            ShowErrorMessage(ex.Message);
+        }
+    }
+
     // SSH Configuration properties
     [ObservableProperty]
     private bool _useSSH = bool.Parse(ConfigurationService.GetConfigurationValue("UseSSH", "False"));
@@ -797,6 +867,21 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
         ConfigurationService.SetConfigurationValue("HotkeyAskClippy", hotkeyAsk);
         ConfigurationService.SetConfigurationValue("HotkeyPreviousTask", hotkeyPrev);
         ConfigurationService.SetConfigurationValue("HotkeyNextTask", hotkeyNext);
+
+        // ClickHouse knowledge base
+        ConfigurationService.SetConfigurationValue("ClickHouseEnabled", ClickHouseEnabled.ToString());
+        ConfigurationService.SetConfigurationValue("ClickHouseUrl", ClickHouseUrl.Trim());
+        ConfigurationService.SetConfigurationValue("ClickHouseUser", ClickHouseUser.Trim());
+        ConfigurationService.SetConfigurationValue("ClickHousePassword", ClickHousePassword);
+        ConfigurationService.SetConfigurationValue("ClickHouseDatabase",
+            string.IsNullOrWhiteSpace(ClickHouseDatabase) ? "OpenCodeRAG" : ClickHouseDatabase.Trim());
+        ConfigurationService.SetConfigurationValue("ClickHouseTables", ClickHouseTables.Trim());
+        ConfigurationService.SetConfigurationValue("ClickHouseMode",
+            string.IsNullOrWhiteSpace(ClickHouseMode) ? "auto" : ClickHouseMode.Trim().ToLowerInvariant());
+        ConfigurationService.SetConfigurationValue("ClickHouseTopK",
+            int.TryParse(ClickHouseTopK, out int topK) ? Math.Clamp(topK, 1, 20).ToString() : "5");
+        ConfigurationService.SetConfigurationValue("ClickHouseMaxChars",
+            int.TryParse(ClickHouseMaxChars, out int maxChars) ? Math.Clamp(maxChars, 200, 20000).ToString() : "2500");
 
         return true;
     }

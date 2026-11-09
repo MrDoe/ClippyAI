@@ -29,6 +29,11 @@
 
                         <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="2">
                             <Button Classes="icon"
+                                    Command="{Binding ShowHistoryCommand}"
+                                    ToolTip.Tip="{x:Static resources:Resources.ClipboardHistory}">
+                                <TextBlock Classes="icon" Text="&#xf1da;" />
+                            </Button>
+                            <Button Classes="icon"
                                     Command="{Binding ShowCameraCommand}"
                                     ToolTip.Tip="{x:Static resources:Resources.ViewCameraDescription}">
                                 <TextBlock Classes="icon" Text="&#xf030;" />

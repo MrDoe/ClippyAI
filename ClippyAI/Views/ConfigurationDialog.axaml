@@ -343,6 +343,101 @@
                     </ScrollViewer>
                 </TabItem>
 
+                <!-- Knowledge (ClickHouse) -->
+                <TabItem>
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Classes="icon" Text="&#xf0c2;" />
+                            <TextBlock Text="{x:Static resources:Resources.KnowledgeTab}" />
+                        </StackPanel>
+                    </TabItem.Header>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <StackPanel Margin="0,18,0,24" Width="720" HorizontalAlignment="Left">
+                            <HeaderedContentControl Header="{x:Static resources:Resources.ClickHouseSettings}">
+                                <StackPanel>
+                                    <CheckBox IsChecked="{Binding ClickHouseEnabled}"
+                                              Content="{x:Static resources:Resources.ClickHouseEnabled}"
+                                              ToolTip.Tip="{x:Static resources:Resources.ClickHouseEnabledDescription}" />
+
+                                    <Label Content="{x:Static resources:Resources.ClickHouseUrl}" />
+                                    <TextBox Text="{Binding ClickHouseUrl}"
+                                             ToolTip.Tip="{x:Static resources:Resources.ClickHouseUrlDescription}" />
+
+                                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                                        <StackPanel Grid.Column="0">
+                                            <Label Content="{x:Static resources:Resources.ClickHouseUser}" />
+                                            <TextBox Text="{Binding ClickHouseUser}" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1">
+                                            <Label Content="{x:Static resources:Resources.ClickHousePassword}" />
+                                            <TextBox Text="{Binding ClickHousePassword}" PasswordChar="*" />
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                                        <StackPanel Grid.Column="0">
+                                            <Label Content="{x:Static resources:Resources.ClickHouseDatabase}" />
+                                            <TextBox Text="{Binding ClickHouseDatabase}" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1">
+                                            <Label Content="{x:Static resources:Resources.ClickHouseMode}" />
+                                            <ComboBox ItemsSource="{Binding ClickHouseModes}"
+                                                      SelectedItem="{Binding ClickHouseMode}"
+                                                      ToolTip.Tip="{x:Static resources:Resources.ClickHouseModeDescription}" />
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <Label Content="{x:Static resources:Resources.ClickHouseTables}" />
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
+                                        <TextBox Text="{Binding ClickHouseTables}"
+                                                 PlaceholderText="{x:Static resources:Resources.ClickHouseTablesDescription}"
+                                                 ToolTip.Tip="{x:Static resources:Resources.ClickHouseTablesDescription}" />
+                                        <Button Grid.Column="1" Content="{x:Static resources:Resources.ClickHouseDiscover}"
+                                                Command="{Binding DiscoverClickHouseTablesCommand}"
+                                                ToolTip.Tip="{x:Static resources:Resources.ClickHouseDiscoverDescription}" />
+                                    </Grid>
+
+                                    <Grid ColumnDefinitions="*,70,*,70" ColumnSpacing="12">
+                                        <StackPanel Grid.Column="0">
+                                            <Label Content="{x:Static resources:Resources.ClickHouseTopK}" />
+                                            <TextBox Grid.Column="1" Text="{Binding ClickHouseTopK}" Width="70" HorizontalAlignment="Left" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2">
+                                            <Label Content="{x:Static resources:Resources.ClickHouseMaxChars}" />
+                                            <TextBox Text="{Binding ClickHouseMaxChars}" Width="70" HorizontalAlignment="Left" />
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,6,0,0">
+                                        <Button Command="{Binding TestClickHouseCommand}"
+                                                IsEnabled="{Binding !ClickHouseTestInProgress}">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <TextBlock Classes="icon" Text="&#xf1e6;" />
+                                                <TextBlock Text="{x:Static resources:Resources.TestConnection}" />
+                                            </StackPanel>
+                                        </Button>
+                                        <TextBlock Text="{x:Static resources:Resources.Testing}"
+                                                   IsVisible="{Binding ClickHouseTestInProgress}"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="{DynamicResource UiAccentBrush}" />
+                                    </StackPanel>
+
+                                    <Border Classes="status"
+                                            Margin="0,12,0,0"
+                                            IsVisible="{Binding ClickHouseTestResult, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                                        <TextBlock Text="{Binding ClickHouseTestResult}"
+                                                   TextWrapping="Wrap"
+                                                   Foreground="{DynamicResource UiTextPrimaryBrush}" />
+                                    </Border>
+
+                                    <TextBlock Text="{x:Static resources:Resources.ClickHouseHint}"
+                                               Classes="hint" TextWrapping="Wrap" Margin="0,14,0,0" />
+                                </StackPanel>
+                            </HeaderedContentControl>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
                 <!-- SSH -->
                 <TabItem>
                     <TabItem.Header>

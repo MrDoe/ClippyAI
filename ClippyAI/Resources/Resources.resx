@@ -313,6 +313,141 @@
     <data name="DuplicateHotkeyError" xml:space="preserve">
         <value>Global hotkeys must be unique - the same combination is assigned to more than one action.</value>
     </data>
+    <data name="ClipboardHistory" xml:space="preserve">
+        <value>Clipboard History</value>
+    </data>
+    <data name="ClipboardHistorySubtitle" xml:space="preserve">
+        <value>Recent clipboard entries - double-click restores an entry to the clipboard.</value>
+    </data>
+    <data name="HistoryFilterPlaceholder" xml:space="preserve">
+        <value>Filter text…</value>
+    </data>
+    <data name="HistoryEmpty" xml:space="preserve">
+        <value>No clipboard history yet - copy something.</value>
+    </data>
+    <data name="HistoryRestore" xml:space="preserve">
+        <value>Restore</value>
+    </data>
+    <data name="HistoryRestoreDescription" xml:space="preserve">
+        <value>Copy the selected entry back to the clipboard</value>
+    </data>
+    <data name="HistoryExecuteDescription" xml:space="preserve">
+        <value>Run the currently selected task against the selected entry</value>
+    </data>
+    <data name="HistoryClear" xml:space="preserve">
+        <value>Clear All</value>
+    </data>
+    <data name="HistoryClearDescription" xml:space="preserve">
+        <value>Delete the complete clipboard history including stored images</value>
+    </data>
+    <data name="HistoryRestored" xml:space="preserve">
+        <value>History entry restored to clipboard</value>
+    </data>
+    <data name="GenerateManual" xml:space="preserve">
+        <value>Generate Manual</value>
+    </data>
+    <data name="GenerateManualDescription" xml:space="preserve">
+        <value>Write a user manual from the selected screenshots (one analysis per image, then assembly)</value>
+    </data>
+    <data name="ManualNeedsImages" xml:space="preserve">
+        <value>Select at least one screenshot (IMAGE entry) in the history to generate a manual.</value>
+    </data>
+    <data name="ManualProgress" xml:space="preserve">
+        <value>Manual: analyzing screenshot {0} of {1}…</value>
+    </data>
+    <data name="ManualAssembling" xml:space="preserve">
+        <value>Manual: assembling final document…</value>
+    </data>
+    <data name="ManualContextTitle" xml:space="preserve">
+        <value>Application Background</value>
+    </data>
+    <data name="ManualContextSubtitle" xml:space="preserve">
+        <value>Tell the model what it is documenting. Details it cannot see in screenshots come from here and from the shared knowledge base.</value>
+    </data>
+    <data name="ManualProfile" xml:space="preserve">
+        <value>Saved profile</value>
+    </data>
+    <data name="ManualProfileNone" xml:space="preserve">
+        <value>(none - new application)</value>
+    </data>
+    <data name="ManualAppName" xml:space="preserve">
+        <value>Application name</value>
+    </data>
+    <data name="ManualAppVersion" xml:space="preserve">
+        <value>Version</value>
+    </data>
+    <data name="ManualAppNotes" xml:space="preserve">
+        <value>Purpose and background notes</value>
+    </data>
+    <data name="ManualAudience" xml:space="preserve">
+        <value>Target audience</value>
+    </data>
+    <data name="ManualLanguage" xml:space="preserve">
+        <value>Manual language</value>
+    </data>
+    <data name="ManualSaveProfile" xml:space="preserve">
+        <value>Save as reusable profile</value>
+    </data>
+    <data name="ManualSaveAsFile" xml:space="preserve">
+        <value>Ask where to save the manual as Markdown file</value>
+    </data>
+    <data name="Generate" xml:space="preserve">
+        <value>Generate</value>
+    </data>
+    <data name="KnowledgeTab" xml:space="preserve">
+        <value>Knowledge</value>
+    </data>
+    <data name="ClickHouseSettings" xml:space="preserve">
+        <value>ClickHouse Knowledge Base (RAG)</value>
+    </data>
+    <data name="ClickHouseEnabled" xml:space="preserve">
+        <value>Use ClickHouse background knowledge for all tasks</value>
+    </data>
+    <data name="ClickHouseEnabledDescription" xml:space="preserve">
+        <value>Before every request, relevant chunks (indexed sources and shared quirks) are retrieved and appended to the system prompt. Failures never block the task.</value>
+    </data>
+    <data name="ClickHouseUrl" xml:space="preserve">
+        <value>Server URL (HTTP interface)</value>
+    </data>
+    <data name="ClickHouseUrlDescription" xml:space="preserve">
+        <value>Use the IP address instead of the hostname in corporate networks (the proxy blocks internal hostnames). Calls always bypass the system proxy.</value>
+    </data>
+    <data name="ClickHouseUser" xml:space="preserve">
+        <value>User</value>
+    </data>
+    <data name="ClickHousePassword" xml:space="preserve">
+        <value>Password</value>
+    </data>
+    <data name="ClickHouseDatabase" xml:space="preserve">
+        <value>Database</value>
+    </data>
+    <data name="ClickHouseMode" xml:space="preserve">
+        <value>Retrieval mode</value>
+    </data>
+    <data name="ClickHouseModeDescription" xml:space="preserve">
+        <value>auto: vector search when the embedding model matches the stored dimension, otherwise keyword search. vector/keyword force one strategy.</value>
+    </data>
+    <data name="ClickHouseTables" xml:space="preserve">
+        <value>Tables (comma separated, empty = all chunks_* tables)</value>
+    </data>
+    <data name="ClickHouseTablesDescription" xml:space="preserve">
+        <value>Table names change their hash suffix on re-index - leave empty to search all discovered tables.</value>
+    </data>
+    <data name="ClickHouseDiscover" xml:space="preserve">
+        <value>Discover</value>
+    </data>
+    <data name="ClickHouseDiscoverDescription" xml:space="preserve">
+        <value>List all chunks_* tables of the server</value>
+    </data>
+    <data name="ClickHouseTopK" xml:space="preserve">
+        <value>Results per request (1-20)</value>
+    </data>
+    <data name="ClickHouseMaxChars" xml:space="preserve">
+        <value>Max knowledge characters in prompt</value>
+    </data>
+    <data name="ClickHouseHint" xml:space="preserve">
+        <value>Vector mode embeds the query with the configured embedding model - it must produce the same dimension as the stored vectors (the OpenCodeRAG index uses 4096-dim embeddings, e.g. qwen3-embedding:8b). Keyword mode works with any setup.</value>
+    </data>
     <data name="EnableSSHTunneling" xml:space="preserve">
         <value>Enable SSH Tunneling</value>
     </data>

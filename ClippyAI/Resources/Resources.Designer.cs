@@ -26,7 +26,7 @@ namespace ClippyAI.Resources {
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resources() {
+        public Resources() {
         }
         
         /// <summary>
@@ -184,6 +184,159 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Database.
+        /// </summary>
+        public static string ClickHouseDatabase {
+            get {
+                return ResourceManager.GetString("ClickHouseDatabase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Discover.
+        /// </summary>
+        public static string ClickHouseDiscover {
+            get {
+                return ResourceManager.GetString("ClickHouseDiscover", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to List all chunks_* tables of the server.
+        /// </summary>
+        public static string ClickHouseDiscoverDescription {
+            get {
+                return ResourceManager.GetString("ClickHouseDiscoverDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use ClickHouse background knowledge for all tasks.
+        /// </summary>
+        public static string ClickHouseEnabled {
+            get {
+                return ResourceManager.GetString("ClickHouseEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Before every request, relevant chunks (indexed sources and shared quirks) are retrieved and appended to the system prompt. Failures never block the task..
+        /// </summary>
+        public static string ClickHouseEnabledDescription {
+            get {
+                return ResourceManager.GetString("ClickHouseEnabledDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vector mode embeds the query with the configured embedding model - it must produce the same dimension as the stored vectors (the OpenCodeRAG index uses 4096-dim embeddings, e.g. qwen3-embedding:8b). Keyword mode works with any setup..
+        /// </summary>
+        public static string ClickHouseHint {
+            get {
+                return ResourceManager.GetString("ClickHouseHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Max knowledge characters in prompt.
+        /// </summary>
+        public static string ClickHouseMaxChars {
+            get {
+                return ResourceManager.GetString("ClickHouseMaxChars", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retrieval mode.
+        /// </summary>
+        public static string ClickHouseMode {
+            get {
+                return ResourceManager.GetString("ClickHouseMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to auto: vector search when the embedding model matches the stored dimension, otherwise keyword search. vector/keyword force one strategy..
+        /// </summary>
+        public static string ClickHouseModeDescription {
+            get {
+                return ResourceManager.GetString("ClickHouseModeDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password.
+        /// </summary>
+        public static string ClickHousePassword {
+            get {
+                return ResourceManager.GetString("ClickHousePassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ClickHouse Knowledge Base (RAG).
+        /// </summary>
+        public static string ClickHouseSettings {
+            get {
+                return ResourceManager.GetString("ClickHouseSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tables (comma separated, empty = all chunks_* tables).
+        /// </summary>
+        public static string ClickHouseTables {
+            get {
+                return ResourceManager.GetString("ClickHouseTables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Table names change their hash suffix on re-index - leave empty to search all discovered tables..
+        /// </summary>
+        public static string ClickHouseTablesDescription {
+            get {
+                return ResourceManager.GetString("ClickHouseTablesDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Results per request (1-20).
+        /// </summary>
+        public static string ClickHouseTopK {
+            get {
+                return ResourceManager.GetString("ClickHouseTopK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server URL (HTTP interface).
+        /// </summary>
+        public static string ClickHouseUrl {
+            get {
+                return ResourceManager.GetString("ClickHouseUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use the IP address instead of the hostname in corporate networks (the proxy blocks public hostnames). Calls always bypass the system proxy..
+        /// </summary>
+        public static string ClickHouseUrlDescription {
+            get {
+                return ResourceManager.GetString("ClickHouseUrlDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User.
+        /// </summary>
+        public static string ClickHouseUser {
+            get {
+                return ResourceManager.GetString("ClickHouseUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Clipboard.
         /// </summary>
         public static string Clipboard {
@@ -207,6 +360,24 @@ namespace ClippyAI.Resources {
         public static string ClipboardContentDescription {
             get {
                 return ResourceManager.GetString("ClipboardContentDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clipboard History.
+        /// </summary>
+        public static string ClipboardHistory {
+            get {
+                return ResourceManager.GetString("ClipboardHistory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recent clipboard entries - double-click restores an entry to the clipboard..
+        /// </summary>
+        public static string ClipboardHistorySubtitle {
+            get {
+                return ResourceManager.GetString("ClipboardHistorySubtitle", resourceCulture);
             }
         }
         
@@ -553,6 +724,33 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Generate.
+        /// </summary>
+        public static string Generate {
+            get {
+                return ResourceManager.GetString("Generate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generate Manual.
+        /// </summary>
+        public static string GenerateManual {
+            get {
+                return ResourceManager.GetString("GenerateManual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Write a user manual from the selected screenshots (one analysis per image, then assembly).
+        /// </summary>
+        public static string GenerateManualDescription {
+            get {
+                return ResourceManager.GetString("GenerateManualDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Get the next stored response for this query.
         /// </summary>
         public static string GetNextResponseDescription {
@@ -576,6 +774,78 @@ namespace ClippyAI.Resources {
         public static string GlobalHotkeysHint {
             get {
                 return ResourceManager.GetString("GlobalHotkeysHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear All.
+        /// </summary>
+        public static string HistoryClear {
+            get {
+                return ResourceManager.GetString("HistoryClear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete the complete clipboard history including stored images.
+        /// </summary>
+        public static string HistoryClearDescription {
+            get {
+                return ResourceManager.GetString("HistoryClearDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No clipboard history yet - copy something..
+        /// </summary>
+        public static string HistoryEmpty {
+            get {
+                return ResourceManager.GetString("HistoryEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Run the currently selected task against the selected entry.
+        /// </summary>
+        public static string HistoryExecuteDescription {
+            get {
+                return ResourceManager.GetString("HistoryExecuteDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filter text….
+        /// </summary>
+        public static string HistoryFilterPlaceholder {
+            get {
+                return ResourceManager.GetString("HistoryFilterPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restore.
+        /// </summary>
+        public static string HistoryRestore {
+            get {
+                return ResourceManager.GetString("HistoryRestore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to History entry restored to clipboard.
+        /// </summary>
+        public static string HistoryRestored {
+            get {
+                return ResourceManager.GetString("HistoryRestored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy the selected entry back to the clipboard.
+        /// </summary>
+        public static string HistoryRestoreDescription {
+            get {
+                return ResourceManager.GetString("HistoryRestoreDescription", resourceCulture);
             }
         }
         
@@ -670,6 +940,15 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Knowledge.
+        /// </summary>
+        public static string KnowledgeTab {
+            get {
+                return ResourceManager.GetString("KnowledgeTab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Language.
         /// </summary>
         public static string Language {
@@ -711,6 +990,132 @@ namespace ClippyAI.Resources {
         public static string LocalTunnelDescription {
             get {
                 return ResourceManager.GetString("LocalTunnelDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Application name.
+        /// </summary>
+        public static string ManualAppName {
+            get {
+                return ResourceManager.GetString("ManualAppName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Purpose and background notes.
+        /// </summary>
+        public static string ManualAppNotes {
+            get {
+                return ResourceManager.GetString("ManualAppNotes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version.
+        /// </summary>
+        public static string ManualAppVersion {
+            get {
+                return ResourceManager.GetString("ManualAppVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manual: assembling final document….
+        /// </summary>
+        public static string ManualAssembling {
+            get {
+                return ResourceManager.GetString("ManualAssembling", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target audience.
+        /// </summary>
+        public static string ManualAudience {
+            get {
+                return ResourceManager.GetString("ManualAudience", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tell the model what it is documenting. Details it cannot see in screenshots come from here and from the shared knowledge base..
+        /// </summary>
+        public static string ManualContextSubtitle {
+            get {
+                return ResourceManager.GetString("ManualContextSubtitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Application Background.
+        /// </summary>
+        public static string ManualContextTitle {
+            get {
+                return ResourceManager.GetString("ManualContextTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manual language.
+        /// </summary>
+        public static string ManualLanguage {
+            get {
+                return ResourceManager.GetString("ManualLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select at least one screenshot (IMAGE entry) in the history to generate a manual..
+        /// </summary>
+        public static string ManualNeedsImages {
+            get {
+                return ResourceManager.GetString("ManualNeedsImages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saved profile.
+        /// </summary>
+        public static string ManualProfile {
+            get {
+                return ResourceManager.GetString("ManualProfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (none - new application).
+        /// </summary>
+        public static string ManualProfileNone {
+            get {
+                return ResourceManager.GetString("ManualProfileNone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manual: analyzing screenshot {0} of {1}….
+        /// </summary>
+        public static string ManualProgress {
+            get {
+                return ResourceManager.GetString("ManualProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ask where to save the manual as Markdown file.
+        /// </summary>
+        public static string ManualSaveAsFile {
+            get {
+                return ResourceManager.GetString("ManualSaveAsFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save as reusable profile.
+        /// </summary>
+        public static string ManualSaveProfile {
+            get {
+                return ResourceManager.GetString("ManualSaveProfile", resourceCulture);
             }
         }
         

@@ -142,6 +142,18 @@ public partial class App : Application
 
             _trayIcon.Menu.Items.Add(new NativeMenuItem
             {
+                Header = ClippyAI.Resources.Resources.ClipboardHistory,
+                Command = new RelayCommand(async () =>
+                {
+                    if (_mainWindow.DataContext is MainViewModel historyVm)
+                    {
+                        await historyVm.ShowHistoryCommand.ExecuteAsync(null);
+                    }
+                })
+            });
+
+            _trayIcon.Menu.Items.Add(new NativeMenuItem
+            {
                 Header = ClippyAI.Resources.Resources.Exit,
                 Command = new RelayCommand(() =>
                 {

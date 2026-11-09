@@ -1,6 +1,8 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Input;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform.Storage;
 using ClippyAI.Models;
 using ClippyAI.Services;
 using ClippyAI.ViewModels;
@@ -17,6 +19,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 namespace ClippyAI.Views;
@@ -396,6 +399,12 @@ public partial class MainViewModel : ViewModelBase
         }
     }
 
+    // SHA-256 (hex) of the PNG encoding of the last processed clipboard image.
+    // The clipboard hands out a fresh Bitmap instance on every read, so a
+    // reference comparison would treat the same screenshot as "new" every
+    // second; the content hash is the only reliable change signal.
+    private string? _clipboardImageSha;
+
     // updates the clipboard content regularly
     public async Task UpdateClipboardContent(CancellationToken cancellationToken)
     {
@@ -435,8 +444,12 @@ public partial class MainViewModel : ViewModelBase
             ClipboardContent = newContent;
             Input = newContent ?? "";
             ClipboardService.LastInput = newContent ?? "";
+            ClipboardHistoryService.RecordText(newContent);
 
-            if (AutoMode && initialized)
+            // AutoMode runs text tasks only: with an image task selected, a
+            // copied text would trigger image analysis of a stale screenshot
+            // and the response would ping-pong through the clipboard again.
+            if (AutoMode && initialized && SelectedTaskConfiguration?.IsImageTask != true)
             {
                 await AskClippy(cancellationToken);
             }
@@ -450,42 +463,432 @@ public partial class MainViewModel : ViewModelBase
             IsTextInputVisible = true;
 
             IsBusy = false;
-            return; // Early exit - don't check image when text changed
         }
 
-        // Only check image if text content hasn't changed (to reduce CPU load)
-        Bitmap? newImage;
+        // Images are evaluated every cycle now. The old early exit after a
+        // text change lost screenshots that arrive together with text
+        // (Office/browser copies carry both), and never fed them to the
+        // history or to AutoMode image processing.
+        await UpdateClipboardImage(cancellationToken);
+    }
+
+    private async Task UpdateClipboardImage(CancellationToken cancellationToken)
+    {
+        string[]? formats = await ClipboardService.GetFormatsAsync();
+        bool hasBitmap = formats?.Any(f => string.Equals(f, DataFormat.Bitmap.Identifier, StringComparison.OrdinalIgnoreCase)) == true;
+
+        if (!hasBitmap)
+        {
+            if (ClipboardImage != null)
+            {
+                ClipboardImage.Dispose();
+                ClipboardImage = null;
+                _clipboardImageSha = null;
+                IsImageInputVisible = false;
+                IsTextInputVisible = true;
+            }
+
+            ClipboardService.MarkImageSynced();
+            return;
+        }
+
+        // Cheap Windows clipboard-sequence gate: skip re-decoding while the
+        // clipboard payload is unchanged.
+        if (!ClipboardService.ImagePayloadMayHaveChanged())
+        {
+            return;
+        }
+
+        ClipboardService.MarkImageSynced();
+
+        ClipboardImageSnapshot? snapshot = await ClipboardService.GetImageSnapshotAsync();
+        if (snapshot == null)
+        {
+            return;
+        }
+
+        string sha = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(snapshot.PngBytes));
+        if (sha == _clipboardImageSha)
+        {
+            // Same image (the sequence probably changed due to another format).
+            snapshot.Bitmap.Dispose();
+            return;
+        }
+
+        Bitmap? previous = ClipboardImage;
+        ClipboardImage = snapshot.Bitmap;
+        previous?.Dispose();
+        _clipboardImageSha = sha;
+
+        ClipboardHistoryService.RecordImage(snapshot.PngBytes);
+
+        IsImageInputVisible = true;
+        IsTextInputVisible = false;
+
+        // AutoMode with a clipboard-sourced image task selected: a new
+        // screenshot is analyzed automatically - the intended flow for
+        // "copy screenshot, get the result".
+        if (AutoMode && initialized
+            && SelectedTaskConfiguration is { IsImageTask: true } imageTask
+            && imageTask.ImageSource == TaskConfiguration.ImageSourceClipboard
+            && !IsBusy)
+        {
+            await CaptureAndAnalyze();
+        }
+    }
+
+    // ==================== Clipboard history ====================
+
+    [ObservableProperty]
+    private ObservableCollection<ClipboardHistoryItem> _historyItems = [];
+
+    [ObservableProperty]
+    private ClipboardHistoryItem? _selectedHistoryItem;
+
+    [ObservableProperty]
+    private string _historyFilter = "";
+
+    partial void OnHistoryFilterChanged(string value) => LoadHistory();
+
+    public void LoadHistory()
+    {
+        List<ClipboardHistoryItem> items = ClipboardHistoryService.GetItems(HistoryFilter);
+        HistoryItems.Clear();
+        foreach (ClipboardHistoryItem item in items)
+        {
+            HistoryItems.Add(item);
+        }
+    }
+
+    [RelayCommand]
+    private async Task ShowHistory()
+    {
+        if (mainWindow == null)
+        {
+            return;
+        }
+
+        LoadHistory();
+        ClipboardHistoryWindow window = new() { DataContext = this };
+        await window.ShowDialog(mainWindow);
+    }
+
+    /// <summary>Copies the selected history entry back to the clipboard.</summary>
+    [RelayCommand]
+    private async Task RestoreHistoryItem()
+    {
+        if (SelectedHistoryItem is not { } item)
+        {
+            return;
+        }
+
         try
         {
-            newImage = await ClipboardService.GetImage();
-        }
-        catch (Exception e)
-        {
-            if (e is InvalidOperationException)
+            if (item.IsImage)
             {
-                // Ignore the exception if the clipboard does not contain image
-                newImage = null;
+                if (item.ImagePath == null || !File.Exists(item.ImagePath))
+                {
+                    ShowErrorMessage("History image file is missing.");
+                    return;
+                }
+
+                await ClipboardService.SetImageFile(item.ImagePath);
+                LoadImageIntoClipboardSlot(File.ReadAllBytes(item.ImagePath));
             }
             else
             {
-                ErrorMessages?.Add(e.Message);
-                return;
+                await ClipboardService.SetText(item.Content);
+                ClipboardContent = item.Content;
+                Input = item.Content;
+                ClipboardService.LastInput = item.Content ?? "";
+                IsTextInputVisible = true;
+                IsImageInputVisible = false;
             }
+
+            mainWindow?.ShowNotification("ClippyAI", Resources.Resources.HistoryRestored, false, false, 3000);
+        }
+        catch (Exception ex)
+        {
+            ErrorMessages?.Add(ex.Message);
+            ShowErrorMessage(ex.Message);
+        }
+    }
+
+    /// <summary>Runs the currently selected task against the selected history entry.</summary>
+    [RelayCommand]
+    private async Task ExecuteHistoryItem()
+    {
+        if (SelectedHistoryItem is not { } item)
+        {
+            return;
         }
 
-        // Check if the image has changed
-        if (newImage != null && newImage != ClipboardImage)
+        try
         {
-            ClipboardImage = newImage;
-            IsImageInputVisible = true;
-            IsTextInputVisible = false;
+            if (item.IsImage)
+            {
+                if (item.ImagePath == null || !File.Exists(item.ImagePath))
+                {
+                    ShowErrorMessage("History image file is missing.");
+                    return;
+                }
+
+                LoadImageIntoClipboardSlot(File.ReadAllBytes(item.ImagePath));
+                await CaptureAndAnalyze();
+            }
+            else
+            {
+                Input = item.Content;
+                ClipboardService.LastInput = item.Content ?? "";
+                await AskClippy(_askClippyCts.Token);
+            }
         }
-        else if (newImage == null && ClipboardImage != null)
+        catch (Exception ex)
         {
-            // Image was removed from clipboard
-            ClipboardImage = null;
-            IsImageInputVisible = false;
-            IsTextInputVisible = true;
+            ErrorMessages?.Add(ex.Message);
+            ShowErrorMessage(ex.Message);
+        }
+    }
+
+    [RelayCommand]
+    private void DeleteHistoryItem()
+    {
+        if (SelectedHistoryItem is { } item)
+        {
+            ClipboardHistoryService.Delete(item.Id);
+            LoadHistory();
+        }
+    }
+
+    [RelayCommand]
+    private void ClearHistory()
+    {
+        ClipboardHistoryService.ClearAll();
+        LoadHistory();
+    }
+
+    private void LoadImageIntoClipboardSlot(byte[] pngBytes)
+    {
+        Bitmap bitmap;
+        using (MemoryStream ms = new(pngBytes))
+        {
+            bitmap = new Bitmap(ms);
+        }
+
+        Bitmap? previous = ClipboardImage;
+        ClipboardImage = bitmap;
+        previous?.Dispose();
+        _clipboardImageSha = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(pngBytes));
+        ClipboardService.MarkImageSynced();
+        IsImageInputVisible = true;
+        IsTextInputVisible = false;
+    }
+
+    // ==================== Application manual generator ====================
+
+    /// <summary>
+    /// Creates a user manual from the selected (image) history entries: one
+    /// vision pass per screenshot plus an assembly pass. Background knowledge
+    /// (app profile + ClickHouse RAG) reaches the model through the dynamic
+    /// system prompts; the ClickHouse augmentation happens centrally in
+    /// OllamaService.SendRequestWithConfig/AnalyzeImage.
+    /// </summary>
+    public async Task GenerateManualAsync(IReadOnlyList<ClipboardHistoryItem> selectedItems)
+    {
+        if (mainWindow == null)
+        {
+            return;
+        }
+
+        List<ClipboardHistoryItem> images = selectedItems
+            .Where(i => i.IsImage && i.ImagePath != null && File.Exists(i.ImagePath))
+            .OrderBy(i => i.CreatedAt)
+            .ToList();
+
+        if (images.Count == 0)
+        {
+            ShowErrorMessage(Resources.Resources.ManualNeedsImages);
+            return;
+        }
+
+        ManualDialogViewModel dialogVm = new(images.FirstOrDefault()?.SourceContext);
+        ManualContextDialog dialog = new() { DataContext = dialogVm };
+        bool? dialogConfirmed = await dialog.ShowDialog<bool>(mainWindow);
+        if (dialogConfirmed != true)
+        {
+            return;
+        }
+
+        string appLine = dialogVm.AppName
+                       + (string.IsNullOrWhiteSpace(dialogVm.AppVersion) ? "" : " " + dialogVm.AppVersion.Trim());
+        string language = string.IsNullOrWhiteSpace(dialogVm.Language) ? "English" : dialogVm.Language.Trim();
+        bool wasBusy = IsBusy;
+        IsBusy = true;
+
+        try
+        {
+            TaskConfiguration baseConfig = TaskConfigurations.FirstOrDefault(t =>
+                    t.TaskName.Equals(ManualTaskName, StringComparison.OrdinalIgnoreCase))
+                ?? new TaskConfiguration { TaskName = ManualTaskName, Model = Model, IsImageTask = true };
+
+            StringBuilder sections = new();
+            for (int i = 0; i < images.Count; i++)
+            {
+                mainWindow.ShowNotification("ClippyAI",
+                    string.Format(Resources.Resources.ManualProgress, i + 1, images.Count), true, false);
+
+                byte[] bytes = await File.ReadAllBytesAsync(images[i].ImagePath!);
+                TaskConfiguration sectionConfig = CloneForPrompt(baseConfig,
+                    BuildSectionPrompt(appLine, dialogVm, i + 1, images.Count, images[i].SourceContext));
+
+                string section = await OllamaService.AnalyzeImage(bytes, sectionConfig);
+                if (!string.IsNullOrWhiteSpace(section))
+                {
+                    sections.AppendLine(section.Trim());
+                    sections.AppendLine();
+                }
+            }
+
+            if (sections.Length == 0)
+            {
+                ShowErrorMessage("The vision model did not return any usable sections.");
+                return;
+            }
+
+            mainWindow.ShowNotification("ClippyAI", Resources.Resources.ManualAssembling, true, false);
+
+            string draft = sections.ToString();
+            if (draft.Length > 14000)
+            {
+                draft = draft.Substring(0, 14000);
+            }
+
+            TaskConfiguration assemblyConfig = CloneForPrompt(baseConfig,
+                BuildAssemblyPrompt(appLine, dialogVm, language));
+
+            string? manual = await OllamaService.SendRequestWithConfig(draft, ManualTaskName,
+                baseConfig.Model, assemblyConfig, _askClippyCts.Token);
+
+            if (string.IsNullOrWhiteSpace(manual))
+            {
+                ShowErrorMessage("Manual assembly failed.");
+                return;
+            }
+
+            await SetResponse(manual.Trim());
+
+            if (dialogVm.SaveAsFile)
+            {
+                await SaveManualAsync(appLine, manual.Trim());
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // Stop pressed - fine.
+        }
+        catch (Exception ex)
+        {
+            ErrorMessages?.Add(ex.Message);
+            ShowErrorMessage(ex.Message);
+        }
+        finally
+        {
+            mainWindow.HideLastNotification();
+            IsBusy = wasBusy;
+        }
+    }
+
+    public const string ManualTaskName = "Write Application Manual";
+
+    private static TaskConfiguration CloneForPrompt(TaskConfiguration source, string systemPrompt) => new()
+    {
+        Id = source.Id,
+        TaskName = source.TaskName,
+        SystemPrompt = systemPrompt,
+        Model = source.Model,
+        Temperature = source.Temperature,
+        MaxLength = Math.Max(source.MaxLength, 4096),
+        TopP = source.TopP,
+        TopK = source.TopK,
+        RepeatPenalty = source.RepeatPenalty,
+        NumCtx = Math.Max(source.NumCtx, 8192),
+        IsActive = source.IsActive,
+        IsImageTask = source.IsImageTask,
+        ImageSource = source.ImageSource,
+        CreatedAt = source.CreatedAt,
+        UpdatedAt = source.UpdatedAt
+    };
+
+    private string BuildSectionPrompt(string appLine, ManualDialogViewModel vm, int index, int total, string? windowContext)
+    {
+        StringBuilder sb = new();
+        sb.AppendLine($"You are a precise technical writer producing one section of a user manual for the application \"{appLine}\".");
+        if (!string.IsNullOrWhiteSpace(vm.AppNotes))
+        {
+            sb.AppendLine($"Application purpose and background: {vm.AppNotes.Trim()}");
+        }
+
+        if (!string.IsNullOrWhiteSpace(vm.Audience))
+        {
+            sb.AppendLine($"Target audience: {vm.Audience.Trim()}");
+        }
+
+        if (!string.IsNullOrWhiteSpace(windowContext))
+        {
+            sb.AppendLine($"Captured in window/process: {windowContext.Trim()}");
+        }
+
+        sb.AppendLine("Additional authentic background knowledge may be appended below; treat it as factual.");
+        sb.AppendLine($"Write the section in {vm.Language}.");
+        sb.AppendLine($"This is screenshot {index} of {total}. Write ONLY the Markdown section for the visible screen or dialog:");
+        sb.AppendLine("- '## <screen/dialog title>' derived from the visible title bar or tabs, not invented");
+        sb.AppendLine("- one short description paragraph of what this screen is for");
+        sb.AppendLine("- a bulleted '### Controls' list of the visible interactive elements and what they do");
+        sb.AppendLine("- a short '### Workflow' paragraph of the typical task performed here");
+        sb.AppendLine("Ground every statement in the screenshot and the background knowledge. Never invent menus, buttons or features that are not visible; say 'unknown' where unsure.");
+        sb.Append("Output only the section Markdown, no preamble.");
+        return sb.ToString();
+    }
+
+    private static string BuildAssemblyPrompt(string appLine, ManualDialogViewModel vm, string language)
+    {
+        return $"You are a technical editor. Combine the draft sections provided as user content into ONE coherent user manual for \"{appLine}\" in {language}.\n" +
+               "Structure: '# ' title line; a short introduction paragraph (use only given background, no marketing); a '## Contents' list linking the sections; the sections (you may smooth wording and fix headings, but add no new facts); a final '## Tips' section with 3-5 tips derived strictly from the sections.\n" +
+               "Output only the complete Markdown document.";
+    }
+
+    private async Task SaveManualAsync(string appLine, string manual)
+    {
+        try
+        {
+            if (mainWindow?.StorageProvider is null)
+            {
+                return;
+            }
+
+            string safeName = string.Join("_", appLine.Split(Path.GetInvalidFileNameChars(), StringSplitOptions.RemoveEmptyEntries));
+            if (safeName.Length == 0)
+            {
+                safeName = "Manual";
+            }
+
+            var file = await mainWindow.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+            {
+                SuggestedFileName = $"{safeName}-Manual.md",
+                DefaultExtension = "md",
+                FileTypeChoices = [new FilePickerFileType("Markdown") { Patterns = ["*.md", "*.txt"] }]
+            });
+            if (file is not null)
+            {
+                await using Stream stream = await file.OpenWriteAsync();
+                await using StreamWriter writer = new(stream);
+                await writer.WriteAsync(manual);
+                mainWindow.ShowNotification("ClippyAI", Resources.Resources.HistoryRestored + " ✓ " + file.Name, false, false, 4000);
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Manual file save failed: {ex.Message}");
         }
     }
 

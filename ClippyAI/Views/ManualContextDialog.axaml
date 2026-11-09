@@ -1,0 +1,81 @@
+<Window xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="clr-namespace:ClippyAI.ViewModels"
+    xmlns:resources="clr-namespace:ClippyAI.Resources"
+    x:Class="ClippyAI.Views.ManualContextDialog"
+    x:DataType="vm:ManualDialogViewModel"
+    Title="{x:Static resources:Resources.ManualContextTitle}"
+    Width="560" SizeToContent="Height"
+    MaxHeight="760"
+    WindowStartupLocation="CenterOwner"
+    TransparencyLevelHint="AcrylicBlur"
+    Background="Transparent"
+    ExtendClientAreaToDecorationsHint="True"
+    ExtendClientAreaTitleBarHeightHint="-1"
+    Topmost="True"
+    CanResize="True"
+    ShowInTaskbar="False">
+
+    <Border CornerRadius="14"
+            BorderBrush="{DynamicResource UiBorderBrush}"
+            BorderThickness="1"
+            Background="{DynamicResource UiWindowBgTranslucentBrush}"
+            ClipToBounds="True">
+        <DockPanel LastChildFill="True">
+
+            <Border DockPanel.Dock="Top" Padding="24,20,24,10" Background="Transparent"
+                    WindowDecorationProperties.ElementRole="TitleBar">
+                <StackPanel Spacing="2">
+                    <TextBlock Text="{x:Static resources:Resources.ManualContextTitle}"
+                               FontSize="18" FontWeight="SemiBold" />
+                    <TextBlock Text="{x:Static resources:Resources.ManualContextSubtitle}"
+                               Classes="hint" TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+
+            <Border DockPanel.Dock="Bottom" Padding="24,14,24,18"
+                    Background="{DynamicResource UiSurfaceBrush}"
+                    BorderBrush="{DynamicResource UiBorderBrush}" BorderThickness="0,1,0,0">
+                <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
+                    <Button Name="CancelButton" Width="112" IsCancel="True"
+                            Content="{x:Static resources:Resources.Cancel}" />
+                    <Button Name="OkButton" Classes="accent" Width="112" IsDefault="True"
+                            Content="{x:Static resources:Resources.Generate}" />
+                </StackPanel>
+            </Border>
+
+            <StackPanel Margin="24,10,24,18" Width="512" HorizontalAlignment="Left" Spacing="0">
+                <Label Content="{x:Static resources:Resources.ManualProfile}" />
+                <ComboBox ItemsSource="{Binding ProfileNames}"
+                          SelectedItem="{Binding SelectedProfile}"
+                          PlaceholderText="{x:Static resources:Resources.ManualProfileNone}" />
+
+                <Label Content="{x:Static resources:Resources.ManualAppName}" />
+                <TextBox Text="{Binding AppName}" />
+
+                <Label Content="{x:Static resources:Resources.ManualAppVersion}" />
+                <TextBox Text="{Binding AppVersion}" />
+
+                <Label Content="{x:Static resources:Resources.ManualAppNotes}" />
+                <TextBox Text="{Binding AppNotes}" Height="84" TextWrapping="Wrap" AcceptsReturn="True" />
+
+                <Label Content="{x:Static resources:Resources.ManualAudience}" />
+                <TextBox Text="{Binding Audience}" />
+
+                <Label Content="{x:Static resources:Resources.ManualLanguage}" />
+                <ComboBox ItemsSource="{Binding LanguageItems}"
+                          SelectedItem="{Binding Language}" />
+
+                <CheckBox IsChecked="{Binding SaveProfile}"
+                          Content="{x:Static resources:Resources.ManualSaveProfile}" />
+                <CheckBox IsChecked="{Binding SaveAsFile}"
+                          Content="{x:Static resources:Resources.ManualSaveAsFile}" />
+
+                <TextBlock Text="{Binding ErrorMessage}"
+                           Foreground="{DynamicResource UiDangerBrush}"
+                           IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                           TextWrapping="Wrap" Margin="0,6,0,0" />
+            </StackPanel>
+        </DockPanel>
+    </Border>
+</Window>

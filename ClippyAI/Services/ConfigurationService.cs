@@ -91,9 +91,47 @@ public static class ConfigurationService
         // Insert default task configurations if none exist
         InsertDefaultTaskConfigurations(connection);
 
+        // The manual generator needs an image task as model/parameter carrier;
+        // add it to existing installs that predate the feature.
+        EnsureManualTask(connection);
+
         // Migrate legacy tasks
         connection.Close();
         MigrateLegacyTasks();
+
+        // Clipboard history (table in the same database, PNG files beside it)
+        ClipboardHistoryService.Initialize();
+    }
+
+    private static void EnsureManualTask(SqliteConnection connection)
+    {
+        try
+        {
+            using SqliteCommand check = new("SELECT COUNT(*) FROM TaskConfigurations WHERE TaskName = @name", connection);
+            _ = check.Parameters.AddWithValue("@name", Views.MainViewModel.ManualTaskName);
+
+            if (Convert.ToInt64(check.ExecuteScalar()) > 0)
+            {
+                return;
+            }
+
+            SaveTaskConfiguration(new TaskConfiguration
+            {
+                TaskName = Views.MainViewModel.ManualTaskName,
+                SystemPrompt = "You are a meticulous technical writer. Based on the provided screenshot and the background knowledge you write precisely one Markdown section of a user manual. Ground every statement in visible UI or given background information; never invent features; mark unknown details as 'unknown'.",
+                Model = GetConfigurationValue("OllamaModel", ""),
+                Temperature = 0.4,
+                MaxLength = 4096,
+                NumCtx = 8192,
+                IsActive = true,
+                IsImageTask = true,
+                ImageSource = TaskConfiguration.ImageSourceClipboard
+            }, connection);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"EnsureManualTask failed: {ex.Message}");
+        }
     }
 
     private static void MigrateTaskConfigurationsSchema(SqliteConnection connection)

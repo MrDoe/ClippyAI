@@ -252,7 +252,8 @@ namespace ClippyAI.Services
             // with SetLastError; calling kernel32 GetLastError() as an extra
             // P/Invoke can already return a clobbered value.
             int err = Marshal.GetLastWin32Error();
-            Console.WriteLine($"Failed to register {entry.Display} (Win32 error {err}). " +
+            Console.WriteLine($"Failed to register {entry.Display} (Win32 error {err}, " +
+                              $"modifiers=0x{modifiers:X4}, vk=0x{hotkey.VirtualKey:X2}, hWnd=0x{_windowHandle.ToInt64():X}). " +
                               (err == 1420
                                   ? "Another application or another ClippyAI instance already owns this hotkey."
                                   : "The combination may be reserved by another app or by the keyboard layout (AltGr)."));

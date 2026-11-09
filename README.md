@@ -131,6 +131,22 @@ Image analysis is now integrated into the task system. You can create dedicated 
 
 Default image tasks "Analyze Clipboard Image" and "Analyze Webcam Image" are provided out of the box.
 
+**Clipboard History**
+
+Every copied text and every copied screenshot is recorded in a history (SQLite table plus PNG files under `%APPDATA%\ClippyAI\History`, hash-deduplicated, capped at the newest 200 entries — configurable via `ClipboardHistoryLimit`, disable with `ClipboardHistoryEnabled=False`). Open it via the clock icon in the Clipboard card or the tray icon menu:
+
+- Filter, restore (double-click), and execute the selected task against any entry.
+- Image entries show thumbnails and the window they were captured in.
+- Delete single entries (Del key) or clear everything.
+
+**Application Manual Generator**
+
+Select one or more screenshots in the history and press `Generate Manual`. ClippyAI asks for the application background (name — pre-filled from the captured window — version, purpose, audience, language), analyzes every screenshot with the configured vision model (one manual section per screenshot) and assembles the sections into a complete Markdown user manual with introduction, table of contents and tips. The manual lands in the output/clipboard and can be saved as a `.md` file. A task named "Write Application Manual" carries the model and parameters and can be adjusted like every other task.
+
+**Knowledge (ClickHouse RAG)**
+
+If a ClickHouse server with an OpenCodeRAG index is available (the team's instance indexes the project sources *and* the shared quirk database), enable the `Knowledge` tab in the configuration: before every task and every manual section, ClippyAI retrieves the most relevant chunks (vector search when the configured embedding model matches the stored dimension, keyword search otherwise) and appends them to the system prompt as factual background. Retrieval failures never block a task — the knowledge block is simply omitted. In corporate networks use the server's **IP address** instead of its hostname; ClippyAI always bypasses the system proxy for this connection.
+
 **Keyboard Shortcuts**
 
 ClippyAI provides convenient global hotkeys that work even when the window is hidden or minimized:
