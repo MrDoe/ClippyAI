@@ -1,7 +1,7 @@
 ---
 title: Clipboard history, manual generator, ClickHouse knowledge (RAG)
 tags: [clipboard, history, manual, rag, clickhouse, opencoderag, vision]
-sourceRefs: [ClippyAI/Services/ClipboardHistoryService.cs, ClippyAI/Services/ClickHouseKnowledgeService.cs, ClippyAI/ViewModels/MainViewModel.cs, ClippyAI/Views/ClipboardHistoryWindow.axaml, ClippyAI/Services/OllamaService.cs]
+sourceRefs: [ClippyAI/Services/ClipboardHistoryService.cs, ClippyAI/Services/ClickHouseKnowledgeService.cs, ClippyAI/Services/OpenAIService.cs, ClippyAI/Models/OpenAIModels.cs, ClippyAI/ViewModels/MainViewModel.cs, ClippyAI/Views/ClipboardHistoryWindow.axaml, ClippyAI/Services/OllamaService.cs]
 lastReviewed: 2026-11-09
 ---
 
@@ -18,6 +18,10 @@ Old flaws fixed in `MainViewModel.UpdateClipboardContent`: image changes are det
 ## Manual generator (`MainViewModel.GenerateManualAsync`)
 
 Entry point: History window → select screenshots → Generate Manual → `ManualContextDialog`/`ManualDialogViewModel` (app name/version/notes/audience/language; profiles persisted as `ManualProfile::<name>` keys + `ManualProfileList`). Pipeline: per screenshot one `OllamaService.AnalyzeImage` pass with a dynamic section prompt (`BuildSectionPrompt`, grounding instructions, window context line, screenshot i/N), then one assembly pass (`SendRequestWithConfig` with `BuildAssemblyPrompt`) → Markdown manual → `SetResponse` (output+clipboard) and optional save-file (`StorageProvider.SaveFilePickerAsync`). Model/params come from the default task **Write Application Manual** (`ConfigurationService.EnsureManualTask`, IsImageTask, MaxLength≥4096, NumCtx≥8192 via `CloneForPrompt`).
+
+## Vision provider paths (fixed in v1.7.2)
+
+`AnalyzeImage` exists on both providers. The Ollama provider passes base64 images natively. The OpenAI provider (`OpenAIService.AnalyzeImage`) had two latent bugs, surfaced only by the real GUI + llama-swap (vLLM backend): (1) it computed the base64 image and discarded it (`_ =`), sending `content` as a plain string — the image was never actually transmitted; now it sends proper multimodal parts `content=[{type:"text"},{type:"image_url",url:"data:image/png;base64,…"}]` via `OpenAIVisionMessage`/`OpenAIContentPart` (`OpenAIRequest.Messages` is `object[]`, STJ serializes runtime types). (2) Unset nullable `OpenAIRequest` properties serialized as explicit `null` (`"stream": null`, `"frequency_penalty": null`) which strict pydantic backends reject with HTTP 400 — all request serialization now uses `JsonIgnoreCondition.WhenWritingNull`. Vision `MaxTokens` = `RequestLimits.MaxOutputTokens` (8192). Error surfaced as the app's own `ErrorMessageDialog` (class `ErrorMessageDialog`, UIA title "Window").
 
 ## ClickHouse knowledge (`ClickHouseKnowledgeService`)
 
