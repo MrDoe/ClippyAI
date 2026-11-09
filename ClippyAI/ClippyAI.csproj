@@ -60,8 +60,8 @@
     <PackageReference Condition="'$(OS)' == 'Windows_NT'" Include="Emgu.CV.runtime.mini.windows" Version="4.13.0.5924" />
     <PackageReference Condition="'$(OS)' != 'Windows_NT'" Include="Emgu.CV.runtime.mini.ubuntu-x64" Version="4.12.0.5764" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.12" />
+    <PackageReference Include="LanceDB" Version="2.5.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.12" />
-    <PackageReference Include="Npgsql" Version="10.0.3" />
     <PackageReference Include="ReactiveUI" Version="24.2.0" />
     <PackageReference Include="ReactiveUI.Avalonia" Version="12.1.2" />
     <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.53.3" />
@@ -108,10 +108,55 @@
     <PostInstallScript>chmod 777 /usr/share/ClippyAI
 chmod 666 /usr/share/ClippyAI/ClippyAI.dll.config</PostInstallScript>  
   </PropertyGroup>
+  <PropertyGroup>
+    <Authors>Christoph Döllinger</Authors>
+    <PackageProjectUrl>https://github.com/MrDoe/ClippyAI</PackageProjectUrl>
+    <PackageDescription>ClippyAI is an AI assistant that captures your clipboard, sends it to a local AI provider and puts the response back into your clipboard.</PackageDescription>
+  </PropertyGroup>
+  <!-- Dependencies of the generated .deb package (see the CreateDeb target of Packaging.Targets) -->
+  <ItemGroup Condition="'$(OS)' != 'Windows_NT'">
+    <DebDotNetDependencies Include="dotnet-runtime-10.0" />
+    <DebDependency Include="libc6" />
+    <DebDependency Include="libgcc1" />
+    <DebDependency Include="libgssapi-krb5-2" />
+    <DebDependency Include="libstdc++6" />
+    <DebDependency Include="zlib1g" />
+  </ItemGroup>
   <ItemGroup Condition="'$(OS)' == 'Windows_NT'">
     <Compile Remove="Services\LinuxHotkeyService.cs" />
   </ItemGroup>
   <ItemGroup Condition="'$(OS)' != 'Windows_NT'">
     <Compile Remove="Services\WindowsHotkeyService.cs" />
   </ItemGroup>
+  <!--
+    A portable publish (no RuntimeIdentifier) copies the native assets of every
+    runtime identifier a package ships. That put 37 RID folders (~686 MB) into
+    the publish output and the .deb. Keep only the native libraries that can be
+    loaded on the target OS:
+      Linux:   linux-x64 (SkiaSharp, HarfBuzz, SQLitePCLRaw) and ubuntu-x64
+               (Emgu.CV's libcvextern.so).
+      Windows: win-x64 (SkiaSharp, HarfBuzz, ANGLE, Emgu) and win.
+    Managed runtime assets (runtimes/*/lib) are left untouched: they are small
+    and provide fallbacks the host may need.
+  -->
+  <Target Name="FilterNativeAssetsForPackage"
+          AfterTargets="ComputeResolvedFilesToPublishList"
+          Condition="'$(RuntimeIdentifier)' == ''">
+    <ItemGroup Condition="'$(OS)' != 'Windows_NT'">
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)"
+        Condition="$([System.String]::Copy('%(ResolvedFileToPublish.RelativePath)').Replace('\','/').StartsWith('runtimes/'))
+          and ($([System.String]::Copy('%(ResolvedFileToPublish.RelativePath)').Replace('\','/').Contains('/native/'))
+            or $([System.String]::Copy('%(ResolvedFileToPublish.RelativePath)').Replace('\','/').Contains('/nativeassets/')))
+          and !$([System.String]::Copy('%(ResolvedFileToPublish.RelativePath)').Replace('\','/').StartsWith('runtimes/linux-x64/native/'))
+          and !$([System.String]::Copy('%(ResolvedFileToPublish.RelativePath)').Replace('\','/').StartsWith('runtimes/ubuntu-x64/native/'))" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(OS)' == 'Windows_NT'">
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)"
+        Condition="$([System.String]::Copy('%(ResolvedFileToPublish.RelativePath)').Replace('\','/').StartsWith('runtimes/'))
+          and ($([System.String]::Copy('%(ResolvedFileToPublish.RelativePath)').Replace('\','/').Contains('/native/'))
+            or $([System.String]::Copy('%(ResolvedFileToPublish.RelativePath)').Replace('\','/').Contains('/nativeassets/')))
+          and !$([System.String]::Copy('%(ResolvedFileToPublish.RelativePath)').Replace('\','/').StartsWith('runtimes/win-x64/native/'))
+          and !$([System.String]::Copy('%(ResolvedFileToPublish.RelativePath)').Replace('\','/').StartsWith('runtimes/win/native/'))" />
+    </ItemGroup>
+  </Target>
 </Project>

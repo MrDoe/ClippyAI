@@ -4,6 +4,7 @@ using EvDevSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.Versioning;
 using System.Threading;
@@ -25,15 +26,32 @@ public class LinuxHotkeyService
         DataContext = Window.DataContext as MainViewModel;
 
         // get keyboard device from configuration file
-        Keyboard = ConfigurationService.GetConfigurationValue("LinuxKeyboardDevice") switch
-        {
-            { } name when !string.IsNullOrEmpty(name) => EvDevDevice.GetDevices().FirstOrDefault(d => d.Name == name),
-            _ => null
-        };
+        Keyboard = FindConfiguredDevice();
 
         if (Keyboard != null)
         {
             StartMonitoring();
+        }
+    }
+
+    private static EvDevDevice? FindConfiguredDevice()
+    {
+        string name = ConfigurationService.GetConfigurationValue("LinuxKeyboardDevice");
+        if (string.IsNullOrEmpty(name))
+        {
+            return null;
+        }
+
+        try
+        {
+            return EvDevDevice.GetDevices().FirstOrDefault(d => d.Name == name);
+        }
+        catch (Exception ex)
+        {
+            // The device may be gone, or reading /dev/input may not be permitted.
+            // Do not take the app down at startup; the settings button explains it.
+            System.Diagnostics.Debug.WriteLine($"Could not load keyboard device '{name}': {ex.Message}");
+            return null;
         }
     }
 
@@ -44,35 +62,43 @@ public class LinuxHotkeyService
     {
         if (!OperatingSystem.IsLinux())
         {
-            throw new Exception("This feature is only supported on Linux.");
+            throw new PlatformNotSupportedException("This feature is only supported on Linux.");
         }
 
-        List<EvDevDevice> devices = EvDevDevice.GetDevices().OrderBy(d => d.DevicePath).ToList();
-        if (!devices.Any())
+        List<EvDevDevice> devices = GetReadableDevices();
+
+        // A keyboard is identified by its key set, not by its name: many
+        // keyboards are called "AT Raw Set 2 keyboard", "N-KEY Device",
+        // "Logitech K380" and so on. Requiring "keyboard" in the name hid them.
+        List<EvDevDevice> keyboards = devices
+            .Where(IsKeyboard)
+            // Prefer the device whose name says "keyboard", then the one with
+            // the richest key set (secondary HID interfaces often expose more
+            // media keys than the real keyboard).
+            .OrderByDescending(d => d.Name?.Contains("keyboard", StringComparison.OrdinalIgnoreCase) == true)
+            .ThenByDescending(d => d.Keys?.Count ?? 0)
+            .ToList();
+
+        if (keyboards.Count == 0)
         {
-            throw new Exception("Devices are not queryable!");
+            throw new InvalidOperationException(
+                "No keyboard device was found. Make sure your user can read /dev/input/event* (group 'input').");
         }
 
-        // get all keyboard devices
-        List<EvDevDevice> keyboards = devices.Where(d => d.GuessedDeviceType == EvDevGuessedDeviceType.Keyboard &&
-                                      d.Name!.ToLower().Contains("keyboard")).ToList();
+        EvDevDevice selected;
 
-        if (!keyboards.Any()) // no keyboard device was found
+        if (keyboards.Count == 1)
         {
-            throw new Exception("No keyboard device was found.");
+            selected = keyboards[0];
         }
-        else if (keyboards.Count == 1) // only one keyboard device was found
+        else
         {
-            Keyboard = keyboards[0];
-            Window!.HideLastNotification();
-            Window.ShowNotification("ClippyAI", $"Keyboard device detected: {Keyboard.Name}", false, false);
-        }
-        else // multiple keyboard devices were found
-        {
-            List<string?> keyboardNames = keyboards.Select(k => k.Name).ToList() ?? throw new Exception("No keyboard device was found.");
-
-            // convert to ObservableCollection
-            ObservableCollection<string> keyboardNamesCollection = new(keyboardNames!);
+            List<string> keyboardNames = keyboards
+                .Select(k => k.Name)
+                .Where(n => !string.IsNullOrWhiteSpace(n))
+                .Select(n => n!)
+                .Distinct()
+                .ToList();
 
             string? selectedDeviceName = await InputDialog.Prompt(
                 parentWindow: Window!,
@@ -80,8 +106,8 @@ public class LinuxHotkeyService
                 caption: "Select a keyboard device:",
                 subtext: "Please test it after clicking OK by pressing [Ctrl]+[Alt]+[C] hotkey.",
                 isRequired: true,
-                initialValue: Keyboard?.Name ?? "",
-                comboBoxItems: keyboardNamesCollection
+                initialValue: Keyboard?.Name ?? keyboardNames.FirstOrDefault() ?? "",
+                comboBoxItems: new ObservableCollection<string>(keyboardNames)
             );
 
             if (string.IsNullOrEmpty(selectedDeviceName))
@@ -89,18 +115,122 @@ public class LinuxHotkeyService
                 return;
             }
 
-            Keyboard = keyboards.FirstOrDefault(k => k.Name == selectedDeviceName);
+            selected = keyboards.FirstOrDefault(k => k.Name == selectedDeviceName)
+                ?? throw new InvalidOperationException($"Keyboard device '{selectedDeviceName}' is no longer available.");
         }
 
-        if (Keyboard != null)
+        SelectDevice(selected);
+        Window?.ShowNotification("ClippyAI", $"Keyboard device: {selected.Name}", false, false);
+    }
+
+    private void SelectDevice(EvDevDevice device)
+    {
+        // Keep the live instance when the same device is re-selected: replacing
+        // it would start a second reader on the same event node.
+        if (Keyboard?.DevicePath != device.DevicePath)
         {
-            // save to configuration database
-            if (Keyboard.Name != null)
-            {
-                ConfigurationService.SetConfigurationValue("LinuxKeyboardDevice", Keyboard.Name);
-            }
-            StartMonitoring();
+            StopMonitoringCurrent();
+            Keyboard = device;
         }
+
+        if (!string.IsNullOrEmpty(Keyboard?.Name))
+        {
+            ConfigurationService.SetConfigurationValue("LinuxKeyboardDevice", Keyboard.Name);
+        }
+
+        StartMonitoring();
+    }
+
+    private void StopMonitoringCurrent()
+    {
+        EvDevDevice? previous = Keyboard;
+        if (previous == null)
+        {
+            return;
+        }
+
+        // Unsubscribe first, otherwise the old device keeps firing hotkeys
+        // until its blocked read returns.
+        previous.OnKeyEvent -= OnKeyEvent;
+
+        // EvDevSharp blocks in read() and StopMonitoring() waits for the next
+        // event, so never call this synchronously on the UI thread.
+        _ = Task.Run(() =>
+        {
+            try
+            {
+                previous.StopMonitoring();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Could not stop monitoring {previous.DevicePath}: {ex.Message}");
+            }
+        });
+    }
+
+    private const string InputPermissionMessage =
+        "ClippyAI is not allowed to read the keyboard devices in /dev/input.\n\n" +
+        "Add your user to the 'input' group, then log out and back in:\n\n" +
+        "    sudo usermod -aG input $USER\n\n" +
+        "Open this dialog again afterwards.";
+
+    private static List<EvDevDevice> GetReadableDevices()
+    {
+        string[] eventPaths;
+        try
+        {
+            eventPaths = Directory.GetFiles("/dev/input", "event*");
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException($"Cannot list /dev/input: {ex.Message}", ex);
+        }
+
+        if (eventPaths.Length == 0)
+        {
+            throw new InvalidOperationException("No input devices were found in /dev/input.");
+        }
+
+        if (!eventPaths.Any(IsReadable))
+        {
+            throw new UnauthorizedAccessException(InputPermissionMessage);
+        }
+
+        try
+        {
+            return EvDevDevice.GetDevices().OrderBy(d => d.DevicePath).ToList();
+        }
+        catch (AggregateException ex) when (ex.InnerExceptions.Any(e => e is UnauthorizedAccessException))
+        {
+            throw new UnauthorizedAccessException(InputPermissionMessage, ex);
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException($"Input devices are not queryable: {ex.Message}", ex);
+        }
+    }
+
+    private static bool IsReadable(string path)
+    {
+        try
+        {
+            using FileStream stream = File.Open(path, FileMode.Open, FileAccess.Read);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static bool IsKeyboard(EvDevDevice device)
+    {
+        List<EvDevKeyCode>? keys = device.Keys;
+        return keys != null
+            && keys.Contains(EvDevKeyCode.KEY_A)
+            && keys.Contains(EvDevKeyCode.KEY_Z)
+            && keys.Contains(EvDevKeyCode.KEY_SPACE)
+            && keys.Contains(EvDevKeyCode.KEY_ENTER);
     }
 
     private void OnKeyEvent(object sender, OnKeyEventArgs e)
@@ -220,12 +350,12 @@ public class LinuxHotkeyService
     {
         if (Keyboard == null)
         {
-            Console.WriteLine("No keyboard device was found.");
+            Console.WriteLine("No keyboard device is configured.");
             return;
         }
 
+        // StartMonitoring() is idempotent, so no need to stop a healthy reader.
         Keyboard.OnKeyEvent -= OnKeyEvent;
-        Keyboard.StopMonitoring();
         Keyboard.OnKeyEvent += OnKeyEvent;
         Keyboard.StartMonitoring();
     }

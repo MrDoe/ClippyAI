@@ -1,4 +1,12 @@
 {
+    // Tasks for building, packaging and running ClippyAI.
+    //
+    // The Linux packaging tasks (publish-linux-deb/rpm/tar) rely on the
+    // Packaging.Targets NuGet package. Its .deb writer compresses the payload
+    // with liblzma's multithreaded encoder, which fails intermittently on
+    // Linux with "Specified preset is not supported" (MSB4018). Forcing a
+    // single processor makes the package use liblzma's single threaded
+    // encoder, which is stable. Hence DOTNET_PROCESSOR_COUNT=1 below.
     "version": "2.0.0",
     "tasks": [
         {
@@ -59,6 +67,7 @@
                 "${workspaceFolder}/ClippyAI/ClippyAI.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary;ForceNoAlign",
+                "/p:Configuration=Release",
                 "/p:TargetFramework=net10.0-windows10.0.17763.0"
             ],
             "problemMatcher": "$msCompile"
@@ -98,7 +107,7 @@
         },
         {
             "label": "publish-linux-deb",
-            "dependsOn": "",
+            "dependsOn": ["build-release"],
             "command": "dotnet",
             "type": "process",
             "args": [
@@ -109,14 +118,19 @@
                 "/consoleloggerparameters:NoSummary;ForceNoAlign",
                 "/p:Configuration=Release"
             ],
-            "options":{
-                "cwd": "${workspaceFolder}/ClippyAI"
+            "options": {
+                // The packaging tasks receive the publish folder as a relative
+                // path, so they have to run in the project directory.
+                "cwd": "${workspaceFolder}/ClippyAI",
+                "env": {
+                    "DOTNET_PROCESSOR_COUNT": "1"
+                }
             },
             "problemMatcher": "$msCompile"
         },
         {
             "label": "publish-linux-rpm",
-            "dependsOn": "",
+            "dependsOn": ["build-release"],
             "command": "dotnet",
             "type": "process",
             "args": [
@@ -127,14 +141,17 @@
                 "/consoleloggerparameters:NoSummary;ForceNoAlign",
                 "/p:Configuration=Release"
             ],
-            "options":{
-                "cwd": "${workspaceFolder}/ClippyAI"
+            "options": {
+                "cwd": "${workspaceFolder}/ClippyAI",
+                "env": {
+                    "DOTNET_PROCESSOR_COUNT": "1"
+                }
             },
             "problemMatcher": "$msCompile"
         },
         {
             "label": "publish-linux-tar",
-            "dependsOn": "",
+            "dependsOn": ["build-release"],
             "command": "dotnet",
             "type": "process",
             "args": [
@@ -145,8 +162,11 @@
                 "/consoleloggerparameters:NoSummary;ForceNoAlign",
                 "/p:Configuration=Release"
             ],
-            "options":{
-                "cwd": "${workspaceFolder}/ClippyAI"
+            "options": {
+                "cwd": "${workspaceFolder}/ClippyAI",
+                "env": {
+                    "DOTNET_PROCESSOR_COUNT": "1"
+                }
             },
             "problemMatcher": "$msCompile"
         },

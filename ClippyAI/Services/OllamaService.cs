@@ -3,7 +3,6 @@ using Avalonia.Controls.ApplicationLifetimes;
 using ClippyAI.Interfaces;
 using ClippyAI.Models;
 using ClippyAI.Views;
-using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -26,13 +25,27 @@ public class OllamaProvider : IAIProvider
     };
     private static readonly HttpClient client = new(handler)
     {
-        Timeout = TimeSpan.FromMinutes(5)
+        // Timeouts are enforced per request with a linked CancellationTokenSource
+        // so a timeout can be reported instead of looking like a user cancel.
+        // This value is only a last-resort backstop.
+        Timeout = TimeSpan.FromSeconds(RequestLimits.MaxTimeoutSeconds)
     };
 
     private static string? url = ConfigurationService.GetConfigurationValue("OllamaUrl", "http://localhost:11434/api");
     private static string? system = ConfigurationService.GetConfigurationValue("System");
 
     public void UpdateConfig()
+    {
+        url = ResolveBaseUrl();
+        system = ConfigurationService.GetConfigurationValue("System");
+    }
+
+    /// <summary>
+    /// Resolves the Ollama API base URL, applying the SSH tunnel port when
+    /// tunneling is enabled. Shared with <see cref="EmbeddingService"/> so chat
+    /// and embedding traffic always reach the same endpoint.
+    /// </summary>
+    public static string ResolveBaseUrl()
     {
         string baseUrl = ConfigurationService.GetConfigurationValue("OllamaUrl", "http://localhost:11434/api");
 
@@ -50,24 +63,12 @@ public class OllamaProvider : IAIProvider
                     // Replace the port in the base URL with the tunnel port
                     Uri uri = new(baseUrl);
                     UriBuilder tunnelUri = new(uri) { Port = tunnelPort };
-                    url = tunnelUri.ToString();
-                }
-                else
-                {
-                    url = baseUrl; // Fallback to base URL if tunnel parsing fails
+                    return tunnelUri.ToString();
                 }
             }
-            else
-            {
-                url = baseUrl; // Fallback to base URL if no tunnel configured
-            }
-        }
-        else
-        {
-            url = baseUrl; // Use direct connection when SSH is disabled
         }
 
-        system = ConfigurationService.GetConfigurationValue("System");
+        return baseUrl;
     }
 
     public async Task<string?> SendRequestWithConfig(string input, string task, string model,
@@ -79,17 +80,18 @@ public class OllamaProvider : IAIProvider
 
         // Load advanced configuration options
         double temperature = taskConfig?.Temperature ?? 0.8;
-        int maxLength = taskConfig?.MaxLength ?? 2048;
+        int maxLength = RequestLimits.ClampOutputTokens(taskConfig?.MaxLength);
         double topP = taskConfig?.TopP ?? 0.9;
         int topK = taskConfig?.TopK ?? 40;
         double repeatPenalty = taskConfig?.RepeatPenalty ?? 1.1;
         int numCtx = taskConfig?.NumCtx ?? 2048;
         string modelToUse = taskConfig?.Model ?? model;
         string? systemPrompt = taskConfig?.SystemPrompt ?? system;
+        string userInput = RequestLimits.TruncateInput(input);
 
         OllamaRequest body = new()
         {
-            prompt = $"# TEXT\n\n'''{input.Trim()}'''\n# TASK\n\n'{task.Trim()}'",
+            prompt = $"# TEXT\n\n'''{userInput}'''\n# TASK\n\n'{task.Trim()}'",
             model = modelToUse,
             system = systemPrompt,
             stream = true,
@@ -106,38 +108,51 @@ public class OllamaProvider : IAIProvider
         };
         Console.WriteLine("Sending request...");
 
-        // send the request
-        using HttpResponseMessage response = await client.PostAsync(
-                             url + "/generate",
-                             new StringContent(JsonSerializer.Serialize(body),
-                             Encoding.UTF8,
-                             "application/json"),
-                             token).ConfigureAwait(false);
+        int timeoutSeconds = RequestLimits.TimeoutSeconds;
+        using CancellationTokenSource timeoutCts = RequestLimits.CreateTimeoutSource(token, timeoutSeconds);
 
-        if (response.IsSuccessStatusCode)
+        Console.WriteLine($"Ollama request: model={modelToUse}, num_predict={maxLength}, timeout={timeoutSeconds}s");
+
+        try
         {
-            Console.WriteLine("Request successful.");
+            // send the request
+            using HttpResponseMessage response = await client.PostAsync(
+                                 url + "/generate",
+                                 new StringContent(JsonSerializer.Serialize(body),
+                                 Encoding.UTF8,
+                                 "application/json"),
+                                 timeoutCts.Token).ConfigureAwait(false);
 
-            using Stream responseStream = await response.Content.ReadAsStreamAsync(token);
-            using StreamReader reader = new(responseStream);
-
-            string? line;
-            while ((line = await reader.ReadLineAsync(token)) != null &&
-                    !token.IsCancellationRequested)
+            if (response.IsSuccessStatusCode)
             {
-                if (!string.IsNullOrWhiteSpace(line))
+                Console.WriteLine("Request successful.");
+
+                using Stream responseStream = await response.Content.ReadAsStreamAsync(timeoutCts.Token);
+                using StreamReader reader = new(responseStream);
+
+                string? line;
+                while ((line = await reader.ReadLineAsync(timeoutCts.Token)) != null &&
+                        !timeoutCts.IsCancellationRequested)
                 {
-                    OllamaResponse? responseObj = JsonSerializer.Deserialize<OllamaResponse>(line);
-                    string? responseText = responseObj?.response;
-                    fullResponse += responseText;
+                    if (!string.IsNullOrWhiteSpace(line))
+                    {
+                        OllamaResponse? responseObj = JsonSerializer.Deserialize<OllamaResponse>(line);
+                        string? responseText = responseObj?.response;
+                        fullResponse += responseText;
+                    }
                 }
+                Console.WriteLine("Response fully received.");
             }
-            Console.WriteLine("Response fully received.");
+            else
+            {
+                string errorContent = await response.Content.ReadAsStringAsync(timeoutCts.Token);
+                throw new Exception($"Ollama request failed with status: {response.StatusCode}. Response: {errorContent}");
+            }
         }
-        else
+        catch (OperationCanceledException) when (!token.IsCancellationRequested)
         {
-            Console.WriteLine($"Request failed with status: {response.StatusCode}.");
-            //throw new Exception($"Request failed with status: {response.StatusCode}.");
+            // The linked token fired, but the caller did not cancel: this is our timeout.
+            throw RequestLimits.CreateTimeoutException(timeoutSeconds);
         }
 
         // remove double quotes from the beginning and end of the response
@@ -153,12 +168,14 @@ public class OllamaProvider : IAIProvider
     {
         List<string> models = [];
         HttpResponseMessage? response = null;
+        using CancellationTokenSource timeoutCts =
+            RequestLimits.CreateTimeoutSource(token, RequestLimits.MetadataTimeoutSeconds);
         try
         {
             UpdateConfig();
             response = await client.GetAsync(
                                  $"{url}/tags",
-                                 token).ConfigureAwait(false);
+                                 timeoutCts.Token).ConfigureAwait(false);
         }
         catch (Exception e)
         {
@@ -166,7 +183,7 @@ public class OllamaProvider : IAIProvider
         }
         if (response != null && response.IsSuccessStatusCode)
         {
-            using Stream stream = await response.Content.ReadAsStreamAsync(token);
+            using Stream stream = await response.Content.ReadAsStreamAsync(timeoutCts.Token);
             using StreamReader reader = new(stream);
             string? output = await reader.ReadToEndAsync();
 
@@ -213,21 +230,33 @@ public class OllamaProvider : IAIProvider
             stream = false
         };
 
-        using HttpResponseMessage response = await client.PostAsync(
-                             url + "/generate",
-                             new StringContent(JsonSerializer.Serialize(body),
-                             Encoding.UTF8,
-                             "application/json")).ConfigureAwait(false);
+        int timeoutSeconds = RequestLimits.TimeoutSeconds;
+        using CancellationTokenSource timeoutCts =
+            RequestLimits.CreateTimeoutSource(CancellationToken.None, timeoutSeconds);
 
-        if (response.IsSuccessStatusCode)
+        try
         {
-            string responseContent = await response.Content.ReadAsStringAsync();
-            OllamaResponse? responseObj = JsonSerializer.Deserialize<OllamaResponse>(responseContent);
-            return responseObj?.response ?? "Unable to analyze image.";
+            using HttpResponseMessage response = await client.PostAsync(
+                                 url + "/generate",
+                                 new StringContent(JsonSerializer.Serialize(body),
+                                 Encoding.UTF8,
+                                 "application/json"),
+                                 timeoutCts.Token).ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                string responseContent = await response.Content.ReadAsStringAsync(timeoutCts.Token);
+                OllamaResponse? responseObj = JsonSerializer.Deserialize<OllamaResponse>(responseContent);
+                return responseObj?.response ?? "Unable to analyze image.";
+            }
+            else
+            {
+                throw new Exception($"Image analysis failed with status: {response.StatusCode}.");
+            }
         }
-        else
+        catch (OperationCanceledException)
         {
-            throw new Exception($"Image analysis failed with status: {response.StatusCode}.");
+            throw RequestLimits.CreateTimeoutException(timeoutSeconds);
         }
     }
 
@@ -366,20 +395,16 @@ public class OllamaProvider : IAIProvider
 
 public static class OllamaService
 {
-    private static string? connectionString = ConfigurationService.GetConfigurationValue("PostgreSqlConnection");
-    private static string? pgOllamaUrl = ConfigurationService.GetConfigurationValue("PostgresOllamaUrl");
-    private static string? embeddingModel = ConfigurationService.GetConfigurationValue("EmbeddingModel");
+    /// <summary>
+    /// Cosine distance below which a new template counts as a duplicate of an
+    /// existing one. The previous pgvector implementation used an L2 distance of
+    /// 1, which is the same threshold for normalized embeddings.
+    /// </summary>
+    private const float DuplicateCosineDistance = 0.5f;
 
     // Provider instances
     private static readonly OllamaProvider ollamaProvider = new();
     private static readonly OpenAIService openAIProvider = new();
-
-    private static void UpdateConfig()
-    {
-        connectionString = ConfigurationService.GetConfigurationValue("PostgreSqlConnection");
-        pgOllamaUrl = ConfigurationService.GetConfigurationValue("PostgresOllamaUrl");
-        embeddingModel = ConfigurationService.GetConfigurationValue("EmbeddingModel");
-    }
 
     /// <summary>
     /// Gets the current AI provider based on configuration.
@@ -526,243 +551,136 @@ public static class OllamaService
     }
 
     /// <summary>
-    /// Stores the clipboard text and generates the embedding in the PostgreSql vector database.
+    /// Stores a clipboard/answer pair in the local vector database.
+    /// Embeddings are generated with the configured AI provider (Ollama or OpenAI).
     /// </summary>
     /// <param name="task">The task that was executed.</param>
-    /// <param name="clipboard_data">The clipboard_data/task to store.</param>
+    /// <param name="clipboard_data">The clipboard text that produced the answer.</param>
     /// <param name="answer">The answer to store.</param>
-    public static async Task StoreSqlEmbedding(string task, string clipboard_data, string answer)
+    /// <returns><c>true</c> when a new row was stored, <c>false</c> for a duplicate.</returns>
+    public static async Task<bool> StoreEmbedding(string task, string clipboard_data, string answer)
     {
-        UpdateConfig();
-
-        // Check if embeddings are enabled
-        string useEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings");
-        if (useEmbeddings != "True")
+        if (!EmbeddingsEnabled())
         {
             System.Diagnostics.Debug.WriteLine("Embeddings are disabled. Skipping storage.");
-            return;
+            return false;
         }
-
-        await using NpgsqlConnection conn = new(connectionString);
-        await conn.OpenAsync();
 
         clipboard_data = clipboard_data.Trim('\n').Trim();
-
-        // check if no similar embeddings exist
-        NpgsqlCommand cmd = new(@"
-            SELECT COUNT(*)
-            FROM clippy
-            WHERE task = @task
-            AND embedding_clipboard_data <-> ai.ollama_embed(@embedding_model, @clipboard_data) <= 1",
-        conn);
-
-        _ = cmd.Parameters.AddWithValue("task", task);
-        _ = cmd.Parameters.AddWithValue("clipboard_data", clipboard_data);
-        _ = cmd.Parameters.AddWithValue("embedding_model", embeddingModel ?? "nomic-embed-text");
-
-        int count = Convert.ToInt32(await cmd.ExecuteScalarAsync());
-        if (count > 0)
+        if (string.IsNullOrWhiteSpace(task) || string.IsNullOrWhiteSpace(clipboard_data))
         {
-            Console.WriteLine("Similar embedding already exists.");
-            return;
+            return false;
         }
 
-        // Insert the clipboard text and generate the embedding in a single command
-        cmd = new NpgsqlCommand(@"
-            INSERT INTO clippy (task, clipboard_data, answer, embedding_clipboard_data)
-            VALUES (@task,
-                   @clipboard_data,
-                   @answer,
-                   ai.ollama_embed(@embedding_model, @clipboard_data))", conn);
+        (string tableName, float[] vector) = await EmbedForStorageAsync(clipboard_data);
 
-        _ = cmd.Parameters.AddWithValue("task", task);
-        _ = cmd.Parameters.AddWithValue("clipboard_data", "search_document: " + clipboard_data);
-        _ = cmd.Parameters.AddWithValue("answer", answer);
-        _ = cmd.Parameters.AddWithValue("embedding_model", embeddingModel ?? "nomic-embed-text");
-        _ = await cmd.ExecuteNonQueryAsync();
+        bool stored = await EmbeddingStore.StoreAsync(
+            tableName, task, clipboard_data, answer, vector, DuplicateCosineDistance);
+
+        if (!stored)
+        {
+            Console.WriteLine("Similar embedding already exists.");
+        }
+
+        return stored;
     }
 
     /// <summary>
-    /// Retrieves the most similar answers by using embeddings from the PostgreSql vector database.
+    /// Retrieves the cached answers that are closest to <paramref name="clipboard_data"/>.
     /// </summary>
-    /// <param name="clipboard_data">The clipboard_data to use for retrieval.</param>
-    /// <param name="threshold">The threshold for similarity.</param>
-    /// <returns>The most similar answers as list of embeddings</returns>
+    /// <param name="task">Only answers stored for this task are considered.</param>
+    /// <param name="clipboard_data">The clipboard text to search for.</param>
+    /// <param name="threshold">Maximum cosine distance (lower is more similar).</param>
+    /// <returns>The matching answers, closest first.</returns>
     public static async Task<List<Embedding>> RetrieveAnswersForTask(string task, string clipboard_data, float threshold)
     {
-        UpdateConfig();
-
-        // Check if embeddings are enabled
-        string useEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings");
-        if (useEmbeddings != "True")
+        if (!EmbeddingsEnabled())
         {
             System.Diagnostics.Debug.WriteLine("Embeddings are disabled. Returning empty list.");
             return [];
         }
 
-        await using NpgsqlConnection conn = new(connectionString);
-        await conn.OpenAsync();
+        string provider = EmbeddingService.Provider;
+        string model = EmbeddingService.GetModel(provider);
+        string tableName = EmbeddingStore.BuildTableName(provider, model);
 
-        NpgsqlCommand cmd = new(@"
-        SELECT 
-            id, 
-            answer, 
-            embedding_clipboard_data <=> 
-                ai.ollama_embed(@embedding_model, @clipboard_data) as distance
-        FROM clippy
-        WHERE 
-            task = @task 
-        AND embedding_clipboard_data <=> 
-            ai.ollama_embed(@embedding_model, @clipboard_data) <= @threshold
-        ORDER BY 3
-        LIMIT 10", conn);
-
-        _ = cmd.Parameters.AddWithValue("task", task);
-        _ = cmd.Parameters.AddWithValue("clipboard_data", "search_query: " + clipboard_data);
-        _ = cmd.Parameters.AddWithValue("threshold", threshold);
-        _ = cmd.Parameters.AddWithValue("embedding_model", embeddingModel ?? "nomic-embed-text");
-
-        NpgsqlDataReader result = await cmd.ExecuteReaderAsync();
-
-        // generate a list of answers
-        List<Embedding> answers = [];
-        while (await result.ReadAsync())
-        {
-            answers.Add(new Embedding
-            {
-                Id = result.GetInt32(0),
-                Answer = result.GetString(1),
-                Distance = result.GetFloat(2)
-            });
-        }
-        return answers;
+        float[] vector = await EmbeddingService.EmbedAsync(clipboard_data, EmbeddingPurpose.Query);
+        return await EmbeddingStore.SearchAsync(tableName, task, vector, threshold);
     }
 
     /// <summary>
-    /// Initializes the PostgreSql vector database.
+    /// Verifies the local vector database and creates it on first use.
     /// </summary>
-    /// <returns>The task.</returns>
     public static void InitializeEmbeddings()
     {
-        UpdateConfig();
-
-        // Check if embeddings are enabled
-        string useEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings");
-        if (useEmbeddings != "True")
+        if (!EmbeddingsEnabled())
         {
             System.Diagnostics.Debug.WriteLine("Embeddings are disabled. Skipping initialization.");
             return;
         }
 
-        if (pgOllamaUrl == null)
-        {
-            throw new Exception("PostgresOllamaUrl is not set.");
-        }
-
-        using NpgsqlConnection conn = new(connectionString);
-        conn.Open();
-
-        // Install the pgai extension if it doesn't exist
-        NpgsqlCommand cmd = new("CREATE EXTENSION IF NOT EXISTS ai CASCADE", conn);
-        _ = cmd.ExecuteNonQuery();
-
-        // Create the table if it doesn't exist
-        cmd = new NpgsqlCommand(@"
-            CREATE TABLE IF NOT EXISTS clippy (
-                id int not null primary key generated by default as identity,
-                task TEXT NOT NULL,
-                clipboard_data TEXT NOT NULL,
-                answer TEXT NOT NULL,
-                embedding_clipboard_data vector(768)
-            )", conn);
-        _ = cmd.ExecuteNonQuery();
-
-        // Create the index if it doesn't exist
-        cmd = new NpgsqlCommand(@"
-            CREATE INDEX IF NOT EXISTS idx_clippy_embedding_clipboard_data
-            ON clippy
-            USING ivfflat(embedding_clipboard_data vector_cosine_ops)
-            WITH (lists = 20)", conn);
-        _ = cmd.ExecuteNonQuery();
-
-        // set docker host for the ai extension
-        cmd = new NpgsqlCommand("SELECT set_config('ai.ollama_host', @host, false)", conn);
-        _ = cmd.Parameters.AddWithValue("host", pgOllamaUrl);
-        _ = cmd.ExecuteNonQuery();
+        EmbeddingStore.EnsureInitialized();
     }
 
     /// <summary>
-    /// Deletes all embeddings from the PostgreSql vector database.
+    /// Deletes all cached answers from the local vector database.
     /// </summary>
-    /// <returns>The task.</returns>
     public static async Task ClearEmbeddings()
     {
-        // Check if embeddings are enabled
-        string useEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings");
-        if (useEmbeddings != "True")
+        if (!EmbeddingsEnabled())
         {
             System.Diagnostics.Debug.WriteLine("Embeddings are disabled. Skipping clear operation.");
             return;
         }
 
-        await using NpgsqlConnection conn = new(connectionString);
-        await conn.OpenAsync();
-
-        NpgsqlCommand cmd = new("DELETE FROM clippy", conn);
-        _ = await cmd.ExecuteNonQueryAsync();
+        await EmbeddingStore.ClearAsync();
     }
 
     /// <summary>
-    /// Get total number of embeddings in the PostgreSql vector database.
+    /// Gets the number of cached answers, or -1 when the store cannot be read.
     /// </summary>
-    /// <returns>The number of embeddings or -1 if there was an error.</returns>
     public static async Task<int> GetEmbeddingsCount()
     {
-        // Check if embeddings are enabled
-        string useEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings");
-        if (useEmbeddings != "True")
+        if (!EmbeddingsEnabled())
         {
             return 0;
         }
 
-        int count = 0;
         try
         {
-            await using NpgsqlConnection conn = new(connectionString);
-            await conn.OpenAsync();
-
-            NpgsqlCommand cmd = new("SELECT COUNT(*) FROM clippy", conn);
-            count = Convert.ToInt32(await cmd.ExecuteScalarAsync());
+            long count = await EmbeddingStore.CountAsync();
+            return count > int.MaxValue ? int.MaxValue : (int)count;
         }
         catch (Exception)
         {
             return -1;
         }
-
-        return count;
     }
 
     /// <summary>
-    /// Delete an embedding from the PostgreSql vector database.
+    /// Deletes one cached answer from the local vector database.
     /// </summary>
     /// <param name="id">The id of the embedding to delete.</param>
-    /// <returns>The task.</returns>
-    public static async Task DeleteEmbedding(int id)
+    public static async Task DeleteEmbedding(long id)
     {
-        // Check if embeddings are enabled
-        string useEmbeddings = ConfigurationService.GetConfigurationValue("UseEmbeddings");
-        if (useEmbeddings != "True")
+        if (!EmbeddingsEnabled())
         {
             System.Diagnostics.Debug.WriteLine("Embeddings are disabled. Skipping delete operation.");
             return;
         }
 
-        await using NpgsqlConnection conn = new(connectionString);
-        await conn.OpenAsync();
+        _ = await EmbeddingStore.DeleteAsync(id);
+    }
 
-        NpgsqlCommand cmd = new("DELETE FROM clippy WHERE id = @id", conn);
-        _ = cmd.Parameters.AddWithValue("id", id);
-        _ = await cmd.ExecuteNonQueryAsync();
+    private static bool EmbeddingsEnabled() =>
+        ConfigurationService.GetConfigurationValue("UseEmbeddings") == "True";
+
+    private static async Task<(string TableName, float[] Vector)> EmbedForStorageAsync(string clipboardData)
+    {
+        string provider = EmbeddingService.Provider;
+        string model = EmbeddingService.GetModel(provider);
+        float[] vector = await EmbeddingService.EmbedAsync(clipboardData, EmbeddingPurpose.Document);
+        return (EmbeddingStore.BuildTableName(provider, model), vector);
     }
 
     /// <summary>

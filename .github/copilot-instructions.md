@@ -29,8 +29,8 @@ Bootstrap the project in this exact order:
   - `Views/` - Avalonia XAML UI files (MainView, ConfigurationDialog, etc.)
   - `Services/` - Core services (OllamaService, ClipboardService, HotkeyService, etc.)
   - `Libs/` - Git submodules for evdev-sharp and DesktopNotificationsNet8
-  - `Docker/` - PostgreSQL pgai setup for embeddings database
-- **Configuration**: `App.config` contains default settings for Ollama URL, models, database connection
+  - `Models/` - Data models (Embedding, TaskConfiguration, etc.)
+- **Configuration**: SQLite config database in the app-data folder; `App.config` contains build/runtime defaults
 - **Entry Point**: `Program.cs` - Standard Avalonia application startup
 
 ## Build and Test
@@ -61,16 +61,16 @@ The following warnings are normal and do not indicate build failures:
   - Install from: https://ollama.com/download
 
 ### Optional Dependencies
-- **PostgreSQL with pgai**: For embeddings-based template caching
-  - Use Docker setup: `cd ClippyAI/Docker && docker-compose up`
-  - Connection string in App.config: `Host=localhost;Port=5432;Username=clippy;Password=password;Database=ClippyAI`
-  - Embedding model: `nomic-embed-text`
+- **Embedding cache**: For embeddings-based template caching
+  - Embedded LanceDB store (`LanceDB` NuGet package) — no database server or Docker setup
+  - Data lives in `{ApplicationData}/ClippyAI/lancedb` (configurable via `VectorDbPath`)
+  - Embeddings use the selected AI provider: Ollama (`nomic-embed-text`) or OpenAI (`text-embedding-3-small`)
 
 ## Platform-Specific Information
 
 ### Target Frameworks
-- **Linux**: `net9.0`
-- **Windows**: `net9.0-windows10.0.17763.0`
+- **Linux**: `net10.0`
+- **Windows**: `net10.0-windows10.0.17763.0`
 
 ### Platform-Specific Features  
 - **Windows**: Uses custom implementation for global hotkeys
@@ -87,6 +87,17 @@ The `.vscode/tasks.json` defines several useful tasks:
 - `watch` - File watcher mode for development
 - `publish-windows` - Windows-specific publish
 - `publish-linux-deb/rpm/tar` - Linux package creation
+- `publish-linux` - Builds the Linux packages and uploads them to the GitHub release
+
+### Linux Packaging
+The Linux packages are built by the `Packaging.Targets` NuGet package
+(`CreateDeb`, `CreateRpm`, `CreateTarball` targets). Its `.deb` writer
+compresses the payload with liblzma's **multithreaded** encoder, which fails
+intermittently on Linux with `MSB4018 ... Specified preset is not supported`.
+The packaging tasks therefore run with `DOTNET_PROCESSOR_COUNT=1`, which makes
+the package use liblzma's single threaded encoder. The packages land in
+`ClippyAI/bin/Release/net10.0/` and are named `ClippyAI.<version>.deb`,
+`.rpm` and `.tar.gz`.
 
 ### Making Changes
 1. Always build first: `dotnet build`
@@ -98,7 +109,7 @@ The `.vscode/tasks.json` defines several useful tasks:
 ### Architecture Notes
 - **MVVM Pattern**: Uses CommunityToolkit.Mvvm with ReactiveUI
 - **Dependency Injection**: Microsoft.Extensions.DependencyInjection
-- **Database**: SQLite for local storage, PostgreSQL for embeddings
+- **Database**: SQLite for local storage, embedded LanceDB for embeddings
 - **AI Integration**: Direct HTTP calls to Ollama API
 - **Image Processing**: Emgu.CV for computer vision features
 

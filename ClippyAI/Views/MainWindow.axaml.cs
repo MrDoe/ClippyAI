@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -110,6 +111,17 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
     {
         HotkeyService = new LinuxHotkeyService(this);
     }
+
+    /// <summary>
+    /// Lets the user pick the keyboard that is monitored for global hotkeys and
+    /// switches the already running monitor to it.
+    /// </summary>
+    [SupportedOSPlatform("linux")]
+    public async Task ConfigureHotkeyDeviceAsync()
+    {
+        HotkeyService ??= new LinuxHotkeyService(this);
+        await HotkeyService.SetupHotkeyDevice();
+    }
 #endif
 
     private void MainWindow_Loaded(object? sender, RoutedEventArgs e)
@@ -126,9 +138,27 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
 
     private void SetWindowPos()
     {
-        PixelSize screenSize = Screens.Primary!.Bounds.Size;
-        Height = screenSize.Height;
-        Position = new PixelPoint(0, 0);
+        // Headless / virtual displays (CI, Xvfb) may not expose a primary
+        // screen, so fall back to any known screen and skip the positioning
+        // entirely when the platform reports none at all.
+        var screen = Screens.All.FirstOrDefault(s => s.Bounds.Contains(Position))
+                    ?? Screens.Primary
+                    ?? Screens.All.FirstOrDefault();
+        if (screen is null)
+        {
+            return;
+        }
+
+        // The panel is docked to the left edge of the screen it lives on: it
+        // spans the full working area and can be moved up and down, but it
+        // always stays attached to the edge.
+        var workingArea = screen.WorkingArea;
+        Height = workingArea.Size.Height;
+
+        double maxY = workingArea.Position.Y + workingArea.Size.Height - Height;
+        double y = Math.Clamp(Position.Y, workingArea.Position.Y, Math.Max(workingArea.Position.Y, maxY));
+
+        Position = new PixelPoint(workingArea.Position.X, (int)y);
     }
 
     private void MainWindow_PropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
