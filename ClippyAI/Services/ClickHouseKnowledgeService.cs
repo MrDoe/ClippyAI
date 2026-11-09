@@ -365,7 +365,7 @@ public static class ClickHouseKnowledgeService
         string password = passwordOverride ?? Password;
         request.Headers.TryAddWithoutValidation("Authorization",
             "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes($"{user}:{password}")));
-        request.Content = new StringContent(sql, Encoding.UTF8, "text/plain; charset=utf-8");
+        request.Content = new StringContent(sql, Encoding.UTF8, "text/plain");
 
         using HttpResponseMessage response = await Http.SendAsync(request, token);
         string body = await response.Content.ReadAsStringAsync(token);
