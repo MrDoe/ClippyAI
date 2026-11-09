@@ -15,5 +15,6 @@ Content catalog — every page with a link and one-line summary.
 - [[entities/llama-swap-router]] — local LLM router on :3180 (ollama-native + openai-compat routes, config, health, maintenance)
 
 ## sources
+- [[sources/starlims-handbuch-review]] — Review aller 48 Handbuch-Docs gegen Live-Testsystem HC12.1: 16 Stubs, Namenskonflikte vs. Transaktionsverwaltung, Duplikate, Reiter-Lücken, priorisierte Maßnahmen
 - [[sources/starlims-testsystem]] — live overview of the STARLIMS12 TESTSYSTEM: login flow + Biobank/Rolle modal, Workspace LinkBar groups, Modul-Anatomie (Probenverwaltung), ExtJS automation facts
 - [[sources/winvision-mcp]] — Windows desktop automation MCP used for GUI QA in this repo
