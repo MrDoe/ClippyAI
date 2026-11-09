@@ -15,13 +15,18 @@
 
   // Windows GUI testing via winvision-mcp (UIA + WGC + QA asserts).
   // Usage + gotchas: .opencode/skills/win-gui-test/SKILL.md
-  // Venv lives on C:\Temp (local disk; %APPDATA% is a slow roaming share).
+  // Venv lives at C:\Tools\opencode (permanent local disk; NOT C:\Temp — the
+  // Temp copy was gutted by a disk cleanup on 2026-11-09, exit 106; and NOT
+  // %APPDATA% — that is a slow roaming share). Launch module
+  // winvision_compatch = site-packages COM-init shim required for
+  // FastMCP>=3 UIA tools (CoInitialize on anyio worker threads); do not
+  // replace with a direct winvision-mcp.exe call.
   // timeout >= 60000: the first cold UIA call can exceed 30 s and a timeout
   // severs the stdio session with no in-session reconnect.
   "mcp": {
     "winvision": {
       "type": "local",
-      "command": ["C:\\Temp\\opencode\\winvision-mcp-venv\\Scripts\\python.exe", "-m", "winvision_compatch"],
+      "command": ["C:\\Tools\\opencode\\winvision-mcp-venv\\Scripts\\python.exe", "-m", "winvision_compatch"],
       "enabled": true,
       "timeout": 60000
     }

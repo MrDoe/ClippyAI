@@ -5,9 +5,10 @@ description: Test or automate native Windows desktop GUI apps (ClippyAI, WPF/Win
 
 # Windows GUI Testing (winvision MCP)
 
-The `winvision` MCP server (registered in the project `opencode.jsonc`, exe at
-`C:\Temp\opencode\winvision-mcp-venv\Scripts\winvision-mcp.exe`) drives any app that
-exposes a UI Automation (UIA) surface. Prefer it over coordinate clicking or WinAppDriver.
+The `winvision` MCP server (registered in the project `opencode.jsonc`, launched as
+`C:\Tools\opencode\winvision-mcp-venv\Scripts\python.exe -m winvision_compatch`) drives
+any app that exposes a UI Automation (UIA) surface. Prefer it over coordinate clicking
+or WinAppDriver.
 
 ## Golden rules (violating these wastes minutes)
 
@@ -63,7 +64,7 @@ exposes a UI Automation (UIA) surface. Prefer it over coordinate clicking or Win
   Data/baselines/recordings also live there — set `WINVISION_DATA_DIR` to relocate.
 - Elevated target windows (running as Admin) need the signed UIAccess build — not
   installed; only normal-integrity apps are drivable.
-- Health check: `C:\Temp\opencode\winvision-mcp-venv\Scripts\winvision-mcp.exe doctor`
+- Health check: `C:\Tools\opencode\winvision-mcp-venv\Scripts\winvision-mcp.exe doctor`
   (DPI, COM, WGC, monitors). Upgrade: `...python.exe -m pip install -U winvision-mcp`.
 - Screenshots are absolute-coordinate; single-monitor optimized; locked desktop
   (Win+L) breaks raw input injection but UIA-pattern actions and PrintWindow/WGC
@@ -115,3 +116,18 @@ Raw Win32 `ShowWindow` unhides the HWND but leaves Avalonia `IsVisible=false` �
   13/28). Record invokes with `{automation_id: ...}` refs for replay-stable scripts
   (=> requires the app-side `x:Name` additions).
 - Search known issues before debugging an MCP server beyond one restart.
+
+## MS Paint drawing recipe (verified 2026-11-09, house + dog flows)
+
+- Ribbon tool buttons (`Bleistift`/`Linie`/`Rechteck`, de-DE names) do NOT support
+  InvokePattern — winvision falls back to a real click at the button center, which
+  works. Always invoke by `name` + `window_title`, NOT by cached `handle` (stale
+  ribbon handles silently no-op after canvas state changes).
+- After each shape drag, deselect with `click_at` on a far EMPTY canvas spot
+  (commits + clears selection in one real click). `send_keys {ESC}` immediately
+  after a drag CANCELS the shape (mouse-up race) — blank canvas. Never start a new
+  shape inside the still-selected previous shape: it MOVES the selection instead.
+- `screenshot_window` PNG is downsampled to 1600 px longest edge (maximized Paint
+  1936 px → factor 0.8265): convert window px to PNG px when cropping ASCII previews.
+- Clear canvas: `^z` repeated via `send_keys` (pywinauto chords work); blank canvas
+  + tool re-select is enough to restart.

@@ -59,6 +59,11 @@ uninstall **SSMS 20** (SSMS 22 already installed) ~1.
 pagefile (commit demand is real — add RAM instead) · `C:\Windows\Installer` 5.1 (patch chain) ·
 `ProgramData\Package Cache` 2.2 (burned-in uninstallers) · `ProgramData\Microsoft` 7.4 (Defender/WU) ·
 `C:\Daten\Outlook` 4.5 (PST/OST user data — archive/move instead) · MailStore Home 2.3 (user data — move) ·
-WinSxS only via DISM, never manually.
+WinSxS only via DISM, never manually · **`C:\Tools\opencode\winvision-mcp-venv` — live winvision MCP
+server venv (moved there 2026-11-09 after the Temp copy was destroyed by a Temp wipe; DO-NOT-DELETE)**.
+
+**Lesson learned:** C:\Temp on this machine held *live infrastructure* — the winvision MCP venv
+(exit 106 crash during the wipe) and NuGet global-packages (`NUGET_PACKAGES` env). Before any
+`C:\Temp` wipe: enumerate venvs/services pointing into it. MCP venves belong under `C:\Tools\opencode\`.
 
 Duplicate to review: `C:\Daten\Entwicklung\OpenCodeRAG-main` (0.48) looks like an extract duplicate of `OpenCodeRAG`.

@@ -1,7 +1,7 @@
 ---
 title: winvision-mcp — Windows GUI automation & QA via MCP
 tags: [mcp, windows, gui-testing, uia, qa, tooling]
-sourceRefs: [https://pypi.org/project/winvision-mcp/, C:/Temp/opencode/winvision-mcp-venv, opencode.jsonc]
+sourceRefs: [https://pypi.org/project/winvision-mcp/, C:/Tools/opencode/winvision-mcp-venv, opencode.jsonc]
 lastReviewed: 2026-11-09
 ---
 
@@ -26,20 +26,27 @@ UIA+WebView2+Swing, scenario replay), **WinProbe** (WPF-focused), **windows-gui-
 
 ## Local install (this machine)
 
-- Venv: `C:\Temp\opencode\winvision-mcp-venv` (created with `python -m venv` +
-  `ensurepip`; `%APPDATA%` is a roaming network share so `pip --user`/`uv tool` were
-  rejected — see quirk). **Run command** (since 2026-11-09):
-  `...\Scripts\python.exe -m winvision_compatch` — a site-packages shim that calls
-  `ole32.CoInitializeEx(MTA)` on every anyio worker thread before delegating to the
-  real CLI (fixes the FastMCP≥3 UIA COM crash; see [[#known-issue-fastmcp--uia--com]]).
+- Venv: **`C:\Tools\opencode\winvision-mcp-venv`** — PERMANENT local-disk path. Never
+  put it under `C:\Temp`: the original install there (`C:\Temp\opencode\winvision-mcp-venv`)
+  was gutted by a user-approved Tier-1 disk cleanup on 2026-11-09 ~12:02 (disk-pressure
+  audit); the next connect attempt failed with exit 106 `failed to locate pyvenv.cfg`.
+  `%APPDATA%` is also rejected (slow roaming network share). Rebuilt in place same day:
+  `C:\Python313\python.exe -m venv ...` + `pip install winvision-mcp 'fastmcp>=3'`
+  (resolved winvision-mcp 1.0.1 / fastmcp 4.1.6 / mcp 2.3.0).
+  **Run command**: `...\Scripts\python.exe -m winvision_compatch` — a site-packages
+  shim that calls `ole32.CoInitializeEx(MTA)` on every anyio/asyncio worker thread
+  before delegating to the real CLI (fixes the FastMCP≥3 UIA COM crash; see
+  [[#known-issue-fastmcp--uia--com]]). Shim gotchas when rewriting: `asyncio.to_thread`
+  is a function attribute (not a submodule), and anyio `run_sync` kwargs
+  (`limiter`, `abandon_on_cancel`) must NOT be forwarded to the wrapped func.
 - Registered **project-scoped** as `mcp.winvision` in `opencode.jsonc` with
   `timeout: 60000` (per upstream troubleshooting: default 30 s severs stdio on the
   first cold call, and stdio never reconnects in-session).
-- **Live-verified 2026-11-09**: config hot-reloaded, server connected via OpenCode,
-  44 tools exposed; `get_system_info` + `list_baselines` returned real data
-  (Win11 22631; host has 3 monitors incl. an 8480-px ultrawide — `click_at` is
-  multi-monitor-safe via VIRTUALDESK, but per README, cross-monitor coordinate
-  workflows still need care).
+- **Live-verified 2026-11-09 (twice)**: after the Temp wipe, rebuilt at `C:\Tools\opencode`
+  and reconnected same day — handshake, 44 tools, `list_windows` UIA call through the
+  shim OK, then via OpenCode `get_system_info` returned real data (Win11 22631; host has
+  3 monitors incl. an 8480-px ultrawide — `click_at` is multi-monitor-safe via
+  VIRTUALDESK, but per README, cross-monitor coordinate workflows still need care).
 - Health check: `winvision-mcp.exe doctor`. Data/baselines/recordings:
   `%LOCALAPPDATA%\WinVision` (override `WINVISION_DATA_DIR`).
 - Not UIAccess-signed → elevated windows are not drivable.
