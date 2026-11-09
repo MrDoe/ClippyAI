@@ -250,7 +250,9 @@ public class OpenAIService : IAIProvider
         {
             Model = visionModel,
             Messages = messages,
-            MaxTokens = 2000
+            // Local serving (llama-swap/vLLM) affords the full output budget;
+            // screenshots + long manual sections need the headroom.
+            MaxTokens = RequestLimits.MaxOutputTokens
         };
 
         string json = JsonSerializer.Serialize(request, requestJsonOptions);
