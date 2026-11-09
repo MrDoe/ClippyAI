@@ -131,7 +131,7 @@
     "enabled": true,
     "timeoutMs": 60000,
     "think": false,
-    "numCtx": 2048
+    "numCtx": 8192
   },
   "decision": {
     "enabled": false,

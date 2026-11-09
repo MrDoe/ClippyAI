@@ -28,7 +28,10 @@ UIA+WebView2+Swing, scenario replay), **WinProbe** (WPF-focused), **windows-gui-
 
 - Venv: `C:\Temp\opencode\winvision-mcp-venv` (created with `python -m venv` +
   `ensurepip`; `%APPDATA%` is a roaming network share so `pip --user`/`uv tool` were
-  rejected — see quirk). Server exe: `...\Scripts\winvision-mcp.exe`.
+  rejected — see quirk). **Run command** (since 2026-11-09):
+  `...\Scripts\python.exe -m winvision_compatch` — a site-packages shim that calls
+  `ole32.CoInitializeEx(MTA)` on every anyio worker thread before delegating to the
+  real CLI (fixes the FastMCP≥3 UIA COM crash; see [[#known-issue-fastmcp--uia--com]]).
 - Registered **project-scoped** as `mcp.winvision` in `opencode.jsonc` with
   `timeout: 60000` (per upstream troubleshooting: default 30 s severs stdio on the
   first cold call, and stdio never reconnects in-session).
@@ -50,6 +53,18 @@ UIA+WebView2+Swing, scenario replay), **WinProbe** (WPF-focused), **windows-gui-
    replay-safe deterministic checks.
 3. Electron/Chromium: rely on WGC screenshots + `click_at`; UIA tree may be empty.
 4. `WINVISION_UIA_WALK_TIMEOUT_S` (8 s) bounds tree walks on accessibility-heavy apps.
+
+## Known issue: FastMCP ≥ 3 breaks UIA (COM)
+
+All UIA tools threw `[WinError -2147221008] CoInitialize has not been called` with
+fastmcp 4.1.6 (fresh server too) — root cause
+[fastmcp#4003](https://github.com/PrefectHQ/fastmcp/issues/4003): sync tools run on
+anyio worker threads without COM init; winvision 1.0.1 doesn't use the `run_in_thread`
+opt-out. **Pinning `fastmcp<3` does NOT work** (2.14.7/2.13.3 ImportError
+`IdentityAssertionParams` against their resolved mcp). Working fix: the
+`winvision_compatch` launch shim above (server verified: handshake + full ClippyAI
+config-dialog flow PASS 2026-11-09). Watch upstream: a winvision release using
+`@tool(run_in_thread=False)` would let us drop the shim.
 
 Related: [[concepts/windows-release-pipeline]] (what we ship and test),
 [[entities/llama-swap-router]] (client LLM behind sampling-capable calls).

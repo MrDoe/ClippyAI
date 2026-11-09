@@ -21,7 +21,7 @@
   "mcp": {
     "winvision": {
       "type": "local",
-      "command": ["C:\\Temp\\opencode\\winvision-mcp-venv\\Scripts\\winvision-mcp.exe", "stdio"],
+      "command": ["C:\\Temp\\opencode\\winvision-mcp-venv\\Scripts\\python.exe", "-m", "winvision_compatch"],
       "enabled": true,
       "timeout": 60000
     }

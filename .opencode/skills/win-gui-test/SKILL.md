@@ -78,3 +78,40 @@ exposes a UI Automation (UIA) surface. Prefer it over coordinate clicking or Win
   is a roaming network share — reading it is fine, don't write).
 - Smoke-test recipe: build MSI or run the exe → `is_running ClippyAI` →
   `assert_element_visible` on a known automation_id → `screenshot_window` for evidence.
+
+## Verified run book (2026-11-09, installed 1.6.0 MSI, Avalonia → UIA)
+
+**Startup:** the app ALWAYS launches hidden to the tray (`MainWindow_Loaded` →
+`Hide()`); global hotkeys Ctrl+Alt+C/↑/↓ run tasks, they do NOT show the window.
+Raw Win32 `ShowWindow` unhides the HWND but leaves Avalonia `IsVisible=false` →
+**UIA tree comes back with 0 nodes**. Show it properly via the tray:
+1. `find_elements {name_regex:"(?i)hidden|ausgeblendet", control_type:"Button", window_title_regex:".*"}`
+   → Win11 "Show hidden icons" chevron (AutomationId `SystemTrayIcon`) → `invoke_element`.
+2. `find_elements {name:"ClippyAI", control_type:"Button", window_title_regex:".*"}`
+   → invoke the EXACT name (beware look-alikes: VS Code's "ClippyAI (Git)" tray icons).
+   Filter `matches[].info.process_id`. Main window then docks at screen-left, 536px wide.
+
+**Selectors (verified):**
+- Header icon trio (top-right, y≈16, w=30, **no x:Name/AutomationId**): leftmost =
+  gear → opens ConfigurationDialog; then minimize; then close (close asks a Yes/No
+  InputDialog). Add `x:Name` to the gear in MainWindow.axaml to stop geometry probing.
+- ConfigurationDialog: stable ids `SaveButton`, `CloseButton`, `SaveStatusPanel`.
+  Title is LOCALIZED ("Konfiguration" on de-DE) and winvision title-matching resolves
+  the owning window — do NOT filter dialog elements by dialog title; use
+  `{automation_id: "...", window_title_regex: ".*"}` and filter by `process_id`.
+- Close the dialog via `CloseButton` in tests (Save writes to the roaming config DB).
+
+**Tool constraints (hit in practice):**
+- `get_ui_tree`/`get_ui_tree_text`: `depth ≤ 12`.
+- `find_elements` matches can have `rect: null` (scrollbar children) — null-filter before `.x`.
+- Screenshots are useless with a non-vision client model ("Cannot read image") — use
+  `assert_element_visible` / `assert_text_present` / tree dumps for evidence.
+- Debug sessions (F5) spawn extra ClippyAI instances — always pin one `pid`.
+
+**Speed rules:**
+- Batch a whole flow into ONE Code Mode `execute` block (8–10 calls per inference);
+  never one MCP call per assistant turn.
+- Recorded replays reference runtime element HANDLES → cross-run failures (observed
+  13/28). Record invokes with `{automation_id: ...}` refs for replay-stable scripts
+  (=> requires the app-side `x:Name` additions).
+- Search known issues before debugging an MCP server beyond one restart.
