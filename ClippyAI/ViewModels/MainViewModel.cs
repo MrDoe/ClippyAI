@@ -329,8 +329,11 @@ public partial class MainViewModel : ViewModelBase
         {
             ResponseCounter = "      *";
         }
-        else
+        else if (_responseIndex >= 0 && _responseIndex < _responseList.Count)
         {
+            // Manual indexing: the list is empty whenever a response did not come
+            // from a completed comparison run (e.g. manual generator) - indexing
+            // it unguarded threw IndexOutOfRangeException on every such response.
             ResponseDistance = (float)Math.Round(_responseList[_responseIndex].Distance, 2);
             ResponseCounter = $"{_responseIndex + 1} / {_responseList.Count}";
         }
