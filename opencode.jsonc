@@ -1,0 +1,15 @@
+{
+  // Project configuration for OpenCode (ClippyAI workspace).
+  "$schema": "https://opencode.ai/config.json",
+
+  // Enable LSP diagnostics for the agent. Enabling the `lsp` section turns
+  // on ALL built-ins, so everything not wanted here is disabled explicitly.
+  // csharp: needs .NET SDK (present, 10.0.201). razor: additionally needs
+  // the VS Code C# extension (ms-dotnettools.csharp) — currently NOT
+  // installed, so razor stays dormant until that extension is added.
+  "lsp": {
+    "csharp": { "disabled": false },
+    "razor": { "disabled": false },
+    "clangd": { "disabled": true }
+  }
+}
