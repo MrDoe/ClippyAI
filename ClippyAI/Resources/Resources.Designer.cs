@@ -418,6 +418,15 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Global hotkeys must be unique - the same combination is assigned to more than one action..
+        /// </summary>
+        public static string DuplicateHotkeyError {
+            get {
+                return ResourceManager.GetString("DuplicateHotkeyError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Embedding Model.
         /// </summary>
         public static string EmbeddingModel {
@@ -553,6 +562,51 @@ namespace ClippyAI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Global Hotkeys.
+        /// </summary>
+        public static string GlobalHotkeys {
+            get {
+                return ResourceManager.GetString("GlobalHotkeys", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click into a field and press the desired key combination (at least one modifier required). Clear the field to disable a hotkey. On German and similar layouts avoid Ctrl+Alt+ letters (they are AltGr characters): prefer Ctrl+Shift+... or Win+... ..
+        /// </summary>
+        public static string GlobalHotkeysHint {
+            get {
+                return ResourceManager.GetString("GlobalHotkeysHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ask Clippy (execute selected task).
+        /// </summary>
+        public static string HotkeyAskClippy {
+            get {
+                return ResourceManager.GetString("HotkeyAskClippy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next task.
+        /// </summary>
+        public static string HotkeyNextTask {
+            get {
+                return ResourceManager.GetString("HotkeyNextTask", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Previous task.
+        /// </summary>
+        public static string HotkeyPreviousTask {
+            get {
+                return ResourceManager.GetString("HotkeyPreviousTask", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Image Source.
         /// </summary>
         public static string ImageSource {
@@ -585,6 +639,15 @@ namespace ClippyAI.Resources {
         public static string ImageSourceWebcam {
             get {
                 return ResourceManager.GetString("ImageSourceWebcam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid global hotkey. Use a combination like Ctrl+Alt+C, Ctrl+Shift+F1 or Win+Alt+D, or clear the field to disable it..
+        /// </summary>
+        public static string InvalidHotkeyError {
+            get {
+                return ResourceManager.GetString("InvalidHotkeyError", resourceCulture);
             }
         }
         

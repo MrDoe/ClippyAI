@@ -292,6 +292,27 @@
     <data name="ConfigureHotkeyDevice" xml:space="preserve">
         <value>Configure Hotkey Device</value>
     </data>
+    <data name="GlobalHotkeys" xml:space="preserve">
+        <value>Global Hotkeys</value>
+    </data>
+    <data name="GlobalHotkeysHint" xml:space="preserve">
+        <value>Click into a field and press the desired key combination (at least one modifier required). Clear the field to disable a hotkey. On German and similar layouts avoid Ctrl+Alt+ letters (they are AltGr characters): prefer Ctrl+Shift+... or Win+... .</value>
+    </data>
+    <data name="HotkeyAskClippy" xml:space="preserve">
+        <value>Ask Clippy (execute selected task)</value>
+    </data>
+    <data name="HotkeyPreviousTask" xml:space="preserve">
+        <value>Previous task</value>
+    </data>
+    <data name="HotkeyNextTask" xml:space="preserve">
+        <value>Next task</value>
+    </data>
+    <data name="InvalidHotkeyError" xml:space="preserve">
+        <value>Invalid global hotkey. Use a combination like Ctrl+Alt+C, Ctrl+Shift+F1 or Win+Alt+D, or clear the field to disable it.</value>
+    </data>
+    <data name="DuplicateHotkeyError" xml:space="preserve">
+        <value>Global hotkeys must be unique - the same combination is assigned to more than one action.</value>
+    </data>
     <data name="EnableSSHTunneling" xml:space="preserve">
         <value>Enable SSH Tunneling</value>
     </data>

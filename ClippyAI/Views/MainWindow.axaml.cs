@@ -124,6 +124,25 @@ public partial class MainWindow : ReactiveWindow<MainViewModel>
     }
 #endif
 
+    /// <summary>
+    /// Re-reads the configured global hotkey combinations and swaps them in at
+    /// runtime. Called after the configuration dialog has saved new values.
+    /// </summary>
+    public void ApplyGlobalHotkeyConfiguration()
+    {
+#if WINDOWS
+        if (OperatingSystem.IsWindows())
+        {
+            _windowsHotkeyService?.ApplyConfiguration();
+        }
+#elif LINUX
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            HotkeyService?.ApplyConfiguration();
+        }
+#endif
+    }
+
     private void MainWindow_Loaded(object? sender, RoutedEventArgs e)
     {
         // set window position to top left corner

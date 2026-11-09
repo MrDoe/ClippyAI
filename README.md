@@ -135,13 +135,15 @@ Default image tasks "Analyze Clipboard Image" and "Analyze Webcam Image" are pro
 
 ClippyAI provides convenient global hotkeys that work even when the window is hidden or minimized:
 
-| Hotkey | Action |
+| Default Hotkey | Action |
 |--------|--------|
 | **Ctrl + Alt + C** | Send clipboard content with selected task to the LLM |
 | **Ctrl + Alt + Up** | Select previous task in the task list |
 | **Ctrl + Alt + Down** | Select next task in the task list |
 
 All hotkeys trigger notifications to display the current status or selected task, providing visual feedback even when the main window is hidden.
+
+All three hotkeys are configurable under the gear button → `System` tab → `Global Hotkeys`: click into a field, press the new combination (at least one modifier required) and save — changes apply immediately, no restart needed. Clear a field to disable that hotkey. On German (and similar) keyboard layouts, `Ctrl+Alt+<letter>` is the AltGr layer (e.g. Ctrl+Alt+C types €), so prefer `Ctrl+Shift+...` or `Win+...` combinations there.
 
 **Linux hotkey permissions**
 

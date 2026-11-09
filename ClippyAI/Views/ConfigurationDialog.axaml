@@ -317,6 +317,28 @@
                                             ToolTip.Tip="{x:Static resources:Resources.ConfigureHotkeyDeviceDescription}" />
                                 </StackPanel>
                             </HeaderedContentControl>
+
+                            <HeaderedContentControl Header="{x:Static resources:Resources.GlobalHotkeys}">
+                                <StackPanel>
+                                    <TextBlock Text="{x:Static resources:Resources.GlobalHotkeysHint}"
+                                               Classes="hint" TextWrapping="Wrap" Margin="0,0,0,14" />
+
+                                    <Label Content="{x:Static resources:Resources.HotkeyAskClippy}" />
+                                    <TextBox Text="{Binding HotkeyAskClippy}"
+                                             KeyDown="HotkeyTextBox_KeyDown"
+                                             ToolTip.Tip="{x:Static resources:Resources.GlobalHotkeysHint}" />
+
+                                    <Label Content="{x:Static resources:Resources.HotkeyPreviousTask}" />
+                                    <TextBox Text="{Binding HotkeyPreviousTask}"
+                                             KeyDown="HotkeyTextBox_KeyDown"
+                                             ToolTip.Tip="{x:Static resources:Resources.GlobalHotkeysHint}" />
+
+                                    <Label Content="{x:Static resources:Resources.HotkeyNextTask}" />
+                                    <TextBox Text="{Binding HotkeyNextTask}"
+                                             KeyDown="HotkeyTextBox_KeyDown"
+                                             ToolTip.Tip="{x:Static resources:Resources.GlobalHotkeysHint}" />
+                                </StackPanel>
+                            </HeaderedContentControl>
                         </StackPanel>
                     </ScrollViewer>
                 </TabItem>

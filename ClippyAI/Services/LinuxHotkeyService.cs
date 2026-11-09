@@ -1,4 +1,5 @@
 using Avalonia.Threading;
+using ClippyAI.Models;
 using ClippyAI.Views;
 using EvDevSharp;
 using System;
@@ -20,10 +21,17 @@ public class LinuxHotkeyService
     private readonly MainViewModel? DataContext;
     private readonly MainWindow? Window;
 
+    /// <summary>A configured hotkey and the action it triggers.</summary>
+    private sealed record HotkeyCombo(GlobalHotkey Hotkey, Action Action);
+
+    private List<HotkeyCombo> _combos = [];
+
     public LinuxHotkeyService(MainWindow window)
     {
         Window = window;
         DataContext = Window.DataContext as MainViewModel;
+
+        LoadHotkeyConfiguration();
 
         // get keyboard device from configuration file
         Keyboard = FindConfiguredDevice();
@@ -31,6 +39,53 @@ public class LinuxHotkeyService
         if (Keyboard != null)
         {
             StartMonitoring();
+        }
+    }
+
+    /// <summary>
+    /// Re-reads the configured hotkey combos. The evdev reader keeps running
+    /// and simply matches against the new set on the next key event.
+    /// </summary>
+    public void ApplyConfiguration()
+    {
+        LoadHotkeyConfiguration();
+    }
+
+    private void LoadHotkeyConfiguration()
+    {
+        List<HotkeyCombo> combos = [];
+
+        TryAdd(combos, "HotkeyAskClippy", "Ctrl+Alt+C",
+            () => Dispatcher.UIThread.Post(() => { _ = DataContext?.AskClippy(new CancellationToken()); }));
+        TryAdd(combos, "HotkeyPreviousTask", "Ctrl+Alt+Up",
+            () => Dispatcher.UIThread.Post(() => DataContext?.SelectPreviousTask()));
+        TryAdd(combos, "HotkeyNextTask", "Ctrl+Alt+Down",
+            () => Dispatcher.UIThread.Post(() => DataContext?.SelectNextTask()));
+
+        _combos = combos;
+
+        void TryAdd(List<HotkeyCombo> target, string configKey, string defaultCombo, Action action)
+        {
+            string raw = ConfigurationService.GetConfigurationValue(configKey, defaultCombo);
+            GlobalHotkey? parsed = GlobalHotkey.TryParse(raw);
+
+            if (parsed == null && !string.IsNullOrWhiteSpace(raw) && !string.Equals(raw, defaultCombo, StringComparison.OrdinalIgnoreCase))
+            {
+                Console.WriteLine($"Invalid hotkey configuration {configKey}='{raw}' - using default {defaultCombo}.");
+                parsed = GlobalHotkey.TryParse(defaultCombo);
+            }
+
+            if (parsed?.EvDevKeyCodes == null)
+            {
+                if (parsed != null)
+                {
+                    Console.WriteLine($"Hotkey '{parsed}' has no evdev mapping for key '{parsed.KeyName}'.");
+                }
+
+                return; // disabled or unmappable
+            }
+
+            target.Add(new HotkeyCombo(parsed, action));
         }
     }
 
@@ -104,7 +159,7 @@ public class LinuxHotkeyService
                 parentWindow: Window!,
                 title: "Select Keyboard Device",
                 caption: "Select a keyboard device:",
-                subtext: "Please test it after clicking OK by pressing [Ctrl]+[Alt]+[C] hotkey.",
+                subtext: "Please test it after clicking OK by pressing the configured global hotkey.",
                 isRequired: true,
                 initialValue: Keyboard?.Name ?? keyboardNames.FirstOrDefault() ?? "",
                 comboBoxItems: new ObservableCollection<string>(keyboardNames)
@@ -233,118 +288,82 @@ public class LinuxHotkeyService
             && keys.Contains(EvDevKeyCode.KEY_ENTER);
     }
 
+    // All parts of a combo must have been pressed within this window, mirroring
+    // the tolerance of the original hard-coded implementation.
+    private const int ComboWindowSeconds = 3;
+
     private void OnKeyEvent(object sender, OnKeyEventArgs e)
     {
-        string? keyStr = e.Key switch
+        string? partName = GlobalHotkey.EvDevPartName(e.Key);
+        if (partName == null)
         {
-            EvDevKeyCode.KEY_LEFTCTRL => "Ctrl",
-            EvDevKeyCode.KEY_LEFTALT => "Alt",
-            EvDevKeyCode.KEY_C => "C",
-            EvDevKeyCode.KEY_A => "A",
-            EvDevKeyCode.KEY_UP => "Up",
-            EvDevKeyCode.KEY_DOWN => "Down",
-            _ => null
-        };
+            return; // key irrelevant for every configured hotkey
+        }
 
-        if (keyStr != null)
+        if (e.Value == EvDevKeyValue.KeyDown)
         {
-            if (e.Value == EvDevKeyValue.KeyDown)
+            _ = pressedKeys.Add(partName);
+            keyTimes[partName] = DateTime.Now;
+        }
+        else if (e.Value == EvDevKeyValue.KeyUp)
+        {
+            _ = pressedKeys.Remove(partName);
+            _ = keyTimes.Remove(partName);
+            return;
+        }
+        else
+        {
+            return; // KeyRepeat: never a fresh trigger
+        }
+
+        foreach (HotkeyCombo combo in _combos)
+        {
+            if (IsPressed(combo.Hotkey))
             {
-                _ = pressedKeys.Add(keyStr);
-                keyTimes[keyStr] = DateTime.Now;
-            }
-            else if (e.Value == EvDevKeyValue.KeyUp)
-            {
-                _ = pressedKeys.Remove(keyStr);
-                _ = keyTimes.Remove(keyStr);
+                Console.WriteLine($"Hotkey {combo.Hotkey} pressed");
+                Consume(combo.Hotkey);
+
+                try
+                {
+                    combo.Action();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to execute hotkey action: {ex.Message}");
+                }
+
+                break;
             }
         }
 
-        // Check for Ctrl + Alt + C
-        if (pressedKeys.Contains("Ctrl") && pressedKeys.Contains("Alt") && pressedKeys.Contains("C") &&
-            DateTime.Now.Subtract(keyTimes["Ctrl"]).TotalSeconds < 3 &&
-            DateTime.Now.Subtract(keyTimes["Alt"]).TotalSeconds < 3 &&
-            DateTime.Now.Subtract(keyTimes["C"]).TotalSeconds < 3)
+        bool IsPressed(GlobalHotkey hotkey)
         {
-            Console.WriteLine("Hotkey Ctrl + Alt + C pressed");
-            _ = pressedKeys.Remove("Ctrl");
-            _ = pressedKeys.Remove("Alt");
-            _ = pressedKeys.Remove("C");
-            _ = keyTimes.Remove("Ctrl");
-            _ = keyTimes.Remove("Alt");
-            _ = keyTimes.Remove("C");
-
-            // execute relay command AskClippy
-            try
+            DateTime now = DateTime.Now;
+            foreach (string part in hotkey.PartNames)
             {
-                Dispatcher.UIThread.Post(() =>
+                if (!pressedKeys.Contains(part)
+                    || !keyTimes.TryGetValue(part, out DateTime pressedAt)
+                    || now.Subtract(pressedAt).TotalSeconds >= ComboWindowSeconds)
                 {
-                    _ = (DataContext?.AskClippy(new CancellationToken()));
-                });
+                    return false;
+                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to execute AskClippy: {ex.Message}");
-            }
+
+            return true;
         }
-        // Check for Ctrl + Alt + Up
-        else if (pressedKeys.Contains("Ctrl") && pressedKeys.Contains("Alt") && pressedKeys.Contains("Up") &&
-                 DateTime.Now.Subtract(keyTimes["Ctrl"]).TotalSeconds < 3 &&
-                 DateTime.Now.Subtract(keyTimes["Alt"]).TotalSeconds < 3 &&
-                 DateTime.Now.Subtract(keyTimes["Up"]).TotalSeconds < 3)
-        {
-            Console.WriteLine("Hotkey Ctrl + Alt + Up pressed");
-            _ = pressedKeys.Remove("Ctrl");
-            _ = pressedKeys.Remove("Alt");
-            _ = pressedKeys.Remove("Up");
-            _ = keyTimes.Remove("Ctrl");
-            _ = keyTimes.Remove("Alt");
-            _ = keyTimes.Remove("Up");
 
-            // execute relay command SelectPreviousTask
-            try
-            {
-                Dispatcher.UIThread.Post(() =>
-                {
-                    DataContext?.SelectPreviousTask();
-                });
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to execute SelectPreviousTask: {ex.Message}");
-            }
-        }
-        // Check for Ctrl + Alt + Down
-        else if (pressedKeys.Contains("Ctrl") && pressedKeys.Contains("Alt") && pressedKeys.Contains("Down") &&
-                 DateTime.Now.Subtract(keyTimes["Ctrl"]).TotalSeconds < 3 &&
-                 DateTime.Now.Subtract(keyTimes["Alt"]).TotalSeconds < 3 &&
-                 DateTime.Now.Subtract(keyTimes["Down"]).TotalSeconds < 3)
+        static void Consume(GlobalHotkey hotkey)
         {
-            Console.WriteLine("Hotkey Ctrl + Alt + Down pressed");
-            _ = pressedKeys.Remove("Ctrl");
-            _ = pressedKeys.Remove("Alt");
-            _ = pressedKeys.Remove("Down");
-            _ = keyTimes.Remove("Ctrl");
-            _ = keyTimes.Remove("Alt");
-            _ = keyTimes.Remove("Down");
-
-            // execute relay command SelectNextTask
-            try
+            foreach (string part in hotkey.PartNames)
             {
-                Dispatcher.UIThread.Post(() =>
-                {
-                    DataContext?.SelectNextTask();
-                });
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to execute SelectNextTask: {ex.Message}");
+                _ = pressedKeys.Remove(part);
+                _ = keyTimes.Remove(part);
             }
         }
     }
 
     /// <summary>
-    /// Listen for [Ctrl]+[Alt]+[C] hotkey
+    /// Listen for the configured global hotkeys.
     /// </summary>
     public void StartMonitoring()
     {

@@ -1,6 +1,9 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Input;
+using Avalonia.Interactivity;
+using ClippyAI.Models;
 using ClippyAI.ViewModels;
 using System;
 using System.Threading.Tasks;
@@ -18,6 +21,56 @@ public partial class ConfigurationDialog : Window
     private void InitializeComponent()
     {
         Avalonia.Markup.Xaml.AvaloniaXamlLoader.Load(this);
+    }
+
+    /// <summary>
+    /// Turns a key press in a hotkey field into the canonical "Ctrl+Alt+C"
+    /// form. Bare keys are rejected (a global hotkey without a modifier would
+    /// swallow normal typing); Backspace/Delete clears the field (= disabled).
+    /// </summary>
+    private void HotkeyTextBox_KeyDown(object? sender, KeyEventArgs e)
+    {
+        if (sender is not TextBox box)
+        {
+            return;
+        }
+
+        e.Handled = true;
+
+        switch (e.Key)
+        {
+            // Modifier-only presses: nothing to record yet.
+            case Key.LeftCtrl or Key.RightCtrl or Key.LeftAlt or Key.RightAlt
+                or Key.LeftShift or Key.RightShift or Key.LWin or Key.RWin:
+                return;
+
+            case Key.Back or Key.Delete:
+                box.Text = "";
+                return;
+
+            case Key.Escape:
+                return; // leave the current text untouched
+        }
+
+        KeyModifiers mods = e.KeyModifiers;
+        string? keyName = GlobalHotkey.NameFromAvaloniaKey(e.Key);
+
+        if (keyName == null)
+        {
+            return;
+        }
+
+        bool ctrl = mods.HasFlag(KeyModifiers.Control);
+        bool alt = mods.HasFlag(KeyModifiers.Alt);
+        bool shift = mods.HasFlag(KeyModifiers.Shift);
+        bool win = mods.HasFlag(KeyModifiers.Meta);
+
+        if (!ctrl && !alt && !shift && !win)
+        {
+            return; // bare key - keep the previous value
+        }
+
+        box.Text = GlobalHotkey.Format(ctrl, alt, shift, win, keyName);
     }
 
     private void OnDataContextChanged(object? sender, EventArgs e)
@@ -39,7 +92,12 @@ public partial class ConfigurationDialog : Window
             // Override the commands to handle dialog closing
             saveButton?.Click += (s, args) =>
                 {
-                    viewModel.Save();
+                    if (!viewModel.Save())
+                    {
+                        // Invalid settings were rejected with an error message;
+                        // do not refresh or re-register anything.
+                        return;
+                    }
 
                     // Refresh configurations in MainViewModel
                     if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
@@ -50,6 +108,9 @@ public partial class ConfigurationDialog : Window
                             {
                                 mainViewModel.RefreshConfigurations();
                             }
+
+                            // Hotkey changes take effect immediately, no restart needed.
+                            mainWindow.ApplyGlobalHotkeyConfiguration();
                         }
                     }
 

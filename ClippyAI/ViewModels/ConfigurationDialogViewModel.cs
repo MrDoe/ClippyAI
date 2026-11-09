@@ -99,6 +99,17 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
     [ObservableProperty]
     private string _linuxKeyboardDevice = ConfigurationService.GetConfigurationValue("LinuxKeyboardDevice", "");
 
+    // Global hotkeys in canonical "Ctrl+Alt+C" form (empty = disabled). They
+    // are applied at runtime by the dialog via MainWindow.ApplyGlobalHotkeyConfiguration().
+    [ObservableProperty]
+    private string _hotkeyAskClippy = ConfigurationService.GetConfigurationValue("HotkeyAskClippy", "Ctrl+Alt+C");
+
+    [ObservableProperty]
+    private string _hotkeyPreviousTask = ConfigurationService.GetConfigurationValue("HotkeyPreviousTask", "Ctrl+Alt+Up");
+
+    [ObservableProperty]
+    private string _hotkeyNextTask = ConfigurationService.GetConfigurationValue("HotkeyNextTask", "Ctrl+Alt+Down");
+
     [ObservableProperty]
     private string _ollamaEmbeddingModel = EmbeddingService.GetModel("Ollama");
 
@@ -726,8 +737,32 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
         }
     }
 
-    public void Save()
+    /// <summary>
+    /// Validates and persists all settings. Returns false (with an error
+    /// message shown) when the configured global hotkeys are invalid or
+    /// duplicated - nothing is written in that case, so the running
+    /// registrations can never end up half-updated.
+    /// </summary>
+    public bool Save()
     {
+        // Validate hotkeys first: an invalid combination must not be stored,
+        // and the rest of the settings still needs a chance to save.
+        if (!TryNormalizeHotkey(HotkeyAskClippy, out string hotkeyAsk)
+            || !TryNormalizeHotkey(HotkeyPreviousTask, out string hotkeyPrev)
+            || !TryNormalizeHotkey(HotkeyNextTask, out string hotkeyNext))
+        {
+            ShowErrorMessage(ClippyAI.Resources.Resources.InvalidHotkeyError);
+            return false;
+        }
+
+        string[] hotkeyValues = [hotkeyAsk, hotkeyPrev, hotkeyNext];
+        if (hotkeyValues.Count(h => h.Length > 0)
+            != hotkeyValues.Where(h => h.Length > 0).Distinct(StringComparer.OrdinalIgnoreCase).Count())
+        {
+            ShowErrorMessage(ClippyAI.Resources.Resources.DuplicateHotkeyError);
+            return false;
+        }
+
         SaveTaskConfiguration();
 
         // Update all configuration values
@@ -757,6 +792,36 @@ public partial class ConfigurationDialogViewModel : ViewModelBase
         ConfigurationService.SetConfigurationValue("SSHLocalTunnel", SshLocalTunnel);
         ConfigurationService.SetConfigurationValue("SSHRemoteTunnel", SshRemoteTunnel);
         ConfigurationService.SetConfigurationValue("SSHPrivateKeyFile", SshPrivateKeyFile);
+
+        // Global hotkeys (canonicalized; empty = disabled)
+        ConfigurationService.SetConfigurationValue("HotkeyAskClippy", hotkeyAsk);
+        ConfigurationService.SetConfigurationValue("HotkeyPreviousTask", hotkeyPrev);
+        ConfigurationService.SetConfigurationValue("HotkeyNextTask", hotkeyNext);
+
+        return true;
+    }
+
+    /// <summary>
+    /// True when the text is empty (disabled) or parses as a hotkey; the
+    /// canonical "Ctrl+Alt+C" spelling is returned in <paramref name="canonical"/>.
+    /// </summary>
+    private static bool TryNormalizeHotkey(string text, out string canonical)
+    {
+        canonical = (text ?? "").Trim();
+
+        if (canonical.Length == 0)
+        {
+            return true;
+        }
+
+        GlobalHotkey? parsed = GlobalHotkey.TryParse(canonical);
+        if (parsed == null)
+        {
+            return false;
+        }
+
+        canonical = parsed.ToString();
+        return true;
     }
 
     public void Cancel()
