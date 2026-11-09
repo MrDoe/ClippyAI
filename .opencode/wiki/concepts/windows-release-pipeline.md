@@ -18,3 +18,14 @@ Windows releases of ClippyAI ship **only as an MSI installer** (user decision
   ClickOnce needs .NET Framework MSBuild).
 
 Related: [[vscode-debug-setup]]
+
+## Build gotcha (learned 2026-11-09)
+
+`ClippyAI.Installer.wixproj` publishes inside the build (`BeforeTargets="Build"`), but WiX's
+`Files Include="!(bindpath.PublishDir)**"` harvest runs **before** the publish target fills
+the folder on a clean build → 45 KB empty MSI (WIX8601 + ICE71). Also, incremental builds
+silently repackage **stale** payloads. Correct flow: build once (publishes), touch
+`Package.wxs`, build again (relink with fresh harvest); verify the exe `FileVersion`.
+WiX v5 ProductCodes are content-deterministic → every rebuilt MSI needs the old product
+uninstalled first. After a .NET SDK band bump, pre-run
+`dotnet restore ClippyAI/ClippyAI.csproj --runtime win-x64 --force` (NETSDK1112).
