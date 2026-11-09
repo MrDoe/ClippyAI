@@ -5,7 +5,7 @@ sourceRefs: [ClippyAI/Services/ClipboardHistoryService.cs, ClippyAI/Services/Cli
 lastReviewed: 2026-11-09
 ---
 
-# Clipboard history, manual generator, ClickHouse knowledge (v1.7.0)
+# Clipboard history, manual generator, ClickHouse knowledge (RAG — v1.7.0, vision fixes v1.7.2/1.7.3)
 
 ## Clipboard history (`ClipboardHistoryService`)
 
