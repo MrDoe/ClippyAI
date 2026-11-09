@@ -10,8 +10,10 @@ public class OpenAIRequest
     [JsonPropertyName("model")]
     public string? Model { get; set; }
 
+    // Elements are OpenAIMessage (plain text) or OpenAIVisionMessage (multimodal);
+    // System.Text.Json serializes the runtime type of object-typed members.
     [JsonPropertyName("messages")]
-    public OpenAIMessage[]? Messages { get; set; }
+    public object[]? Messages { get; set; }
 
     [JsonPropertyName("temperature")]
     public double? Temperature { get; set; }
@@ -45,6 +47,40 @@ public class OpenAIMessage
 
     [JsonPropertyName("content")]
     public string? Content { get; set; }
+}
+
+/// <summary>
+/// Multimodal chat message: Content holds an array of OpenAIContentPart
+/// (text + image_url), as required by OpenAI-compatible vision endpoints.
+/// </summary>
+public class OpenAIVisionMessage
+{
+    [JsonPropertyName("role")]
+    public string? Role { get; set; }
+
+    [JsonPropertyName("content")]
+    public OpenAIContentPart[]? Content { get; set; }
+}
+
+public class OpenAIContentPart
+{
+    [JsonPropertyName("type")]
+    public string? Type { get; set; }
+
+    [JsonPropertyName("text")]
+    public string? Text { get; set; }
+
+    [JsonPropertyName("image_url")]
+    public OpenAIImageUrl? ImageUrl { get; set; }
+}
+
+public class OpenAIImageUrl
+{
+    [JsonPropertyName("url")]
+    public string? Url { get; set; }
+
+    [JsonPropertyName("detail")]
+    public string? Detail { get; set; }
 }
 
 /// <summary>

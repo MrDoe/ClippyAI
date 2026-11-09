@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 namespace ClippyAI.Services;
@@ -30,6 +31,14 @@ public class OpenAIService : IAIProvider
     private static string? apiKey = ConfigurationService.GetConfigurationValue("OpenAIApiKey");
     private static string? baseUrl = ConfigurationService.GetConfigurationValue("OpenAIBaseUrl", "https://api.openai.com/v1");
     private static string? system = ConfigurationService.GetConfigurationValue("System");
+
+    // Strict OpenAI-compatible backends (vLLM behind llama-swap, pydantic validation)
+    // reject bodies that explicitly contain nulls like "stream": null with HTTP 400,
+    // so unset optional properties must be omitted from the request entirely.
+    private static readonly JsonSerializerOptions requestJsonOptions = new()
+    {
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+    };
 
     static OpenAIService()
     {
@@ -105,7 +114,7 @@ public class OpenAIService : IAIProvider
 
         Console.WriteLine("Sending OpenAI request...");
 
-        string json = JsonSerializer.Serialize(request);
+        string json = JsonSerializer.Serialize(request, requestJsonOptions);
         using StringContent content = new(json, Encoding.UTF8, "application/json");
 
         int timeoutSeconds = RequestLimits.TimeoutSeconds;
@@ -214,27 +223,37 @@ public class OpenAIService : IAIProvider
             ? taskConfig!.SystemPrompt
             : "Describe the image.";
 
-        // Convert image to base64
+        // Convert image to base64 and send it as a multimodal content part;
+        // OpenAI-compatible vision endpoints take content = [text, image_url],
+        // a plain string content would ignore the image entirely.
         string base64Image = Convert.ToBase64String(image);
-        _ = $"data:image/jpeg;base64,{base64Image}";
+        string dataUrl = $"data:image/png;base64,{base64Image}";
 
-        OpenAIMessage[] messages = new[]
-        {
-            new OpenAIMessage
+        OpenAIVisionMessage[] messages =
+        [
+            new OpenAIVisionMessage
             {
                 Role = "user",
-                Content = visionPrompt
+                Content =
+                [
+                    new OpenAIContentPart { Type = "text", Text = visionPrompt },
+                    new OpenAIContentPart
+                    {
+                        Type = "image_url",
+                        ImageUrl = new OpenAIImageUrl { Url = dataUrl, Detail = "auto" }
+                    }
+                ]
             }
-        };
+        ];
 
         OpenAIRequest request = new()
         {
             Model = visionModel,
             Messages = messages,
-            MaxTokens = 1000
+            MaxTokens = 2000
         };
 
-        string json = JsonSerializer.Serialize(request);
+        string json = JsonSerializer.Serialize(request, requestJsonOptions);
         using StringContent content = new(json, Encoding.UTF8, "application/json");
 
         int timeoutSeconds = RequestLimits.TimeoutSeconds;
