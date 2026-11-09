@@ -10,3 +10,5 @@ Diagnosed user report "model Qwen3.8-Flash-Next-NVFP4 does not work". Live probe
 ## [2026-11-09] op | VS Code debugging setup: RESOLVED (stable 1.143.1 + C# ext via VSIX)
 ## [2026-11-09] op | .NET updated: SDK 10.0.403, 9.0.320, DR 10.0.14; SDK 8.0.427 installed then REMOVED per user
 ## [2026-11-09] op | Built ClippyAI 1.6.0 MSI from HEAD + installed to Program Files; documented wixproj harvest/publish ordering gotcha
+## [2026-11-09] ingest | winvision-mcp (Windows GUI testing MCP server) + win-gui-test skill
+Chose winvision-mcp (PyPI/MIT, UIA+WGC, QA asserts, baselines, record/replay) over WinApp MCP/winuse/WinProbe/Drive.NET. Installed via local venv C:\Temp\opencode\winvision-mcp-venv (uv --user rejected: %APPDATA% is a roaming network share; C: nearly full — pip cache purge first). Registered project-scoped as mcp.winvision in opencode.jsonc, timeout 60000. Authored .opencode/skills/win-gui-test/SKILL.md (foreground-window refusal, sampling fallback, UIA-first rules). Filed sources/winvision-mcp.md.

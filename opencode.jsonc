@@ -11,5 +11,19 @@
     "csharp": { "disabled": false },
     "razor": { "disabled": false },
     "clangd": { "disabled": true }
+  },
+
+  // Windows GUI testing via winvision-mcp (UIA + WGC + QA asserts).
+  // Usage + gotchas: .opencode/skills/win-gui-test/SKILL.md
+  // Venv lives on C:\Temp (local disk; %APPDATA% is a slow roaming share).
+  // timeout >= 60000: the first cold UIA call can exceed 30 s and a timeout
+  // severs the stdio session with no in-session reconnect.
+  "mcp": {
+    "winvision": {
+      "type": "local",
+      "command": ["C:\\Temp\\opencode\\winvision-mcp-venv\\Scripts\\winvision-mcp.exe", "stdio"],
+      "enabled": true,
+      "timeout": 60000
+    }
   }
 }

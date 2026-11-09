@@ -121,8 +121,8 @@
     "maxContextChunks": 10,
     "readOverride": true,
     "autoIndex": {
-      "enabled": false,
-      "debounceMs": 2000,
+      "enabled": true,
+      "debounceMs": 30000,
       "intervalMs": 300000,
       "watcher": "chokidar"
     }
@@ -165,5 +165,9 @@
   "logging": {
     "level": "info",
     "logFilePath": "./.opencode/opencode-rag.log"
+  },
+  "memory": {
+    "passiveCapture": true,
+    "autoInjectLatencyBudgetMs": 5000
   }
 }

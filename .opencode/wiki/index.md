@@ -12,4 +12,4 @@ Content catalog — every page with a link and one-line summary.
 - [[concepts/corporate-proxy-workaround]] — KRZ proxy: winget/dotnet/git use integrated auth; curl --proxy-ntlm + gunzip for VSIX downloads; never store creds
 
 ## Sources
-*(none yet)*
+- [[sources/winvision-mcp]] — Windows GUI automation & QA MCP server installed locally (venv + project-scoped `mcp.winvision`); choice rationale, install layout, operating gotchas
